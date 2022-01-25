@@ -1,0 +1,251 @@
+\documentclass[a4paper,12pt, oneside]{book}
+
+% \usepackage{fullpage}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphics}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{colortbl}
+\usepackage{engrec}
+\usepackage{rotating}
+\usepackage{subcaption}
+\usepackage{verbatim}
+\usepackage[safe,extra]{tipa}
+% \usepackage{showkeys}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{microtype}
+% \usepackage{fontspec}
+\usepackage{enumerate}
+\usepackage{braket}
+\usepackage{relsize}
+\usepackage{marginnote}
+\usepackage{pgfplots}
+\usepackage{cancel}
+\usepackage{polynom}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{pdfpages}
+\usepackage{pgfplots}
+\usepackage{algorithm}
+\usepackage[backend=biber, backref=true, sorting=none]{biblatex}
+\usepackage{fvextra}
+\usepackage{csquotes}
+% \usepackage{natbib}
+% \usepackage{algpseudocode}
+% \usepackage[cache=false]{minted}
+\usepackage{mathtools}
+\usepackage[noend]{algpseudocode}
+\usepackage{svg}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{blindtext}
+\usepackage{titleps}
+\addbibresource{thesis.bib}
+\usepackage{tikz}\usetikzlibrary{er}\tikzset{multi  attribute /.style={attribute
+    ,double  distance =1.5pt}}\tikzset{derived  attribute /.style={attribute
+    ,dashed}}\tikzset{total /.style={double  distance =1.5pt}}\tikzset{every
+  entity /.style={draw=orange , fill=orange!20}}\tikzset{every  attribute
+  /.style={draw=MediumPurple1, fill=MediumPurple1!20}}\tikzset{every
+  relationship /.style={draw=Chartreuse2,
+    fill=Chartreuse2!20}}\newcommand{\key}[1]{\underline{#1}}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{arrows,shapes,backgrounds,petri} 
+\usetikzlibrary{automata,positioning}
+\usetikzlibrary{matrix}
+%\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhead[LO,RE]{\slshape \leftmark}
+%\fancyhead[CO,CE]{\slshape\rightmark}
+\fancyhead[LE,RO]{\slshape\rightmark}
+\fancyfoot[C]{\thepage}
+% \fancyhf{}
+% \fancyhead[LO,RE]{\slshape \leftmark}
+% %\fancyhead[CO,CE]{\slshape\rightmark}
+% \fancyhead[LE,RO]{\slshape\thepage}
+% \renewcommand{\footrulewidth}{0pt}
+%\fancyfoot[C]{\thepage}
+% \title{Relazione}
+% \fancypagestyle{plain}{% \fancyhf{} % clear all header and footer fields
+%   \fancyhead[RO,RE]{\thepage}%RO=right odd, RE=right even
+%   \renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0.3pt}}
+
+
+\pgfplotsset{compat=1.13}
+
+\begin{document}
+
+% \maketitle
+\newgeometry{margin=1in} 
+\begin{titlepage}
+  
+
+  \noindent
+  \begin{minipage}[t]{0.19\textwidth}
+    \vspace{-4mm}{\includegraphics[scale=1.15]{img/logo_unimib.pdf}}
+  \end{minipage}
+  \begin{minipage}[t]{0.81\textwidth}
+    {
+      \setstretch{1.42}
+      {\textsc{Università degli Studi di Milano - Bicocca}} \\
+      \textbf{Scuola di Scienze} \\
+      \textbf{Dipartimento di Informatica, Sistemistica e Comunicazione} \\
+      \textbf{Corso di Laurea Magistrale in Informatica} \\
+      \par
+    }
+  \end{minipage}
+  
+  \vspace{40mm}
+  
+  \begin{center}
+    {\LARGE{
+        \setstretch{1.2}
+        \textbf{Algoritmi per la trasformata di}}}
+     \vspace{1mm}
+    {\LARGE{
+        \setstretch{1.2}
+        \textbf{Burrows-Wheeler Posizionale con}}}
+    \vspace{1mm}
+    {\LARGE{
+        \setstretch{1.2}
+        \textbf{compressione run-length, RLPBWT}}}
+    
+  \end{center}
+  
+  \vspace{48mm}
+
+  \noindent
+  {\large \textbf{Relatore:} \textit{Prof.ssa Raffaella Rizzi}} \\
+
+  \noindent
+  {\large \textbf{Correlatore:} \textit{}}
+  
+  \vspace{15mm}
+
+  \begin{flushright}
+    \textbf{\large Tesi di Laurea Magistrale di:} \\
+    \large{\textit{Davide Cozzi}}\\
+    \large{\textit{Matricola 829827}}
+  \end{flushright}
+  
+  \vspace{40mm}
+  \begin{center}
+    {\large{\bf Anno Accademico 2021-2022}}
+  \end{center}
+
+  \restoregeometry
+  
+\end{titlepage}
+\restoregeometry
+\definecolor{shadecolor}{gray}{0.80}
+\setlist{leftmargin = 2cm}
+\newtheorem{teorema}{Teorema}
+\newtheorem{definizione}{Definizione}
+\newtheorem{esempio}{Esempio}
+\newtheorem{corollario}{Corollario}
+\newtheorem{lemma}{Lemma}
+\newtheorem{osservazione}{Osservazione}
+\newtheorem{nota}{Nota}
+\newtheorem{esercizio}{Esercizio}
+
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
+
+\renewcommand{\chaptermark}[1]{%
+  \markboth{\chaptername
+    \ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+
+\newcommand{\MYhref}[3][blue]{\href{#2}{\color{#1}{#3}}}%
+\newcommand{\hiddenchapter}[1]{
+  \stepcounter{chapter*}
+  \chapter*{\arabic{chapter}\hspace{1em}{#1}}
+}
+% \pagenumbering{roman}
+
+\newpage
+\thispagestyle{plain}
+\begin{flushleft}
+  \huge{\textbf{Abstract}}
+\end{flushleft}
+\vspace{10mm}
+\textit{}
+{
+  \pagestyle{plain}
+  \tableofcontents
+  \cleardoublepage
+}
+\chapter{Introduzione}
+\chapter{Preliminari}
+\section{Motivazioni Biologiche}
+\section{Trasformata di Burrows-Wheeler}
+\subsection{Trasformata di Burrows-Wheeler run-length}
+\subsubsection{MONI}
+\section{Trasformata di Burrows-Wheeler posizionale}
+\subsection{Implementazione originale}
+\subsubsection{Gli algoritmi di Durbin}
+\subsection{Varianti}
+\subsubsection{PBWT multiallelica}
+\subsubsection{PBWT con struttura LEAP}
+\subsubsection{PBWT dinamica}
+\subsubsection{PBWT bidirezionale}
+\chapter{Metodo}
+\section{Introduzione agli strumenti usati}
+\section{Costruzione della RLPBWT}
+\subsection{Implementazione con divergence array}
+\subsubsection{Algoritmo per match massimali}
+\subsection{Implementazione senza divergence array}
+\subsubsection{Algoritmo per match massimali}
+\chapter{Risultati}
+\section{Ambiente di benchmark}
+\section{Analisi temporale}
+\subsection{Confronto con implementazione originale e varianti}
+\section{Analisi spaziale}
+\subsection{Confronto con implementazione originale e varianti}
+\chapter{Conclusioni}
+\section{Sviluppi futuri}
+%% BIBLIOGRAFIA
+\addcontentsline{toc}{chapter}{Bibliografia e sitografia}
+\printbibliography[title={Bibliografia e sitografia}]
+
+\begin{comment}
+  \newpage
+  \thispagestyle{empty}
+  \begin{flushleft}
+    \textit{}.%\\
+    \[\sim\cdot\sim\]
+    % \vspace{6mm}
+    \textit{}.%\\ 
+    \[\sim\cdot\sim\]
+    % \vspace{6mm}
+    \textit{}.\\
+    \vspace{2mm}
+    \textit{}.%\\
+    
+    \[\sim\cdot\sim\]
+    % \vspace{6mm}
+    \textit{}.\\
+    \vspace{2mm}
+    \textit{}.\\
+    \vspace{2mm}
+    \textit{}.
+    \[\sim\cdot\sim\]
+    % \vspace{6mm}
+    \textit{}.
+  \end{flushleft}
+\end{comment}
+\end{document}
+
+% LocalWords:  divergence prefix
