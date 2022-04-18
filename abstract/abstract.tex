@@ -1,0 +1,241 @@
+\documentclass[a4paper,12pt, oneside]{article}
+% \usepackage{fullpage}
+%\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphics}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{engrec}
+\usepackage{rotating}
+\usepackage{verbatim}
+\usepackage[safe,extra]{tipa}
+% \usepackage{showkeys}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{fontspec}
+\usepackage{enumerate}
+\usepackage{physics}
+\usepackage{braket}
+\usepackage{mhchem}
+\usepackage{marginnote}
+\usepackage{pgfplots}
+\usepackage{cancel}
+\usepackage{polynom}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{pdfpages}
+\usepackage{pgfplots}
+\usepackage{algorithm}
+% \usepackage{algpseudocode}
+\usepackage[cache=false]{minted}
+\usepackage{mathtools}
+\usepackage[noend]{algpseudocode}
+
+\newcommand*{\bfrac}[2]{\genfrac{}{}{0pt}{}{#1}{#2}}
+
+\usepackage{tikz}\usetikzlibrary{er}\tikzset{multi  attribute /.style={attribute
+    ,double  distance =1.5pt}}\tikzset{derived  attribute /.style={attribute
+    ,dashed}}\tikzset{total /.style={double  distance =1.5pt}}\tikzset{every
+  entity /.style={draw=orange , fill=orange!20}}\tikzset{every  attribute
+  /.style={draw=MediumPurple1, fill=MediumPurple1!20}}\tikzset{every
+  relationship /.style={draw=Chartreuse2,
+    fill=Chartreuse2!20}}\newcommand{\key}[1]{\underline{#1}}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{arrows,shapes,backgrounds,petri}
+\tikzset{
+  place/.style={
+    circle,
+    thick,
+    draw=black,
+    minimum size=6mm,
+  },
+  transition/.style={
+    rectangle,
+    thick,
+    fill=black,
+    minimum width=8mm,
+    inner ysep=2pt
+  },
+  transitionv/.style={
+    rectangle,
+    thick,
+    fill=black,
+    minimum height=8mm,
+    inner xsep=2pt
+  }
+} 
+\usetikzlibrary{automata,positioning,chains,fit,shapes}
+\usetikzlibrary{circuits.logic.US}
+\usetikzlibrary{positioning}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\slshape \rightmark}
+\fancyhead[LO,RE]{\slshape \leftmark}
+\fancyfoot[C]{\thepage}
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+\usepackage[space]{grffile} % For spaces in paths
+\usepackage{etoolbox} % For spaces in paths
+\makeatletter % For spaces in paths
+\patchcmd\Gread@eps{\@inputcheck#1 }{\@inputcheck"#1"\relax}{}{}
+\makeatother
+\usepackage{lipsum}
+\DeclareSymbolFont{symbolsC}{U}{txsyc}{m}{n}
+\DeclareMathSymbol{\strictif}{\mathrel}{symbolsC}{74}
+\title{PHD Proposal}
+\author{Davide Cozzi, 829827,
+  \href{mailto:d.cozzi@campus.unimib.it}{d.cozzi@campus.unimib.it}} 
+\date{}
+
+\pgfplotsset{compat=1.13}
+\begin{document}
+\maketitle
+
+\definecolor{shadecolor}{gray}{0.80}
+\setlist{leftmargin = 2cm}
+\newtheorem{teorema}{Teorema}
+\newtheorem{definizione}{Definizione}
+\newtheorem{esempio}{Esempio}
+\newtheorem{corollario}{Corollario}
+\newtheorem{lemma}{Lemma}
+\newtheorem{osservazione}{Osservazione}
+\newtheorem{nota}{Nota}
+\newtheorem{esercizio}{Esercizio}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\MYhref}[3][blue]{\href{#2}{\color{#1}{#3}}}%
+\section{Introduction}
+The problem of \textit{pattern matching} is one of the most studied topics in
+the field of algorithmics and bioinformatics. For example the interest in such
+problems is due to the need to align sequences or search for specific patterns
+within the \textit{DNA}. \\
+In this context, a large number of data structure algorithms have been
+modeled. Among these, one of the most used is the \textbf{Burrows-Wheeler
+  transform (\textit{BWT})} thanks to the studies of Ferragina and Manzini who
+proposed its use together with the so-called FM-index \cite{fmindex}.\\
+In recent years, in the field of bioinformatics, there is a change of
+interest. While until a few years ago the research was focused on the study of
+the \textit{genome}, we are now starting to deepen the topic of
+\textit{pangenome}. Currently, the need to take into
+account the high variability in population genomes as well as the specificity of
+an individual genome in a personalized approach to medicine is rapidly pushing
+the abandonment of the traditional paradigm of using a single reference genome
+\cite{pangenome}. \\ 
+In this context, various algorithms and various data structures have been
+implemented in order to study the so called \textit{haplotypes} and
+\textit{genotypes}. Briefly we could define \textit{haplotypes} as a combination
+of allelic variants, inherited from a parent. Instead we can define the
+\textit{genotype} as the complete set of genes contained in the DNA. From a
+biological point of view it is indeed interesting to note that each individual
+shares about 99\% of the genetic code, while the remaining 1\% differs mostly
+with \textbf{Single Nucleotide Polymorphisms (\textit{SNPs})}, i.e. variations
+of a single nucleotide in a precise \textit{locus} of the DNA\\ 
+Thanks to the last developments in sequencing technologies, which have led both
+to reduce the costs of single sequencing and to produce sequences of ever higher
+quality in less and less time, the researchers were able to theorize the
+\textit{pangenome graph}, replacing the old representation of the single genome
+by a single sequence. \\
+One of the most important data structure developed in order to handle the study
+of haplotypes sequences is the \textbf{positional Burrows-Wheeler transform
+  (\textit{PBWT})}, proposed by Durbin in 2014 \cite{pbwt_durbin}. With this
+particular data structure it was possible both to study possible matches inside
+a haplotype panel and to search for set maximal matches between an external
+haplotype and a panel, as well as the set maximal matches inside the panel
+itself. Furthermore, for example, variants have also been studied for the 
+management of the multiallelic case \cite{mpbwt}. \\
+In 2021 Rossi et al. proposed \textit{MONI} as a data structure to handle a
+\textbf{run-length version of BWT (\textit{RLPBWT})} with the ultimate intention
+of indexing and using multiple genomes as a reference \cite{moni}. Together with
+this data structure the authors proposed the concept of \textit{matching
+  statistics} in order to efficiently compute the matches between a pattern and
+a text. A recent improvement, regarding the \textit{RLPBWT}, has been made
+through the implementation of \textit{PHONI} \cite{phoni}, where where the
+so-called \textit{longest-common-extension (LCE) queries} are used. \\
+During the development of my master's thesis I worked in collaboration with the
+authors of MONI in order to create a run length encoded variant of the PBWT. In
+this work I used practically all concepts applied to the ``classic''
+\textit{BWT} in \textit{MONI} and \textit{PHONI}. \\
+During my PhD I will focus my studies on the development of new algorithms in
+various topics such as variants of the \textit{PBWT} (and any related uses),
+\textit{haplotyping/genotyping} or solutions concerning the study of
+\textit{SNPs}.It is also my intention to deepen the more experimental themes
+relating to pattern matching, in detail the new developments on BWT and new
+indexing structures, as well as the theme of \textit{succinct data structures},
+with particular attention to the use of \textit{bitvectors}. 
+\section{State of the art}
+I will now present a brief overview of the main algorithms, data structures,
+methods etc that will be the core of my studies during my PhD. 
+\subsection*{BWT}
+The \textbf{Burrows-Wheeler Transform (\textit{BWT})} \cite{bwt} was introduced
+in 1994 in order to compress texts but it has had then wide use in
+bioinformatics, above all thanks to the already cited \textit{FM-index}. Given a
+text $T$, \$-terminated, such that $|T|=n$, we can define the $BWT_T$, denoting
+with $SA_T$ the \textit{suffix array} of $T$, as:
+$BWT_T[i] = T[SA_T[i]-1]$, if $SA_T[i]>0$, and $BWT_T[i] = \$ $ otherwise. Less
+formally we can say that $BWT_T[i]$ is the character that precedes the $i$-th
+suffix in the lexicographically order. It is important to note that this
+transform is reversible so we can reconstruct the text $T$ from its transform
+$BWT_T$ using the so-called \textbf{LF-mapping}. Given $BWT_T$ and an array,
+called $F_T$, with all the characters of $T$ in the lexicographically order, we
+can say that, thanks to the \textit{LF-mapping}, the $j$-th occurrence of a
+certain character in $BWT_T$ corresponds to the $j$-th occurrence of the same
+character in $F_T$, so we can reconstruct $T$ starting from its last character
+\$. With the use of the \textit{LF-mapping} we can perform the
+\textit{backward-search} in order to use the $BWT_T$ to look for a pattern $P$
+within $T$. This can be done efficiently thank to the \textit{FM-index} which
+consists of two functions. The first one is $C$ function, such that, given an
+alphabet $\Sigma$ (that includes the ending character \$),
+$C:\Sigma\to[1,n]$. This function, given a character $\sigma\in \Sigma$ returns
+the number of occurrences of characters lexicographically than the one given as
+argument in $T$. The second one is the $Occ$ function,
+$Occ:\Sigma\times[1,n]\to[1,n]$, has as arguments a character $\sigma\in\Sigma$
+and an index $i$ of $BWT_T$ and returns the count of occurrences of $\sigma$ in
+$BWT_T[1,i]$ (\textbf{CONTROLLARE E RISCRIVERE MEGLIO}).\\
+The use of \textit{BWT} has allowed the construction of efficient algorithms
+both in the field of pattern matching and in that of sequence alignment. 
+\subsection*{Bitvectors}
+\textit{Bitvectors} are ones of the most important data structure when
+mentioning succinct data structures. \\
+A \textit{bitvector} is an array on $n$ bits which allows two particular
+operations, called \textbf{rank} and \textbf{select}, in addition to the classic
+operations possible on Boolean arrays, such as \textit{random access} in
+\textit{constant time} (\textbf{DA VERIFICARE}). More in detail the rank
+function allows you to calculate how many values of 1 are up to a certain
+index. Instead the select function allows to obtain the index of any one present
+in the bitvector. Formally, given a bitvector $B$, such that $|B|=n$, and given
+an index $i$, such that $0\leq i<n$, we can define $rank_B(i)=\sum_{k=0}^{k<i}
+B[k]$. Instead, about the select function, given an integer $i$, such that
+$0<i\leq rank_B(n)$, where $n=|B|$,  we can define $select(i)=\min\{j \,| \,\,
+rank_B(j+1)=i\}$.\\
+From a purely theoretical point of view, with the additional cost of
+$\mathcal{O}(n)$ bits in memory, these two operations can be supported with
+constant time.  In more practical terms there are several implementations of the
+same within \textbf{SDSL (\textit{Succint Data Structures Library})}
+\cite{sdsl}, one of the most important C++ library used in bioinformatics. As
+the implementation changes (for example \textit{plain bitvector, interleaved
+  bitvector, sparse bivector} etc$\ldots$) the computational time of the two
+operations varies (usually only one of the two is in constant time) and the
+amount of additional bits needed.\\
+An example of the use of bitvectors is to track the runs in the run-length
+encoded implementations of \textit{BWT} and \textit{PBWT}, where we put one at
+each head of run. 
+\subsection*{RLBWT, Matching Statistics, MONI and PHONI}
+\subsection*{PBWT}
+\subsection*{RLPBWT}
+\section{Research goals}
+% RLMPBWT
+% missing data
+\bibliographystyle{unsrt}
+\bibliography{abstract}
+\end{document}
