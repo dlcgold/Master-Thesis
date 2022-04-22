@@ -122,7 +122,9 @@ within the \textit{DNA}. \\
 In this context, a large number of data structure algorithms have been
 modeled. Among these, one of the most used is the \textbf{Burrows-Wheeler
   transform (\textit{BWT})} thanks to the studies of Ferragina and Manzini who
-proposed its use together with the so-called FM-index \cite{fmindex}.\\
+proposed its use together with the so-called FM-index
+%\cite{fmindex}
+.\\
 In recent years, in the field of bioinformatics, there is a change of
 interest. While until a few years ago the research was focused on the study of
 the \textit{genome}, we are now starting to deepen the topic of
@@ -152,7 +154,9 @@ particular data structure it was possible both to study possible matches inside
 a haplotype panel and to search for set maximal matches between an external
 haplotype and a panel, as well as the set maximal matches inside the panel
 itself. Furthermore, for example, variants have also been studied for the 
-management of the multiallelic case \cite{mpbwt}. \\
+management of the multiallelic case
+% \cite{mpbwt}
+. \\
 In 2021 Rossi et al. proposed \textit{MONI} as a data structure to handle a
 \textbf{run-length version of BWT (\textit{RLBWT})} with the ultimate intention
 of indexing and using multiple genomes as a reference \cite{moni}. Together with
@@ -176,7 +180,9 @@ with particular attention to the use of \textit{bitvectors}.
 I will now present a brief overview of the main algorithms, data structures,
 methods etc that will be the core of my studies during my PhD. 
 \subsection*{BWT}
-The \textbf{Burrows-Wheeler Transform (\textit{BWT})} \cite{bwt} was introduced
+The \textbf{Burrows-Wheeler Transform (\textit{BWT})}
+% \cite{bwt}
+was introduced
 in 1994 in order to compress texts but it has had then wide use in
 bioinformatics, above all thanks to the already cited \textit{FM-index}. Given a
 text $T$, \$-terminated, such that $|T|=n$, we can define the $BWT_T$, denoting
@@ -221,7 +227,8 @@ From a purely theoretical point of view, with the additional cost of
 $\mathcal{O}(n)$ bits in memory, these two operations can be supported with
 constant time.  In more practical terms there are several implementations of the
 same within \textbf{SDSL (\textit{Succint Data Structures Library})}
-\cite{sdsl}, one of the most important C++ library used in bioinformatics. As
+% \cite{sdsl}
+, one of the most important C++ library used in bioinformatics. As
 the implementation changes (for example \textit{plain bitvector, interleaved
   bitvector, sparse bivector} etc$\ldots$) the computational time of the two
 operations varies (usually only one of the two is in constant time) and the
@@ -240,15 +247,20 @@ consecutive equal characters, the so-called \textit{runs}. With this change of
 perspective the algorithms have gone from being linear over the length of the
 text, $n$, to being linear over the number of runs, $r$. \\
 The new indexing method, which was then introduced by Gagie et
-al. \cite{rindex}, was called \textbf{r-index} and corresponds to the
+al.
+% \cite{rindex}
+, was called \textbf{r-index} and corresponds to the
 \textit{RLBWT} and a SA sampling at the begin and at the end of every run. The
 algorithm for querying through the \textit{RLBWT} take advantage of other
 methods, such as the use of \textbf{thresholds} (minimum
 \textit{LCP} value between two consecutive runs of the same character) in
 \textit{MONI}, and the use of \textbf{longest common extension (\textit{LCE})
   query} (to compute the right equal common extension between two position in
-the text) cd\cite{lce} and \textbf{straight-line programs (\textit{SLP})}
-\cite{slp} (for \textit{random access} and \textit{lce queries} over the
+the text)
+% \cite{lce}
+and \textbf{straight-line programs (\textit{SLP})}
+% \cite{slp}
+(for \textit{random access} and \textit{lce queries} over the
 grammar-compressed text) in \textit{PHONI}. Both these solutions are used for
 the computation of the \textbf{matching statistics (\textit{MS})}. Given a
 pattern $P$ and a text $T$ the \textit{MS} of $P$ in respect to $P$ is an array
@@ -316,7 +328,24 @@ current use of bitvectors to manage the \textit{LF-mapping} also in that
 case. On the other hand, it will be more complicated to manage the missing
 data. This problem is known to be \textit{hard} so I should probably deal with
 parametric algorithms or approximate algorithms, based on researches already
-developed in \textit{BIAS}.
+developed in \textit{BIAS}.\\
+\textbf{AGGIUNGERE ALMENO DUE O TRE TOPIC DI RICERCA}.\\
+From a more technical point of view, during both my bachelor degree and master
+degree, mainly focused on the use of the \textbf{C++ programming language},
+mainly due to the availability of efficient libraries that have now become
+standard in the bioinformatics field, as the already cited \textit{SDSL}. In
+addition to \textit{C++}, however, I had the opportunity to deepen
+\textbf{Python}, with libraries such as \textit{biopython} and \textbf{Rust},
+with recently developed libraries such as \textit{bio-rust} (and therefore not
+yet complete from an algorithmic point of view). \\
+A lack of knowledge that I intend to fill during the PhD is the use of efficient
+algorithms based on parallel computing on GPU, algorithms that are increasingly
+in use in both bioinformatics and systems biology. \\
+To conclude this proposal I also point out the intention to maintain contacts
+with various researchers, initially obtained during the work on the project of
+the master’s thesis, including Christina Boucher (University of Florida), Travis
+Gagie (Dalhousie University) etc$\ldots$ in order to make my PhD program more
+complete. 
 \bibliographystyle{unsrt}
 \bibliography{abstract}
 \end{document}
