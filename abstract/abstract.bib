@@ -116,3 +116,35 @@
 	pages        = {221--231},
 	organization = {Springer}
 }
+
+@article{dpbwt,
+	title        = {{d-PBWT: dynamic positional Burrows–Wheeler transform}},
+	author       = {Sanaullah, Ahsan and Zhi, Degui and Zhang, Shaojie},
+	year         = 2021,
+	month        = {02},
+	journal      = {Bioinformatics},
+	volume       = 37,
+	number       = 16,
+	pages        = {2390--2397},
+	doi          = {10.1093/bioinformatics/btab117},
+	issn         = {1367-4803},
+	url          = {https://doi.org/10.1093/bioinformatics/btab117},
+	abstract     = {{Durbin’s positional Burrows–Wheeler transform (PBWT) is a scalable data structure for haplotype matching. It has been successfully applied to identical by descent (IBD) segment identification and genotype imputation. Once the PBWT of a haplotype panel is constructed, it supports efficient retrieval of all shared long segments among all individuals (long matches) and efficient query between an external haplotype and the panel. However, the standard PBWT is an array-based static data structure and does not support dynamic updates of the panel.Here, we generalize the static PBWT to a dynamic data structure, d-PBWT, where the reverse prefix sorting at each position is stored with linked lists. We also developed efficient algorithms for insertion and deletion of individual haplotypes. In addition, we verified that d-PBWT can support all algorithms of PBWT. In doing so, we systematically investigated variations of set maximal match and long match query algorithms: while they all have average case time complexity independent of database size, they have different worst case complexities and dependencies on additional data structures.The benchmarking code is available at genome.ucf.edu/d-PBWT.Supplementary data are available at Bioinformatics online.}},
+	eprint       = {https://academic.oup.com/bioinformatics/article-pdf/37/16/2390/39947158/btab117.pdf}
+}
+
+@article{impute5,
+	title        = {Genotype imputation using the Positional Burrows Wheeler Transform},
+	author       = {Rubinacci, Simone and Delaneau, Olivier and Marchini, Jonathan},
+	year         = 2020,
+	month        = {Nov},
+	day          = 16,
+	journal      = {PLOS Genetics},
+	publisher    = {Public Library of Science},
+	volume       = 16,
+	number       = 11,
+	pages        = {e1009049},
+	doi          = {10.1371/journal.pgen.1009049},
+	url          = {https://doi.org/10.1371/journal.pgen.1009049},
+	abstract     = {Author summary Genome-wide association studies (GWAS) typically use microarray technology to measure genotypes at several hundred thousand positions in the genome. However reference panels of genetic variation consist of haplotype data at >100 fold more positions in the genome. Genotype imputation makes genotype predictions at all the reference panel sites using the GWAS data. Reference panels are continuing to grow in size and this improves accuracy of the predictions, however methods need to be able to scale this increased size. We have developed a new version of the popular IMPUTE software than can handle reference panels with millions of haplotypes, and has better performance than other published approaches. A notable property of the new method is that it scales sub-linearly with reference panel size. Keeping the number of imputed markers constant, a 100 fold increase in reference panel size requires less than twice the computation time.}
+}
