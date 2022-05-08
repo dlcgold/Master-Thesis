@@ -140,7 +140,9 @@ account the high variability in population genomes as well as the specificity of
 an individual genome in a personalized approach to medicine is rapidly pushing
 the abandonment of the traditional paradigm of using a single reference genome
 \cite{pangenome}. \\
-Thanks to the last developments in sequencing technologies, which had led both
+Thanks to the last developments in sequencing technologies, with \textbf{Next
+  Generation Sequencing (\textit{NGS})} and \textbf{third-generation
+  sequencing}, which had led both 
 to reduce the costs of single sequencing and to produce sequences of ever higher
 quality in less and less time, the researchers were able to theorize the
 \textbf{pangenome graph}. Furthermore, the new amount of sequences has led to
@@ -156,7 +158,7 @@ through the implementation of \textit{PHONI} \cite{phoni}, where the
 optimize the pattern search.\\ 
 From a biological point of view, it is interesting to note that, as it has been
 pointed out by the study of \textit{1000 Genome Project}, there are over 88
-million variants between those human genomes. Among these variants 84.7 million
+million variants between those human genomes. Among these variants, 84.7 million
 are \textbf{Single 
   Nucleotide Polymorphisms (\textit{SNPs})}, 3.6 million are \textbf{short
   insertions/deletions (\textit{indel})} and 60000 are \textbf{structural
@@ -172,15 +174,16 @@ of allelic variants, each one inherited from a parent. Instead, the
 \textit{genotype} is the complete set of genes contained in the DNA. So, from
 2005, publication of the \textbf{genome-wide association studies
   (\textit{GWAS})} has begun. The goal of this type of studies is to screen the 
-\textit{pangenome} looking for associations between genetic variants, in order,
-for example, to study also deseases outocomes.
-In this particular historical period it is also impossible not to mention the
-viruses. In fact, by nature, during infections, viruses replicate a lot but
-often in a not perfect way, thus producing many inexact clones, referred as
-\textbf{viral haplotypes} which, taken together, form the \textbf{viral
-  pangenome}. The identification of all this haplotypes is crucial both for the
-effective study of the spread of the virus and for the production of effective
-drugs, in a content of high pharmacological resistance. \\
+\textit{pangenome} looking for associations between genetic variants, for
+example in order to study outocomes of diseases.
+In this particular historical period, it is impossible not to mention
+viruses. In fact, by nature, viruses replicate a lot but
+often in a not perfect way, during infections. Thus produces many inexact
+clones, referred as 
+\textbf{viral haplotypes}, which, taken together, form the \textbf{viral
+  pangenome}. The identification of all these haplotypes is crucial both to the
+study of the spread of viruses and to the production of efficient
+drugs, in a context of high pharmacological resistance. \\
 One of the most important data structure, developed in order to handle the study
 of haplotypes sequences, is the \textbf{positional Burrows-Wheeler transform
   (\textit{PBWT})}, proposed by Durbin in 2014 \cite{pbwt_durbin}. Using this
@@ -346,17 +349,17 @@ Another interesting paper is the one by Wlliams and Mumey, published in 2020,
 who also studied \textit{maximal perfect haplotype blocks}, but with the
 addition of \textit{missing data}, handled with the help of wildcards, using the
 \textit{PBWT}. \\ 
-A very intriguing tool, talking about \textit{GWAS}, to be cited is
+A very intriguing tool, talking about \textit{GWAS}, is
 \textbf{IMPUTE5}, proposed by Rubinacci et al. in 2020. The main purpose of this
 software is to make genotype imputation in order to predict unobserved genotypes
 from a panel with milions of haplotypes. Due to the size of the panel, the use
-of \textit{PBWT} proved inevitable, further demonstrating the importance of this
-data structure.\\
+of \textit{PBWT} has been proved to be inevitable, further demonstrating the
+importance of this data structure.\\
 Durbin himself, the author of the \textit{PBWT}, with Shchur et al. in 2019,
-proposed a use of his data structure in \textit{GWAS} context. Infact they
+proposed a use of his data structure in \textit{GWAS} context. In fact, they
 studied the associations between genetic variants in order to identify signals
-of natural selection to build the so-called \textbf{ancestral recombination
-  graph}, that contains complete informations about samples history.\\
+of natural selection and to build the so-called \textbf{ancestral recombination
+  graph}, that contains complete information about history of samples.\\
 For the sake of completeness, an example where \textit{PBWT} is not used is
 \textbf{Ranbow}, proposed by Moeinzadeh et al. in 2020. The 
 aim of this project was the haplotype reconstruction of polyploid genome from
@@ -369,7 +372,7 @@ for the panel, how to use \textit{thresholds}/\textit{LCE queries} and how to
 get the same behaviour of the $\varphi$ function, in order to obtain the
 \textbf{RLPBWT}, combining the ideas related to the \textit{RLBWT} with those of
 the \textit{PBWT}, eventually, as for example for the $\varphi$ function,
-developing a simple new data structure.\\  
+developing a simple new data structure.
 % More formally, given a panel $X$ (where every row is 
 % defined by $X_j$) and a pattern $P$, $|P|=X_{width}=n$, we define \textit{MS} as
 % an array of length $n$, such that, for each position $1\leq i\leq n$,
@@ -388,53 +391,57 @@ developing a simple new data structure.\\
 Obviously, there are some limitations, as in Durbin's \textit{PBWT}, such as
 studying only biallelic panels and ignoring the management of missing data,
 which are very frequent in real cases. \\
-Especially during my master’s degree I have deepened both the most theoretical
-issues related to algorithms, especially in the field of bioinformatics, that
-the most modeling and inference issues, related to the field of computational
-systems biology, so it is my interest to continue my studies with the PhD
+During my master’s degree, I have deepened some theoretical
+issues related to algorithms, especially in bioinformatics, and
+some modeling and inference topics, related to computational 
+systems biology. So, it is my interest to continue my studies with the PhD
 in order to be able to deepen the computer science potential in the biological
-context. Summarizing, some of the research goals of my \textit{Phd} are:
+context.\\
+Summarizing, the most important research goals of my PhD are:
 \begin{enumerate}[leftmargin=.2in]
   \setlength\itemsep{-0.2em}
-  \item \textbf{Multiallelic data}. Thanks to the increasing growth in the
-  production of genotype data the number of multiallelic sites is expected to
-  grow, as the number of samples increases, even in the human
-  genome, although now, for example, there is only a 2\% presence of triallelic
-  sites. Moreover, not only could such sites be more than expected but they are
-  usually not considered by most tools. A first step in this direction was made
-  by Naseri with the already cited \textit{m-PBWT}. From the point of view of
-  spatial complexity, especially about stored arrays for the \textit{FM-index},
-  a run-length encoded version of the same could 
-  allow the management of increasingly large data for the imputation phases. 
-  In this context the aim is to implement a new 
-  version of the \textit{RLPBWT} that can handle multiallelic data, adapting the
-  current use of bitvectors to handle efficiently the \textit{LF-mapping} also
-  with more than two alleles. 
+  \item \textbf{Multiallelic data}. Thanks to the growth in the
+  production of genotypic data, the number of multiallelic sites is expected to
+  grow, as well as the number of sample (even if there is only a 2\% presence of
+  triallelic sites, actually known in the human genome). Moreover, not only
+  such sites could be more than expected but they are 
+  usually not considered by the majority of tools. A first step in this
+  direction was made 
+  by Naseri with the already cited \textit{m-PBWT}.
+  Talking about spatial complexity, run-length encoded version of the stored
+  arrays for the \textit{FM-index} could allow the management of increasingly
+  large data for the imputation phases.   
+  In this context, the aim is to implement a new 
+  version of the \textit{RLPBWT} that can manage multiallelic data, adapting the
+  current use of bitvectors to handle efficiently the \textit{LF-mapping},
+  with more than two alleles, too. 
   \item \textbf{Missing data}. A second extension, that would be more
   complicated to 
-  handle, is a \textit{RLPBWT} version that admits the presence of
+  design, is a \textit{RLPBWT} version that admits the presence of
   missing data. Most algorithms and data structures mentioned above assume that
   they work on exact data. In reality, real data can contain errors or even
-  gaps, both mainly due to sequencing machines that are not yet perfect,
-  although they now have very high correctness rates. Unfortunately, although 
-  most of them are corrected as a preliminary step (mostly by heuristic
-  methods), this is still an open problem. The development of a data structure
-  based on the \textit{PBWT}, and as a next step on the \textit{RLPBWT}, that
-  can manage missing data would allow the 
-  creation of more and more complete tools for the study of haplotypes and for
-  the various \textit{GWAS}. 
-  Handling missing data is known to be \textit{hard} so I should
-  probably deal with parametric algorithms or approximate algorithms, based on
+  gaps, both mainly due to the imperfections of sequencing technologies,
+  although now they have really high correctness rates. Unfortunately, this is
+  still an open problem, even if most of the errors are corrected in a
+  preliminary step (mostly by heuristic methods).
+  Handling missing data is known to be \textit{hard} so, I should
+  probably deal with parametric or approximate algorithms, based on
   researches already developed in \textit{BIAS}.
-  \item \textbf{Genotype imputation}. As introduced, having developed a
-  wide-range interest in computer science potential in biological studies, I do
+  \item \textbf{Genotype imputation \& other goals}. As introduced, I have
+  developed a wide-range interest in the application of computer science to
+  biology. So, I do 
   not intend to forget the actual use of the data structures that I will study
-  and develop during my PhD. Including the management of missing data and
-  multiallelic data can further improve the state of the art of genotype
-  imputation, allowing even more precise inference of unobserved genotypes, and,
-  in more detail, of \textit{GWAS}. All this must be read in the perspective of
-  a continuous increase of the available data, moreover not not only regarding
-  the human sequencing.  
+  and develop during my PhD. The management of missing and
+  multiallelic data can further improve the state of the art of \textit{GWAS}
+  and of genotype imputation, allowing even more precise inference of unobserved
+  genotypes. All this must be read in the perspective of 
+  a continuous rise of available data, not only regarding the human
+  sequencing. \\
+  I would also  point out my interest in deepening the issues related to
+  pattern matching, indexing structures and pangenome graph. During
+  my PhD, it’s my intention to focus on all the BIAS laboratory's topics of
+  interest, from the point of view of bioinformatics and experimental 
+  algorithmics. 
 \end{enumerate}
 From a more technical point of view I mainly focused on the use of the
 \textbf{C++ programming language}, during both my bachelor and master

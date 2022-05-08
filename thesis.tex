@@ -62,25 +62,25 @@
 \usetikzlibrary{arrows,shapes,backgrounds,petri} 
 \usetikzlibrary{automata,positioning}
 \usetikzlibrary{matrix}
-%\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+% \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 
 \fancyhead[LO,RE]{\slshape \leftmark}
-%\fancyhead[CO,CE]{\slshape\rightmark}
+% \fancyhead[CO,CE]{\slshape\rightmark}
 \fancyhead[LE,RO]{\slshape\rightmark}
 \fancyfoot[C]{\thepage}
 % \fancyhf{}
 % \fancyhead[LO,RE]{\slshape \leftmark}
-% %\fancyhead[CO,CE]{\slshape\rightmark}
+% % \fancyhead[CO,CE]{\slshape\rightmark}
 % \fancyhead[LE,RO]{\slshape\thepage}
 % \renewcommand{\footrulewidth}{0pt}
-%\fancyfoot[C]{\thepage}
+% \fancyfoot[C]{\thepage}
 % \title{Relazione}
 % \fancypagestyle{plain}{% \fancyhf{} % clear all header and footer fields
-%   \fancyhead[RO,RE]{\thepage}%RO=right odd, RE=right even
-%   \renewcommand{\headrulewidth}{0pt}
-%\renewcommand{\footrulewidth}{0.3pt}}
+% \fancyhead[RO,RE]{\thepage}%RO=right odd, RE=right even
+% \renewcommand{\headrulewidth}{0pt}
+% \renewcommand{\footrulewidth}{0.3pt}}
 
 
 \pgfplotsset{compat=1.13}
@@ -113,7 +113,7 @@
     {\LARGE{
         \setstretch{1.2}
         \textbf{Algoritmi per la trasformata di}}}
-     \vspace{1mm}
+    \vspace{1mm}
     {\LARGE{
         \setstretch{1.2}
         \textbf{Burrows-Wheeler Posizionale con}}}
@@ -236,10 +236,15 @@
 \section{Analisi spaziale}
 \chapter{Conclusioni}
 \section{Sviluppi futuri}
+\subsection{K-mems}
+\subsection{RLPBWT multi-allelica}
+\subsection{RLPBWT con dati mancanti}
 %% BIBLIOGRAFIA
 \addcontentsline{toc}{chapter}{Bibliografia e sitografia}
 \printbibliography[title={Bibliografia e sitografia}]
-
+\appendix
+\chapter{Pseudocodici}
+\chapter{Tabelle}
 \begin{comment}
   \newpage
   \thispagestyle{empty}
