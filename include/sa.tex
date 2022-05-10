@@ -1,0 +1,113 @@
+\section{Suffix Array}
+Nel 1976 Manber e Myers proposero una struttura dati per la memorizzazione di
+stringhe e la loro interrogazione, efficiente sia per
+l'aspetto temporale che spaziale, chiamata \textbf{Suffix Array (\textit{SA})}
+\cite{sa}.
+\begin{definizione}
+  Dato un testo $T$, \$-terminato, tale che $|T|=n$, si definisce \textbf{suffix
+    array} di $T$, denotato con $SA_T$, un array lungo $n$ di interi, tale che
+  $SA_T[i]=j$ sse il suffisso di ordine $j$, ovvero $T[SA_T[i]:n-1]$, è
+  l'$i$-esimo suffisso nell’ordinamento lessicografico dei suffissi di $T$. In
+  altri termini quindi il \textbf{suffix array} altro non è che una permutazione
+  dell'intervallo di numeri interi $[0,n-1]$.
+\end{definizione}
+Grazie a questa definizione si può quindi dire che, presi $i,i'\in \mathbb{N}$
+tali che $0\leq i < i' < n$ allora vale che, indicando con $<$ anche
+l'ordinamento lessicografico:
+\[T[SA_T[i]:n-1] < T[SA_T[i']:n-1]\]
+Si vede quindi esempio chiarificatore.
+\begin{esempio}
+  Si prenda la stringa:
+  \[s=\mbox{mississippi\$},\,\,|s|=12\]
+  Si producono quindi i seguenti suffissi e il loro riordinamento:
+  \begin{table}[H]
+    \footnotesize
+    \centering
+    \begin{tabular}{c|c}
+      \textbf{Indice del suffisso} & \textbf{Suffisso}\\
+      \hline
+      0 & mississippi\$\\
+      1 & ississippi\$\\
+      2 & ssissippi\$\\
+      3 & sissippi\$\\
+      4 & issippi\$\\
+      5 & ssippi\$\\
+      6 & sippi\$\\
+      7 & ippi\$\\
+      8 & ppi\$\\
+      9 & pi\$\\
+      10 & i\$\\
+      11 & \$\\
+    \end{tabular}
+    \quad
+    \begin{tabular}{c|c} 
+      \textbf{Indice del suffisso} & \textbf{Suffisso}\\ 
+      \hline
+      11 & \$\\
+      10 & i\$\\
+      7 & ippi\$\\
+      4 & issippi\$\\
+      1 & ississippi\$\\
+      0 & mississippi\$\\
+      9 & pi\$\\
+      8 & ppi\$\\
+      6 & sippi\$\\
+      3 & sissippi\$\\
+      5 & ssippi\$\\
+      2 & ssissippi\$\\
+    \end{tabular}
+  \end{table}
+  Ottenendo quindi che:
+  \[SA_T=[11,10,7,4,1,0,9,8,6,3,5,2]\]
+\end{esempio}
+L'uso del \textit{suffix array} è spesso accompagnato dal \textbf{Longest Common
+  Prefix}.
+\begin{definizione}
+  Si definisce il \textbf{Longest Common Prefix (\emph{LCP})} di un testo $T$,
+  tale che $|T|=n$,
+  denotato con $LCP_T$, come un array lungo $n+1$, contenente la
+  lunghezza del prefisso comune tra ogni coppia di suffissi consecutivi
+  nell'ordinamento lessicografico dei suffissi, quindi in $SA_T$. Più formalmente
+  $LCP_T$ è un array tale che, avendo $0\leq i\leq n$ e indicando con $lcp(x,y)$ il
+  più lungo prefisso comune tra le stringhe $x$ e $y$:
+  \[LCP_T[i]=
+    \begin{cases}
+      -1&\mbox{ se } i=0 \lor i=n\\
+      lcp(T[SA_T[i-1]: n],T[SA_T [i]: n])&\mbox{ altrimenti}
+    \end{cases}
+  \]
+\end{definizione}
+\begin{esempio}
+  Riprendendo l'esempio precedente si avrebbe quindi:
+  \begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{c|c|c|c} 
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{LCP_T}$ & \textbf{Suffisso}\\ 
+      \hline
+      0 & 11 & -1 & \$\\
+      1 & 10 & 0 & i\$\\
+      2 & 7 & 1 & ippi\$\\
+      3 & 4 & 1 & issippi\$\\
+      4 & 1 & 4 & ississippi\$\\
+      5 & 0 & 0 & mississippi\$\\
+      6 & 9 & 0 & pi\$\\
+      7 & 8 & 1 & ppi\$\\
+      8 & 6 & 0 & sippi\$\\
+      9 & 3 & 2 & sissippi\$\\
+      10 & 5 & 1 & ssippi\$\\
+      11 & 2 & 3 & ssissippi\$\\
+      12 & - & -1 & -
+    \end{tabular}
+  \end{table}
+\end{esempio}
+Senza entrare in ulteriori dettagli relativi all'algoritmo di pattern matching
+tramite \textit{SA} e \textit{LCP}, in quanto non centrali per il resto della
+trattazione, risulta comunque interessante riportare le complessità
+temporali. Si ha quindi che per l'algoritmo di query su \textit{SA} senza l'uso
+dell'\textit{LCP} si ha, per un testo lungo $n$ e un pattern lungo $m$:
+\[\mathcal{O}(m\log n)\]
+Con l'uso dell'\textit{LCP} questo si riduce a:
+\[\mathcal{O}(m+\log n)\]
+Per ulteriori approfondimenti si rimanda al testo di Gusfield
+\cite{gusfield_1997}. 

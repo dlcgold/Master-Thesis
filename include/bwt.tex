@@ -1,0 +1,78 @@
+\section{Trasformata di Burrows-Wheeler}
+Introdotta nel 1994 da Burrows e Wheeler con lo scopo di comprimere testi, la
+\textbf{Burrows-Wheeler Transform} \cite{bwt} è divenuta ormai uno standard nel
+campo dell'\textit{algoritmica su stringhe} e della \textit{bioinformatica},
+grazie ai suoi molteplici vantaggi sia dal punto di vista della complessità
+temporale che da quello della complessità spaziale.\\
+Nel dettaglio la \textit{BWT} è una \textit{trasformata reversibile} che
+permette una \textit{compressione lossless}, quindi senza perdita
+d'informazione. Tale trasformazione vien costruita a partire dal riordinamento
+dei caratteri del testo in input, fattore che ha 
+portato all'evidenza per cui caratteri uguali tendono ad essere posti
+consecutivamente all'interno della stringa prodotta dalla trasformata.
+\begin{definizione}
+  Dato un testo $T$ \$-terminato, tale che $|T|=n$, si definisce la
+  \textbf{Burrows-Wheeler Transform (\textit{BWT})} di $T$, denotata con
+  $BWT_T$, come un array di caratteri lungo $n$ dove l'elemento $i$-esimo è il
+  carattere che precede l'$i$-esimo suffisso $T$ nel riordinamento
+  lessicografico. Più formalmente si ha che, con $0\leq i<n$:
+  \[BWT_T[i]=
+    \begin{cases}
+      T[SA_T[i]-1]&\mbox{ se } SA_T[i]\neq 1\\
+      \$&\mbox{ altrimenti}
+    \end{cases}
+  \]
+\end{definizione}
+In termini più pratici, la \textit{BWT} di un testo è calcolabile riordinando
+lessicograficamente tutte le possibili \textbf{rotazioni} del testo $T$.
+\begin{definizione}
+  Si definisce \textbf{rotazione $\mathbf{i}$-esima}, denotata con $rot_T(i)$ di
+  un testo $T$, tale che $|T|=n$, come la stringa ottenuta dalla concatenazione
+  del suffisso $i$-esimo con la restante porzione del testo. Più formalmente si
+  ha che, avendo $0\leq i<n$:
+  \[rot_T(i)=T[i:n-1]\cdot T[0:i-1]\]
+\end{definizione}
+Data questa definizione quindi la \textit{BWT} del testo $T$ risulta essere
+l'ultima colonna della matrice che si ottiene riordinando tutte le
+\textit{rotazioni} di $T$, che altro non sono che i suffissi già riordinati per
+il calcolo del \textit{SA} a cui viene concatenata la parte restante del
+testo.\\
+Un altro array spesso utilizzato insieme alla \textit{BWT} è il cosiddetto
+\textbf{array $\mathbf{F}$}, lungo $|T|$, che altro non è che l'array formato
+dalla prima colonna della matrice delle rotazioni. In termini ancora più
+semplicistici l'array $F$ è banalmente l'array formato dal riordinamento
+lessicografico dei caratteri del testo $T$.\\
+Per chiarezza si vede un esempio. 
+\begin{esempio}
+   Si prenda la stringa:
+  \[s=\mbox{mississippi\$},\,\,|s|=12\]
+  Si produce la seguente matrice delle rotazioni riordinate:
+  \begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{c|c|c|c|c} 
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & \textbf{Rotazione}
+      & $\mathbf{BWT_T}$\\ 
+      \hline
+      0 & 11 & \$ & \$mississippi & i\\
+      1 & 10 & i & i\$mississipp & p\\
+      2 & 7 & i & ippi\$mississ & s\\
+      3 & 4 & i & issippi\$miss & s\\
+      4 & 1 & i & ississippi\$m & m\\
+      5 & 0 & m & mississippi\$ & \$\\
+      6 & 9 & p & pi\$mississip & p\\
+      7 & 8 & p & ppi\$mississi & i\\
+      8 & 6 & s & sippi\$missis & s\\
+      9 & 3 & s & sissippi\$mis & s\\
+      10 & 5 & s & ssippi\$missi & i\\
+      11 & 2 & s & ssissippi\$mi & i\\
+    \end{tabular}
+  \end{table}
+  Avendo quindi:
+  \[F_T=\mbox{\$iiiimppssss}\]
+  \[BWT_T=\mbox{ipssm\$pissii}\]
+\end{esempio}
+\subsection{Trasformata di Burrows-Wheeler run-length}
+\subsection{Matching Statistics}
+\subsection{R-index}
+\subsection{PHONI}

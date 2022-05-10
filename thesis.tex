@@ -15,6 +15,7 @@
 \usepackage{rotating}
 \usepackage{subcaption}
 \usepackage{verbatim}
+\usepackage{stackengine}
 \usepackage[safe,extra]{tipa}
 % \usepackage{showkeys}
 \usepackage{multirow}
@@ -34,7 +35,7 @@
 \usepackage{pdfpages}
 \usepackage{pgfplots}
 \usepackage{algorithm}
-\usepackage[backend=biber, backref=true, sorting=none]{biblatex}
+%\usepackage[backend=biber, backref=true, sorting=none]{biblatex}
 \usepackage{fvextra}
 \usepackage{csquotes}
 % \usepackage{natbib}
@@ -49,7 +50,6 @@
 \usepackage{geometry}
 \usepackage{blindtext}
 \usepackage{titleps}
-\addbibresource{thesis.bib}
 \usepackage{tikz}\usetikzlibrary{er}\tikzset{multi  attribute /.style={attribute
     ,double  distance =1.5pt}}\tikzset{derived  attribute /.style={attribute
     ,dashed}}\tikzset{total /.style={double  distance =1.5pt}}\tikzset{every
@@ -161,7 +161,7 @@
 \newtheorem{esercizio}{Esercizio}
 
 \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
-
+\renewcommand{\bibname}{Bibliografia e sitografia}
 \renewcommand{\chaptermark}[1]{%
   \markboth{\chaptername
     \ \thechapter.\ #1}{}}
@@ -173,6 +173,7 @@
   \stepcounter{chapter*}
   \chapter*{\arabic{chapter}\hspace{1em}{#1}}
 }
+\newcommand\xrowht[2][0]{\addstackgap[.5\dimexpr#2\relax]{\vphantom{#1}}}
 % \pagenumbering{roman}
 
 \newpage
@@ -188,89 +189,95 @@
   \cleardoublepage
 }
 \chapter{Introduzione}
-\section{Motivazioni Biologiche}
-\section{Bitvector sparsi}
-\section{Straight-Line Program}
-\subsection{Random access}
-\subsection{Longest Common Extension}
-\section{Trasformata di Burrows-Wheeler}
-\subsection{Trasformata di Burrows-Wheeler run-length}
-\subsection{Matching Statistics}
-\subsection{R-index}
-\subsection{MONI}
-\subsection{PHONI}
-\section{Trasformata di Burrows-Wheeler posizionale}
-\subsection{Implementazione originale}
-\subsubsection{Gli algoritmi di Durbin}
-\subsubsection{Limiti spaziali}
-\subsection{Varianti della PBWT}
-\subsubsection{PBWT multi-allelica}
-\subsubsection{PBWT con struttura LEAP}
-\subsubsection{PBWT dinamica}
-\subsubsection{PBWT bidirezionale}
-\subsubsection{Recenti sviluppi}
+\chapter{Preliminari}
+In questo capitolo verranno specificate tutti i concetti fondamentali atti a
+comprendere i metodi usati in questa tesi che le motivazioni della stessa. In
+primis, verranno introdotte le \textit{motivazioni biologiche}, al fine di dare
+uno scopo pratico agli algoritmi e alle strutture dati introdotte, per procedere
+poi con un breve excursus dei fondamenti teorici presenti allo stato
+dell'arte.\\
+Dal punto di vista tecnico verranno quindi introdotti i \textit{bit vector} e
+gli \textit{straight-line programs}, fondamentali sia per la \textit{run-length
+  encoded Burrows-Wheeler Transform}, introdotta qui insieme alla versione
+classica della trasformata, che per la mia variante relativa alla
+\textit{Position Burrows-Wheeler Transform}, che verrà anch'essa trattata nel
+capitolo. 
+
+% sezione introduzione biologia
+\input{include/bio}
+
+% sezione bitvector
+\input{include/bitvector}
+
+% sezione slp
+\input{include/slp}
+
+% sezione suffix array
+\input{include/sa}
+
+% sezione BWT
+\input{include/bwt}
+
+% sezione PBWT
+\input{include/pbwt}
+
+
 \chapter{Metodo}
-\section{Introduzione agli strumenti usati}
-\subsection{SDSL}
-\subsection{BigRepair}
-\subsection{ShapedSlp}
-\subsubsection{Ricostruzione del panel}
-\section{Introduzione alle varianti della RLPBWT}
-\subsection{Perché un'implementazione run-length}
-\section{Mapping nella RLPBWT}
-\section{RLPBWT naive}
-\subsection{Algoritmo per match massimali}
-\section{RLPBWT con bitvectors}
-\subsection{Algoritmo per match massimali}
-\section{RLPBWT con pannello}
-\subsection{Algoritmo con matching statistics}
-\section{RLPBWT con SLP}
-\subsection{Algoritmo con matching statistics}
-\section{Funzione Phi}
-\subsection{Costruzione della struttura di supporto}
-\subsection{Estensione dei match}
+% sezione strumenti
+\input{include/strumenti}
+
+% sezione varianti RLPBWT
+\input{include/var_rlpbwt}
+
+% sezione mapping RLPBWT
+\input{include/map_rlpbwt}
+
+% sezione RLPBWT naive
+\input{include/naive_rlpbwt}
+
+% sezione RLPBWT bitvectors
+\input{include/bv_rlpbwt}
+
+% sezione match massimali di RLPBWT naive/bitvectors
+\input{include/naive_bv_matches}
+
+% sezione RLPBWT panel
+\input{include/panel_rlpbwt}
+
+% sezione RLPBWT slp
+\input{include/slp_rlpbwt}
+
+% sezione per struttura phi
+\input{include/phi}
+
+
 \chapter{Risultati}
-\section{Ambiente di benchmark}
-\subsection{Descrizione input}
-\section{Analisi temporale}
-\section{Analisi spaziale}
+% sezione benchmark
+\input{include/bench}
+
+% sezione complessità
+\input{include/compl}
+
+
 \chapter{Conclusioni}
-\section{Sviluppi futuri}
-\subsection{K-mems}
-\subsection{RLPBWT multi-allelica}
-\subsection{RLPBWT con dati mancanti}
+% sezione sviluppi
+\input{include/sviluppi}
+
 %% BIBLIOGRAFIA
+% \addcontentsline{toc}{chapter}{Bibliografia e sitografia}
+% \printbibliography[title={Bibliografia e sitografia}]
 \addcontentsline{toc}{chapter}{Bibliografia e sitografia}
-\printbibliography[title={Bibliografia e sitografia}]
+\bibliographystyle{unsrt}
+\bibliography{thesis}
+
 \appendix
 \chapter{Pseudocodici}
+\input{include/pseudo}
 \chapter{Tabelle}
-\begin{comment}
-  \newpage
-  \thispagestyle{empty}
-  \begin{flushleft}
-    \textit{}.%\\
-    \[\sim\cdot\sim\]
-    % \vspace{6mm}
-    \textit{}.%\\ 
-    \[\sim\cdot\sim\]
-    % \vspace{6mm}
-    \textit{}.\\
-    \vspace{2mm}
-    \textit{}.%\\
-    
-    \[\sim\cdot\sim\]
-    % \vspace{6mm}
-    \textit{}.\\
-    \vspace{2mm}
-    \textit{}.\\
-    \vspace{2mm}
-    \textit{}.
-    \[\sim\cdot\sim\]
-    % \vspace{6mm}
-    \textit{}.
-  \end{flushleft}
-\end{comment}
+\input{include/tabelle}
+
+% ringraziamenti
+\input{include/ringraziamenti}
 \end{document}
 
-% LocalWords:  divergence prefix
+% LocalWords:  divergence prefix primis

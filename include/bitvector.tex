@@ -1,0 +1,88 @@
+\section{Bit vector}
+\textbf{TUTTE LE TABELLE VANNO VERIFICATE!!!}\\
+Nell'ambito delle \textit{strutture dati succinte}, una delle strutture dati
+principali, ormai sviluppatasi in molteplici varianti, è quella denominata
+\textbf{bit vector}.
+\begin{definizione}
+  Si definisce un \textbf{bit vector} $B$ come un array di lunghezza $n$,
+  popolato da elementi binari. Formalmente si ha quindi:
+  \[B[i]=\{0,1\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
+  In alternativa si potrebbe avere come formalismo:
+  \[B[i]=\{\bot,\top\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
+\end{definizione}
+Nel corso degli ultimi anni si sono sviluppate diverse varianti dei \textit{bit
+  vector}, finalizzate ad offrire diversi costi di complessità spaziale e
+diversi tempi computazionali per le principali funzioni offerte.\\
+Il primo vantaggio di questa struttura dati, nelle varianti che si andranno poi
+a nominare, è quella di garantire \textit{random access} in tempo costante pur
+sfruttando varie tecniche per la memorizzazione efficiente della stessa in
+memoria. Lo spazio necessario per l'implementazione, presente in
+\textit{SDSL} \cite{sdsl}, delle principali varianti è visualizzabile in tabella
+\ref{tab:bvspace}. Il secondo vantaggio consiste nel fatto che i \textit{bit
+  vector} permettono l'implementazione efficiente di due funzioni:
+\begin{enumerate}
+  \item la \textbf{funzione rank}
+  \item la \textbf{funzione select}
+\end{enumerate}
+Tali funzioni, al costo di $\mathcal{O}(n)$ bit aggiuntivi, possono essere
+supportate in tempo costante. Questo è però un discorso prettamente teorico,
+infatti si vedrà come, nelle implementazioni in \textit{SDSL}, le complessità
+temporali delle due funzioni non siano mai entrambe costanti.
+\subsection{Funzione rank}
+La prima funzione che si approfondisce è la \textbf{funzione rank}. Tale
+funzione permette di calcolare il \textit{rango} di un dato elemento del
+bit vector $B$, $|B|=n$. In altri termini, data una certa posizione $i$ del
+\textit{bit vector}, la funzione restituisce il numero di 1 presenti fino a
+quella data posizione, escluda. Più formalmente si ha:
+\[rank_B(i)=\sum_{k=0}^{k<i}B[k],\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
+Come detto, da un punto di vista teorico, al costo di $\mathcal{O}(n)$ bit
+aggiuntivi in memoria tale funzione sarebbe supportata in tempo
+$\mathcal{O}(1)$. Questo però non risulta vero nelle principali
+implementazioni. La complessità temporale varia infatti a seconda
+dell'implementazione, anche in conseguenza al fatto che si ha una quantità
+diversa di bit aggiuntivi salvati in memoria.
+La tabella con le complessità temporali stimate della \textit{funzione rank},
+per le varianti di \textit{bit vector} implementate in \textit{SDSL}, è
+visualizzabile in tabella \ref{tab:rank}.
+
+\subsection{Funzione select}
+La seconda funzione fondamentale è la \textbf{funzione select}. Tale funzione
+permette, dato un valore intero $i$, di calcolare l'indice dell'$i$-esimo valore
+pari a 1 nel \textit{bit vector} $B$, tale che $|B|=n$. Più formalmente si ha
+che:
+\[select_B(i)=\min\{j < n\,|\,\,rank_B(j+1)=1\},\,\,\forall i \mbox{ t.c. }
+  0<i\leq rank_B(n)\]
+Anche in questo caso vale lo stesso discorso fatto per la \textit{funzione rank}
+in merito alla complessità temporale e ai bit aggiuntivi. La tabella con le
+complessità temporali stimate della \textit{funzione select}, 
+per le varianti di \textit{bit vector} implementate in \textit{SDSL}, è
+visualizzabile in tabella \ref{tab:rank}.\\
+Si può quindi vedere un semplice esempio esplicativo.
+\begin{esempio}
+  Ipotizziamo di avere il seguente bit vector $B$, di lunghezza $n=14$:
+  \begin{center}
+    \begin{tikzpicture} [nodes in empty cells,
+      nodes={minimum width=0.6cm, minimum height=0.6cm},
+      row sep=-\pgflinewidth, column sep=-\pgflinewidth]
+      border/.style={draw}
+      
+      \matrix(vector)[matrix of nodes,
+      row 1/.style={nodes={draw=none, minimum width=0.3cm}},
+      nodes={draw}]
+      {
+        \tiny{0} & \tiny{1} & \tiny{2} & \tiny{3} & \tiny{4} & \tiny{5}&\tiny{6}
+        & \tiny{7} & \tiny{8} & \tiny{9} & \tiny{10} & \tiny{11} & \tiny{12} &
+        \tiny{13}\\  
+        $\mathbf{1}$ & $0$ & $0$ & $\mathbf{1}$ & $0$ & $\mathbf{1}$ & $0$ &
+        $\mathbf{1}$ & $0$ & $\mathbf{1}$ & $0$ & $0$ & $\mathbf{1}$ & $0$\\ 
+      };
+    \end{tikzpicture}
+  \end{center}
+  Si ha che, per esempio:
+  \[\mathtt{rank}(6)=3\]
+  \[\mathtt{select}(5) =9\]
+\end{esempio}
+Da un punto di vista pratico si vedrà nel corso di questa tesi come l'uso di
+tali strutture, nel dettaglio l'uso dei \textit{bit vector plain} e dei
+\textit{bit vector sparsi}, sia fondamentale sia nella costruzione delle
+\textit{strutture run-length encoded} che nelle interrogazioni alle stesse.
