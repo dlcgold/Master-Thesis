@@ -6,13 +6,13 @@
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage[tickmarkheight=0.7ex]{todonotes}
-\newcommand{\gdv}[1]{\todo[backgroundcolor=blue]{\textbf{GDV} #1}}
+\newcommand{\gdv}[1]{\todo[backgroundcolor=green]{\textbf{GDV} #1}}
 \newcommand{\pb}[1]{\todo[backgroundcolor=red]{\textbf{PB} #1}}
-\newcommand{\dc}[1]{\todo[[backgroundcolor=yellow]{\textbf{DC} #1}}
+\newcommand{\dc}[1]{\todo[backgroundcolor=yellow]{\textbf{DC} #1}}
 \usepackage[style=numeric, sorting=none, doi=false, isbn=false, url=false,
 eprint=false,maxcitenames=2, mincitenames=1, maxbibnames=2, minbibnames=2,
 giveninits=true]{biblatex} 
-\addbibresource{abstract.bib}
+\addbibresource{main.bib}
 
 
 \usepackage{fancyhdr}
@@ -38,164 +38,222 @@ giveninits=true]{biblatex}
 \setlist{leftmargin = 2cm}
 \subsubsection*{Introduction}
 \textit{Computational pangenomics} is a new emerging research field in
-computational biology. This concept is based on the idea we need to move
+computational biology based on the idea that we need to move
 from the traditional view of a reference genome as a \textit{linear sequence} to
 the one where we consider the \textit{genetic variations} or \textit{variants},
-in a large collection of sequences of species. This new reference is called a
+in a large collection of individual genomes. This new reference is called a
 \emph{pangenome}.  
 Pangenomics is becoming increasingly essential in the
-field of biomedical and personalized medicine, mainly thanks to the
-\textbf{genome-wide association studies (\textit{GWAS})} since GWAS studies need
-to analyze a large collection of individual genomes.  Unfortunately, to complete
-these types of studies on a large amount of data, such data 
-must be indexed, queried and analyzed. Just to give some examples the
-\textit{homo sapiens reference genome (GRCh38.p14)}, 
-has a size of $\sim 3.1$\textit{Gb} and contains $\sim 59,265$ genes, as
-reported by NCBI. Biological studies done with the \textit{1000 Genome Project}
+field of biology and personalized medicine, mainly thanks to 
+\textbf{genome-wide association studies (\textit{GWAS})}, which need
+to analyze a large collection of individual genomes.  Moreover, 
+these studies also require such data  to be indexed, queried and analyzed. Just
+to give some examples, from a Computer Science point of view, the 
+\textit{homo sapiens reference genome (GRCh38.p14)} consists of $\sim 3.1$
+characters \textit{Gb} and contains $\sim 59,265$ genes, as 
+reported by NCBI. Biological studies based on the \textit{1000 Genome Project}
 have pointed out that there are over 88 
 million variants between those human genomes. Among these variants, 84.7 million
 are \textbf{Single Nucleotide Polymorphisms (\textit{SNPs})}, 3.6 million are
 \textbf{short insertions/deletions (\textit{indel})} and 60000 are
 \textbf{structural variants}, involving more than 50 nucleotides. Moreover, it
-is necessary to consider that the objective is the sequencing of at least 100
-thousand individuals, in the next few years. Therefore, it is clear that dealing
-with  all these data is challenging for the current state of art algorithms and
-data structures for sequence analysis. 
-An example is represented by a classical research topic in sequence comparison:
-\textit{pattern matching}, where the input is a long text (a
+is necessary to consider that the final goal is the sequencing of at least 100
+thousand individuals, in the next few years, also thanks to latest developments
+in sequencing technologies, (\textbf{Next Generation Sequencing
+  (\textit{NGS})} and \textbf{third-generation sequencing}).
+\dc{NGS etc citati nell'introduzione ma potrebbero essere superflui}
+Therefore, it is
+clear that dealing with this amount of data is challenging for the current
+state-of-the-art algorithms. The problem of \textit{pattern matching} is one of
+the most fundamental topics in 
+the field of algorithmics and bioinformatics, where the input is a long text (a
 genome) and a short pattern (a read) and the output is the list of all
-occurrences of the pattern as substrings of the text.  
-The problem of \textit{pattern matching} is one of the most
-fundamental topics in 
-the field of algorithmics and bioinformatics. We can notice that such problem
-has linear solution in time, if there is proper indexing of the text. The
-interest in such 
+occurrences of the pattern as a substring of the text.  
+We can notice that such problem
+has practical and efficient linear-time solutions, if there is a proper indexing
+of the text. The interest in such 
 problems is due to the need to align sequences or to search for specific
-patterns within the \textit{DNA}. 
+patterns within a database of \textit{DNA} sequences. 
 In this context, a large number of data structures and algorithms have been
-modeled. Among these, one of the most used is the \textbf{Burrows-Wheeler
-  transform (\textit{BWT})} together with indexing via \textit{FM-index}. Thanks
-to these algorithms and to the fact that it is returned an interval over the
-\textit{BWT}, the problem of pattern matching, over an indexed text, has become 
-linear on the length of the pattern. The
-use of such 
-algorithms is essential in speeding alignment algorithms such as
-\textbf{BLAST}, based on the \textit{seed-and-extend paradigm}, where short
-strings, the so-called \textit{seed}, are chosen to be the starting point of
+designed. Among these, one of the most used is the \textbf{Burrows-Wheeler
+  transform (\textit{BWT})} on which the \textit{FM-index} is based. 
+%Thanks
+%to these algorithms and to the fact that it is returned an interval over the
+%\textit{BWT}, the problem of pattern matching, over an indexed text, has become 
+%linear on the length of the pattern. 
+The use of such 
+algorithms is essential in speeding up alignment algorithms such as
+\textbf{BLAST}, one of the most widely used aligners and implementation of one
+of the most cited theoretical studies in the field of bioinformatics.
+% \gdv{spiegare la rilevanza di blast} 
+%\dc{BLAST ha moltissime citazioni ed è uno dei top 4 aligner}. 
+This aligner based on the \textit{seed-and-extend paradigm}, where pattern
+matching occurrences, the so-called \textit{seed}, are chosen to be the starting
+point of 
 the alignment. Then, from the seed, the algorithm proceeds to extend the match
 to compute the alignment, increasing the efficiency of the
-algorithm. The key point is the ability to compress large texts and query the
-compressed texts themselves.\\  
-Furthermore, in recent years, as introduced, there has been a change of interest
+algorithm compared, for example, to those based on dynamic programming.
+%\dc{confronto con DP etc}
+The key point, talking about \textit{BWT}, is the ability to compress large
+texts and query the compressed texts themselves, allowing alignment even 
+in very large databases such as those used by \textit{BLAST}.\\
+%\dc{Essenziale compressione dei db su cui lavora blast}.\\  
+In recent years, there has been an important development
 in the field of bioinformatics. Now the 
-researchers are deepening the topic of the \textbf{pangenome}, which
+researchers are focusing on the study of \textbf{pangenomes}, which
 term was introduced
 % by Tettelin
 in 2005 for dealing with the comparison of genes in
 bacterial species. Briefly, the \textit{pangenome} is a compact 
-representation of multiple genomes, encoding the variations in a multitude of
-samples from the same species. In fact, the need to take into 
-account the high variability in population genomes as well as the specificity of
-an individual genome in a personalized approach to medicine is rapidly pushing
-the abandonment of the traditional paradigm of using a single reference genome
-% \cite{pangenome}
-\cite{pancon}. \\
+representation of multiple genomes, encoding the variations of a multitude of
+individual genomes from the same species. From a computational point of view,
+\textit{pangenome} is often represented as a \textit{pangenome graph} but also
+as a \textit{collection of haplotypes} \cite{pancon}, for which space complexity
+can be optimised thanks to \textit{succinct data structures}. By
+\textit{pangenome}, it has been possible to take into account the high
+variability in population genomes, in 
+addition to the specificity of single genome, allowing even more the use of
+computational techniques for a \textit{personalized approach to medicine},
+approach that will become increasingly important even in near future.\\ 
+%In fact, the need to take into 
+%account the high variability in population genomes as well as the specificity of
+%an individual genome in a personalized approach to medicine is rapidly pushing
+%towards leaving the traditional paradigm based on a single reference genome
+%\dc{paragrafo confuso aggiungere miglioramenti tramite ds succinte e
+%collegamento poi con PBWT} 
 The main focus of this proposal is improving the current state of the art
-of pattern matching algorithms and data structures to manage biological
-sequences, with a focus on spatial 
-complexity. In fact, the design of data structures to handle large
-collections of data, filling the gap between the genomic data production and the
-current computational state of the art, will have an impact on the ability of
-molecular biologists to analyze the current amount of data, represented by
-pangenome graphs. 
-% \pb{the main focus of this project proposal is...}
-% \dc{Corretto}
-% \pb{IO menzionerei il tempo di calcolo del pattern matching del pattern ad un
-% testo che è lineare nel pattern se vi è una adeguata rappresentazione o
-% indicizzazione del testo}
-% \dc{Aggiunto}
-% \pb{il tempo che si vuole avere per ricercare tutte le occorrenze del pattern
-% con la BWT è lineare nel pattern anche se il numero di occorrenze potrebbe
-% essere più alto perchè si restituisce un intervallo...in altre parole tieni
-% presente che dovresti dare motivazioni all'uso dell'FM-index, tenere compresso
-% il testo e nel contempo avere tutte le occorrenze come intervallo di
-% BWT... dire qualcosa tipo che la dimensione dei dati richieste tenere il dato
-% in forma compressa e quindi poter fare le query direttamente sul dato
-% compresso...puoi anche dire che lo sviluppo e il disegno di strutture succinte
-% per trattare grandi collezioni di dati e la loro implementazione e
-% applicazione a sequenze reali (esempio aplotipi) è uno dei temi focus del tuo
-% progetto...}
-% \dc{Aggiunto in modo sintetico}
-% \pb{tenuto conto che il focus è filling  the current gap between the genomic
-% data production and the ability of computer scintests to manage such data by
-% developing new  data structure and algorithms that have to deal with these
-% data. This improvement will have an impact on the ability of molecolar
-% biologists to analyze the current amount of data represented by pangenome
-% graphs as I will discuss in the specific goals of my project...}
-% \dc{Aggiunto}
-\subsubsection*{Preliminaries}
-Thanks to the last developments in sequencing technologies, with \textbf{Next
-  Generation Sequencing (\textit{NGS})} and \textbf{third-generation
-  sequencing}, which had led both to reduce the costs of single sequencing and
-to produce sequences of ever-higher quality in less and less time, the
-researchers were able to theorize the \textbf{pangenome graph}. Furthermore, the
-new amount of sequences has led to new algorithms for \textit{pattern matching}
-for collections of sequences. In 2021, Rossi et al. proposed \textit{MONI} as a
-data structure to handle a \textbf{run-length encoded version of BWT
-  (\textit{RLBWT})}, with the ultimate intention of indexing and using multiple
-genomes as a reference \cite{moni}. With this type of encoding, it is possible
-to further improve the compression of the text, having that consecutive
-identical characters, the so-called \textit{runs}, are compactly stored, making
-it possible to study pangenomic sequences. According to Rossi et al.,
-\textit{BWA-MEM}, one of the most used read aligners, uses between 1.1 and 3.8
-times more memory than \textit{MONI}. Together with this data structure, the
-authors used the concept of \textbf{matching statistics (\textit{MS})}
-to efficiently compute the matches between a pattern and a text. A recent
-improvement has been made through the implementation of \textit{PHONI}
-\cite{phoni}, where the \textbf{longest-common-extension (\textit{LCE})
-  queries}, achieving the same results as \textit{MONI} with only a single sweep
-over \textit{MS} array instead of two as in \textit{MONI} (details in the next
-section). 
-On the other side, several computational problems arising from computational
-biology have led to the development and implementation of algorithms and data
-structures for analyzing specific sequence data such as \textit{haplotypes} and
-\textit{genotypes} in the \textbf{genotyping variants problem}. Briefly, we
-could define \textit{haplotypes} as a combination of allelic variants, each one
-inherited from a parent. Instead, the \textit{genotype} is combined information
-of the haplotypes. For example, humans have two haplotypes, being diploid, and
-the genotype is their combined information. So, since 2005, publication of the
-\textbf{GWAS} has begun. The goal of this type of studies is to screen the
-\textit{pangenome} looking for associations between genetic variants, for
-example to study the outcomes of diseases.  In this particular historical
-period, it is impossible not to mention viruses. In fact, by nature, viruses
-replicate a lot but often in a not perfect way, during infections. This produces
-many inexact clones, referred as \textbf{viral haplotypes}, which, taken
-together, form the \textbf{viral pangenome}. The identification of all these
-haplotypes is crucial both to the study of the spread of viruses and to the
-production of efficient drugs, in a context of high pharmacological resistance.
-One of the most important data structures, developed to handle the
-study of haplotypes sequences, is the \textbf{positional Burrows-Wheeler
-  transform (\textit{PBWT})}, proposed by Durbin in 2014
-\cite{pbwt_durbin}. \textit{PBWT} 
-aims to represent efficiently an haplotypes panel, storing them in a queryable
-compressed way (details will be described later). According to Durbin, the used
-memory by \textit{PBWT} is nearly six times smaller than the raw data. These
-spatial results are necessary to process real information. 
-% \pb{qua dovresti essere più specifico sull'obiettivo di ridurre la memoria
-  % per tenere gli aplotipi e fare analisi come l'estrazione di pattern
-  % comuni...non hai menzionato le questioni della memoria...la compressione
-  % serve a quello}
-%\dc{I dettagli sono stati messi nello stato dell'arte}
-Using this particular data structure, it is
-possible to study only biallelic panel, over an alphabet $\Sigma\in\{0,1\}$, for
-example, to extract common patterns in a set of haplotypes. Thanks to
-the compressed representation of the 
-data, the use of the \textit{PBWT} is found in many 
-software for the study of haplotypes and in various genotype imputation methods
-that infer unobserved genotypes in a sample of individuals \cite{impute5}.
-%\pb{idem qua ...se citi anche il risparmio di memoria in sintesi può essere
-%utile}
-%\dc{Aggiunto il fattore di riduzione indicato da Durbin nel paper}
+of pattern matching algorithms and data structures to represent and query
+biological sequences, with a focus on space 
+complexity. In fact, the design of data structures and algorithms to handle
+large collections of data will fill the current gap that exists between the
+exponential growth of genomic data and the available state of the art algorithms
+to manage  
+such data. These research field will have an impact on the ability of
+molecular biologists to analyze the current amount of data to extract important
+genomic information from pangenome graphs. 
+%\pb{the main focus of this project proposal is...}
+%\pb{IO menzionerei il tempo di calcolo del pattern matching del pattern ad un
+%testo che è lineare nel pattern se vi è una adeguata rappresentazione o
+%indicizzazione del testo}
+%\pb{il tempo che si vuole avere per ricercare tutte le occorrenze del pattern
+%con la BWT è lineare nel pattern anche se il numero di occorrenze potrebbe
+%essere più alto perchè si restituisce un intervallo...in altre parole tieni
+%presente che dovresti dare motivazioni all'uso dell'FM-index, tenere compresso
+%il testo e nel contempo avere tutte le occorrenze come intervallo di
+%BWT... dire qualcosa tipo che la dimensione dei dati richieste tenere il dato
+%in forma compressa e quindi poter fare le query direttamente sul dato
+%compresso...puoi anche dire che lo sviluppo e il disegno di strutture succinte
+%per trattare grandi collezioni di dati e la loro implementazione %applicazione
+%a sequenze reali (esempio aplotipi) è uno dei temi focus del tuo progetto...} 
+%\pb{tenuto conto che il focus è filling  the current gap between the genomic
+%data production and the ability of computer scintests to manage such data by
+%developing new  data structure and algorithms that have to deal with these
+%data. This improvement will have an impact on the ability of molecolar
+%biologists to analyze the current amount of data represented by pangenome
+%graphs as I will discuss in the specific goals of my project...}
+%\subsubsection*{Preliminaries}
+%\dc{Spostare su definizioni di MS, LCE, MEM,; etc...}
+%\dc{Spiegare meglio pannello di aplotipi come un pangenoma con tutti genomi di
+%stessa lunghezza} 
+%\dc{Per risparmiare spazio non so se l'introduzione nei preliminari della RLBWT
+%  com'è ora poss andare bene} 
+% The latest developments in sequencing technologies, with \textbf{Next
+%   Generation Sequencing (\textit{NGS})} and \textbf{third-generation
+%   sequencing}, have greatly reduced the cost of sequencing data and
+% improved the quality of the data produced, the
+% researchers were able to theorize the \textbf{pangenome graph}. Furthermore, the
+% new amount of sequences has led to new algorithms for \textit{pattern matching}
+% for collections of sequences. 
+% \gdv{Questo paragrafo mi sembra una ripetizione di quanto detto nell'introduzione.
+% Direi di toglierlo}
+% A simple but effective strategy to compress texts is based on encoding a
+% \textbf{run} of consecutive identical characters as the pair (characters, length
+% of the run). For example, the string \texttt{AAAAAA} is encoded as (\texttt{A},
+% 6). 
+% Clearly, such an encoding achieves a better compression ratio the more
+% consecutive character we can find. 
+% This fact is coupled with the use of BWT, which is designed to obtain long run
+% on repetitive texts, such as a pangenome, to obtain the \textbf{run-length
+%   encoded BWT (\textit{RLBWT})}. 
+% In fact, some recent papers --- \textit{MONI}~\cite{moni} and
+% \textit{PHONI}~\cite{phoni} --- present two practical indexing tools that are
+% tailored for pangenomes. 
+%%In 2021, Rossi et al. proposed  as a
+%data structure to handle a \textbf{run-length encoded version of BWT
+%(\textit{RLBWT})},
+%with the ultimate intention of indexing and using multiple
+%genomes as a reference \cite{moni}, by run-length compression. 
+%With this type of encoding, it is possible
+%to further improve the compression of the text, having that consecutive
+%identical characters, the so-called \textbf{runs}, are compactly stored, making
+%it possible to study pangenomic sequences. 
+%A recent
+%improvement has been made through the implementation of \textit{PHONI}
+%\cite{phoni}. 
+%\gdv{Si riesce a dare un indizio del legame fra MEM, MS, LCE?}
+%According to Rossi et al.,
+%\textit{BWA-MEM}, one of the most used read aligners, uses between 1.1 and 3.8
+%times more memory than \textit{MONI}. 
+%Together with this data structure, the
+%authors used the concept of \textbf{matching statistics (\textit{MS})}
+%to efficiently compute the matches between a pattern and a text. A recent
+%improvement has been made through the implementation of \textit{PHONI}
+%\cite{phoni}, where the \textbf{longest-common-extension (\textit{LCE})
+%  queries}, achieving the same results as \textit{MONI} with only a single sweep
+%over \textit{MS} array instead of two as in \textit{MONI} (details in the next
+%section). 
+% On the other hand, several computational problems arising from computational
+% biology have led to the development and implementation of algorithms and data
+% structures for analyzing specific sequence data such as \textit{haplotypes} and
+% \textit{genotypes} in the \textbf{genotyping variants problem}.
+% Briefly, we
+% could define \textit{haplotypes} as a combination of allelic variants, each one
+% inherited from a parent. Instead, the \textit{genotype} is combined information
+% of the haplotypes. For example, humans have two haplotypes, being diploid, and
+% the genotype is their combined information. So, since 2005, publication of the
+% \textbf{GWAS} has begun. The goal of this type of studies is to screen the
+% \textit{pangenome} looking for associations between genetic variants, for
+% example to study the outcomes of diseases. In this particular historical
+% period, it is impossible not to mention viruses. In fact, by nature, viruses
+% replicate a lot but often in a not perfect way, during infections. This produces
+% many inexact clones, referred as \textbf{viral haplotypes}, which, taken
+% together, form the \textbf{viral pangenome}. The identification of all these
+% haplotypes is crucial both to the study of the spread of viruses and to the
+% production of efficient drugs, in a context of high pharmacological resistance.
+% One of the most important data structures, developed to handle the
+% study of haplotypes sequences, is the \textbf{positional Burrows-Wheeler
+%   transform (\textit{PBWT})}, proposed by Durbin in 2014
+% \cite{pbwt_durbin}. \textit{PBWT} 
+% aims to represent efficiently an haplotype panel with bi-allelic sites, storing
+% them in a queryable 
+% compressed way (details will be described later).
+% According to Durbin, the used
+% memory by \textit{PBWT} is nearly six times smaller than the raw data.
+%\pb{qua dovresti essere più specifico sull'obiettivo di ridurre la memoria
+%  per tenere gli aplotipi e fare analisi come l'estrazione di pattern
+%  comuni...non hai menzionato le questioni della memoria...la compressione
+%  serve a quello}
+% From a computational point of view, he aim is to study panels built on an
+% alphabet $\Sigma\in\{0,1\}$, for example, to extract common patterns in a set of
+% haplotypes, computing the so-called \textit{blocks} (maximal intervals of
+% columns, not extendable in any direction, such that there is a substet of
+% identical rows).
+%\dc{Ricordando quanto detto dalla prof Bonizzoni ho citato molto brevemente il
+%concetto di blocco} 
+% As introduced, haplotypes panel can be thought of as a particular case of 
+% \textit{pangenome}, with fixed-length genomes, so we can understand the
+% importance of such compressed and efficient data structure in computational
+% pangenomics. 
+%\dc{Quest'ultima parte devo sistemarla meglio}
+% In addition, recent papers, such as \textit{IMPUTE5} \cite{impute5}, are based
+% on the use of \textit{PBWT} for inference of unobserved genotypes in a sample of
+% individuals. 
+% In addition, the use of the \textit{PBWT} is found in many 
+% software for the study of haplotypes and in various genotype imputation
+% methods that infer unobserved genotypes in a sample of individuals
+% \cite{impute5}. 
+% \pb{va spegato meglio}
+%\pb{idem qua ...se citi anche il risparmio di memoria in sintesi può essere utile}
 % During the development of my master thesis, I worked to create a run-length
 % encoded variant of the \textit{PBWT}, the \textbf{RLPBWT}, using and adapting
 % the various theories developed for the \textit{RLBWT}, in collaboration with
@@ -223,8 +281,11 @@ that infer unobserved genotypes in a sample of individuals \cite{impute5}.
 %dicendo che i dettagli li dai nella sezione dello stato dell'arte} 
 %\pb{lo stato dell'arte serve a dire cosa si è fatto prima e cosa tu pensi di
 %fare per avanzare nello stato dell'arte...di solito serve ad evidenziare i
-%problemi aperti} 
+%problemi aperti}
+
 \subsubsection*{State of the art}
+% \gdv{Questa sezione deve essere fusa con preliminaries, in modo da evitare
+%   ripetizioni. Al momento in entrambe le sezioni si parla di RLBWT, MONI.}
 Now I present a brief overview of the main algorithms, data structures and tools
 that are the state of the art of computational pangenomics.  
 % \paragraph*{BWT}
@@ -256,19 +317,18 @@ that are the state of the art of computational pangenomics.
 % $\sigma$ in $BWT_T[1,i]$.\\
 % The use of \textit{BWT} has allowed the construction of efficient algorithms
 % both in the field of pattern matching and sequence alignment. 
-%\pb{questa parte io la imposterei con titoli diversi che evidenziano da quali}
-%problemi aperti dello stato dell'arte parti per poi sviluppare gli obiettivi
+%\pb{questa parte io la imposterei con titoli diversi che evidenziano da quali
+%%problemi aperti dello stato dell'arte parti per poi sviluppare gli obiettivi
 %del progetto...ad esempio sui Bitvectors ...se metti invece come titolo
 %qualcosa tipo: 
-% Efficient and compact boolean data structures and applications...
-% Inizierei dicendo che una struttura dati estremamente utile per algoritmi di
-% analisi sequenze è quello dei bitvectors utilizzati tra l'altro anche per
-% implementare Bloom filters...sono compatti etec... magari anche dire chi ha
-% fatto SDSL in che anno ...} 
-% \dc{Titoli modificati come indicato}
+%Efficient and compact boolean data structures and applications...
+%Inizierei dicendo che una struttura dati estremamente utile per algoritmi di
+%analisi sequenze è quello dei bitvectors utilizzati tra l'altro anche per
+%implementare Bloom filters...sono compatti etec... magari anche dire chi ha
+%fatto SDSL in che anno ...} 
 % \paragraph*{Bitvectors}
 \paragraph*{Efficient and compact boolean data structures.}
-% \dc{Non so se ho lo spazio per introdurre i bloom filters}
+\dc{Non so se ho lo spazio per introdurre i bloom filters}
 If $\mathcal{X}$ is the optimal number of bits needed to store some data, a
 representation of this information is defined \textit{succint} if it takes
 $\mathcal{X} +o(\mathcal{X})$ bits of space. 
@@ -302,10 +362,11 @@ tracking the runs in the run-length encoded implementations of \textit{BWT} and
 operations for indexing and mapping. 
 %\paragraph*{RLBWT}
 \paragraph*{Run-length encoding and succinct data structures.}
-% \pb{Run-length encoding and succinct data structures... potrebbe essere il
-% titolo generale qua...tieni presente che il run lengh encoding è una vecchia
-% idea usata nella compressione dei dati alternativa a LZ.. Lempel Ziv...ed è
-% stata estesa alla BWT...} 
+%\pb{Run-length encoding and succinct data structures... potrebbe essere il
+%titolo generale qua...tieni presente che il run lengh encoding è una vecchia
+%idea usata nella compressione dei dati alternativa a LZ.. Lempel Ziv...ed è
+%stata estesa alla BWT...}
+\dc{Non so se parlare di LZ}
 The \textbf{Burrows-Wheeler Transform (\textit{BWT})} was introduced
 in 1994 to compress texts but it has been used widely
 in bioinformatics, above all thanks to the already cited
@@ -313,58 +374,130 @@ in bioinformatics, above all thanks to the already cited
 Speaking of \textit{pangenome}, linear indexing via \textit{FM-index} is no
 longer the 
 best solution as it does not handle the large repetitions there are in this new
-type of sequences. In 2005 M\"{a}niken and Navarro defined 
+type of sequences and a simple but effective strategy to compress texts is based
+on encoding a \textbf{run} of consecutive identical characters as the pair
+(characters, length of the run). For example, the string \texttt{AAAAAA} is
+encoded as (\texttt{A}, 6). 
+Clearly, such an encoding achieves a better compression ratio the more
+consecutive character we can find. In 2005 M\"{a}niken and Navarro defined 
 the \textbf{Run-Length encoded Burrows–Wheeler Transform
   (\textit{RLBWT})}. Given a text 
 $T$, $RLBWT_T$ is a representation of $BWT_T$ with a compact storage of
 consecutive equal characters, the so-called \textit{runs}. With this new
-perspective, the algorithms have changed from being linear over the length of
-the text, $n$, to be linear over the number of runs, $r$, so sub-linear over
-the length of the text. The new indexing method, introduced by Gagie et al., was
-called \textbf{r-index} 
+perspective, some recent papers --- \textit{MONI}~\cite{moni} and
+\textit{PHONI}~\cite{phoni} --- present two practical indexing tools that are
+tailored for pangenomes. In these works, algorithms have changed from being
+linear over the length of the text, $n$, to be linear over the number of runs,
+$r$, so sub-linear over the length of the text.
+The new indexing method, introduced by Gagie et al., was called \textbf{r-index} 
 and it corresponds to the \textit{RLBWT} plus the \textit{suffix array sampling}
-at the beginning and the end of every run. The algorithm for querying through
-the \textit{RLBWT} takes advantage of other methods, such as the use of
-\textbf{thresholds}, defined as the minimum \textit{LCP} value between two
-consecutive runs of the same character, in \textit{MONI}. Instead, in
-\textit{PHONI}, the authors use the \textbf{longest common extension
-  (\textit{LCE}) query}, to compute the \textit{MS}. Formally, an \textit{LCE
-  query}, given two positions $i$ and $j$ in a text $T$, such that $|T|=n$,
-compute the length of the longest common prefix between $T[i:n-1]$ and
-$T[j:n-1]$, so an \textit{LCE} is the right equal common extension 
-between two positions in the text. Both solutions operate on a compressed
-representation of the text, via a
-\textbf{straight-line program (\textit{SLP})}. Briefly, an \textit{SLP} is based
-on a \textit{grammar-compression} algorithm, by a \textit{context-free grammar},
-and here it is used for \textit{random access} and \textit{LCE queries}. 
-The purpose of the two projects is the computation of the \textbf{matching
-  statistics (\textit{MS})}. Given a pattern $P$ and a text $T$, the \textit{MS}
-of $P$ in respect to $T$ is an array $M$ of pairs position/length ($pos$/$len$),
-$|M|=|P|$, such that $T[M[i].pos:M[i].pos+M[i].len-1]=P[i:i+M[i].len]-1]$ and
-$P[i:i+M[i].len]$ does not occur in $T$. Given \textit{MS}, we can compute every
-\textbf{Maximal Exact Match (\textit{MEM})} of a pattern in a text. Given a
-text $T$ and a pattern $P$, a substring of the pattern $P[i : i+l-1]$, of length
-$l$, is a \textit{MEM} of $P$ in $T$ if $P[i:i+l-1]$ is a substring of $T$ but
-neither $P[i-1:i+l-1]$ nor $P[i:i+l]$ are, so if the substring cannot be
-extended either to the right or to the left. Furthermore, using a particular
+at the beginning and the end of every run. \\
+To better describe how \textit{pattern matching} works in these papers, we need
+to introduce some definitons. First of all, the main purpose of these algorithms
+is to compute \textbf{Maximal Exact Matches (\textit{MEMs})} of a pattern in a
+text. Given a text $T$ and a pattern $P$, a substring of the pattern $P[i :
+i+l-1]$, of length $l$, is a \textit{MEM} of $P$ in $T$ if $P[i:i+l-1]$ is a
+substring of $T$ but neither $P[i-1:i+l-1]$ nor $P[i:i+l]$ are, that is the
+match cannot be extended in any direction. The authors state that computing
+\textit{MEMs} is equivalent to computing \textbf{matching statistics
+  (\textit{MS})}. Formally, the \textit{MS} of a pattern $P$ in respect to a
+text $T$ is an array $M$ of pairs position/length ($pos$/$len$), $|M|=|P|$, such
+that $T[M[i].pos:M[i].pos+M[i].len-1]=P[i:i+M[i].len]-1]$ and $P[i:i+M[i].len]$
+does not occur in $T$. To compute \textit{MS}, \textit{random-access} over the
+text is required  but it is also required that the text is stored in a
+compressed way. For this purpose, the authors get a compressed 
+representation of the text, via a \textbf{straight-line program
+(\textit{SLP})}, that is based on a \textit{grammar-compression} algorithm 
+(by a \textit{context-free grammar}). To compute \textit{MS}, in \textit{MONI},
+the authors used the so-called \textbf{thresholds}, defined as the minimum
+\textbf{Longest Common Prefix (\textit{LCP})} value between two 
+consecutive runs of the same character This solution requires two sweep over the
+\textit{MS array} and \textit{random access} over the \textit{SLP}. The
+improvement in \textit{PHONI} is due to the fact that it was decided to use
+\textbf{longest common extension (\textit{LCE}) queries}, to compute
+\textit{MS}, by a single sweep. Formally, given two positions $i$ and $j$ in a
+text $T$, such that 
+$|T|=n$, an \textit{LCE query} compute the length of the longest common prefix
+between $T[i:n-1]$ and $T[j:n-1]$. So, \textit{LCE} is the right equal common
+extension between two positions in the text. Summarizing, after computing the
+\textit{MS array}, as stated by Bannai et al., it is possible to obtain
+\textit{MEMs}. Furthermore, using a particular
 function called $\varphi$ (and its inverse $\varphi^{-1}$), based on the use
 of the \textbf{inverse suffix array (\textit{ISA})}, it has been possible to
 find all starting positions of all copies of $P$ in $T$ from starting position
 of the match extracted by \textit{MS}, quickly calculating, given a position $p$
-in $SA$, the previous and next index stored in the suffix array.
+in $SA$, the previous and next index stored in the suffix array. \\
+Thanks to these works, it is
+possible to perform \textit{pattern matching} 
+efficiently even on long sequences of nucleotides, such as those studied in
+a pangenomic context. In fact, for example, according to Rossi et al.,
+\textit{BWA-MEM}, one of the most used \textit{read aligners}, uses between 1.1
+and 3.8 times more memory than \textit{MONI}, having further improved results in
+\textit{PHONI}.  
+% Briefly, thanks to \textit{LCE
+%   queries}, we can compute efficiently \textit{MS array}, calculating both
+% position and length in a single sweep. After computing \textit{MS} we have a
+% kind of representation of the \textit{MEMs} themselves.\\
+%  The algorithm for querying through
+% the \textit{RLBWT} takes advantage of other methods, such as the use of
+% \textbf{thresholds}, defined as the minimum \textbf{Longest Common Prefix
+%   (\textit{LCP})} value between two 
+% consecutive runs of the same character, in \textit{MONI}, and \textit{LCE
+% queries} in \textit{PHONI}, achieving the same results with only a single sweep
+% over \textit{MS} array instead of two as using the \textit{thresholds}. 
+%Instead, in
+%\textit{PHONI}, the authors use the \textbf{longest common extension
+%  (\textit{LCE}) query}, to compute the \textit{MS}. Formally, an \textit{LCE
+%  query}, given two positions $i$ and $j$ in a text $T$, such that $|T|=n$,
+%compute the length of the longest common prefix between $T[i:n-1]$ and
+%$T[j:n-1]$, so an \textit{LCE} is the right equal common extension 
+%between two positions in the text. 
+%Both solutions operate on a compressed representation of the text, via a
+%\textbf{straight-line program (\textit{SLP})}. Briefly, an \textit{SLP} is based
+%on a \textit{grammar-compression} algorithm, by a \textit{context-free grammar},
+%and here it is used for \textit{random access} and \textit{LCE queries}. 
+%Given a pattern $P$ and a text $T$, the \textit{MS}
+%of $P$ in respect to $T$ is an array $M$ of pairs position/length %($pos$/$len$),
+%$|M|=|P|$, such that $T[M[i].pos:M[i].pos+M[i].len-1]=P[i:i+M[i].len]-1]$ and
+%$P[i:i+M[i].len]$ does not occur in $T$.
+%Given a
+%text $T$ and a pattern $P$, a substring of the pattern $P[i : i+l-1]$, of length
+%$l$, is a \textit{MEM} of $P$ in $T$ if $P[i:i+l-1]$ is a substring of $T$ but
+%neither $P[i-1:i+l-1]$ nor $P[i:i+l]$ are, so if the substring cannot be
+%extended either to the right or to the left. 
+
 % More formally, given a starting position
 % $p$, $\varphi(p)=SA[ISA[p]-1]$, $NULL$ if $ISA[p]=0$, and
 % $\varphi^{-1}(p)=SA[ISA[p]+1]$, $NULL$ if $ISA[p]=|T|-1$, where $ISA[i]=j$ iff
 % $SA[j]=i$.\\
-So, it was possible to perform pattern matching
-efficiently even on long sequences of nucleotides, such as those studied in
-a pangenomic context.
-\paragraph*{PBWT.}
-Based on the theories of the \textit{BWT}, in 2014, Durbin devised the
-\textbf{positional Burrows–Wheeler transform (\textit{PBWT})}, to
-solve the problem of pattern matching on panels (matrices) of haplotypes. In
-detail, he analyzed a panel $X$ with $M$ haplotypes and $N$ biallelic
-sites. This data structure is based on a \textit{reversed-prefix ordering} at
+\paragraph*{Genotyping variants problems and GWAS.}
+% \paragraph*{PBWT.}
+Several computational problems, arising from computational
+biology, have led to the development and of algorithms and data
+structures for analyzing specific sequence data such as \textit{haplotypes} and
+\textit{genotypes} in the \textbf{genotyping variants problem}. Briefly, we
+could define \textit{haplotypes} as a combination of allelic variants, each one
+inherited from a parent. Instead, the \textit{genotype} is combined information
+of the haplotypes. For example, humans have two haplotypes, being diploid, and
+the genotype is their combined information. So, since 2005, publication of the
+\textbf{GWAS} has begun. The goal of this type of studies is to screen the
+\textit{pangenome} looking for associations between genetic variants, for
+example to study the outcomes of diseases. In this particular historical
+period, it is impossible not to mention viruses. In fact, by nature, viruses
+replicate a lot but often in a not perfect way, during infections. This produces
+many inexact clones, referred as \textbf{viral haplotypes}, which, taken
+together, form the \textbf{viral pangenome}. The identification of all these
+haplotypes is crucial both to the study of the spread of viruses and to the
+production of efficient drugs, in a context of high pharmacological
+resistance.\\
+In 2014, Durbin proposed the
+\textbf{positional Burrows–Wheeler transform (\textit{PBWT})} to
+solve the problem of \textit{pattern matching} on panels of haplotypes,
+with efficient compression. According to the author, the used
+memory by \textit{PBWT} is nearly six times smaller than the raw data.
+In detail, he analyzed a biallelic-sites panel $X$, built on an
+alphabet $\Sigma\in\{0,1\}$, with $M$ haplotypes/individuals and $N$ sites. This
+data structure is based on a \textit{reversed-prefix ordering} at 
 each column $k$ that produces two different multidimensional arrays. The first
 one is the set of the \textbf{prefix arrays}, denoted by $a$, which contains the
 index of the haplotype $m$ in the original panel, for each column $k$ and
@@ -379,7 +512,11 @@ iff $h$ is the smallest column index such that $y_i^k[h,k)=y_{i-1}^k[h,k)$.
 Thanks to these two bidimensional arrays, it is possible to compute all matches
 within $X$ longer than a minimum length $L$, all set-maximal matches within $X$
 in linear time and all set-maximal matches, maximal in the width of the match,
-from a new sequence $z$ to $X$ in $\mathcal{O}(M^2N)$.
+from a new sequence $z$ to $X$ in $\mathcal{O}(M^2N)$. Another interesting use
+of the \textit{PBWT} is to extract common patterns in a set of
+haplotypes, computing the so-called \textit{blocks} (maximal intervals of
+columns, not extendable in any direction, such that there is a substet of
+identical rows).
 Since its development, there has been a growth in
 research based on it, both in terms of variant design, such as the
 \textbf{multiallelic PBWT} or the \textbf{dynamic PBWT}, where the static PBWT
@@ -395,11 +532,17 @@ who also studied \textit{maximal perfect haplotype blocks}, but with the
 addition of a \textit{missing data} management attempt, handled with the help of
 wildcards, using the \textit{PBWT}. 
 A very intriguing tool, talking about \textit{GWAS}, is
-\textbf{IMPUTE5}, proposed by Rubinacci et al. in 2020. The main purpose of this
+\textbf{IMPUTE5} \cite{impute5}, proposed by Rubinacci et al. in 2020. The main
+purpose of this 
 software is making \textit{genotype imputation} to predict unobserved
 genotypes from a panel with millions of haplotypes, so it was necessary to use
 \textit{PBWT}. Improving this data structure, it will be possible to help the
-\textit{GWAS} on tumors and other disorders. 
+\textit{GWAS} on tumors and other disorders.\\
+To concludes, as introduced,
+haplotypes panel can be thought of as a particular case of  
+\textit{pangenome}, with fixed-length genomes, so we can understand the
+importance of such compressed and efficient data structure in
+\textit{computational pangenomics}. 
 % Durbin himself, the author of the \textit{PBWT}, with Shchur et al. in 2019,
 % proposed a use of his data structure in \textit{GWAS} context. In fact, they
 % studied the associations between genetic variants in order to identify signals
@@ -445,13 +588,15 @@ pangenomics, such as:
   \setlength\itemsep{-0.2em}
   \item \textbf{Multiallelic data}. Thanks to the growth in the
   production of genotypic data, the number of multiallelic sites is expected to
-  grow, as well as the number of sample(even if there is only a 2\% presence of
-  triallelic sites, actually known in the human genome). Moreover, not only
+  grow, as well as the number of individuals (even if there is only a 2\%
+  presence of triallelic sites, actually known in the human genome)
+  %\pb{spiegare in sintesi cosa è il sample che viene menzionato anche sotto}.
+  Moreover, not only 
   such sites could be more than expected but they are 
   usually not considered by the majority of tools. The first step in this
   direction was made 
   by Naseri with the already cited \textit{m-PBWT}.
-  Talking about spatial complexity, the run-length encoded version of the stored
+  Talking about space complexity, the run-length encoded version of the stored
   arrays for the \textit{FM-index} could allow the management of increasingly
   large data for the imputation phases.   
   In this context, the aim is to implement a new 
@@ -471,13 +616,15 @@ pangenomics, such as:
   assume any possible value. Having said this, I should  
   probably deal with \textit{parametric} or \textit{approximate algorithms},
   based on research already developed in \textit{BIAS}.
-  \item \textbf{Algorithms for pangenome graphs \& other goals}. Another research
-  goal is to deepen 
-  the study of \textit{pangenome graphs}. In fact, it is possible to interpret
+  \item \textbf{Data structures and algorithms for the representation and
+    indexing  of pangenome graphs}. The above mentioned  research 
+  goals are relevant in the context of a more general goal which is to deepen 
+  the study of data structures for  representing the information of
+  \textit{pangenome graphs}. In fact, it is possible to interpret 
   haplotype sequences as a 
   pangenome graphs, in a compact way via the \textbf{Graph BWT (\textit{GBWT})},
   even if it is more a \textit{multi-string BWT} than a classical graph. A first
-  improvement would be spatial optimization. There are a lot of open problems 
+  improvement would be space optimization. There are a lot of open problems 
   regarding the use of \textit{GBWT}, such as handling missing/erroneous data
   and representing complex and nested 
   variants. Once I have tried to solve the problem of missing data for the
@@ -486,7 +633,16 @@ pangenomics, such as:
   analyze more precisely real data. I would also point out my interest in
   deepening all the other issues related to 
   pattern matching, indexing structures and pangenome graphs, according to the
-  \textit{BIAS} laboratory's topics of interest.
+  \textit{BIAS} laboratory's topics of interest. So far there has been talk of
+  \textit{bitvector-based} and \textit{BWT-based indexing}. There are other data
+  structures that would be interesting to study and extend, such as
+  \textit{wavelet tree}, another \textit{succint data structure} used to
+  compress texts. The design of new indexing structures, both for strings and
+  graphs, could lead to very important results in the field of computational
+  pangenomics, for example regarding the \textit{string-graph alignment problem}.
+  \dc{Eventualmente penso si possa aggiungere qualcosa sull'allineamento tra
+    stringhe e il grafo del pangenoma... ma non so quanto si finisca "off-topic"
+    rispetto a quanto discusso nei research goals} 
   % chiarire questa parte
   %\item \textbf{Imputation}.
   % As introduced, I have
@@ -501,6 +657,7 @@ pangenomics, such as:
   % sequencing. \\ 
 \end{enumerate}
 \vspace{-1.25mm}
+%\dc{Mancano lib per pangenoma (anche lato benchmark)}
 The theoretical research requires an experimental verification, for this purpose
 some technologies that will be used during my Ph.D. must be mentioned. 
 During both my bachelor's and master's degree, I mainly focused on the use of
@@ -510,84 +667,23 @@ cited \textit{SDSL}. However, in
 addition to \textit{C++}, I had the opportunity to deepen 
 \textbf{Python}, with libraries such as \textit{biopython}, and \textbf{Rust},
 with recently developed libraries such as \textit{bio-rust} (even if still not
-complete from an algorithmic point of view). Another point of interest is the
+complete from an algorithmic point of view). Always from an experimental point
+of view, there is currently a lack of libraries, in any programming language,
+dedicated to the study of \textit{pangenome}, also with regard to benchmarking.
+It is therefore my interest to contribute to the development of such open
+source libraries. Another point of interest is the
 analysis and the development of efficient algorithms based on parallel computing
 (also on GPU), that are increasingly in use in both \textit{bioinformatics} and
 \textit{computational systems biology}.  
+\gdv{Secondo me bisogna estendere la parte di ricerca, mettendo qualcosa di più
+  a lungo termine. Ad esempio pensare a tecniche di indicizzazione diverse, non
+  necessariamente basate su BWT e bitvectors} 
+\dc{Allo stato attuale abbiamo una pagina di goals. Non so se possa bastare}
 To conclude this proposal, I also would point out the intention to remain in
 contact with various researchers, with whom I have already collaborated during 
 my master thesis, including Christina Boucher (University of Florida)
 and Travis Gagie (Dalhousie University).
-% \pb{nella bibliografia il lavoro MONI non è forse apparso a recomb22? non hai
-% una referenza più recente?}
-% \dc{non trovo la ref ufficiale a recomb21, eventualmente la posso scrivere a
-% mano ma ho aggiornato con la ref a Journal of Computational Biology del 2022} 
-% \pb{non metterei la referenza di Natural Computing...ma metterei quella di
-% Briefings in bioinformatics sul Pangenome consortium che trovi in Natural
-% computing..}
-% \dc{non sono certo di aver trovato la reference indicata}
-% \bibliographystyle{abbrv}
-% \bibliography{abstract}
+
 \printbibliography
-% \newpage
-% \noindent
-% \begin{shaded}
-%   \noindent
-%   \textbf{Note}:
-%   \begin{itemize}
-%     \item il font dovrebbe essere corretto secondo le richieste. Non ho visto
-%     specifiche relative ai margini del file
-%     \item nell'introduzione mancano alcuni concetti relativi allo
-%     studio diretto del grafo pangenomico. La professoressa Bonizzoni aveva
-%     citato ad esempio le \textit{superbubbles}. Una volta chiariti gli scopri
-%     precisi 
-%     del progetto di ricerca dovrò sistemare (oltre che aggiungere eventuali
-%     aspetti non considerati e toglierne altri)
-%     \item nell'introduzione devo capire come ordinare meglio i concetti
-%     \item nell'introduzione forse servono esempi di casi d'uso relativi alle
-%     varie problematiche. Probabilmente è necessaria una parte più discorsiva
-%     relativa anche all'importanza biologica di questo genere di studi
-%     \item la conclusione dell'introduzione, dove si parla di cosa verrà
-%     eventualmente approfondito durante il Ph.D., è praticamente un
-%     \textit{placeholder}  
-%     \item l'incipit allo stato dell'arte è sicuramente da modificare
-%     \item la struttura dell'intera sezione riguardante lo stato dell'arte penso
-%     debba essere rivista in base a standard per la stesura della proposal che
-%     non conosco
-%     \item nello stato dell'arte la parte relativa alla BWT è commentata in
-%     quanto, pur avendola scritta, non la ritengo essenziale (soprattutto avendo
-%     a che fare con un limite di 4 pagine)
-%     \item nello stato dell'arte la sezione relativa ad alcuni esempi di studio
-%     sugli aplotipi deve essere profondamente rivista in luce soprattutto dei
-%     research goals. Un esempio potrebbe essere la citazione, ad esempio, di
-%     HapCol, qualora i goals si spostassero un po' dalla PBWT e dai suoi usi più
-%     immediati 
-%     \item per ignoranza mia su come vada scritto questo tipo di documento non
-%     sono sicuro che alcuni dettagli formali nei vari passaggi dello stato
-%     dell'arte siano sensati da mettere. Stesso discorso vale nell'incipit dei
-%     research goals
-%     \item la citazione di quanto svolto per la tesi magistrale non so se sia
-%     necessario, e, qualora lo fosse, se la collocazione all'inizio dei research
-%     goals sia corretta, ne tantomeno se sia troppo riassunto/esteso
-%     \item mancano le specifiche dei fini della ricerca, da chiarire coi docenti
-%     (e da cui dipendono diversi punti della proposal)
-%     \item la conclusione del research goals non so se sia necessaria
-%     \item per quanto riguarda la scelta delle reference nel file \texttt{.bib}
-%     ne sono 
-%     presenti diverse. In ogni caso, per la prima selezione fatta, ritengo le
-%     prime due necessarie mentre la terza e la quarta sono per diversi punti di
-%     vista superflue. Avendo un bound di cinque citazioni c'è comunque spazio di
-%     manovra
-%   \end{itemize}
-% \end{shaded}
-% \begin{shaded}
-%   \textbf{TODO}:
-%   \begin{itemize}
-%     \item in introduzione parlare di GWAS
-%     \item in introduzione parlare della ricerca degli ancestor
-%     \item in stato dell'arte citare IMPUTE5
-%     \item nei fini della ricerca spingere su importanza dell'imputation e del
-%     caso multiallelico
-%   \end{itemize}
-% \end{shaded}
+
 \end{document}
