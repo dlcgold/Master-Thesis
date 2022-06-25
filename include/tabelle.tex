@@ -68,3 +68,22 @@
   \end{tabular}
   \label{tab:select}
 \end{table}
+
+\begin{table}[H]
+  \centering
+   \caption{Tabella stima complessità temporale delle principali operazioni
+     effettuate nelle varianti della \textbf{RLPBWT}.}
+  \begin{tabular}{c|c}
+    Operazione & Complessità temporale\\
+    \hline
+    Rank per sparse bitvector & $\mathcal{O}(\frac{height}{|run|})$\\
+    \hline
+    Select per sparse bitvector & $\mathcal{O}(1)$\\
+    \hline
+    Random Access su slp & $\mathcal{O}(\log (height\times width))$\\
+     \hline
+    LCE lunga $l$ su slp & $\mathcal{O}\left(1+\frac{l}{\log (height\times
+                           width)}\right)$\\                               
+  \end{tabular}
+  \label{tab:time}
+\end{table}

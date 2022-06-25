@@ -77,17 +77,20 @@ Quindi, trascurando le varie informazioni aggiuntive, il pannello è
 \textit{RLPBWT}. Questa però risulta essere una comodità in quanto, leggendo
 iterativamente il file, si legge di volta in volta la $i$-esima colonna, ovvero
 quanto serve per la costruzione della struttura dati.\\
-Per capire meglio come venga prodotto un pannello analizziamo un semplice
-esempio:
-\begin{minted}{bash}
-  ./macs 20 1000 -t 0.001 -r 0.001
-\end{minted}
+Per capire meglio come venga prodotto un pannello tramite questo strumento,
+analizziamo un semplice esempio:
+\begin{shaded}
+  \begin{minted}{bash}
+    ./macs 5 3000 -t 0.001 -r 0.001
+  \end{minted}
+\end{shaded}
+\noindent
 Dove:
 \begin{itemize}
-  \item $20$ è il numero di sample richiesto, ovvero il numero di sequenze che
+  \item $5$ è il numero di sample richiesto, ovvero il numero di sequenze che
   il software simulerà
-  \item $1000$ è la lunghezza in paia-basi della regione genomica su cui
-  verranno simulate le $20$ sequenze
+  \item $3000$ è la lunghezza in paia-basi della regione genomica su cui
+  verranno simulate le $5$ sequenze
   \item \texttt{-t} $0.001$ segnala il \textit{mutation rate} per ogni sito,
   ovvero la frequenza di \textit{nuove mutazioni} per un sito nel tempo 
   \item \texttt{-r} $0.001$ segnala il \textit{recombination rate} per ogni
@@ -95,10 +98,96 @@ Dove:
   processi per i quali si ottengono nuove combinazioni di alleli a partire da un
   \textit{genotipo}, per un sito nel tempo 
 \end{itemize}
-Il risultato, dove si noti vengono selezionati 5 siti dopo la simulazione, del
-comando appena descritto è visualizzabile alla listing \ref{lst:macs}. 
-
+Il risultato, dove si noti vengono selezionati 4 siti dopo la simulazione, del
+comando appena descritto è visualizzabile alla listing \ref{lst:macs}.\\ 
+\textbf{MANCA SIGNIFICATO DEGLI ``HEADER'' DI OGNI SITE NEL RISULTATO.}
 \subsection{SDSL}
-\subsection{BigRepair e ShapedSlp}
-\subsubsection{Ricostruzione del panel}
+La libreria più utilizzata nel progetto, come anche in diverse sue dipendenze, è
+\textbf{Succinct Data Structure Library (\textit{SDSL})} \cite{sdsl}. Questa
+libreria, scritta in \Cplusplus 11, fornisce diverse implementazioni riguardanti
+strutture dati succinte, come i già citati, nella sezione \ref{bvsec},
+\textbf{bitvectors}.\\ 
+Nel dettaglio, in questo progetto, \textit{SDSL} è stata usata per:
+\begin{itemize}
+  \item gli \textbf{sparse bitvectors}, il cui uso specifico verrà specificato
+  più avanti nel capitolo
+  \item i cosiddetti \textbf{int vectors}, ovvero vettori di interi memorizzati
+  in modo efficiente
+  \item le funzioni di atte a gestire le \textbf{serializzazioni} delle
+  strutture dati implementate
+  \item stimare, in certi casi, lo \textbf{spazio in memoria} richiesto per le
+  varie strutture 
+\end{itemize}
+\subsection{BigRePair e ShapedSlp}
+Come introdotto alla sezione \ref{slpsec}, una delle varianti della
+\textbf{RLPBWT}, richiede l'uso, estremamente vantaggioso dal punto di vista
+della memoria occupata, degli \textbf{SLP}.\\
+Da un punto di vista implementativo, l'oggetto contenente l'\textit{SLP} del
+pannello viene costruito ed interrogato mediante l'uso della libreria
+\textbf{ShapedSlp} \cite{shapedslp}, implementazione dei risultati ottenuti da
+Gagie et al. \cite{slpgagie}. Inoltre, tale libreria basa il suo funzionamento
+sull'uso di un'altra libreria, detta \textbf{BigRePair} \cite{bigrepair}, che
+implementa i quanto studiato da Gagie et al. \cite{rpair} in merito alla
+compressione, via uso di grammatiche, di file con frequenti ripetizioni (come
+possono essere, nel nostro caso, pannelli binari di aplotipi).\\
+In termini di pipeline si procede quindi:
+\begin{enumerate}
+  \item generando la \textit{grammatica} tramite \textit{BigRePair}, che accetta
+  come file di input un file \texttt{txt} ``raw'' ma anche un file in formati
+  più standard come i \textit{FASTA}
+  \item generando l'\textit{SLP} tramite \textit{ShapedSlp} specificatamente a
+  partire dai risultati di \textit{BigRePair} (si segnala che la libreria
+  accetta anche input prodotti tramite altri tool che non verranno qui
+  approfonditi) 
+\end{enumerate}
+\subsubsection{Compressione del panel}
+I tool appena citati assumono un input ``monodimensionale'', ovvero una singola
+sequenze lineare. Nel nostro caso l'input era invece un file \texttt{.macs} con
+rappresentato il pannello trasposto. Nel dettaglio, assumendo di avere il
+pannello come nella listing \ref{lst:macs} (pannello al quale sono giù state
+estratte le query), si avrebbe, isolando:
+\[
+  X=\left[
+    \begin{matrix}
+      0 & 0 & 1 & 0 & 0\\
+      1 & 1 & 1 & 0 & 1\\
+      0 & 1 & 1 & 1 & 1\\
+      0 & 0 & 0 & 1 & 0
+    \end{matrix}
+  \right]
+\]
+Dove però come detto le righe sono i siti e le colonne i sample. Per ottenere
+l'\textit{SLP} biosgna quindi, in primis, trasporre la matrice:
+\[
+  X^T=\left[
+    \begin{matrix}
+      0 & 1 & 0 & 0\\
+      0 & 1 & 1 & 0\\
+      1 & 1 & 1 & 0\\
+      0 & 0 & 1 & 1\\
+      0 & 1 & 1 & 0
+    \end{matrix}
+  \right]
+\]
+Per procedere ulteriormente bisogna però ricordare che sull'\textit{SLP} si avrà
+necessità di effettuare \textit{LCE query} che però, si anticipa, nel nostro
+pannello, devono essere fatte tra due righe da destra a sinistra (a differenza
+di quanto visto nel caso standard dove si confrontavano prefissi comuni). Ad
+esempio, prendendo la seconda e la terza riga, avremmo una \textit{LCE query}
+lunga 3, terminante nella prima colonna esclusa:
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale = 0.38]{img/slppanel.pdf}
+\end{figure}
+Per rendere possibile questa operazione quindi il pannello deve essere sia
+salvato come un'unica riga, per ottenerne l'\textit{SLP}, che ``da destra a
+sinistra'', per permettere le \textit{LCE query}. Si procede quindi concatenando
+ogni riga, selezionandole consecutivamente e leggendone i singoli elementi da
+destra a sinistra ottenendo, con colorate gli stessi risultati della query fatta
+sopra:
+\[0010\,\,{\color{nordgreen}011}{\color{nordred}0}\,\,
+  {\color{nordgreen}011}{\color{nordred}1} \,\,1100\,\,0110\]
+\textit{Si noti che qui si sono segnalate le varie righe con uno spazio ma solo
+  per praticità ``visiva''.}
 \subsection{Snakemake}
+\textbf{PARTE DA FARE UNA VOLTA STABILITA LA PIPELINE FINALE}

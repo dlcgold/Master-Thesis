@@ -1,2 +1,62 @@
 \section{Introduzione alle varianti della RLPBWT}
+Lo sviluppo di questo progetto di tesi è stato tale per cui si sono sviluppate
+varie implementazioni della \textbf{RLPBWT}. Tali varianti non sono da
+intendersi ugualmente valide ma corrispondono al percorso evolutivo che c'è
+stato nell'ultimo anno di studio e ricerca in merito. Riassumendo il tutto si
+vedranno:
+\begin{itemize}
+  \item una prima implementazione \textit{naive}, detta appunto \textbf{RLPBWT
+    naive}, che corrisponde al primo tentativo di studio. Questa soluzione non
+  permette di sapere quali righe del pannello stanno matchando ma solo quali
+  \item si è quindi iniziato ad introdurre l'uso dei \textit{bitvectors}, con la
+  \textbf{RLPBWT con bitvectors}, il cui funzionamento è pressoché analogo alla
+  versione \textit{naive} al più dell'uso di tali strutture succinte per il
+  funzionamento del mapping. Questa soluzione non
+  permette di sapere quali righe del pannello stanno matchando ma solo quali
+  \item il primo sostanziale ``cambio di paradigma'', si ha avuto con la
+  \textbf{RLPBWT con pannello denso}, variante in cui, oltre all'uso dei
+  \textit{bitvectors} si è proceduto al calcolo dei match tramite
+  \textit{matching statistics} e \textit{LCE query}. Questa soluzione permette
+  di sapere l'indice di una sola riga per la quale si sta avendo un match con il
+  pattern 
+  \item migliorando la soluzione precedente con l'uso dell'\textit{SLP} per la
+  memorizzazione del pannello si è ottenuta la \textbf{RLPBWT con SLP}. Questa
+  soluzione permette di sapere l'indice di una sola riga per la quale si sta
+  avendo un match con il pattern 
+  \item con l'implementazione della \textbf{funzione} $\mathbf{\varphi}$ per la
+  \textbf{RLPBWT} si è permesso di estendere i risultati delle ultime due
+  varianti in modo da ottenere tutti i match con tutti gli indici delle righe
+  per cui si hanno tali match con il pattern
+\end{itemize}
+Si può quindi iniziare ad apprezzare il percorso evolutivo e incrementale
+vissuto con questo progetto.
 \subsection{Perché un'implementazione run-length}
+Prima di proseguire con la spiegazione dettagliata delle varianti è bene dare
+una prima motivazione al perché si sia ritenuto utile sviluppare una variante
+\textbf{run-length encoded} della \textbf{PBWT}.\\
+Citando direttamente il paper di Durbin del 2014 \cite{pbwt}, in cui si
+introduce la struttura:
+\begin{center}
+  \textit{Furthermore we can also expect the y arrays to be strongly run-length
+    compressible. This is because population genetic structure means that there
+    is local correlation in values due to linkage disequilibrium, which means
+    that haplotypes with similar prefixes in the sort order will tend to have
+    the same allele values at the next position, giving rise to long runs of
+    identical values in the y array. So the PBWT can easily be stored in smaller
+    space than the original data.} 
+\end{center}
+Dove, con la dicitura \textit{y arrays}, si ottengono le colonne già permutate
+della \textbf{matrice PBWT}.\\
+Quindi il risultato atteso è quello per cui aplotipi simili, che ad ogni step
+saranno consecutivi nel riordinamento, è molto probabile presentino lo stesso
+allele nella colonna di cui si sta in quel momento calcolando la
+permutazione. Ne segue che, all'interno della \textbf{matrice PBWT}, è molto
+probabile che si abbiano, consecutivamente, lunghe run di $0$ e di $1$.\\
+Si noti quindi che si ottiene quindi il medesimo risultato atteso che si ha con
+la \textbf{BWT}, avendo che caratteri uguali è probabile che vengano posti in
+modo consecutivo all'interno della \textit{BWT} stessa. Si hanno quindi le
+stesse premesse che hanno portato alla \textbf{RLBWT}, considerando inoltre che,
+come in quel caso, non si tratta solo di memorizzare la struttura con
+compressione run-length ma di lavorare direttamente con la struttura dati
+compressa, risolvendo il problema del pattern matching senza decomprimere la
+struttura dati.

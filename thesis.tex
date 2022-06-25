@@ -83,6 +83,8 @@
 % \renewcommand{\footrulewidth}{0.3pt}}
 %c C plus plus
 \def\Cplusplus{C\raisebox{0.5ex}{\tiny\textbf{++}}}
+\definecolor{nordred}{RGB}{191, 97, 106}
+\definecolor{nordgreen}{RGB}{135, 157, 116}
 
 \pgfplotsset{compat=1.13}
 
@@ -190,7 +192,7 @@
   \huge{\textbf{Abstract}}
 \end{flushleft}
 \vspace{10mm}
-\textit{}
+\input{include/abstract}
 {
   \pagestyle{plain}
   \tableofcontents
@@ -244,14 +246,14 @@ studio, evidenziandone pro e contro
 % sezione varianti RLPBWT
 \input{include/var_rlpbwt}
 
-% sezione mapping RLPBWT
-\input{include/map_rlpbwt}
-
 % sezione RLPBWT naive
 \input{include/naive_rlpbwt}
 
 % sezione RLPBWT bitvectors
 \input{include/bv_rlpbwt}
+
+% sezione mapping RLPBWT
+\input{include/map_rlpbwt}
 
 % sezione match massimali di RLPBWT naive/bitvectors
 \input{include/naive_bv_matches}
