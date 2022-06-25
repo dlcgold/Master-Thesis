@@ -69,9 +69,27 @@ Per chiarezza si vede un esempio.
     \end{tabular}
   \end{table}
   Avendo quindi:
-  \[F_T=\mbox{\$iiiimppssss}\]
-  \[BWT_T=\mbox{ipssm\$pissii}\]
+  \[F_T=\mbox{\$iiiimppssss}\mbox{ e }BWT_T=\mbox{ipssm\$pissii}\]
 \end{esempio}
+L'importanza di questa trasformata è dovuta soprattutto al fatto che sia
+\textit{reversibile}, implicando quindi che a partire da $BWT_T$ è possibile
+ricostruire $T$. Questo è possibile grazie ad una proprietà intrinseca della
+trasformata che viene riassunta nel cosiddetto \textbf{LF-mapping}.
+\begin{definizione}
+  Dato un testo $T$, tale che $|T|=n$, data la sua $BWT_T$ e il suo array $F_T$
+  si definisce \textbf{LF-mapping} come la proprietà per la quale l'$i$-esima
+  occorrenza di un carattere $\sigma$ in $BWT_T$ corrisponde all'$i$-esima
+  occorrenza dello stesso carattere in $F_T$.
+\end{definizione}
+Grazie a questa definizione è possibile partire dall'ultimo carattere del testo,
+\$, e ricostruire l'intero testo a ritroso. Si vede quindi un breve esempio.
+\begin{esempio}
+  Si riprende l'esempio precedente, avendo:
+  \[BWT_T=\mbox{ipssm\$pissii}\mbox{ e }F_T=\mbox{\$iiiimppssss}\]
+  % ricostruisci testo
+  
+\end{esempio}
+
 \subsection{Trasformata di Burrows-Wheeler run-length}
 \subsection{Matching Statistics}
 \subsection{R-index}

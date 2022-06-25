@@ -40,7 +40,7 @@
 \usepackage{csquotes}
 % \usepackage{natbib}
 % \usepackage{algpseudocode}
-% \usepackage[cache=false]{minted}
+\usepackage[cache=false]{minted}
 \usepackage{mathtools}
 \usepackage[noend]{algpseudocode}
 \usepackage{svg}
@@ -81,7 +81,8 @@
 % \fancyhead[RO,RE]{\thepage}%RO=right odd, RE=right even
 % \renewcommand{\headrulewidth}{0pt}
 % \renewcommand{\footrulewidth}{0.3pt}}
-
+%c C plus plus
+\def\Cplusplus{C\raisebox{0.5ex}{\tiny\textbf{++}}}
 
 \pgfplotsset{compat=1.13}
 
@@ -120,7 +121,7 @@
     \vspace{1mm}
     {\LARGE{
         \setstretch{1.2}
-        \textbf{compressione run-length, RLPBWT}}}
+        \textbf{compressione run-length}}}
     
   \end{center}
   
@@ -175,7 +176,14 @@
 }
 \newcommand\xrowht[2][0]{\addstackgap[.5\dimexpr#2\relax]{\vphantom{#1}}}
 % \pagenumbering{roman}
-
+\begin{titlepage}
+  \begin{flushright}
+    \textit{E pensare che\\
+      mi iscrissi ad informatica\\
+      per fare il sistemista!}
+  \end{flushright}
+\end{titlepage}
+\newpage
 \newpage
 \thispagestyle{plain}
 \begin{flushleft}
@@ -223,6 +231,13 @@ capitolo.
 
 
 \chapter{Metodo}
+In questo capitolo verranno illustrate le metodologie usate in questa tesi,
+trattando, sia dal punto di vista teorico che sperimentale, tutte le soluzioni
+che hanno portato alla costruzione della \textbf{RLPBWT}.\\
+Nel dettaglio, dopo una breve introduzione agli strumenti computazionali usati,
+si approfondiranno tutte le varianti della \textbf{RLPBWT} ottenute durante lo
+studio, evidenziandone pro e contro
+
 % sezione strumenti
 \input{include/strumenti}
 
@@ -271,10 +286,12 @@ capitolo.
 \bibliography{thesis}
 
 \appendix
-\chapter{Pseudocodici}
-\input{include/pseudo}
 \chapter{Tabelle}
 \input{include/tabelle}
+\chapter{Pseudocodici}
+\input{include/pseudo}
+\chapter{Esempi di File}
+\input{include/file}
 
 % ringraziamenti
 \input{include/ringraziamenti}

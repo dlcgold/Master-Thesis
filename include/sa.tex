@@ -23,7 +23,7 @@ Si vede quindi esempio chiarificatore.
   \begin{table}[H]
     \footnotesize
     \centering
-    \begin{tabular}{c|c}
+    \begin{tabular}{c|l}
       \textbf{Indice del suffisso} & \textbf{Suffisso}\\
       \hline
       0 & mississippi\$\\
@@ -40,7 +40,7 @@ Si vede quindi esempio chiarificatore.
       11 & \$\\
     \end{tabular}
     \quad
-    \begin{tabular}{c|c} 
+    \begin{tabular}{c|l} 
       \textbf{Indice del suffisso} & \textbf{Suffisso}\\ 
       \hline
       11 & \$\\
@@ -68,8 +68,8 @@ L'uso del \textit{suffix array} è spesso accompagnato dal \textbf{Longest Commo
   denotato con $LCP_T$, come un array lungo $n+1$, contenente la
   lunghezza del prefisso comune tra ogni coppia di suffissi consecutivi
   nell'ordinamento lessicografico dei suffissi, quindi in $SA_T$. Più formalmente
-  $LCP_T$ è un array tale che, avendo $0\leq i\leq n$ e indicando con $lcp(x,y)$ il
-  più lungo prefisso comune tra le stringhe $x$ e $y$:
+  $LCP_T$ è un array tale che, avendo $0\leq i\leq n$ e indicando con $lcp(x,y)$
+  il più lungo prefisso comune tra le stringhe $x$ e $y$:
   \[LCP_T[i]=
     \begin{cases}
       -1&\mbox{ se } i=0 \lor i=n\\
@@ -82,7 +82,7 @@ L'uso del \textit{suffix array} è spesso accompagnato dal \textbf{Longest Commo
   \begin{table}[H]
     \centering
     \footnotesize
-    \begin{tabular}{c|c|c|c} 
+    \begin{tabular}{c|c|c|l} 
       \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{LCP_T}$ & \textbf{Suffisso}\\ 
       \hline
       0 & 11 & -1 & \$\\
