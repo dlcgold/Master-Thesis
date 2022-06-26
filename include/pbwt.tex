@@ -1,6 +1,247 @@
 \section{Trasformata di Burrows-Wheeler posizionale}
-\subsection{Implementazione originale}
-\subsubsection{Gli algoritmi di Durbin}
+Presentata nel 2014 da Richard Durbin la \textbf{Positional Burrows-Wheeler
+  Transform (\textit{PBWT})}, traducibile con \textit{trasformata di
+  Burrows-Wheeler posizionale}, è una struttura efficiente per la memorizzazione
+e l'interrogazione di pannelli di aplotipi.\\
+Formalmente si considera un pannello $X$ di $M$ aplotipi $x_i$, $i=0,\ldots,
+M-1$, su $N$ siti, indicizzati tramite $k=0,\ldots, N-1$, tale che tutti i siti
+sono considerati biallelici. Da un punto di vista computazionale quest'ultima
+assunzione comporta che il pannello $X$ è costruito sull'alfabeto $\Sigma
+=\{0,1\}$, avendo quindi che:
+\[x_i[k]=\{0,1\}\]
+Si consideri che l'alfabeto è \textit{ordinato}, avendo che $0\prec 1$.\\
+Prima di proseguire con la trattazione è bene fornire la descrizione di alcuni
+formalismi utilizzati:
+\begin{itemize}
+  \item si denota, per una qualsiasi sequenza $s$, con $s[k_1,k_2)$ la
+  \textbf{sottostringa} di $s$ che inizia alla colonna $k_1$ e termina alla colonna
+  $k_2-1$
+  \item date due sequenze $t$ e $s$, si definisce un \textbf{match} tra le due
+  sequenze sse $s[k_1,k_2)=t[k_1,k_2)$, avendo che tale match inizia alla
+  colonna $k_1$ e termina alla colonna $k_2-1$
+  \item un match tra due sequenze $s$ e $t$, come definito al punto precedente,
+  è definito \textbf{localmente massimale} sse non si ha alcuna estensione a
+  destra o sinistra che comporti un ulteriore match, avendo quindi che:
+  \[(k_1=0\lor s[k_1-1]\neq t[k_1-1])\land (k_2=N\lor s[k_2]\neq t[k_2] )\]
+  \item comparando una sequenza $s$ ad un pannello di aplotipi $X$ si definisce
+  che $s$ ha un \textbf{set-maximal match} con $x_i$, che inizia alla
+  colonna $k_1$ e termina alla colonna $k_2-1$, sse tale match è
+  \textit{localmente massimale} e non si ha alcun altro match di $s$ con un
+  altro $x_j$ che include l'intervallo $[k_1,k_2)$
+\end{itemize}
+La costruzione di questa struttura dati si basa, ad ogni colonna $k$, sul
+riordinamento lessicografico delle sequenze di aplotipi basato sull'ordinamento
+inverso dei prefissi terminanti in colonna $k-1$. I valori presenti in colonna
+$k$ dopo il riordinamento altro non sono che i valori che andranno a popolare la
+cosiddetta \textbf{matrice PBWT}, che rappresenta la vera e propria
+trasformata. Si noti che avere le sequenze 
+ordinate in base ai prefissi invertiti alla $k$-esima colonna permette di
+identificare i match con maggior facilità in quanto, ad ogni colonna, aplotipi
+con suffisso comune (o prefisso comune in ordine inverso) saranno in posizioni
+consecutive all'interno della trasformata.\\
+La computazione di tutti i riordinamenti non presenta difficoltà dal punto di
+vista computazionale in quanto, conoscendo l'ordinamento in colonna $k$, si può
+derivare facilmente l'ordinamento in colonna $k+1$, studiando solo i valori alla
+colonna precedente ed effettuando uno \textbf{step di radix sort}.\\
+Più formalmente si denota con $a_k[i]=m$, con $m<M$, l'indice della sequenza
+$x_m$ del pannello $X$ da cui deriva il prefisso $i$-esimo nell'ordine inverso
+in colonna $k$. Si ottiene quindi che l'array $a_k$, detto \textbf{prefix
+  array}, altro non è che una permutazione degli indici $0,\ldots,M-1$.
+\begin{definizione}
+  Dato un aplotipo $i$, appartenente al pannello $X$, e un indice di colonna
+  $k$, si definisce il \textbf{prefix array} $a_k$ come una permutazione degli
+  indici $0,\ldots, M-1$ tale che $a_k[i]=j$ sse $x_j$ è l'$i$-esimo aplotipo di
+  $X$ nell'ordinamento inverso dei prefissi ottenuto alla colonna $k$.
+\end{definizione}
+Data questa definizione ne segue che la \textit{matrice PBWT} si ottiene
+direttamente andando a vedere, per ogni colonna, gli indici del \textit{prefix
+  array} e prendendo i valori del pannello $X$ secondo l'ordine espresso da
+quell'array.\\ 
+Per comodità di rappresentazione definiamo formalmente i valori della
+\textit{matrice PBTW} con il seguente formalismo:
+\[y_i^k[k]=x_{a_k[i]}[k]\]
+avendo quindi che $y_i^k$ denota la sequenza $i$-esima secondo l'ordinamento
+ottenuto per la colonna $k$. Possiamo quindi meglio spiegare perché risulti
+semplice computare i vari \textit{prefix array}. Infatti, si ha
+quindi che l'ordinamento degli elementi per $a_{k+1}$ è lo stesso degli elementi
+per $a_k$, al più di ``guidare'' internamente il riordinamento tramite i valori
+di $y_i^k[k]$, seguendo l'ordinamento dato dall'alfabeto. A breve, tramite un
+esempio, si chiarirà meglio quanto detto.\\
+\textbf{SPIEGARE MOLTO MEGLIO QUANTO DETTO}\\
+Come anticipato prefissi simili saranno consecutivi nei riordinamenti fino alla
+colonna $k$-esima risulta quindi utile tenere traccia della posizione iniziale
+dei match tra prefissi vicini. Formalmente, dato $i>0$, si definisce il
+$d_k[i]$ come il più piccolo $j$ tale che $y_i^k[j,k)=y_{i-1}^k[j,k)$. Ne segue
+ovviamente che, se $y_i^k[k-1]\neq y_{i-1}^k[k-1]$, allora $d_k[i]=k$. Per
+definizione, inoltre, $d_k[i]=k$ se $i=0$. L'array $d_k$ è detto
+\textbf{divergence array}.
+\begin{definizione}
+  Si definisce \textbf{divergence array} l'array $d_k$ tale che $d_k[i]$ è
+  l'indice colonna iniziale del match massimale a sinistra terminante in $k$ tra
+  l'$i$-esimo aplotipo e il suo precedente nell'ordinamento ottenuto alla
+  colonna $k$-esima.
+\end{definizione}
+Si può quindi dimostrare che l'inizio di qualsiasi match massimale terminante in
+colonna $k$ tra qualsiasi $y_i^k$ e $y_j^k$, con $i<j$, è calcolabile facilmente
+avendo che è dato da:
+\[\max_{i<m\leq j}d_k[m]\]
+Si noti che al posto del \textbf{divergence array} si può usare anche una
+variante del \textbf{Longest Common Prefix (\textit{LCP}) array}, denotato
+$l_k$, che, anziché 
+memorizzare l'indice d'inizio del match massimale a sinistra da due aplotipi
+consecutivi nell'ordinamento ottenuto alla colonna $k$-esima, tiene traccia
+della lunghezza di tale match. Formalmente si ha che $l_k[i]=k-d_k[i]$. \\ 
+\textbf{FORSE SERVE DEFINIZIONE FORMALE}.\\
+Fatte queste premesse possiamo quindi fornire una definizione formale di
+\textbf{PBWT}.
+\begin{definizione}
+  Dato $X=\{x_1,x_2,\ldots,x_M\}$ un insieme/pannello di $M$ aplotipi con $N$
+  siti, la \textbf{PBWT} di $X$ è una collezione di $N+1$ coppie di array
+  $(a_k,d_k)$, con $0\leq k\leq N$, dove ogni $a_k$ è detto \textbf{prefix
+    array} e ogni $d_k$ è detto \textbf{divergence array}. 
+\end{definizione}
+L'algoritmo per la costruzione di $a_{k+1}$ e $d_{k+1}$ a partire da $a_k$ e
+$d_k$ è disponibile all'algoritmo \ref{algo:durbin1}.
+\begin{esempio}
+  Vediamo quindi un esempio chiarificatore.\\
+  Si assuma il seguente pannello $X$:
+  \begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{c|ccccccccccccccc}
+      X & 00 & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 & 13
+      & 14 \\
+      \hline
+      00 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+      01 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+      02 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      03 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      04 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      05 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      06 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      07 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 \\
+      08 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 1 \\
+      09 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 \\
+      10 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 \\
+      11 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+      12 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 1 \\
+      13 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 1 \\
+      14 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 \\
+      15 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 \\
+      16 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+      17 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+      18 & 0 & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      19 & 0 & 1 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 
+    \end{tabular}
+  \end{table}
+  Volendo calcolare $y^6$ riordiniamo il pannello con l'ordine inverso alla
+  quinta colonna e $y^6$ altro non è che la sesta colonna del pannello
+  riordinato, $a_6$ la colonna degli indici e $d_6$ la colonna iniziale in cui
+  terminano le sottolineature:  
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.365]{img/matrix1.pdf}
+  \end{figure}
+  Ottenendo quindi:
+  \[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
+  \[d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]\]
+  \[l_6=[0,6,2,4,6,6,1,6,6,6,3,6,2,6,6,0,2,6,6,6]\]
+\end{esempio}
+\subsection{Match con aplotipo esterno}
+Durbin, nel suo articolo, propone diversi algoritmi, ad esempio per il calcolo
+di match interni ad $X$ più lunghi di una lunghezza minima $L$ o per la ricerca
+di tutti i \textit{set-maximal match} interni ad $X$ in tempo lineare. Di
+interesse per questa tesi è però il cosiddetto \textit{algoritmo 5}, quello che
+si propone di trovare tutti i \textit{set-maximal match} tra il panello $X$ e un
+aplotipo esterno $z$, assumendo che $|z|=M$.\\
+L'idea dietro l'algoritmo è quella di usare tre indici: $e_k$, $f_k$ e
+$g_k$. Nel dettaglio $e_k$ tiene traccia dell'inizio del più lungo match,
+terminante in colonna $k$, tra $z$ e un qualche $y_i^k$. L'intervallo
+$[f_k,g_k)$$\subseteq[0,\ldots,M)$ invece identifica il sotto-intervallo di
+$a_k$ contenente gli indici degli aplotipi appartenetenti a tale match.
+Formalmente si ha quindi che:
+\[z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall i\mbox{
+    t.c. }f_k\leq i < g_k\]
+Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle sequenze per cui si ha tale
+match più lungo.\\
+Bisogna quindi capire come aggiornare $e_k$, $f_k$ e $g_k$ passando dalla
+colonna $k$ alla colonna $k+1$. L'idea è quella per cui, avendo
+$f_{k+1}<g_{k+1}$ allora sicuramente ho ancora delle righe che presentano un
+match che parte da $e_k=e_{k+1}$ e termina in $k$ che può essere esteso in
+$k+1$. In caso contrario, avendo $f_{k+1}=g_{k+1}$, non si hanno match
+estendibili e quindi si può concludere che quelli terminanti in colonna $k$
+erano match massimali, dovendo poi aggiornare $e_{k+1}$ ottenedo i relativi
+$f_{k+1}$ e $g_{k+1}$. Bisogna quindi capire come funzioni la
+variante dell'\textbf{LF-mapping}, guidato dal carattere corrente dell'aplotipo
+query, all'interno della \textbf{PBWT}, per ottenere $f_{k+1}$ e $g_{k+1}$ a
+partire da $f_k$ e $g_k$.\\ 
+Per effettuare il mapping abbiamo bisogno di tre componenti:
+\begin{enumerate}
+  \item l'array $c$ tale per cui $c[k]=j$ sse la colonna $k$ contiene $j$
+  occorrenze di 0
+  \item l'array $u_k$ tale per cui, alla colonna $k$-esima, $u_k[i]=j$ sse $j$ è
+  il numero di occorrenze di 0 prima dell'indice $i$ nella colonna $k$
+  \item l'array $v_k$ tale per cui, alla colonna $k$-esima, $v_k[i]=j$ sse $j$ è
+  il numero di occorrenze di 1 prima dell'indice $i$ nella colonna $k$ 
+\end{enumerate}
+Tali valori possono essere computati e memorizzati in fase di costruzione della
+\textbf{PBWT}, come visibile direttamente nell'algoritmo \ref{algo:durbin1} per
+quanto riguarda $u$ e $v$, avendone già la computazione. Per quanto riguarda $c$
+si ha che potrebbe essere banalmente calcolato anch'esso in fase di costruzione
+della \textbf{PBWT}, tenendo ogni volta traccia del numero di 0 incontrati
+nella colonna $k$-esima.\\
+Sfruttando i valori di questi 3 array possiamo quindi effettuare il mapping,
+definito per comodità da una funzione, rappresentabile in pseudocodice come
+nell'algoritmo \ref{algo:lf}:
+\[w_k:N\times\Sigma\to N\]
+tale per cui:
+\[w_k(i,\sigma)=
+  \begin{cases}
+    u_k[i]&\mbox{ se }\sigma=0\\
+    v_k[i]+c[k]&\mbox{ se }\sigma=1
+  \end{cases}
+\]
+Infatti, come confermato anche dall'algoritmo di costruzione stesso, si ha che:
+\[a_{k+1}\left[w_k\left(i,y_i^k[k]\right)\right]=a_k[i]\]
+Infatti, avendo che $0\prec 1$, qualora si abbia $\sigma =0$, per mantenere la
+stabilità dell'ordinamento, basterà vedere quanti zeri ci sono fino all'indice
+corrente mentre, avendo $\sigma=1$ devo prima spostarmi alla fine degli zeri per
+poi vedere l'ordinamento all'interno degli uni.
+\begin{algorithm}
+  \begin{algorithmic}   
+    \Function{Find\_Set\_Maximal\_Matches\_From\_Z}{$z$}
+    \For {$k\gets 0$ \textbf{to} $N$}
+    \State $e,f,g\gets \mbox{\textit{Update\_Z\_Matches}}(k, z, e, f, g)$
+    \EndFor
+    \EndFunction    
+    \Function{Update\_Z\_Matches}{$k, z, e, f, g$}
+    \State $f'\gets w(k, f, z[k])$
+    \State $g'\gets w(k, g, z[k])$
+    \If{$f'<g'$}
+    \Comment\textit{{se $k$ è $N-1$ match da $e_k$ a $N-1$}}
+    \State $e'\gets e_k$
+    \Else
+    \Comment{\textit{match da $e_k$ a $k$}}
+    \State $e'\gets d_{k+1}[f']-1$
+    \If{$z[e']=0$ \textbf{and} $f'>0$}
+    \State $f'\gets g'-1$
+    \State \textbf{while} $z[e'-1]=y_{f'}^{k+1}[e'-1]$ \textbf{do} $e'\gets
+    e'-1$
+    \State \textbf{while} $d_{k+1}[f']\leq e'$ \textbf{do} $f'\gets f'-1$
+    \Else
+    \State $g'\gets f'+1$
+    \State \textbf{while} $z[e'-1]=y_{f'}^{k+1}[e'-1]$ \textbf{do}  $e'\gets
+    e'-1$ 
+    \State \textbf{while} $g'<M$ \textbf{and} $d_{k+1}[g']\leq e'$ \textbf{do}
+    $g'\gets g'+1$ 
+    \EndIf
+    \EndIf
+    \State \textbf{return} $e',f',g'$
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo 5 di Durbin.}
+  \label{algo:dur5}
+\end{algorithm}
 \subsubsection{Limiti spaziali}
 \subsection{Varianti della PBWT}
 \subsubsection{PBWT multi-allelica}
@@ -8,3 +249,4 @@
 \subsubsection{PBWT dinamica}
 \subsubsection{PBWT bidirezionale}
 \subsubsection{Recenti sviluppi}
+% LocalWords:  pseudocodice
