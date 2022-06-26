@@ -101,6 +101,17 @@
 % \renewcommand{\headrulewidth}{0pt}
 % \renewcommand{\footrulewidth}{0.3pt}}
 
+\AtBeginDocument{%
+  \renewcommand{\thelisting}{\Alph{chapter}.\arabic{listing}}
+  % \renewcommand\thetable{\Alph{section}.\arabic{table}}
+  % \renewcommand\thefigure{\Alph{section}.\arabic{figure}}
+}
+%Automatically change the driver counter for reset:
+\makeatletter
+\g@addto@macro\appendix{%
+  \counterwithin*{listing}{section}%
+}
+\makeatother
 % c C plus plus
 \def\Cplusplus{C\raisebox{0.5ex}{\tiny\textbf{++}}}
 \definecolor{nordred}{RGB}{191, 97, 106}
