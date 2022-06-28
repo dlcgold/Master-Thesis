@@ -1,2 +1,73 @@
 \section{RLPBWT naive}
-\subsection{Algoritmo per match massimali}
+Un primo approccio alla \textbf{compressione run-length} è stato quello di
+semplicemente ``adattare'' quanto presentato da Durbin. Soprattutto a causa di
+questo fattore tale approccio è stato nominato \textbf{RLPBWT naive}.\\
+L'idea è stata quella di capire quali informazioni fossero necessarie al fine di
+poter calcolare i match. Si è quindi partiti studiando quanto memorizzato da
+Durbin stesso, pensando ad eventuali alternative.\\
+Il dato fondamentale che la \textit{PBWT} tiene in memoria è \textit{il pannello
+  $X$, con random access}. Ovviamente memorizzare l'intero pannello non era
+possibile. D'altro canto l'idea dietro la 
+\textbf{RLPBWT} è quella di memorizzare con \textit{compressione run-length}
+la \textit{matrice PBWT}. La soluzione iniziale è stata quindi quella di
+memorizzare gli indici delle \textit{teste di run}, ovvero gli indici iniziali
+di ogni run. Ovviamente questa informazione non è sufficiente per poter sapere
+se una run sia composta da simboli $\sigma=0$ o simboli
+$\sigma=1$. Fortunatamente, essendo lo studio limitato, come per la
+\textit{PBWT}, a pannelli costruiti su alfabeto binario, $\Sigma=\{0,1\}$, si è
+potuto sfruttare il fatto che le run si alternano tra un carattere e
+l'altro. Basta quindi tenere in memoria anche un valore booleano che permetta di
+capire se la prima run sia una run di simboli $\sigma=0$. Infatti le run di
+indice pari presentano lo stesso simbolo della prima run e quindi, dato un
+qualsiasi indice di run, è possibile sapere quale sia il simbolo di tale run.\\
+Il passaggio successivo è stato quello di capire se le informazioni necessarie
+al mapping fossero tutte necessarie. In altri termini se, data la colonna $k$
+nella \textit{matrice PBWT}, fossero necessari $c[k]$, $u_k$ e $v_k$. In merito
+al valore $c[k]$, per quanto calcolabile in tempo $\mathcal{O}(r)$, dove $r$ è
+il numero di run della colonna $k$-esima, si è deciso che si potesse calcolarlo
+in fase di costruzione delle \textit{RLPBWT} e memorizzarlo esattamente come per
+la \textit{PBWT}. In merito invece ai vettori $u_k$ e $v_k$ si è cercato un modo
+per ottenerne una rappresentazione che implicasse avere un solo valore per ogni
+run della colonna. In altri termini si è cercato di capire se fosse possibile
+tenere in memoria $r$ valori che permettessero di effettuare comunque il
+mapping, a partire da un indice arbitrario $i\in\{0,\ldots,N-1\}$. Anche in
+questo caso l'alternanza data dal caso binario ha permesso di trovare una
+semplice soluzione. I valori di $u_k$ e $v_k$ crescono infatti in modo
+alternato. A seconda del simbolo $\sigma$ rappresentato in una data run infatti
+si avrà che solo i valori dell'array relativo a tale simbolo, nel range di
+indici di quella run, verranno incrementati ad ogni passo di una unità. Per fare
+un semplice esempio, se siamo in una run di 0 e iteriamo virtualmente
+all'interno di tale run, solo i valori di $u_k$, in quel
+range di indici, cresceranno di volta in volta di uno mentre per $v_k$, nello
+stesso range, si avrà sempre lo stesso valore.
+\begin{esempio}
+  Si vede un esempio per chiarire meglio quanto espresso in merito a $u_k$ e
+  $v_k$.\\
+  Sia data la seguente colonna:
+  \[y^5=00101111000000000000\]
+  Si hanno, oltre a $c[5]=15$:
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c||cc|c|c|cccc|cccccccccccc}
+      & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16
+      & 17 & 18 & 19\\
+      \hline
+      \hline
+      $y^5$ & 0 & 0 & 1 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+      & 0 & 0 & 0\\
+      \hline
+      \hline
+      $u_5$ & 0 & 1 & 2 & 2 & 3 & 3 & 3 & 3 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10
+      & 11 & 12 & 13 & 14\\
+      \hline
+      $v_5$ & 0 & 0 & 0 & 1 & 1 & 2 & 3 & 4 & 5 & 5 & 5 & 5 & 5 & 5 & 5 & 5 & 5
+      & 5 & 5 & 5
+    \end{tabular}
+  \end{table}
+\end{esempio}
+Grazie a questa alternanza è quindi possibile memorizzare, per ogni indice di
+testa di run $p$, tale che $p\neq 0$, solo il valore di $u_k[p]$ o $v_k[p]$,
+rispettivamente se sia una run su simboli $\sigma=1$ o $\sigma=0$ (visto che,
+esempio, se si analizza una run di zeri si avrà che solo i valori di $v_k$, nel
+range della run, verranno incrementati ad ogni step). Per $p=0$ banalmente si ha
+che $u_k[0]=v_k[0]=0$.\\

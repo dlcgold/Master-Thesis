@@ -101,7 +101,14 @@ Fatte queste premesse possiamo quindi fornire una definizione formale di
     array} e ogni $d_k$ è detto \textbf{divergence array}. 
 \end{definizione}
 L'algoritmo per la costruzione di $a_{k+1}$ e $d_{k+1}$ a partire da $a_k$ e
-$d_k$ è disponibile all'algoritmo \ref{algo:durbin1}.
+$d_k$ è disponibile all'algoritmo \ref{algo:durbin1}.\\
+Ai fini della trattazione dell'algoritmo di match con un'aplotipo esterno
+ricordiamo un'ulteriore definizione.
+\begin{definizione}
+  Definiamo $\alpha_k$ come l'inverso della permutazione data dal \textbf{prefix
+    array} $a_k$, avendo che:
+  \[\alpha_k[i]=j \iff a_k[j]=i\]
+\end{definizione}
 \begin{esempio}
   Vediamo quindi un esempio chiarificatore.\\
   Si assuma il seguente pannello $X$:
@@ -144,8 +151,40 @@ $d_k$ è disponibile all'algoritmo \ref{algo:durbin1}.
   \end{figure}
   Ottenendo quindi:
   \[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
+  \[\alpha_6=[2,12,13,14,16,17,18,19,6,3,4,7,8,9,0,1,5,15,10,11]\]
   \[d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]\]
   \[l_6=[0,6,2,4,6,6,1,6,6,6,3,6,2,6,6,0,2,6,6,6]\]
+  Nel complesso, permutando con tutti i vari \textit{prefix array}, si
+  otterrebbe la seguente \textbf{matrice PBTW}:
+  \begin{table}[H]
+  \centering
+  \footnotesize
+  \begin{tabular}{c|ccccccccccccccc}
+    X & 00 & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 & 13
+    & 14 \\
+    \hline
+    00 & 1 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
+    01 & 1 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
+    02 & 1 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 1 \\
+    03 & 1 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 1 \\
+    04 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 1 \\
+    05 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+    06 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+    07 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 \\
+    08 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 \\
+    09 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 \\
+    10 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+    11 & 0 & 1 & 0 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+    12 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+    13 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+    14 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+    15 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+    16 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+    17 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 \\
+    18 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 \\ 
+    19 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1
+  \end{tabular}
+\end{table}
 \end{esempio}
 \subsection{Match con aplotipo esterno}
 Durbin, nel suo articolo, propone diversi algoritmi, ad esempio per il calcolo
@@ -157,7 +196,7 @@ aplotipo esterno $z$, assumendo che $|z|=M$.\\
 L'idea dietro l'algoritmo è quella di usare tre indici: $e_k$, $f_k$ e
 $g_k$. Nel dettaglio $e_k$ tiene traccia dell'inizio del più lungo match,
 terminante in colonna $k$, tra $z$ e un qualche $y_i^k$. L'intervallo
-$[f_k,g_k)$$\subseteq[0,\ldots,M)$ invece identifica il sotto-intervallo di
+$[f_k,g_k)\subseteq[0,\ldots,M)$ invece identifica il sotto-intervallo di
 $a_k$ contenente gli indici degli aplotipi appartenetenti a tale match.
 Formalmente si ha quindi che:
 \[z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall i\mbox{
@@ -174,7 +213,7 @@ erano match massimali, dovendo poi aggiornare $e_{k+1}$ ottenedo i relativi
 $f_{k+1}$ e $g_{k+1}$. Bisogna quindi capire come funzioni la
 variante dell'\textbf{LF-mapping}, guidato dal carattere corrente dell'aplotipo
 query, all'interno della \textbf{PBWT}, per ottenere $f_{k+1}$ e $g_{k+1}$ a
-partire da $f_k$ e $g_k$.\\ 
+partire da $f_k$ e $g_k$ (e di conseguenza $e_{k+1}$).\\ 
 Per effettuare il mapping abbiamo bisogno di tre componenti:
 \begin{enumerate}
   \item l'array $c$ tale per cui $c[k]=j$ sse la colonna $k$ contiene $j$
@@ -193,7 +232,7 @@ nella colonna $k$-esima.\\
 Sfruttando i valori di questi 3 array possiamo quindi effettuare il mapping,
 definito per comodità da una funzione, rappresentabile in pseudocodice come
 nell'algoritmo \ref{algo:lf}:
-\[w_k:N\times\Sigma\to N\]
+\[w_k:\{0,\ldots,N\}\times\Sigma\to \{0,\ldots,N\}\]
 tale per cui:
 \[w_k(i,\sigma)=
   \begin{cases}
@@ -203,10 +242,84 @@ tale per cui:
 \]
 Infatti, come confermato anche dall'algoritmo di costruzione stesso, si ha che:
 \[a_{k+1}\left[w_k\left(i,y_i^k[k]\right)\right]=a_k[i]\]
-Infatti, avendo che $0\prec 1$, qualora si abbia $\sigma =0$, per mantenere la
-stabilità dell'ordinamento, basterà vedere quanti zeri ci sono fino all'indice
-corrente mentre, avendo $\sigma=1$ devo prima spostarmi alla fine degli zeri per
-poi vedere l'ordinamento all'interno degli uni.
+\begin{esempio}
+  Vediamo un piccolo esempio chiarificatore, riprendendo il precedente.\\
+  Per praticità riporta che:
+  \[a_5=[14,15,17,0,4,5,6,7,9,10,16,8,11,12,13,18,19,1,2,3]\]
+  \[\alpha_5=[3,17,18,19,4,5,6,7,11,8,9,12,13,14,0,1,10,2,15,16]\]
+  \[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
+  \[\alpha_6=[2,12,13,14,16,17,18,19,6,3,4,7,8,9,0,1,5,15,10,11]\]
+  Si ha quindi, ad esempio, con $k=5$ e $i=2$, che:
+  \[a_{6}\left[w_5\left(2,y_2^5[5]\right)\right]=a_5[2]\]
+  Avendo:
+  \[w_5\left(2,y_2^5[5]\right)=w_5\left(2,1\right)=v_5[2]+c[5]=0+15=15\]
+  Si ha che:
+  \[a_{6}[15]=17=a_5[2]\]
+\end{esempio}
+Ai fini dell'algoritmo serve però il ``passaggio inverso'' rispetto a quello
+indicato da questa equazione, ovvero passare dalla colonna $k$ alla colonna
+$k+1$. Quindi, pensando alla permutazione inversa del \textbf{prefix array}, si
+ha che:
+\[\alpha_{k+1}[i]=w_k(\alpha_k[i],x_i[k])\]
+\begin{esempio}
+  Si riprendono i dati dell'esempio precedente e si vuole calcolare, sempre con
+  $k=5$ e $i=2$:
+  \[\alpha_{6}[2]=w_5(\alpha_5[2],x_2[5])=w_5(18,0)=13\]
+  Come volevasi dimostrare.
+\end{esempio}
+L'ultima equazione ci suggerisce quindi che l'LF-mapping sopra definito
+consente il corretto aggiornamento di $f_k$ e $g_k$.
+Definendo quindi:
+\[f_{k+1}=w_k(f,z[k])\]
+si ha che $f_{k+1}$ sarà l'indice, in $a_{k+1}$, della prima sequenza $y_j^k$,
+con $j\geq f$, per la quale $y_j^k[k]=z[k]$. Analogamente si ha anche:
+\[g_{k+1}=w_k(g,z[k])\]
+Si hanno quindi, dopo il calcolo di $f_{k+1}$ e $g_{k+1}$ due possibili casi:
+\begin{enumerate}
+  \item si ha che $f_{k+1}<g_{k+1}$, quindi si hanno ancora match che partono da
+  $e_k$ e terminano in $k$ che si estendono anche in $k+1$. In tal caso quindi
+  $e_{k+1}=e_k$
+  \item si ha che $f_{k+1}=g_{k+1}$, quindi non si hanno match che partono da
+  $e_k$ e terminano in $k$ che sono anche estendibili in $k+1$. Bisogna quindi
+  annotare i match terminanti in $k$, nell'intervallo $[f_k,g_k)$ su $a_k$,
+  e poi calcolare i nuovi $e_k$, $f_k$ e $g_k$. La chiave per questo calcolo è
+  che, virtualmente, l'aplotipo $z$ si trova o  subito prima del blocco di
+  aplotipi $[f_k,g_k)$ in colonna $k$, secondo l'ordinamento dato dalla medesima
+  colonna, o subito dopo. Si ha quindi che, essendo nell'ordinamento o subito
+  prima di $f_{k}$ o subito dopo $g_k$:
+  \[y_{f_{k+1}-1}^{k+1}<z<y_{f_{k+1}}^{k+1}\]
+  Diventa quindi possibile inferire che:
+  \[e_{k+1}\leq d_{k+1}[f_{k+1}]\]
+  Si considera quindi, come punto di partenza $e_{k+1}=d_{k+1}[f_{k+1}]-1$,
+  studiando di conseguenza $z[e_{k+1}]$, avendo due casi possibili:
+  \begin{enumerate}
+    \item se tale valore è 0 allora, per l'ordinamento, $z$ ha un match migliore
+    con $y_{f_{k+1}-1}^{k+1}$ rispetto che con $y_{f_{k+1}}^{k+1}$. Si aggiorna
+    quindi $e_{k+1}$, decrementandolo, fino a che si ha match tra $z[e_{k+1}-1]$
+    e $y_{f_{k+1}-1}^{k+1}[e_{k+1}-1]$. Infine si decrementa $f_{k+1}$ fino a
+    che $d_{k+1}[f_{k+1}]\leq e_{k+1}$, trovando quelle righe per il quale il
+    \textbf{divergence array} non supera il valore di $e_{k+1}$. Si ottengono in
+    tal modo le sequenze, nel riordinamento in $k+1$, che hanno un match da
+    $e_{k+1}$ a $k+1$. Invece $g_{k+1}$ resta fisso
+    \item se tale valore è 1 allora, per l'ordinamento, $z$ ha un match migliore
+    con $y_{f_{k+1}}^{k+1}$ rispetto che con $y_{f_{k+1}-1}^{k+1}$. Si aggiorna
+    quindi $e_{k+1}$, decrementandolo, fino a che si ha match tra $z[e_{k+1}-1]$
+    e $y_{f_{k+1}-1}^{k+1}[e_{k+1}-1]$. Infine si incrementa $g_{k+1}$ fino a
+    che $d_{k+1}[g_{k+1}]\leq e_{k+1}$, per lo stesso ragionamento del caso
+    precedente. Invece $f_{k+1}$ resta fisso 
+  \end{enumerate}
+\end{enumerate}
+\textbf{METTERE ESEMPIO}\\
+L'algoritmo 5 è visualizzabile all'algoritmo \ref{algo:dur5} e, secondo i
+calcoli di Durbin, ha complessità $\mathcal{O}(NM)$, in quanto si ritiene che il
+numero di accessi ai loop interni sia limitato dalla costante rappresentante il
+numero di match, $c$. Nonostante ciò tale complessità temporale è ancora in
+corso di studio in quanto si hanno in letteratura evidenze della sua non
+correttezza. Un esempio è il paper di Naseri \cite{dpbwt}, dove si afferma che
+l'intuizione per cui tale costante $c$ limiti superiormente gli accessi ai loop
+innestati sia falsa. Si noti che nell'articolo non viene però precisata una
+nuova misura per la complessità dell'algoritmo.
+\textbf{VERIFICARE ULTIMA FRASE (MA ANCHE TUTTO IL RESTO CHE VA SCRITTO MEGLIO)}
 \begin{algorithm}
   \begin{algorithmic}   
     \Function{Find\_Set\_Maximal\_Matches\_From\_Z}{$z$}
@@ -243,10 +356,37 @@ poi vedere l'ordinamento all'interno degli uni.
   \label{algo:dur5}
 \end{algorithm}
 \subsubsection{Limiti spaziali}
+Bisogna affrontare la tematica della complessità in spazio di tale
+algoritmo. Ipotizzando di non ricalcolare colonna per colonna tutti i dati
+necessari (comportando un'incremento dal punto di vista temporale).\\
+Ricapitolando, per poter eseguire l'algoritmo 5, si necessita di avere in
+memoria, con \textit{random access} in tempo costante:
+\begin{itemize}
+  \item il \textbf{pannello} $X$, di dimensione $NM$
+  \item il \textbf{prefix array} $a_k$, di dimensione $NM$
+  \item il \textbf{divergence array} $d_k$, di dimensione $NM$
+  \item i vettori $u_k$ e $v_k$, complessivamente di dimensione $2NM$
+  \item il vettore $c_k$, di dimensione $M$
+\end{itemize}
+Possiamo quindi dire che si ha una complessità in memoria pari a
+$\mathcal{O}(NM)$ e, nel dettaglio, Durbin stima si tratti di $13NM$
+byte\footnote{\url{https://github.com/richarddurbin/pbwt/blob/0de8d02df1b77146ded81e9e196991fdab520767/pbwtMatch.c#L252}}.\\
+Per poter capire meglio la problematica prendiamo ad esempio un pannello di
+medie dimensioni, con $N=30000$ e $M=100000$. Ne segue che, secondo la stima di
+Durbin, si necessitano $\sim 36.32$ gigabytes di memoria. Inoltre, una stima
+sperimentale di tale richiesta di memoria può essere confermata con l'esecuzione
+dell'implementazione della \textbf{PBWT} di Durbin stesso. Infatti, monitorando
+con \texttt{time} il picco di memoria durante l'esecuzione si ha che esso
+corrisponde a $\sim 40.76$ gigabytes (comprensivi anche di tutto ciò che è ``a
+contorno'' all'algoritmo stesso). I dati quindi sembrano confermare le stime di
+Durbin e confermano l'alto uso di memoria richiesto dall'algoritmo 5. Questa è
+stata la motivazione principale per cui si è sviluppata, in questa tesi
+magistrale, una versione \textbf{run-length encoded} della struttura dati che
+permettesse di effettuare query con un aplotipo esterno
 \subsection{Varianti della PBWT}
 \subsubsection{PBWT multi-allelica}
 \subsubsection{PBWT con struttura LEAP}
 \subsubsection{PBWT dinamica}
 \subsubsection{PBWT bidirezionale}
-\subsubsection{Recenti sviluppi}
+%\subsubsection{Recenti sviluppi}
 % LocalWords:  pseudocodice
