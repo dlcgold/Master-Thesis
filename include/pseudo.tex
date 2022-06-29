@@ -152,6 +152,35 @@
   \footnotesize
   \begin{algorithmic}[1]
     \Function{uvtrick}{$k,\,\, i$}
+    \Comment $k$ indice di colonna, $i$ indice di run
+    \If{$i = 0$}
+    \State \textbf{return} $(0,\,\,0)$
+    \ElsIf{$i\mod 2=0$}
+    \State $u\gets uv_k[i-1],\,\,v\gets uv_k[i]$
+    \If{$start^k$}
+    \State \textbf{return} $(u,\,\,v)$
+    \Else
+    \State \textbf{return} $(v,\,\,u)$
+    \EndIf
+    \Else
+    \State $u\gets uv_k[i],\,\,v\gets uv_k[i-1]$
+    \If{$start^k$}
+    \State \textbf{return} $(u,\,\,v)$
+    \Else
+    \State \textbf{return} $(v,\,\,u)$
+    \EndIf
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per uvtrick naive}
+  \label{algo:uvnaive}
+\end{algorithm}
+
+
+\begin{algorithm}
+  \footnotesize
+  \begin{algorithmic}[1]
+    \Function{uvtrick}{$k,\,\, i$}
     \Comment $k$ is column index, $i$ row index
     \If{$i = 0$}
     \State \textbf{return} $(0,\,\,0)$
@@ -197,7 +226,7 @@
     \EndIf
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per uvtrick}
+  \caption{Algoritmo per uvtrick con bitvector}
   \label{algo:uvbv}
 \end{algorithm}
 

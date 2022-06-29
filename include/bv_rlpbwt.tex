@@ -1,1 +1,94 @@
 \section{RLPBWT con bitvectors}
+Al fine di compiere un ulteriore passo verso la formulazione di una struttura
+dati efficiente dal punto di vista dello spazio in memoria per la
+\textbf{RLPBWT}, si è provveduto a modificare la versione \textit{naive} al fine
+di introdurre l'uso dei \textbf{bitvectors}. Questo è stato fatto al fine di
+ottenere una rappresentazione in memoria della stessa che fosse ancora più
+efficiente. Come si vedrà questa versione intermedia non comporterà un
+miglioramento effettivo del consumo di memoria ma permetterà di avere la base su
+cui costruire le versioni successive.\\
+L'idea è quindi quella di sostituire, data una colonna $k$, quanto necessario a
+rappresentare le run (ovvero il vettore $p_k$ della variante naive) e quanto
+necessario a permettere il mapping (ovvero il vettore $uv_k$).\\
+In primis, per poter localizzare le run nella $k$-esima colonna, si è scelto di
+usare un \textit{bitvector}, che denominiamo per praticità $h_k$, tale che
+$|h_k|=N$. Formalmente si ha che:
+\[h_k[i]=
+  \begin{cases}
+    1&\mbox{se } y^k[i]\neq y^k[i+1]\lor i==N-1\\
+    0&\mbox{altrimenti}
+  \end{cases},\forall i\in \{0,\ldots,N-1\}
+\]
+Informalmente, quindi, si ha che si ha 1 in $h_k$ in tutti gli indici
+corrispondenti alla fine di una run.\\
+Empiricamente ci si aspettano ``poche'' run all'interno di una colonna della
+\textit{matrice PBWT}, per quanto già discusso nella sezione
+\ref{secpbwt}. Avendo poche run ci si aspetta anche ``pochi'' 1 all'interno di
+$h_k$, di conseguenza si è optato per usare gli \textbf{sparse bitvector} per la
+memorizzazione in memoria di ogni $h_k$, ricordando che, secondo quanto
+riportato per la libreria \textit{SDSL} \cite{sdsl}, tale variante richiede in
+memoria, indicando con $R$ il numero di run:
+\[\approx R\left(2+\log\frac{|h_k|}{R}\right)\mbox{ bit}\]
+\textbf{VERIFICARE CHE SIANO BITS}\\
+Più elaborata è la rappresentazione dei vettori $u_k$ e $v_k$. In questo caso si
+è deciso, a differenza della rappresentazione unica vista nella \textit{RLPBWT
+  naive}, di optare per due \textit{sparse bitvector}. In particolare, per il
+vettore $u_k$, tale che $|u_k|=c[k]$, si ha che:
+\[u_k[i]=
+  \begin{cases}
+    1&\mbox{se }i \mbox{ è il numero di simboli che contiene la
+    }rank_{u_k}(i)\mbox{-esima run di 0}\\
+    0&\mbox{altrimenti}
+  \end{cases},
+\]
+\vspace{-5mm}
+\[\forall i\in\{0,\ldots,|u_k|-1\}\]
+Analogamente si definisce $v_k$, tale che $|v_k|=N-c[k]$ come:
+\[v_k[i]=
+  \begin{cases}
+    1&\mbox{se }i \mbox{ è il numero di simboli che contiene la
+    }rank_{v_k}(i)\mbox{-esima run di 1}\\
+    0&\mbox{altrimenti}
+  \end{cases},
+\]
+\vspace{-5mm}
+\[\forall i\in\{0,\ldots,|v_k|-1\}\]
+Si noti che:
+\[rank_{h_k}(|h_k-1|)+1=([rank_{u_k}(|u_k-1|)+1)+[rank_{v_k}(|v_k-1|)+1\]
+Ovvero il numero di 1 presenti in $h_k$ è pari alla somma di quelli presenti in
+$u_k$ e $v_k$. Ne segue che, anche per questi ultimi due vettori, la scelta di
+usare \textit{sparse bitvector} per la loro memorizzazione sia giustificata
+dalla poca quantità, empiricamente, di simboli $\sigma=1$.\\
+Si vede un esempio chiarificatore.
+\begin{esempio}
+  Sia data la seguente colonna:
+  \[y^5=00101111000000000000\]
+  Si ha quindi che:
+  \[h_5=01110001000000000001\]
+  Avendo appunto un numero di run pari a:
+  \[rank_{h_5}(|h_5|)+1=4+1=5\]
+  In merito alle run composte da simboli $\sigma=0$ si ha che:
+  \[u_5=011000000000001\]
+  Avendo infatti che si segnalano:
+  \begin{itemize}
+    \item la prima run composta da due simboli $\sigma=0$
+    \item la seconda run composta da un solo simbolo $\sigma=0$
+    \item la terza run composta da dodici simboli $\sigma=0$
+  \end{itemize}
+  Parlando invece di $v_5$ si ha:
+  \[v_5=10001\]
+  Avendo che:
+  \begin{itemize}
+    \item la prima run è composta da un solo simbolo $\sigma=1$
+    \item la seconda run è composta da quattro $\sigma=1$
+  \end{itemize}
+\end{esempio}
+Le restanti informazioni, ovvero, per la colonna $k$, il valore $c[k]$, il
+booleano $start^k$ e l'LCP array $l_k$ sono le medesime della variante
+\textit{naive} della \textit{RLPBWT} (motivo per quale solo a breve si
+tratterà l'algoritmo di match).\\
+Lo pseudocodice relativo alla costruzione della colonna $k$-esima della
+\textbf{RLPBWT con bitvector} è disponile all'algoritmo \ref{algo:cosbv} (dove
+sono presenti anche le istruzioni per le varianti che verranno trattate in
+seguito).\\
+\textbf{CAPIRE SE METTERE UNO PSEUDO A PARTE}
