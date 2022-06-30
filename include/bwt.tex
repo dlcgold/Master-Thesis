@@ -86,11 +86,204 @@ Grazie a questa definizione è possibile partire dall'ultimo carattere del testo
 \begin{esempio}
   Si riprende l'esempio precedente, avendo:
   \[BWT_T=\mbox{ipssm\$pissii}\mbox{ e }F_T=\mbox{\$iiiimppssss}\]
-  % ricostruisci testo
-  
+  Si comincia dal simbolo \$ in $BWT_T$, che è l'ultimo carattere di $T$. Si
+  inoltre ha che esso corrisponde al primo, e unico \$ in $F_T$, all'indice
+  $0$. Tale simbolo, per l'ovvia proprietà delle rotazioni è preceduto dal
+  simbolo $BWT_T[0]=i$ in $T$. Quindi $i$ precederà \$ in $T$. Si sa inoltre che
+  tale $i$ è il primo $i$ in $BWT_T$. Si cerca quindi il primo $i$ in $F_T$,
+  sapendo che sono lo stesso simbolo nel testo. A questo punto il simbolo allo
+  stesso indice di tale $i$ nella $BWT_T$ sarà il simbolo che precede $i$ nel
+  testo. Proseguendo a ritroso si ricostruisce l'intero testo:
+  \[T=\mbox{mississippi\$}\]
 \end{esempio}
-
-\subsection{Trasformata di Burrows-Wheeler run-length}
-\subsection{Matching Statistics}
+\subsection{Trasformata di Burrows-Wheeler run-length encoded}
+Come già introdotto con la \textit{BWT} caratteri uguali tendono ad essere messi
+in posizioni consecutive all'interno della trasformata stessa. Si è quindi
+pensato, fin da subito, ad un modo efficiente per memorizzare in modo compresso
+testi mediante l'uso del \textit{run-length encoding} memorizzando le cosiddette
+\textbf{run} di caratteri consecutivi uguali mediante coppie:
+\[(\mbox{carattere}, \mbox{lunghezza della run})\]
+\begin{esempio}
+  Vediamo un breve esempio.\\
+  Si ipotizzi di avere la seguente stringa:
+  \[s=\mbox{aaaacctgggggg}\]
+  Una sua memorizzazione run-length sarebbe:
+  \[\{(a,4),(c,2),(t,1),(g,6)\}\]
+\end{esempio}
 \subsection{R-index}
+In questa direzione, nel 2005, M\"{a}niken e Navarro proposero la
+\textbf{Run-Length encoded Burrows–Wheeler Transform (\textit{RLBWT})}
+\cite{rlbwt}.
+Dato un testo $T$, tale che $|T|=n$, la \textbf{RLBWT} di $T$ è la
+rappresentazione \textit{run-length encoded} della $BWT_T$ ed è denotata come
+$RLBWT_T$. Si ha  che $|RLBWT_T|=r$, dove $r$ è il numero di run.\\
+Una strategia per la memorizzazione in modo compatto la \textit{RLBWT}, di $r$
+run, è quella di memorizzare:
+\begin{itemize}
+  \item una stringa $c$, tale che $|c|=r$, contenente un solo carattere per ogni
+  run della $BWT_T$, tale che $|BWT_T|=n$
+  \item un bitvector $bv$, tale che $|bv|=n$, tale che $bv[i]=1$ sse $BWT_T[i]$
+  è il primo carattere di una run
+\end{itemize}
+\begin{esempio}
+  Si prenda ad esempio la seguente $BWT_T$:
+  \[BWT_T=acggtcccaa\]
+  Si hanno:
+  \[c=acgtca\]
+  \[bv=1110110010\]
+\end{esempio}
+Grazie al lavoro di M\"{a}niken e Navarro si giunse al seguente teorema.
+\begin{teorema}
+  Dato un testo $T$, tale che $|T|=n$, se ne può costruire la \textit{RLBWT} in
+  uno spazio $\mathcal{O}(r)$ tale per cui si possono conteggiare tutte le
+  occorrenze di un pattern $P$, tale che $|P|=m$, in tempo:
+  \[\mathcal{O}(m\log n)\]
+\end{teorema}
+Nonostante questi ottimi risultati, per poter computare l'\textit{FM-index}, si
+richiedeva anche la costruzione dei \textit{suffix array samples} in spazio
+$\mathcal{O}(r)$. \\
+Grazie al loro indice la struttura era in grado di, dato un testo $T$, tale che
+$|T|=n$, e dato un pattern $P$, tale che $|P|=m$: 
+\begin{itemize}
+  \item conteggiare le occorrenze (\textit{count query}) del pattern nel testo,
+  in tempo $\mathcal{O}(m\log n)$, con spazio $\mathcal{O}(r)$  
+  \item localizzare tali occorrenze (\textit{locate query}) in tempo
+  $\mathcal{O}(s)$, con spazio $\mathcal{O}\left(\frac{r}{s}\right)$, avendo $s$
+  come distanza tra due \textit{SA samples}
+\end{itemize}
+Si ha quindi che i \textit{SA samples} di un ordine di grandezza maggiore, in
+termini di memoria, rispetto alla \textit{RLBWT}.\\
+A tal proposito, nel 2017, Policriti and Prezza \cite{policriti} mostrarono
+come, dato un testo $T$, tale che $|T|=n$, e dato un pattern $P$, tale
+che $|P|=m$, trovare l'intervallo nella $BWT_T$ contenente i caratteri in
+\textit{occ} che precedono le occorrenze di $P$ in $T$ in spazio
+$\mathcal{O}(r)$ e in tempo:
+\[\mathcal{O}(m\log\log n)\]
+Questo risultato è ora noto in letteratura come \textbf{Toehold Lemma} e
+dimostra come identificare \textbf{un} \textit{SA sample} nell'intervallo
+contenente una il pattern $P$. Il limite è dato dal fatto che non si supporta la
+localizzazione di tutte le $k$ occorrenze degli \textit{SA samples} in
+quell'intervallo.\\
+Nel 2020 Gagie et al \cite{gagie2020} trovarono soluzione a questo problema,
+mediante la definizione della funzione $\varphi$ (che nel dettaglio si
+dettaglierà più avanti) che ha permesso di avere le \textit{locate query} in
+spazio $\mathcal{O}(r)$. Tale risultato si riassume nel seguente teorema.
+\begin{teorema}
+  Dato un testo $T$, tale che $|T|=n$, si può memorizzare $T$ in spazio
+  $\mathcal{O}(r)$ tale che si possano trovare tutte le $k$ occorrenze di un
+  pattern $P$, tale che $|P|=m$, in tempo:
+  \[\mathcal{O}((m+k)\log\log n)\]
+\end{teorema}
+La struttura dati dietro questo risultato è stata denotata \textbf{R-index},
+un'evoluzione dell'\textit{FM-index}, consistente in:
+\begin{itemize}
+  \item la \textit{RLBWT}
+  \item i \textit{SA sample}, ovvero i valori di \textit{SA} all'inizio e alla
+  fine di ogni run. Si noti quindi che sono memorizzati in spazio proporzionale
+  al numero di run
+\end{itemize}
+Per i dettagli in merito alla costruzione dell'indice si rimanda ai paper di
+Kuhnle et al. \cite{kuhnle}, di Mun et al. \cite{mun} e di Boucher et
+al. \cite{boucher}. 
+\subsection{Match massimali con RLBWT}
+Dopo aver introdotto l'\textbf{R-index} bisogna brevemente spiegare come avvenga
+effettivamente la ricerca dei match di un pattern $P$, lungo $m$, in un
+testo $T$, lungo $M$.\\
+Il fine è quindi quello di calcolare i cosiddetti \textbf{Maximal exact matches
+  (\textit{MEM})}, ovvero match esatti tra $P$ e $T$ che non possono essere
+estesi in alcuna direzione.
+\begin{definizione}
+  Dato un testo $T$, con $|T|=n$, e un pattern $P$, con $|P|=m$, si definisce
+  una sottostringa $P[i:i+l-1]$, di lunghezza $l$, \textbf{MEM} di $P$ in $T$
+  se:
+  \begin{itemize}
+    \item $P[i:i+l-1]$ è una sottostringa di $T$
+    \item $P[i-1:i+l-1]$ non è una sottostringa di $T$ (non si può estendere a
+    sinistra) 
+    \item $P[i:i+l]$ non è una sottostringa di $T$ (non si può estendere a
+    destra) 
+  \end{itemize}
+\end{definizione}
+L'importanza nel calcolo dei match massimali esatti si ritrova nel loro uso nei
+metodi di allineamento basati sul \textbf{paradigma seed-and-extend}.
+Tale paradigma, sfruttato in algoritmi di allineamento come \textbf{BLAST}
+\cite{blast}, uno degli allineatori più usati al mondo, si basa sul trovare
+\textit{MEM} di piccola lunghezza, i \textit{seed} appunto, per poi continuare
+l'allineamento tramite algoritmi più sofisticati, spesso basati sulla
+\textit{programmazione dinamica}. \\
+Nel 2020, Bannai et al. \cite{bannai} mostrarono come il calcolo dei
+\textit{MEM} fosse equivalente al calcolo delle \textbf{Matching Statistics
+  (\textit{MS})}, un concetto teorico molto usato in
+\textit{bioinformatica}. Informalmente, per ogni posizione $i$ di un pattern
+$P$, le \textit{MS} riportano la lunghezza della più lunga sottostringa comune,
+iniziante in $i$, tra $P$ e un testo $T$, e l'indice di inizio di tale
+sottostringa in $T$.
+\begin{definizione}
+  Dato un testo $T$, con $|T|=n$, e un pattern $P$, con $|P|=m$, si definisce
+  \textbf{matching statistics} di $R$ su $T$ un array $MS$, tale che $|MS|=m$
+  di coppie $(pos, len)$ tale che:
+  \begin{itemize}
+    \item $T[MS[i].pos:MS[i].pos+MS[i].len-1]=P[i:i+MS[i].len-1]$, quindi si ha
+    un match tra $P$ e $T$ lungo $MS[i].len$ a partire da $MS[i].pos$ in $T$ e
+    da $i$ in $P$
+    \item $P[i:i+MS[i].len]$ non occorre in $T$, quindi il match non è
+    ulteriormente estendibile 
+  \end{itemize}
+\end{definizione}
+Una volta calcolato \textit{MS} si ha il seguente lemma.
+\begin{lemma}
+  Dato un testo $T$, con $|T|=n$, un pattern $P$, con $|P|=m$, e il
+  corrispondente array di matching statistics $MS$ si ha che:
+  \[P[i:i+l-1],\forall 1<i\leq m\]
+  è un \textbf{MEM} di lunghezza $l$ in $T$ sse:
+  \[MS[i].len=l\land MS[i-1].len\leq MS[i].len\]
+\end{lemma}
+\textbf{CAPIRE SE METTERE DETTAGLI DI CALCOLO CON LCP}.\\
+Per costruire l'array \textit{MS} l'approccio naive è quello di sfruttare
+interamente l'\textit{LCP array} ma, sempre nell'articolo di Bannai et
+al.\cite{bannai}, si è presentato una semplice concetto in grado di
+ottimizzare il processo, quello delle \textbf{threshold}. Questa piccola
+struttura dati memorizza il minimo valore dell''\textit{LCP array} tra due run
+consecutive nel medesimo simbolo nella \textit{BWT}.
+\begin{definizione}
+  Dato un testo $T$ e date $BWT_T[j':j]$ e $BWT_T[k:k']$ due run consecutive
+  dello stesso carattere in $BWT_T$. Si definisce la \textbf{threshold}
+  posizione:
+  \[j< i \leq k\mbox{ tale che } i\mbox{ è l'indice del minimo valore in
+    }LCP[j+1:k],\] 
+\end{definizione}
+Rossi et al., nel 2021, sfruttarono tutte le conoscenze relative
+alla \textbf{RLBWT}, all'\textbf{R-index} e alle \textbf{matching statistics}
+per ideare \textbf{MONI:\textit{ A Pangenomics Index for Finding MEMs}}
+\cite{moni}. In questa soluzione si ha quindi la costruzione, in due
+\textit{sweep}, dell'array delle \textit{matching statistics}.\\
+\textbf{APPROFONDIRE ULTIMA FRASE}\\
+\textbf{CAPIRE SE METTERE ESEMPIO}\\
+Questa pubblicazione è stata uno dei punti di partenza per
+riadattare quanto studiato sulla \textit{BWT} classica al fine di ottenere
+risultati analoghi per la \textit{PBWT}.
 \subsection{PHONI}
+Nel 2021, Boucher, Gagie, Rossi et al. proposero un ulteriore miglioramento di
+quanto fatto in \textit{MONI}, con \textbf{PHONI: \textit{Streamed Matching
+    Statistics with Multi-Genome References}}.\\
+In questo progetto non solo si sostituì l'uso delle \textit{thresholds} con
+l'uso delle \textbf{LCE queries}, riducendosi ad un solo \textit{sweep}
+sull'array $MS$ (permettendo un uso ``online'' dell'algoritmo), ma si
+esplicitarono anche le \textbf{funzioni} $\mathbf{\varphi}$ e
+$\mathbf{\varphi^{-1}}$ per il riconoscimento di tutte le occorrenze di ogni
+\textit{MEM} tra un pattern e un testo.%
+%Permuted longest-common-prefix array
+\begin{definizione}
+  Si definisce il \textbf{permuted longest-common-prefix array (PLCP)}
+  \cite{plcp}, come un array tale per cui:
+  \[PLCP[p]=
+    \begin{cases}
+      0&\mbox{se }ISA[p]=0
+      LCP[ISA[p]]&\mbox{altrimenti}
+    \end{cases}
+  \]
+  ovvero dove i valori sono in ordine di posizione e non lessicografico. In
+  altri termini:
+  \[PLCP[SA[p]] = LCP[p]\]
+\end{definizione}
+\textbf{DEFINIZIONE INCOMPLETA}
