@@ -61,6 +61,7 @@ usare \textit{sparse bitvector} per la loro memorizzazione sia giustificata
 dalla poca quantità, empiricamente, di simboli $\sigma=1$.\\
 Si vede un esempio chiarificatore.
 \begin{esempio}
+  \label{es:bv1}
   Sia data la seguente colonna:
   \[y^5=00101111000000000000\]
   Si ha quindi che:
@@ -91,4 +92,106 @@ Lo pseudocodice relativo alla costruzione della colonna $k$-esima della
 \textbf{RLPBWT con bitvector} è disponile all'algoritmo \ref{algo:cosbv} (dove
 sono presenti anche le istruzioni per le varianti che verranno trattate in
 seguito).\\
-\textbf{CAPIRE SE METTERE UNO PSEUDO A PARTE}
+\textbf{CAPIRE SE METTERE UNO PSEUDO A PARTE}\\
+Bisogna spiegare come, data un indice di aplotipo $i\in\{0,\ldots,N-1\}$ e una
+colonna $k$, estrarre $u'_k[i]$ e $v'_k[i]$, ovvero come se si stesse usando la
+\textit{PBWT} classica, a partire dagli attuali $u_k[i]$ e $v_k[i]$. Ovviamente,
+se $i=0$, si ha che $u'_k[0]=v'_k[0]=0$. In caso contrario bisogna capire la run
+in cui si trova l'indice $i$. Questo si ottiene direttamente sfruttando $h_k$:
+\[run = rank_{h_k}(i)\]
+Una volta calcolato l'indice di run si hanno tre possibilità:
+\begin{enumerate}
+  \item si ha che $run=0$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$
+  allora:
+  \[(u,v)=
+    \begin{cases}
+      (i,0)&\mbox{se } b=0\\
+      (0,i)&\mbox{altrimenti}
+    \end{cases}
+  \]
+  \item si ha che $run=1$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$. In
+  tal caso bisogna per prima cosa individuare l'indice di inizio della seconda
+  run, sfruttando $h_k$:
+  \[beg = select_{h_k}(1)+1\]
+  A questo punto si ha il numero di simboli della prima run, indicizzata a 0, e,
+  calcolando la distanza tra l'indice di riga e quello di inizio della prima
+  run, avendo che:
+  \[(u,v)=
+    \begin{cases}
+      (beg,i-beg)&\mbox{se } b=0\\
+      (i-beg,beg)&\mbox{altrimenti}
+    \end{cases}
+  \]
+  \item si ha che $run=j$, con $j\in\{2,R-1\}$. Anche in questo caso  si procede
+  calcolando l'indice di inizio della run:
+  \[beg = select_{h_k}(run)+1\]
+  e l'offset rispetto all'indice $i$ dato:
+  \[offset = i-beg\]
+  Poi, sfruttando la solita dicotomia fornita dal caso binario in studio, si
+  hanno due casi: 
+  \begin{enumerate}
+    \item si è in una run di indice pari.
+    Si sfruttano poi $u_k$ e $v_k$ per sapere l'indice della precedente run con
+    simboli $\sigma=0$:
+    \[pre_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1\]
+    e quello della run con simboli simboli $\sigma=1$:
+    \[pre_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1\]
+    Si noti che si usa $\frac{run}{2}$ in quanto, essendo in una run di indice
+    pari si hanno precedentemente lo stesso numero di run per $\sigma=0$ e per
+    $\sigma=1$ e quindi si considera lo stesso numero di ``run'' nei due
+    bitvector $u_k$ e $v_k$.\\
+    A questo punto, sempre per il ragionamento per cui solo uno tra $u$ e $v$
+    non è costante all'interno di una run si ha che o $pre_u$ o $pre_v$ è tale
+    costante mentre l'altro valore deve essere calcolato considerando l'offset:
+    \[(u,v)=
+      \begin{cases}
+        (pre_u+offset,pre_v)&\mbox{se } b=0\\
+        (pre_u,pre_v+offset)&\mbox{altrimenti}
+      \end{cases}
+    \]
+    \item ci si trova in una run di indice dispari, quindi non si hanno
+    precedentemente lo stesso numero di run per i due simboli. Bisogna quindi
+    calcolare quante siano tali run. Se la prima run è di zeri:
+    \[run_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1\]
+    \[run_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)\]
+    mentre se la prima run non è di zeri si devono invertire i due valori. Si sa
+    quindi quali ``run'' considerare sui due bitvector $u_k$ e $v_k$.\\
+    Posso quindi procedere come nel caso precedente, avendo:
+    \[pre_u=select_{u_k}(run_u)+1\]
+    \[pre_v=select_{v_k}(run_v)+1\]
+    E potendo quindi restituire:
+    \[(u,v)=
+      \begin{cases}
+        (pre_u,pre_v+offset)&\mbox{se } b=0\\
+        (pre_u+offset,pre_v)&\mbox{altrimenti}
+      \end{cases}
+    \]
+  \end{enumerate}
+\end{enumerate}
+\textbf{SPIEGAZIONE DA MIGLIORARE}
+\begin{esempio}
+  Si prendano i dati e i risultati ottenuti all'esempio \ref{es:bv1}. Si
+  vogliono calcolare $u$ e $v$ per $i=6$.\\
+  In primis si ha quindi:
+  \[run=rank_{h_5}(6)=3\]:
+  \[beg = select_{h_5}(3)+1=3+1=4\]
+  \[offset = i-beg=6-4=2\]
+  Quindi ci si trova nel terzo caso e, nel dettaglio, avendo una run di
+  indice dispari. Si calcolano quindi:
+  \[run_u=select_{u_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)+1=
+    select_{u_5}(1)+1
+    =1+1=2\] 
+  \[run_v=select_{v_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)=
+    select_{v_5}(1)=0\] 
+  che non andranno invertiti avendo $start^5=\top$.\\
+  Si calcolano quindi:
+  \[pre_u=select_{u_5}(2)+1=2+1=3\]
+  \[pre_v=select_{v_5}(0)+1=0+1=1\]
+  Avendo infatti, in totale, tre simboli $\sigma=0$ e un simbolo $\sigma=1$
+  prima dell'indice 6.\\ 
+  Concludendo, avendo $start^5=\top$:
+  \[(u,v)=(pre_u, pre_v + offset)=(3,1+2)=(3,3)\]
+\end{esempio}
+L'algoritmo per il calcolo di $u$ e $v$, tenendo in considerazione che tale
+metodo verrà usato anche nelle varianti che verranno presentate in seguito della
+\textit{RLPBWT}, è disponibile all'algoritmo \ref{algo:uvbv}.
