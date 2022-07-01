@@ -27,8 +27,8 @@ Empiricamente ci si aspettano ``poche'' run all'interno di una colonna della
 $h_k$, di conseguenza si è optato per usare gli \textbf{sparse bitvector} per la
 memorizzazione in memoria di ogni $h_k$, ricordando che, secondo quanto
 riportato per la libreria \textit{SDSL} \cite{sdsl}, tale variante richiede in
-memoria, indicando con $R$ il numero di run:
-\[\approx R\left(2+\log\frac{|h_k|}{R}\right)\mbox{ bit}\]
+memoria, indicando con $r$ il numero di run:
+\[\approx r\left(2+\log\frac{|h_k|}{r}\right)\mbox{ bit}\]
 \textbf{VERIFICARE CHE SIANO BITS}\\
 Più elaborata è la rappresentazione dei vettori $u_k$ e $v_k$. In questo caso si
 è deciso, a differenza della rappresentazione unica vista nella \textit{RLPBWT
@@ -122,7 +122,7 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
       (i-beg,beg)&\mbox{altrimenti}
     \end{cases}
   \]
-  \item si ha che $run=j$, con $j\in\{2,R-1\}$. Anche in questo caso  si procede
+  \item si ha che $run=j$, con $j\in\{2,r-1\}$. Anche in questo caso  si procede
   calcolando l'indice di inizio della run:
   \[beg = select_{h_k}(run)+1\]
   e l'offset rispetto all'indice $i$ dato:

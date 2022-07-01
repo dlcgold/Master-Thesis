@@ -76,11 +76,11 @@ quanto, se si analizza una run di zeri si avrà che solo i valori di $v_k$, nel
 range della run, verranno incrementati ad ogni step. Per $i=0$ banalmente si ha
 che $u_k[i]=v_k[i]=0$.\\
 Memorizzando i valori di $u_k$ e $v_k$ in un array $uv_k$, tale che
-$|uv_k|=|R|$, dove $R$ è il numero di run alla colonna $k$-esima, e dato
-$i\in\{0,\ldots, R-1\}$, a seconda che la colonna presenti o meno la prima run
+$|uv_k|=|r|$, dove $r$ è il numero di run alla colonna $k$-esima, e dato
+$i\in\{0,\ldots, r-1\}$, a seconda che la colonna presenti o meno la prima run
 con simboli $\sigma=0$, si possono estrarre, in tempo costante, i valori di
 $u_k$ e $v_k$ per una data testa di run. Nel dettaglio, dato $i\in{0,\ldots,
-  R-1}$:
+  r-1}$:
 \begin{itemize}
   \item se $i=0$ si ha che $u_k[p[i]]=v_k[p[i]]=uv_k[0]=0$
   \item se $i\mod 2 =0$ si hanno due casi:
