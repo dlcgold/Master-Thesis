@@ -60,6 +60,7 @@ Si vede quindi esempio chiarificatore.
   Ottenendo quindi che:
   \[SA_T=[11,10,7,4,1,0,9,8,6,3,5,2]\]
 \end{esempio}
+\subsection{Longest common prefix}
 L'uso del \textit{suffix array} è spesso accompagnato dal \textbf{Longest Common
   Prefix}.
 \begin{definizione}
@@ -110,4 +111,147 @@ dell'\textit{LCP} si ha, per un testo lungo $n$ e un pattern lungo $m$:
 Con l'uso dell'\textit{LCP} questo si riduce a:
 \[\mathcal{O}(m+\log n)\]
 Per ulteriori approfondimenti si rimanda al testo di Gusfield
-\cite{gusfield_1997}. 
+\cite{gusfield1997}.
+\subsection{SA inverso}
+Ai fini di poter comprendere future definizioni si presenta brevemente anche
+l'\textbf{Inverse Suffix Array (\textit{ISA})}, ovvero la permutazione inversa
+dei valori del \textit{suffix array}.
+\begin{definizione}
+  Dato il \textbf{suffix array} $SA_T$, costruito su un testo $T$ di lunghezza
+  $n$, si definisce l'\textbf{inverse suffix array} $ISA_T$ come:
+  \[ISA_T[i]=j\iff SA_T[j]=i,\,\,\forall i\in\{0,n-1\}\]
+\end{definizione}
+\begin{esempio}
+  Riprendendo l'esempio precedente si avrebbe quindi:
+  \begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{c|c|c|l} 
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{ISA_T}$ & \textbf{Suffisso}\\ 
+      \hline
+      0 & 11 & 5 & \$\\
+      1 & 10 & 4 & i\$\\
+      2 & 7 & 11 & ippi\$\\
+      3 & 4 & 9 & issippi\$\\
+      4 & 1 & 3 & ississippi\$\\
+      5 & 0 & 10 & mississippi\$\\
+      6 & 9 & 8 & pi\$\\
+      7 & 8 & 2 & ppi\$\\
+      8 & 6 & 7 & sippi\$\\
+      9 & 3 & 6 & sissippi\$\\
+      10 & 5 & 1 & ssippi\$\\
+      11 & 2 & 0 & ssissippi\$\\
+    \end{tabular}
+  \end{table}
+\end{esempio}
+\subsection{LCP permutato}
+Un'altra permutazione che bisogna introdurre è il \textbf{permuted
+  longest-common-prefix array (\textit{PLCP})} \cite{plcp}. Tale permutazione
+permette una rappresentazione succinta in memoria \cite{plcp2},
+permettendo di ottenere gli stessi risultati di quest'ultimo. Un'altro vantaggio
+è che la sua ricostruzione richiede un minor costo computazionale.
+\begin{definizione}
+  Si definisce il \textbf{permuted longest-common-prefix array} $PLCP_T$,
+  construito a partire da un testo $T$ di lunghezza $n$, come un
+  array tale per cui \cite{phoni}:
+  \[PLCP_T[p]=
+    \begin{cases}
+      0&\mbox{se }ISA_T[p]=0\\
+      LCP_T[ISA_T[p]]&\mbox{altrimenti}
+    \end{cases},\,\,\forall p\in\{0,n-1\}
+  \]
+  ovvero dove i valori sono in ordine di posizione e non lessicografico. In
+  altri termini \cite{plcp}:
+  \[PLCP[SA[p]] = LCP[p],\forall p\in\{1,n-1\}\]
+  Quindi, essendo i valori in $PLCP$ i medesimi in $LCP$ ma solo con un ordine
+  diverso si ha a che fare con una \emph{permutazione}.
+\end{definizione}
+Ciò che permette una rappresentazione compatta del \textit{PLCP} è descritto nel
+seguente lemma \cite{plcp3}.
+\begin{lemma}
+  Dato un testo $T$, tale che $|T|=n$, si ha che:
+  \[PCLP_T[i]\geq PLCP_T[i-1]-1,\,\,\forall i\in\{1,n-1\}\]
+\end{lemma}
+\begin{esempio}
+  Riprendendo l'esempio precedente si avrebbe quindi:
+  \begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{c|c|c|c|c|l} 
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{ISA_T}$ & $\mathbf{LCP_T}$
+      & $\mathbf{PLCP_T}$ & \textbf{Suffisso}\\  
+      \hline
+      0 & 11 & 5 & -1 & 0 & \$\\
+      1 & 10 & 4 & 0 & 4 & i\$\\
+      2 & 7 & 11 & 1 & 3 & ippi\$\\
+      3 & 4 & 9 & 1 & 2 & issippi\$\\
+      4 & 1 & 3 & 4 & 1 & ississippi\$\\
+      5 & 0 & 10 & 0 & 1 & mississippi\$\\
+      6 & 9 & 8 & 0 & 0 & pi\$\\
+      7 & 8 & 2 & 1 & 1 & ppi\$\\
+      8 & 6 & 7 & 0 & 1 & sippi\$\\
+      9 & 3 & 6 & 2 & 0 & sissippi\$\\
+      10 & 5 & 1 & 1 & 0 & ssippi\$\\
+      11 & 2 & 0 & 3 & 0/-1 &  ssissippi\$\\
+    \end{tabular}
+  \end{table}
+  \textit{In merito a $PLCP_T[11]$ si ha che esso, a seconda delle definizioni,
+    può essere sia $0$ che $-1$.}
+\end{esempio}
+\subsection{Funzioni phi e phi invertito}
+L'ultimo concetto che si introduce sono le \textbf{funzioni}
+$\boldsymbol\varphi$ e $\mathbf{\boldsymbol\varphi^{-1}}$, usate per poter
+identificare i valori precedenti e successivi di 
+un dato valore in $SA_T$ al fine di poter sia ricostruire efficientemente il
+\textit{PLCP} di un testo $T$ (per i dettagli si rimanda all'articolo di
+K\"{a}rkk\"{a}inen \cite{plcp}) che di permettere, come si vedrà brevemente più 
+avanti nella sezione \ref{secbwt}, il riconoscimento di tutte le occorrenze di
+un match in $T$ \cite{phoni}.
+\begin{definizione}
+  Dato un testo $T$ di lunghezza $n$ si definiscono le funzioni, che di fatto
+  sono permutazioni dei valori di $SA_T$, $\boldsymbol\varphi$ e
+  $\mathbf{\boldsymbol\varphi^{-1}}$ come \cite{phoni}: 
+  \[\varphi(p)=
+    \begin{cases}
+      null&\mbox{se } ISA_T[p]=0\\
+      SA_T[ISA_T[p]-1]&\mbox{altrimenti}
+    \end{cases},\,\,\forall p\in\{0,n-1\}
+  \]
+   \[\varphi(p)^{-1}=
+    \begin{cases}
+      null&\mbox{se } ISA_T[p]=n-1\\
+      SA_T[ISA_T[p]+1]&\mbox{altrimenti}
+    \end{cases},\,\,\forall p\in\{0,n-1\}
+  \]
+  Analogamente possono essere definite come \cite{plcp}:
+  \[\varphi[SA[p]]=SA[p-1]\]
+  \[\varphi^{-1}[SA[p]]=SA[p+1]\]
+\end{definizione}
+\begin{esempio}
+   Riprendendo l'esempio precedente si avrebbe quindi:
+  \begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{c|c|c|c|c|c|c|l} 
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{ISA_T}$ & $\mathbf{LCP_T}$
+      & $\mathbf{PLCP_T}$ & $\mathbf{\boldsymbol\varphi}$
+      & $\mathbf{\boldsymbol\varphi^{-1}}$ & \textbf{Suffisso}\\  
+      \hline
+      0 & 11 & 5 & -1 & 0 & 1 & 9 & \$\\
+      1 & 10 & 4 & 0 & 4 & 4 & 0 & i\$\\
+      2 & 7 & 11 & 1 & 3 & 5 & $null$ & ippi\$\\
+      3 & 4 & 9 & 1 & 2 & 6 & 5 & issippi\$\\
+      4 & 1 & 3 & 4 & 1 & 7 & 1 & ississippi\$\\
+      5 & 0 & 10 & 0 & 1 & 3 & 2 & mississippi\$\\
+      6 & 9 & 8 & 0 & 0 & 8 & 3 & pi\$\\
+      7 & 8 & 2 & 1 & 1 & 10 & 4 & ppi\$\\
+      8 & 6 & 7 & 0 & 1 & 9 & 6 & sippi\$\\
+      9 & 3 & 6 & 2 & 0 & 0 & 8 & sissippi\$\\
+      10 & 5 & 1 & 1 & 0 & 11 & 7 & ssippi\$\\
+      11 & 2 & 0 & 3 & 0/-1 & $null$ & 10 & ssissippi\$\\
+    \end{tabular}
+  \end{table}
+  Infatti, ad esempio, il valore $9$ in $SA_T$ è preceduto dal valore
+  $\varphi(9)=0$ ed è seguito dal valore $\varphi^{-1}(9)=8$.
+\end{esempio}
+\textbf{CAPIRE SE SERVE DIRE ALTRO}

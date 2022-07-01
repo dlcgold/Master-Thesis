@@ -371,7 +371,7 @@ memoria, con \textit{random access} in tempo costante:
 \end{itemize}
 Possiamo quindi dire che si ha una complessità in memoria pari a
 $\mathcal{O}(NM)$ e, nel dettaglio, Durbin stima si tratti di $13NM$
-byte\footnote{\url{https://github.com/richarddurbin/pbwt/blob/0de8d02df1b77146ded81e9e196991fdab520767/pbwtMatch.c#L252}}.\\
+byte\footnote{\url{https://github.com/richarddurbin/pbwt/blob/0de8d02df1b77146ded81e9e196991fdab520767/pbwtMatch.c\#L252}}.\\
 Per poter capire meglio la problematica prendiamo ad esempio un pannello di
 medie dimensioni, con $N=30000$ e $M=100000$. Ne segue che, secondo la stima di
 Durbin, si necessitano $\sim 36.32$ gigabytes di memoria. Inoltre, una stima
@@ -383,11 +383,12 @@ contorno'' all'algoritmo stesso). I dati quindi sembrano confermare le stime di
 Durbin e confermano l'alto uso di memoria richiesto dall'algoritmo 5. Questa è
 stata la motivazione principale per cui si è sviluppata, in questa tesi
 magistrale, una versione \textbf{run-length encoded} della struttura dati che
-permettesse di effettuare query con un aplotipo esterno
+permettesse di effettuare query con un aplotipo esterno.
 \subsection{Varianti della PBWT}
 \subsubsection{PBWT multi-allelica}
 \subsubsection{PBWT con struttura LEAP}
 \subsubsection{PBWT dinamica}
 \subsubsection{PBWT bidirezionale}
+\subsubsection{PBWT con wildcard}
 %\subsubsection{Recenti sviluppi}
 % LocalWords:  pseudocodice

@@ -1,4 +1,5 @@
 \section{Trasformata di Burrows-Wheeler}
+\label{secbwt}
 Introdotta nel 1994 da Burrows e Wheeler con lo scopo di comprimere testi, la
 \textbf{Burrows-Wheeler Transform} \cite{bwt} è divenuta ormai uno standard nel
 campo dell'\textit{algoritmica su stringhe} e della \textit{bioinformatica},
@@ -256,12 +257,21 @@ Rossi et al., nel 2021, sfruttarono tutte le conoscenze relative
 alla \textbf{RLBWT}, all'\textbf{R-index} e alle \textbf{matching statistics}
 per ideare \textbf{MONI:\textit{ A Pangenomics Index for Finding MEMs}}
 \cite{moni}. In questa soluzione si ha quindi la costruzione, in due
-\textit{sweep}, dell'array delle \textit{matching statistics}.\\
+\textit{sweep}, tramite l'\textbf{algoritmo di Bannai}, dell'array delle
+\textit{matching statistics}. Infatti si ha:
+\begin{itemize}
+  \item un primo sweep che computa i vari $MS[i].pos$
+  \item un secondo sweep che, tramite random access sul testo $T$, computa i
+  vari $MS[i].len$ e, contemporaneamente, annota i match
+\end{itemize}
 \textbf{APPROFONDIRE ULTIMA FRASE}\\
 \textbf{CAPIRE SE METTERE ESEMPIO}\\
 Questa pubblicazione è stata uno dei punti di partenza per
 riadattare quanto studiato sulla \textit{BWT} classica al fine di ottenere
-risultati analoghi per la \textit{PBWT}.
+risultati analoghi per la \textit{PBWT}.\\
+Per ulteriori dettagli sull'implementazione, sul calcolo delle
+\textit{threshold} e sui risultati si rimanda direttamente al paper di
+\textit{MONI} \cite{moni}.
 \subsection{PHONI}
 Nel 2021, Boucher, Gagie, Rossi et al. proposero un ulteriore miglioramento di
 quanto fatto in \textit{MONI}, con \textbf{PHONI: \textit{Streamed Matching
@@ -269,21 +279,26 @@ quanto fatto in \textit{MONI}, con \textbf{PHONI: \textit{Streamed Matching
 In questo progetto non solo si sostituì l'uso delle \textit{thresholds} con
 l'uso delle \textbf{LCE queries}, riducendosi ad un solo \textit{sweep}
 sull'array $MS$ (permettendo un uso ``online'' dell'algoritmo), ma si
-esplicitarono anche le \textbf{funzioni} $\mathbf{\varphi}$ e
-$\mathbf{\varphi^{-1}}$ per il riconoscimento di tutte le occorrenze di ogni
-\textit{MEM} tra un pattern e un testo.%
-%Permuted longest-common-prefix array
-\begin{definizione}
-  Si definisce il \textbf{permuted longest-common-prefix array (PLCP)}
-  \cite{plcp}, come un array tale per cui:
-  \[PLCP[p]=
-    \begin{cases}
-      0&\mbox{se }ISA[p]=0
-      LCP[ISA[p]]&\mbox{altrimenti}
-    \end{cases}
-  \]
-  ovvero dove i valori sono in ordine di posizione e non lessicografico. In
-  altri termini:
-  \[PLCP[SA[p]] = LCP[p]\]
-\end{definizione}
-\textbf{DEFINIZIONE INCOMPLETA}
+esplicitò anche l'uso delle \textit{funzioni} $\mathbf{\varphi}$ e
+$\mathbf{\varphi^{-1}}$ e dell'$PLCP_T$ per il riconoscimento di tutte le
+occorrenze di ogni \textit{MEM} tra un pattern e un testo.\\
+A tal fine si sfrutta infatti il seguente teorema \cite{gagie2020}.
+\begin{teorema}
+  Dato un testo $T$, tale che $|t|=n$, si può memorizzare $T$ in
+  $\mathcal{O}(r)$, con $r$ numero di run, tale che, dato un indice
+  $p\in\{0,n-1\}$ si possano computare $\varphi(p)$, $\varphi^{-1}(p)$ e
+  $PLCP[p]$ in tempo:
+  \[\mathcal{O}(\log\log n)\]
+\end{teorema}
+Si è quindi potuto migliorare e semplificare l'\textbf{algoritmo di Bannai}
+usato in \textit{MONI} sfruttando un solo \textit{sweep}. Infatti, sfruttando le
+\textit{LCE query}, avendo il testo $T$ in memoria sotto forma di \textit{SLP},
+è possibile computare contemporaneamente sia i vari
+$MS[i].pos$ che i vari $MS[i].len$, avendo, come nel caso dell'\textit{algoritmo
+  di Bannai}, anche il computo dei match nel momento in cui si hanno a
+disposizione i valori $MS[i].len$, avendo che si ha un \textit{MEM} sse
+$MS[i].len=l\land MS[i-1].len\leq MS[i].len$.\\ 
+Per ulteriori approfondimenti si rimanda al paper di \textit{PHONI}
+\cite{phoni}.
+\textbf{CAPIRE SE SERVE APPROFONDIMENTO SU COMPLESSITÀ CHE PERÒ NON SONO BEN
+  DEFINITI IN QUANTO DIPENDENTI DALLA STRUTTURA SOTTOSTANTE}
