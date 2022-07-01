@@ -111,6 +111,7 @@ ricordiamo un'ulteriore definizione.
   \[\alpha_k[i]=j \iff a_k[j]=i\]
 \end{definizione}
 \begin{esempio}
+  \label{es:pbwt1}
   Vediamo quindi un esempio chiarificatore.\\
   Si assuma il seguente pannello $X$:
   \begin{table}[H]
@@ -233,7 +234,7 @@ nella colonna $k$-esima.\\
 Sfruttando i valori di questi 3 array possiamo quindi effettuare il mapping,
 definito per comodità da una funzione, rappresentabile in pseudocodice come
 nell'algoritmo \ref{algo:lf}:
-\[w_k:\{0,\ldots,N\}\times\Sigma\to \{0,\ldots,N\}\]
+\[w_k:\{0,\ldots,M\}\times\Sigma\to \{0,\ldots,M\}\]
 tale per cui:
 \[w_k(i,\sigma)=
   \begin{cases}
@@ -310,7 +311,59 @@ Si hanno quindi, dopo il calcolo di $f_{k+1}$ e $g_{k+1}$ due possibili casi:
     precedente. Invece $f_{k+1}$ resta fisso 
   \end{enumerate}
 \end{enumerate}
-\textbf{METTERE ESEMPIO}\\
+Si noti inoltre che, a livello di inizializzazione, si hanno:
+\[f_0=g_0=e_0=0\]
+Quindi il primo step sarà già un caso in cui $f_k=g_k$ qualora $x_0[0]=y_0^0\neq
+z[0]$. 
+\begin{esempio}
+  Mostrare un esempio completo di esecuzione richiederebbe troppo tempo quindi
+  ci si limita a mostrare cosa succede nel caso in cui, ad un certo punto
+  dell'esecuzione si hanno $f_{k+1}=g_{k+1}$.\\
+  Si assuma il pannello e la \textit{matrice PBWT} visti all'esempio
+  \ref{es:pbwt1} con una query $z$. Nel complesso si identificherebbero i
+  seguenti match:
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.365]{img/pbwtmatch.pdf}
+  \end{figure}
+  Si assuma di essere in colonna $k=6$, avendo, dopo i calcoli fatti in colonna
+  $k=5$: 
+  \begin{itemize}
+    \item $f_6=6$
+    \item $g_6=10$
+    \item $e_6=0$
+  \end{itemize}
+  Avendo quindi che, a partire dalla colonne $0$ fino alla colonna $6-1=5$ si
+  hanno le righe nel range $[6,10)$ di $a_{5}$ che matchano con $z[0,5]$.\\
+  Bisogna quindi aggiornare $f$ e $g$. Si assuma che $z[6]=1$ e che:
+  \[y^6=00000000000100000000,\,\,\,c[6]=19\]
+  Si calcolano quindi:
+  \[f_7=w_6(6,1)=v_6[6]+c[6]=0+19=19\]
+  \[g_7=w_6(10,1)=v_6[10]+c[6]=0+19=19\]
+  Avendo quindi $f_7=g_7$ si procede, in primis, annotando i match terminanti in
+  $k_5$.\\
+  Seguendo l'algoritmo si ha quindi un primo aggiornamento di $e_{k+1}$, che
+  viene inizializzato a, avendo in memoria $d_7$ con random access in tempo
+  costante: 
+  \[e_7=d_7[19]-1=7-1=6\]
+  Questo viene fatto in quanto, come detto, l'aplotipo $z$ si trova o subito
+  prima del blocco di aplotipi $[f_k,g_k)$.\\
+  Essendo inoltre $z[e_7]=z[6]=1$ si procede aggiornando $g$ e tenendo fermo
+  $f$, avendo che, essendo $z[6]=1$, gli aplotipi che matchano seguiranno nel
+  mapping tramite il simbolo $\sigma=1$. Si procede quindi inizializzando il
+  nuovo $g$:
+  \[g_7=f_7+1=20\]
+  ricordando che $g$ può ``superare'' le dimensioni del pannello essendo
+  escluso in $[f_k,g_k)$.\\
+  A questo punto si segue la linea specificata da $f_7$ in $a_7$ a ritroso,
+  partendo da $e_7-1$, fino a che si hanno match con $z$, aggiornando così il
+  valore di $e_7$.\\
+  In questo caso non si hanno altre operazioni, in quanto $g_7=M$ ma, qualora
+  non lo fosse stato, si sarebbe incrementato $g_7$ fino a che il corrispondente
+  $d_7[g_7]$ sarebbe stato minore o uguale di $e_7$, identificando tutte le
+  nuove righe che hanno un match da $e_7$ a $k=6$ con $z$.
+\end{esempio}
+\textbf{SISTEMARE ESEMPIO E CAPIRE SE METTERE LE IMMAGINI}\\
 L'algoritmo 5 è visualizzabile all'algoritmo \ref{algo:dur5} e, secondo i
 calcoli di Durbin, ha complessità $\mathcal{O}(NM)$, in quanto si ritiene che il
 numero di accessi ai loop interni sia limitato dalla costante rappresentante il
@@ -366,8 +419,8 @@ memoria, con \textit{random access} in tempo costante:
   \item il \textbf{pannello} $X$, di dimensione $NM$
   \item il \textbf{prefix array} $a_k$, di dimensione $NM$
   \item il \textbf{divergence array} $d_k$, di dimensione $NM$
-  \item i vettori $u_k$ e $v_k$, complessivamente di dimensione $2NM$
-  \item il vettore $c_k$, di dimensione $M$
+  \item i \textbf{vettori} $u_k$ e $v_k$, complessivamente di dimensione $2NM$
+  \item il \textbf{vettore} $c_k$, di dimensione $N$
 \end{itemize}
 Possiamo quindi dire che si ha una complessità in memoria pari a
 $\mathcal{O}(NM)$ e, nel dettaglio, Durbin stima si tratti di $13NM$
@@ -385,10 +438,106 @@ stata la motivazione principale per cui si è sviluppata, in questa tesi
 magistrale, una versione \textbf{run-length encoded} della struttura dati che
 permettesse di effettuare query con un aplotipo esterno.
 \subsection{Varianti della PBWT}
-\subsubsection{PBWT multi-allelica}
+Negli anni immediatamente successivi all'articolo di Durbin, una miriade di
+articoli e ricerche sono state svolte per migliorare la \textit{PBWT}, crearne
+varianti o utilizzarla per portare a compimento vari studi. Non essendo tali
+lavori direttamente correlati a questa tesi non 
+verranno approfonditi ma, soprattutto nell'ottica dei prospetti futuri, è bene
+citarne i principali.
+\subsubsection{PBWT multiallelica}
+La prima variante che si introduce è la \textbf{PBWT multiallelica
+  (\textit{mPBWT})}, proposta da Naseri et al. nel 2019 \cite{mpbwt}. Questo
+lavoro estende la \textit{PBWT} di Durbin generalizzandola ad un alfabeto
+arbitrario. \\
+Dal punto di vista delle motivazioni biologiche, questa soluzione risulta
+fondamentale, oltre che per lo studio di specie multialleliche (soprattutto nel
+mondo vegetale) in quanto gli studi riportano come, nell'uomo, la presenza di
+siti triallelici sia sotto stimata. \\
+Da un punto di vista prettamente algoritmico si sono quindi estesi i concetti di
+$c$, $u_k$ e $v_k$ visti nella \textit{PBWT} per ottenere un vero e proprio
+\textit{FM-index} in grado di lavorare su alfabeto arbitrario $\Sigma$, con
+conseguente forte aumento dello spazio richiesto in memoria. Da un punto di
+vista della complessità temporale, invece, si ha che le complessità degli
+algoritmi devono tenere conto anche della grandezza dell'alfabeto stesso, avendo
+però che, essendo esso tendenzialmente di dimensioni ridotte, questo fatto non
+comporti, in media, particolari problematiche dal punto di vista dei tempi di
+calcolo. Le complessità temporali della \textit{mPBWT} infatti sono incrementate
+di un fattore $t$, con $t=\left|\sigma\right|$, e se tale valore è assunto
+costante ad inizio computazione, avendo che difficilmente si ha $t>>2$, la
+complessità temporale non subisce variazioni considerevoli.
 \subsubsection{PBWT con struttura LEAP}
+Sempre nel 2019 Naseri et al. proposero anche una variante della \textit{PBWT}
+che permettesse il calcolo non solo dei match massimali, come per l'algoritmo 5
+di Durbin, ma anche qualsiasi match di lunghezza maggiore uguale ad una
+lunghezza arbitraria $L$ \cite{leap}. Tale algoritmo fu nominato
+\textbf{PBWT-query}. Inoltre, nello 
+stesso articolo, proposero 
+una struttura dati aggiuntiva, detta \textbf{LEAP (\textit{Linked
+    Equal/Alternating Position})}, che, al costo della 
+memorizzazione di otto array aggiuntivi che permettessero di effettuare dei
+salti nella \textit{matrice PBWT} (salvando gli indici del precedente/prossimo
+valore nella colonna uguale/diverso)e di memorizzare gli indici dei valori
+nel \textit{divergence array} relativi a tali indici, che ottimizzava i tempi
+dell'algoritmo per la \textit{PBWT-query} ottenendo l'algoritmo detto
+\textbf{(\textit{L-PBWT-query})}.\\ 
+\textbf{CAPIRE SE SPIEGARE MEGLIO, APPROFONDIRE E FORMALIZZARE GLI 8 ARRAY}\\
+Da un punto di vista computazionale si noti che la complessità dell'algoritmo
+per la \textit{\textit{PBWT query}}, con match di lunghezza minima $L$ è:
+\[\mathcal{O}(N+c(R-L+1))\]
+Avendo:
+\begin{itemize}
+  \item $R$ lunghezza media dei match
+  \item $c$ numero totale dei match
+\end{itemize}
+In merito ai tempi dell'algoritmo \textit{L-PBWT-query} si ha invece che è, al
+costo di $8NM$ byte, con $N$ e $M$ dimensioni del pannello, in più in memoria:
+\[\mathcal{O}(N+c)\]
+\textbf{VERIFICARE SIANO BYTE}
 \subsubsection{PBWT dinamica}
-\subsubsection{PBWT bidirezionale}
+Sanaullah et al., nel 2021, proposero la \textbf{Dynamic PBWT (\textit{d-PBWT})}
+\cite{dpbwt}, col fine di superare le limitazioni imposte dalle strutture
+statiche usate nella \textit{PBWT} di Durbin. Si è quindi pensato di sostituire,
+per i vari elementi della \textit{PBWT}, l'uso degli array, statici, con l'uso
+di \textit{linked list}, dinamiche.\\
+Grazie a alle \textit{linked list} si è quindi reso possibile l'aggiornamento
+efficiente della \textit{matrice PBWT} all'aggiunta di un nuovo aplotipo nel
+pannello o alla rimozione di uno.\\
+Da un punto di vista computazionale è interessante notare come le
+implementazioni degli algoritmi di Durbin presentino la medesima complessità
+computazionale, a partire dalla creazione della \textit{d-PBWT} in
+$\mathcal{O}(NM)$ e che l'aggiunta e la rimozione di un aplotipo siano entrambe
+in tempo:
+\[Avg.\,\,\,\mathcal{O}(N)\]
 \subsubsection{PBWT con wildcard}
+La tematica dei dati mancanti è una tematica aperta in
+\textit{bioinformatica}. I sequenziatori infatti presentano un range d'errore
+dal 1\% al 15\%, si ha a volte un basso \textit{coverage} (ovvero il numero di
+read che contengono la base sequenziata per un certo locus del genoma) e la fase
+di assemblaggio del genoma può comportare errori, Questo, in fase di produzione
+dei pannelli, implica che in alcuni casi non si sappia quale sia l'allele
+corretto per un individuo riferendosi ad un sito. \\
+Williams e Mumey, nel 2020, proposero quindi l'uso della \textbf{PBWT con
+  wildcard} al fine di disegnare un algoritmo in grado di trovare i match
+interni ad un pannello biallelico con dati mancanti, rappresentati come
+\textit{wildcard} mediante il simbolo ``*'' (avendo quindi $\Sigma=\{0,1,*\}$)
+\cite{williams}. \\
+In termini computazionali gli autori sono riusciti a formulare un algoritmo in
+grado tutti i match interni (ovvero i \textit{blocchi}) massimali al pannello in
+tempo, con $T$ numero di blocchi: 
+\[\mathcal{O}(NMT)\]
+\textbf{CAPIRE SE PARLARE DI IMPUTE5}
+\subsubsection{IMPUTE5}
+Per citare un uso della \textit{PBWT} si può parlare di \textbf{genotype
+  imputation}, ovvero il processo con il quale si predicono genotipi non ancora
+osservati in un campione dio individui usando un pannello di aplotipi. Questo
+tipo di studio si basa sui dati prodotti dai \textbf{GWAS (\textit{Genome-wide
+    association studies})}, studi il cui scopo è quello di di esaminare multipli
+genomi alla ricerca di associazioni tra varianti genetiche e malattie (o
+outcome specifici delle stesse), identificando varianti genomiche che sono
+statisticamente associati al rischio per una malattia.\\ 
+A tal fine, nel 2020, Rubinacci et al. proposero \textbf{IMPUTE5}
+\cite{impute5}, un metodo basato sulla \textit{PBWT} per la \textit{genotype
+  imputation} in grado di studiare pannelli di grandi dimensioni.\\
+\textbf{CAPIRE SE DIRE ALTRO}
 %\subsubsection{Recenti sviluppi}
 % LocalWords:  pseudocodice
