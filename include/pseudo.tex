@@ -42,7 +42,62 @@
   \label{algo:lf}
 \end{algorithm}
 
-%TODO COSTRUZIONE NAIVE e UVTRICK NAIVE
+% TODO COSTRUZIONE NAIVE
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{build\_naive}{$col,\,\, pref,\,\, div$}
+    \State $c\gets 0,\,\,u\gets 0,\,\,v\gets 0,\,\,u'\gets 0,\,\, v'\gets
+    0,\,\,run\gets 0$
+    \State $start \gets \top,\,\,beg_{run}\gets \top,\,\,push_{zero}\gets
+    \bot,\,\,push_{one}\gets \bot$
+    \State $rows\gets []$
+    \For {\textit{every} $k\in\left[0,\,\, height\right)$}
+    \If{$k=0\land col[pref[k]]=1$}
+    \State $start \gets \bot$
+    \EndIf
+    \If{$col[k]=0$}
+    \State $c\gets c+1$
+    \EndIf
+    \EndFor
+    \If{$start$}
+    \State $push_{one}\gets \top$
+    \Else
+    \State $push_{zero}\gets \top$
+    \EndIf
+    \For{\textit{every} $k\in[0,height)$}
+    \If{$beg_{run}$}
+    \State $u\gets u',\,\,v\gets v'$
+    \State $beg_{run}\gets \bot$
+    \EndIf
+    \If{$col[pref[k]]=1$}
+    \State $v'\gets v'+1$
+    \Else
+    \State $u'\gets u'+1$
+    \EndIf
+    \If{$k=0\lor col[pref[k]]\neq col[pref[k-1]]$}
+    \State $run\gets k$
+    \EndIf
+    \If{$k=height-1\lor col[pref[k]]\neq col[pref[k+1]]$}
+    \If {$push_{one}$}
+    \State $push(rows, (run, v))$
+    \State $swap(push_{one}, push_{zero})$
+    \Else
+      \State $push(rows, (run, u))$
+    \State $swap(push_{one}, push_{zero})$
+    \EndIf
+    \State $beg_{run}\gets \top$
+    \EndIf
+    \EndFor
+    \State \textbf{return} $(start, c, rows, div)$
+    \EndFunction
+  \end{algorithmic}
+  \label{algo:buildnaive}
+  \caption{\footnotesize{Algoritmo per la costruzione di una colonna della
+  \textit{RLPBWT} naive}}  
+\end{algorithm}
+
+
+
 \begin{algorithm}
   \scriptsize
   \begin{algorithmic}[1]
@@ -126,7 +181,7 @@
     \EndFunction
   \end{algorithmic}
   \caption{{\footnotesize{Algoritmo per la costruzione di una colonna della
-  RLPBWT con bitvectors}}}
+  \textit{RLPBWT} con bitvectors}}}
   \label{algo:cosbv}
 \end{algorithm}
 
