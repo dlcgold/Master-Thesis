@@ -1,19 +1,5 @@
 \begin{algorithm}
   \begin{algorithmic}[1]
-    \Function{$w$}{$k,i,s, c_k, u_k, v_k$}
-    \If{$s = 0$}
-    \State \textbf{return} $u_k[i]$
-    \Else
-    \State \textbf{return} $c_k+v_k[i]$
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \caption{Algoritmo per l'LF-mapping nella PBWT.}
-  \label{algo:lf}
-\end{algorithm}
-
-\begin{algorithm}
-  \begin{algorithmic}[1]
     \Function{BuildPrefixAndDivergenceArrays}{$k$, $M$, $a_k$, $d_k$}
     \State $u\gets 0$, $v\gets 0$
     \State $p\gets k+1$, $q\gets k+1$
@@ -42,6 +28,19 @@
   \label{algo:durbin1}
 \end{algorithm}
 
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{$w$}{$k,i,s, c_k, u_k, v_k$}
+    \If{$s = 0$}
+    \State \textbf{return} $u_k[i]$
+    \Else
+    \State \textbf{return} $c_k+v_k[i]$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per l'LF-mapping nella PBWT.}
+  \label{algo:lf}
+\end{algorithm}
 
 %TODO COSTRUZIONE NAIVE e UVTRICK NAIVE
 \begin{algorithm}
@@ -177,7 +176,6 @@
   \label{algo:uvnaive}
 \end{algorithm}
 
-
 \begin{algorithm}
   \footnotesize
   \begin{algorithmic}[1]
@@ -230,12 +228,36 @@
   \caption{Algoritmo per uvtrick con bitvector}
   \label{algo:uvbv}
 \end{algorithm}
+\begin{algorithm}
+  \footnotesize
+  \begin{algorithmic}[1]
+    \Function{index\_to\_run}{$k,\,\, i$}
+    \Comment $k$ indice di colonna, $i$ indice di run
+    \State $run\gets 0,\,\,found\gets \bot$
+    \If{$i\geq p_k[|p_k|-1]$}
+    \State \textbf{return} $|p_k|-1$
+    \EndIf
+    \For {\textit{every} $r\in[0,|p_k|-1]$}
+    \If{$p_k[r]\geq i<p_k[r+1]$}
+    \State $run\gets r,\,\,found \gets \top$
+    \State \textbf{break}
+    \EndIf
+    \EndFor
+    \If {$\neg found$}
+    \State $run=|p_k|-1$
+    \EndIf
+    \State \textbf{return} $run$
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per convertire un indice in indice di run}
+  \label{algo:itr}
+\end{algorithm}
 
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{lf}{$k,\,\, i, \,\,s$}
     \Comment $k$ is column index, $i$ row index, $s$ symbol
-    \State $c\gets rlpbwt[k].c$
+    \State $c\gets c[k]$
     \State $(u, v) \gets uvtrick(k,\,\,i)$
     \If{$s = 0$}
     \State \textbf{return} $u$
@@ -244,7 +266,83 @@
     \EndIf
     \EndFunction
   \end{algorithmic}
+  \label{algo:lfr}
   \caption{Algoritmo per lf-mapping}
+\end{algorithm}
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{lf\_off}{$k,\,\, i, \,\,s,\,\,o$}
+    \Comment $k$ is column index, $i$ row index, $s$ symbol, $o$ offset
+    \State $(u,v)\gets uvtrick(k,\,\,i)$
+    \If{$p_k[i]+0=height$}
+    \If{$get\_symbol(start^k, i)=0$}
+    \State $v\gets v-1$
+    \Else
+    \State $u\gets u-1$
+    \EndIf
+    \EndIf
+    \If{$s = 0$}
+    \State \textbf{return} $u+o$
+    \Else
+    \State \textbf{return} $c[k]+v+o$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \label{algo:lfro}
+  \caption{Algoritmo per lf-mapping con offset}
+\end{algorithm}
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{reverse\_lf}{$k, \,\,i$}
+    \Comment $k$ indice di colonna, $i$ indice di riga
+    \If{$k=0$}
+    \Comment by design
+    \State \textbf{return} $0$
+    \EndIf
+    \State $k\gets k-1$
+    \State $c\gets rlpbwt[k].c$
+    \State $u\gets 0$, $v\gets 0$, $offset\gets 0$, $run \gets 0$,
+    $found\gets \bot$
+    \If {i < c}
+    \State $u\gets i$
+    \State $prev_0\gets 0$, $next_0\gets 0$
+    \For {\textit{every} $j\in [0,|p_k|)$}
+    \State $(prev_0,\_) = uvtrick(k,j)$
+    \State $(next_0,\_) = uvtrick(k,j+1)$
+    \If{$prev_0\leq u<next_0$}
+    \State $run\gets j$,$found\gets \top$
+    \State \textbf{break}
+    \EndIf
+    \EndFor
+    \If{$\neg found$}
+    \State $run \gets |p_k|-1$
+    \EndIf
+    \State $(curr_u,\_)\gets uvtrick(k, run)$, $offset\gets u-curr_u$
+    \State \textbf{return} $p_k[run]+offset$
+    \Else
+
+    \State $v\gets i-c$
+    \State $prev_1\gets 0$, $next_1\gets 0$
+    \For {\textit{every} $j\in [0,|p_k|)$}
+    \State $(\_,prev_1) = uvtrick(k,j)$
+    \State $(\_,next_1) = uvtrick(k,j+1)$
+    \If{$prev_1\leq v<next_1$}
+    \State $run\gets j$,$found\gets \top$
+    \State \textbf{break}
+    \EndIf
+    \EndFor
+    \If{$\neg found$}
+    \State $run \gets |p_k|-1$
+    \EndIf
+    \State $(curr_v,curr_u)\gets uvtrick(k, run)$, $offset\gets v-curr_v$
+    \State \textbf{return} $p_k[run]+offset$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per lf-mapping inverso naive}
+  \label{algo:lfrev}
 \end{algorithm}
 
 \begin{algorithm}
@@ -284,9 +382,97 @@
     \EndIf
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per lf-mapping inverso}
-  \label{algo:lfrev}
+  \caption{Algoritmo per lf-mapping inverso con bitvector}
+  \label{algo:lfrevbv}
 \end{algorithm}
+
+\begin{algorithm}
+  \footnotesize
+  \begin{algorithmic}[1]
+    \Function{external\_matches}{$z$}
+    \Comment assuming $|z|=rlpbwt.width$
+    \State $f\gets 0,\,\,f_{run}\gets 0,\,\,f'\gets 0,\,\,e\gets 0,\,\,l\gets 0$
+    \State $g\gets 0,\,\,g_{run}\gets 0,\,\,g'\gets 0,\,\,f_{off}\gets
+    0,\,\,g_{off}\gets 0$ 
+    \For {\textit{every} $k\in\left[0,\,\, |z|\right)$}
+    \State $f_{run}\gets index\_to\_run(f,k),\,\,g_{run}\gets
+    index\_to\_run(g,k)$
+    \State $f_{off}\gets f-p_k[f_{run}],\,\,f_{off}\gets g-p_k[g_{run}]$
+    \If{$z[k]=0$}
+    \State \textbf{if} $get\_symbol(start^k, f_{run})=1$ \textbf{then}
+    $f_{off}\gets 0$
+    \State \textbf{if} $get\_symbol(start^k, g_{run})=1$ \textbf{then}
+    $g_{off}\gets 0$ 
+    \Else
+    \State \textbf{if} $get\_symbol(start^k, f_{run})=0$ \textbf{then}
+    $f_{off}\gets 0$
+    \State \textbf{if} $get\_symbol(start^k, g_{run})=0$ \textbf{then}
+    $g_{off}\gets 0$ 
+    \EndIf
+    \State $f'\gets lf\_off(k,\,\, f,\,\, z[k], f_{off}),\,\,g'\gets lf(k,\,\,
+    g,\,\, z[k], g_{off}),\,\,l\gets g-f$
+    \State \textbf{if} $f'>height$ \textbf{then} $f'\gets f'-f_{off}$
+    \State \textbf{if} $g'>height$ \textbf{then} $g'\gets g'-g_{off}$
+    \If{$f'<g'$}
+    \State $f\gets f',\,\,g\gets g'$
+    \Else
+    \If{$k\neq 0$}
+    \State \textbf{report} \textit{matches in} $[e,\,\, k-1]$ \textit{with} $l$
+    haplotypes   
+    \EndIf
+    \State \textbf{if} $f'=|lcp^{k+1}|$ \textbf{then} $e\gets k+1$ \textbf{else}
+    $e\gets k-lcp^{k+1}[f']$ 
+    
+    \If{$(z[e]=0\land f'>0)\lor f'=height$}
+    \State $f'\gets g'-1$
+    \If{$e\geq 1$}
+    \State $f_{rev}\gets f',\,\,k'\gets k+1$
+    \State \textbf{while} $k'\neq e-1$ \textbf{do} $f_{rev}\gets reverse\_lf(k',
+    \,\,f_{rev}),\,\,k'\gets k'-1$ 
+    \State $run\gets index\_to\_run(f_{rev},k'),\,\,symb\gets
+    get\_symbol(start^{k'}, 
+    run)$ 
+    \While {$e>0\land z[e-1]=symb$}
+    \State $f_{rev}\gets reverse\_lf(e, \,\,f_{rev})$
+    \State $run\gets index\_to\_run(f_{rev}, e-1),\,\,symb\gets
+    get\_symbol(start^{e-1}, run)$ 
+    \EndWhile
+    \EndIf
+    \State \textbf{while} $f'>0\land (k+1)-lcp^{k+1}[f]\leq e$ \textbf{do}
+    $e\gets e-1$ 
+    \State $f\gets f',\,\,g\gets g'$
+    \Else
+    \State $g'\gets f'-1$
+    \If{$e\geq 1$}
+    \State $f_{rev}\gets f',\,\,k'\gets k+1$
+    \State \textbf{while} $k'\neq e-1$ \textbf{do} $f_{rev}\gets reverse\_lf(k',
+    \,\,f_{rev}),\,\,k'\gets k'-1$ 
+    \State $run\gets index\_to\_run(f_{rev},k'),\,\,symb\gets
+    get\_symbol(start^{k'}, 
+    run)$ 
+    \While {$e>0\land z[e-1]=symb$}
+    \State $f_{rev}\gets reverse\_lf(e, \,\,f_{rev})$
+    \State $run\gets index\_to\_run(f_{rev},e-1),\,\,symb\gets
+    get\_symbol(start^{e-1}, run)$ 
+    \EndWhile
+    \EndIf
+    \State \textbf{while} $e<height\land (k+1)-lcp^{k+1}[e]\leq e$ \textbf{do}
+    $e\gets e+1$  
+    \State $f\gets f',\,\,g\gets g'$
+    \EndIf
+    \EndIf
+    \EndFor
+    \If{$f<g$}
+    \State \textbf{report} \textit{matches in} $[e,\,\, |z|-1]$ \textit{with}
+    $l\gets g-f$ haplotypes   
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per match con aplotipo esterno con panel $width\times
+  height$ naive}
+  \label{algo:matchpanel}
+\end{algorithm}
+
 
 \begin{algorithm}
   \footnotesize
@@ -310,7 +496,7 @@
     \If{$f'=|lcp^{k+1}|$}
     \State $e\gets k+1$
     \Else
-    \State $e\gets lcp^{k+1}[f']$
+    \State $e\gets k-lcp^{k+1}[f']$
     \EndIf
     
     \If{$(z[e]=0\land f'>0)\lor f'=height$}
@@ -353,15 +539,14 @@
     \EndIf
     \EndFor
     \If{$f<g$}
-    \State $l\gets g-f$
     \State \textbf{report} \textit{matches in} $[e,\,\, |z|-1]$ \textit{with}
-    $l$ haplotypes   
+    $l\gets g-f$ haplotypes   
     \EndIf
     \EndFunction
   \end{algorithmic}
   \caption{Algoritmo per match con aplotipo esterno con panel $width\times
-  height$}
-  \label{algo:matchpanel}
+  height$ con bitvectors}
+  \label{algo:matchpanelbv}
 \end{algorithm}
 
 \begin{algorithm}

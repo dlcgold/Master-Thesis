@@ -1,1 +1,41 @@
 \section{Algoritmo per match massimali}
+Avendo presentato le prime due varianti della \textbf{RLPBWT}, concettualmente
+simili tra loro e diverse dalle successive due varianti, è possibile discutere
+dell'algoritmo di match con un aplotipo esterno, che riprende esattamente quanto
+discusso nell'algoritmo 5 di Durbin.\\
+Il metodo procede quindi con l'aggiornamento dei tre indici $e_k$, $f_k$ e
+$g_k$, avendo che gli ultimi due possono assumere qualsiasi valore in $\{0,M\}$,
+come con la \textit{PBWT} classica. Avendo memorizzato solo informazioni
+relative alle \textit{run} bisogna quindi, ogni volta, ricondurre l'indice alla
+run corretta:
+\begin{itemize}
+  \item nella \textit{RLPBWT naive} si risale all'indice di run a cui appartiene
+  un certo indice, in colonna $k$, in $\{0,M\}$ scorrendo l'array $p_k$
+  \item nella \textit{RLPBWT con bitvector} la medesima operazione viene risolta
+  usando la funzione $rank_{h_k}$
+\end{itemize}
+Inoltre Durbin sfruttava il \textit{random access} al pannello, avendo in
+memoria sia il pannello che il \textit{prefix array}, al fine di aggiornare il
+valore di $e_k$. In entrambe le versioni già presentate della \textit{RLPBWT}
+non si ha in memoria né il \textit{prefix array} né il pannello ma solo solo la
+rappresentazione compatta della \textit{matrice PBWT}. Si è quindi dovuto
+pensare ad un metodo che ricomponga data una riga $x_j$ del pannello $X$ a
+partire da un elemento, indicizzato con $i$ alla colonna $k+1$, della
+\textit{matrice PBWT}, muovendosi da destra a sinistra e seguendo in modo
+inverso il \textit{mapping}.\\ 
+Per ottenere l'indice alla colonna $k$-esima da cui ``proviene'' l'indice $i$ in
+colonna $k+1$ si inizia analizzando il valore $c[k]$. Infatti, se $i<c[k]$,
+allora sicuramente, in colonna $k$, è un indice corrispondente a $\sigma=0$
+quello dal quale proviene, ricordando come la costruzione della colonna $k+1$
+nella \textit{matrice PBWT} si abbia grazie ad un \textit{passo di radix sort}
+con ordinamento stabile. Si sfruttano così ho l'array $p_k$ o le funzioni
+$rank_{h_k}$ e $select_{h_k}$ per risalire all'indice in colonna $k$, calcolando
+prima l'indice di run e l'eventuale offset, per il quale il mapping porta
+all'indice $i'$ in colonna $k+1$, seguendo ``virtualmente'' la riga $x_j$ del
+pannello originale.\\
+Per quanto riguarda la \textit{RLPBWT naive} si ha lo pseudo codice per il
+mapping inverso consultabile all'algoritmo \ref{algo:lfrev} mentre per quanto
+riguarda la \textit{RLPBWT con bitvector} si ha l'algoritmo
+\ref{algo:lfrevbv}.\\
+\textbf{CAPIRE QUANTO APPROFONDIRE I DUE ALGORITMI}.\\
+
