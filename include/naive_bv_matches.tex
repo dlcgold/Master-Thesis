@@ -38,4 +38,19 @@ mapping inverso consultabile all'algoritmo \ref{algo:lfrev} mentre per quanto
 riguarda la \textit{RLPBWT con bitvector} si ha l'algoritmo
 \ref{algo:lfrevbv}.\\
 \textbf{CAPIRE QUANTO APPROFONDIRE I DUE ALGORITMI}.\\
-
+Si procede quindi riadattando l'algoritmo di Durbin all'uso delle \textit{run},
+ottenendo, ad ogni step, i medesimi valori per $e_k$, $f_k$ e $g_k$. Le uniche
+differenze sono:
+\begin{itemize}
+  \item il calcolo del mapping necessità dell'estrazione dei valori $u$ e $v$,
+  tenendo conto esplicito degli offset nel caso della \textit{RLPBWT naive}
+  \item non si ha \textit{random access} al pannello quindi bisogna procedere
+  ogni volta con il'inverso del mapping e il calcolo del simbolo a partire
+  dall'indice della run
+  \item non si ha il \textit{prefix array} in memoria quindi non è possibile
+  sapere quali siano le righe che stanno matchando fino alla colonna $k$ ma solo
+  quante, sapendo che sono $g_k-f_k$
+\end{itemize}
+Anche in questo caso i due algoritmi sono consultabili, rispettivamente,
+all'algoritmo \ref{algo:matchpanel} e all'algoritmo \ref{algo:matchpanelbv}.\\
+\textbf{APPROFONDIRE SPIEGAZIONE ALGORITMI}
