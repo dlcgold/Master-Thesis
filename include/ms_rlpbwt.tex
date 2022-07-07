@@ -189,15 +189,15 @@ desiderato, ovvero $z[k]$. Si supponga che, con il mapping, si sia arrivati
 all'indice $i$ della colonna $k$. Si supponga inoltre che la run successiva
 abbia testa in indice $e$. Si hanno due casi possibili, denotando con
 $LCS(x,y)$ il \textit{longest common suffix} tra le stringhe $X$ e $Y$ e con
-$pref_K$ il \textit{prefix array} in colonna $K$:
+$a_k$ il \textit{prefix array} in colonna $K$:
 \begin{enumerate}
   \item $i<t$ allora, per definizione di \textit{threshold}:
-  \[LCS(z[0,k], x_{pref_{k}[h-1]}[0,k])\geq LCS(z[0,k], x_{pref_{k}[e]}[0,k])\]
-  Quindi si ha che $MS[k].row=pref_{k}[h-1]$ e il mapping potrà proseguire
+  \[LCS(z[0,k], x_{a_{k}[h-1]}[0,k])\geq LCS(z[0,k], x_{a_{k}[e]}[0,k])\]
+  Quindi si ha che $MS[k].row=a_{k}[h-1]$ e il mapping potrà proseguire
   dall'indice $h-1$
   \item  $i\geq t$ allora, per definizione di \textit{threshold}:
-  \[LCS(z[0,k], x_{pref_{k}[h-1]}[0,k])\leq LCS(z[0,k], x_{pref_{k}[e]}[0,k])\]
-  Quindi si ha che $MS[k].row=pref_{k}[e]$ e il mapping potrà proseguire
+  \[LCS(z[0,k], x_{a_{k}[h-1]}[0,k])\leq LCS(z[0,k], x_{a_{k}[e]}[0,k])\]
+  Quindi si ha che $MS[k].row=a_{k}[e]$ e il mapping potrà proseguire
   dall'indice $e$
 \end{enumerate}
 Qualora una colonna presenti solo simboli $\sigma\neq z[k]$, per convenzione, si
@@ -417,20 +417,20 @@ $\sigma$, testa di indice $h$ e coda di indice $e-1$. Si hanno diversi casi:
   la nuova riga da seguire. Si ha che il più lungo suffisso di $z[1,k]$ che è
   anche suffisso di $x_1[1,k],\ldots, x_m[1,k]$ è uno tra:
   \begin{itemize}
-    \item $x_{pref_k[h-1]}$, se $h\neq 0$, ovvero la riga del pannello
+    \item $x_{a_k[h-1]}$, se $h\neq 0$, ovvero la riga del pannello
     corrispondente alla fine della run precedente a $r$ nella \textit{matrice
       PBWT}, se esistente
-    \item $x_{pref_k[e+1]}$, se $e\neq M-1$, ovvero la riga del pannello
+    \item $x_{a_k[e+1]}$, se $e\neq M-1$, ovvero la riga del pannello
     corrispondente all'inizio della run successiva a $r$ nella \textit{matrice
       PBWT}, se esistente
   \end{itemize}
   Avendo quindi i \textit{prefix array sample} che ci dicono a quale riga nel
   pannello corrispondano tali valori e conoscendo $MS[k-1].row$ è possibile
-  calcolare $LCE(MS[k-1].row, pref_k[h-1])$ e $LCE(MS[k-1].row, pref_k[e+1])$. A
+  calcolare $LCE(MS[k-1].row, a_k[h-1])$ e $LCE(MS[k-1].row, a_k[e+1])$. A
   questo punto si sceglie il suffisso comune più lungo tra le due, ovvero il
   maggiore tra i valori ritornati dalla \textit{LCE query} e si sceglie la riga
-  corrispondente per proseguire. Si ha quindi o $MS[k].row=pref_k[h-1]$ o
-  $MS[k].row=pref_k[e+1]$. In merito alla lunghezza, assumendo che il miglior
+  corrispondente per proseguire. Si ha quindi o $MS[k].row=a_k[h-1]$ o
+  $MS[k].row=a_k[e+1]$. In merito alla lunghezza, assumendo che il miglior
   valore ritornato dalle due \textit{LCE query} sia $l$, si ha che:
   \[MS[k].len=\min(MS[k-1].len, l)+1\]
   In quanto la LCE query potrebbe restituire un valore più lungo dell'effettivo
