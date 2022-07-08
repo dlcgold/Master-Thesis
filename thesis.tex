@@ -56,12 +56,12 @@
 \usepackage{geometry}
 \usepackage{blindtext}
 \usepackage{titleps}
-\makeatletter
-\long\def\@makecaption#1#2{%
-  \vskip\abovecaptionskip
-    \bfseries #1: #2\par
-  \vskip\belowcaptionskip}%
-\makeatother
+% \makeatletter
+% \long\def\@makecaption#1#2{%
+%   \vskip\abovecaptionskip
+%     \bfseries #1: #2\par
+%   \vskip\belowcaptionskip}%
+% \makeatother
 % \lstset{ % General setup for the package
 %     language=Perl,
 %     basicstyle=\small\sffamily,
@@ -106,17 +106,17 @@
 % \renewcommand{\headrulewidth}{0pt}
 % \renewcommand{\footrulewidth}{0.3pt}}
 
-\AtBeginDocument{%
-  \renewcommand{\thelisting}{\Alph{chapter}.\arabic{listing}}
-  % \renewcommand\thetable{\Alph{section}.\arabic{table}}
-  % \renewcommand\thefigure{\Alph{section}.\arabic{figure}}
-}
-%Automatically change the driver counter for reset:
-\makeatletter
-\g@addto@macro\appendix{%
-  \counterwithin*{listing}{section}%
-}
-\makeatother
+% \AtBeginDocument{%
+%   \renewcommand{\thelisting}{\Alph{chapter}.\arabic{listing}}
+%   % \renewcommand\thetable{\Alph{section}.\arabic{table}}
+%   % \renewcommand\thefigure{\Alph{section}.\arabic{figure}}
+% }
+% %Automatically change the driver counter for reset:
+% \makeatletter
+% \g@addto@macro\appendix{%
+%   \counterwithin*{listing}{section}%
+% }
+% \makeatother
 % c C plus plus
 \def\Cplusplus{C\raisebox{0.5ex}{\tiny\textbf{++}}}
 \definecolor{nordred}{RGB}{191, 97, 106}
@@ -323,12 +323,12 @@ studio, evidenziandone pro e contro
 \bibliography{thesis}
 
 \appendix
-\chapter{Tabelle}
-\input{include/tabelle}
+% \chapter{Tabelle}
+% \input{include/tabelle}
 \chapter{Algoritmi}
 \input{include/pseudo}
-\chapter{Esempi di File}
-\input{include/file}
+% \chapter{Esempi di File}
+% \input{include/file}
 
 % ringraziamenti
 \input{include/ringraziamenti}

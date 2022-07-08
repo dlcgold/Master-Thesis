@@ -36,7 +36,7 @@ utilizzato da Durbin nella sua implementazione della \textbf{PBWT}
   \item l'indice della colonna in cui termina il match
   \item la lunghezza del match
 \end{enumerate}
-Un esempio è visualizzabile alla listing \ref{lst:pbwtres}.
+%Un esempio è visualizzabile alla listing \ref{lst:pbwtres}.
 \subsection{MaCS}
 \textbf{RIVEDERE!}\\
 \textbf{MaCS} \cite{macs}, sviluppato da Gary K. Chen, è un simulatore di
@@ -100,7 +100,12 @@ Dove:
   \textit{genotipo}, per un sito nel tempo 
 \end{itemize}
 Il risultato, dove si noti vengono selezionati 4 siti dopo la simulazione, del
-comando appena descritto è visualizzabile alla listing \ref{lst:macs}.\\ 
+comando appena descritto è visualizzabile alla listing \ref{lst:macs}.\\
+\begin{listing}[H]
+  \inputminted[obeytabs]{text}{code/example.macs}
+  \caption{Esempio di output di \textbf{MaCS}.}
+  \label{lst:macs}
+\end{listing}
 % \textbf{MANCA SIGNIFICATO DEGLI ``HEADER'' DI OGNI SITE NEL RISULTATO.}
 % \subsection{SDSL}
 % La libreria più utilizzata nel progetto, come anche in diverse sue dipendenze, è
@@ -159,6 +164,10 @@ quantità di aplotipi di query:
   \item produzione di vari grafici relativi sia ai tempi di esecuzione che alla
   memoria richiesta
 \end{itemize}
+Al fine di ottenere risultati non banali infatti l'idea è quella di partire da
+un pannello iniziale fisso ed estrarre un numero di righe pari al numero di
+query richieste, righe che, a loro volta, andranno a formare il pannello di
+query.\\ 
 Uno schema delle regole usate è visualizzabile in figura \ref{fig:snake}.
 \begin{figure}
   \centering

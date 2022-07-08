@@ -26,7 +26,7 @@ mancandone una trattazione teorica approfondita.
 Lo scopo principale di questa tesi era la riduzione delle informazioni in
 memoria necessarie a permette il mapping, quindi in primis si sono valutati i
 vari risultati dal punto di vista della memoria.
-\subsection{Dimensioni dell'SLP}
+\subsubsection{Dimensioni dell'SLP}
 Prima ancora di affrontare i requisiti
 in memoria dell'intera struttura è interessante analizzare le capacità di
 compressione che si ha con l'uso degli \textit{SLP}, grazie ai due tool sopra
@@ -187,8 +187,8 @@ in primis due aspetti:
   parità di risultati, tempi maggiori
   \item l'uso di strutture dati succinte ed eventualmente dell'\textit{SLP}
   comporta costi dal punto di vista temporale. Come anticipato in sezione
-  \ref{secbv}, le operazioni sugli sparse bitvector non sono tutte i tempo
-  costante e, come invece anticipato in sezione \ref{secslp}, gli \textit{SLP}
+  \ref{bvsec}, le operazioni sugli sparse bitvector non sono tutte i tempo
+  costante e, come invece anticipato in sezione \ref{slpsec}, gli \textit{SLP}
   non garantiscono \textit{random access} in tempo costante e questo, per quanto
   poi l'algoritmo di estensione sia efficiente, si ripercuote anche sul calcolo
   delle \textit{LCE query}
@@ -257,7 +257,7 @@ nota come:
     logaritmica. }
   \label{fig:10000}
 \end{figure}
-Per completezza, in figura \ref{bigres}, si riportano anche i risultati in tempo
+Per completezza, in figura \ref{fig:bigres}, si riportano anche i risultati in tempo
 e spazio di una sperimentazione su un pannello di grandi dimensioni:
 $70000\times 46538$ con $30000$ query. Sono riportati anche i risultati delle
 tre varianti basate su \textit{matching statistics} senza l'estensione dei match
