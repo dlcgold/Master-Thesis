@@ -543,4 +543,136 @@ A tal fine, nel 2020, Rubinacci et al. proposero \textbf{IMPUTE5}
 %\subsubsection{Recenti sviluppi}
 % LocalWords:  pseudocodice
 \subsection{Una prima proposta run-length encoded}
-%metti il paper di Travis
+\label{subsectravis}
+A fine 2021, Gagie et al. \cite{tricks} inizio a teorizzare una variante
+\textbf{run-length encoded} della \textbf{PBWT}, basandosi sui risultati
+ottenuti sulla \textit{BWT} classica.\\
+Pensando alla costruzione della \textit{PBWT}, con $M$ individui e $N$ siti, si
+ha che ogni colonna della 
+\textit{matrice PBWT} è ottenuta tramite la permutazione data dal \textit{prefix
+  array}. Denotiamo tale permutazione, alla colonna $k$, con $\pi_k$, $\forall
+1\leq k<N$. 
+Ipotizziamo ora di voler studiare la riga $i$-esima del pannello originale. Si
+ha che, al variare della colonna $k$ sulla \textit{matrice PBWT}, la posizione
+della riga $i$ è ricostruibile applicando le varie permutazioni (che, nei
+termini già presentati nella sezione, sarebbe uguale ad effettuare il
+\textit{mapping} dalla colonna $K$ alla colonna $k+1$):
+\[i, \pi_1(i), \pi_2(\pi_1(i)),\ldots,
+  \pi_{N-1}(\cdots(\pi_2(\pi_1(i)))\cdots)\]
+Il punto fondamentale si ritrova nel fatto che l'autore asserisce:
+\begin{center}
+  \textit{Notice $\pi_k$ can be stored in space proportional to the number of
+    runs in the $k$th column of the PBWT$\ldots$} 
+\end{center}
+Nell'articolo si propone quindi una struttura dati formata da $N$ ``tabelle''
+dove, la $j$-esima riga della $k$ tabella contiene: 
+\begin{itemize}
+  \item l'indice $p$ di inizio della $j$-esima run nella colonna $k$ della
+  \textit{matrice PBWT}
+  \item il valore $\pi_k(p)$, avendo che:
+  \[\pi_k(p)=
+    \begin{cases}
+      p-v_k[p]&\mbox{if } y_p^k[k]=0\\
+      c[k]+v_k[p]-1&\mbox{if } y_p^k[k]=1\\
+    \end{cases}
+  \]
+  
+  \item l'indice della run contenente il simbolo $pi_k(p)$ nella colonna $k+1$
+  della \textit{matrice PBWT}
+  \item un booleano per capire se la prima run è composta da simboli $\sigma=0$
+  o $\sigma =1$
+\end{itemize}
+Il paper presenta anche il metodo per l'estrazione della $i$-esima riga:
+\begin{enumerate}
+  \item si cerca della prima ``tabella'' la riga relativa alla run, con indice
+  di testa $p$, contenente
+  l'indice $i$, avendo che la prima ``tabella'', relativa alla colonna $k=0$ non
+  presenta permutazioni e quindi 
+  l'indice $i$ del pannello è anche l'indice $i$ della \textit{matrice PBWT}
+  \item si calcola poi la permutazione per l'indice $i$ (alla prima operazione
+  si avrà $k=1$):
+  \[\pi_k(i)=\pi_k(p)+i-p\]
+  \item si cerca poi la riga relativa alla run contenente il simbolo $\pi_k(p)$
+  nella ``tabella'' successiva e si scansionano le righe di tale tabella a
+  partire da quella appena identificata fino a trovare la run che contiene
+  $\pi_k(i)$ e vedere il simbolo relativo a tale run (alla prima operazione
+  si avrà $k=1$)
+  \item si ripete la procedura dal punto 2) per ogni colonna $k$
+\end{enumerate}
+Vediamo un esempio, estratto dal paper.
+\begin{esempio}
+  Si assuma la seguente \textit{matrice PBWT}:
+  \begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{c|ccccccccccccccc}
+      X & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 \\
+      \hline
+      00 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
+      01 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & {\color{nordred}\textbf{1}}
+                                                               & 1 \\
+      02 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 1 \\
+      03 & 1 & 1 & 0 & {\color{nordred}\textbf{0}} & {\color{nordred}\textbf{0}}
+                                 & {\color{nordred}\textbf{1}} & 0 & 0 & 1 & 1
+                                                          & 0 & 1 \\
+      04 & 1 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 1 \\
+      05 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & {\color{nordred}\textbf{0}} & 0
+                                                               & 1 \\
+      06 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+      07 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 \\
+      08 & 0 & 1 & {\color{nordred}\textbf{0}} & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0
+                                                               & 1 \\
+      09 & {\color{nordred}\textbf{1}} & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0
+                                                               & 1 \\
+      10 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+      11 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      12 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+      13 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+      14 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{0}} & 0 & 0
+                                                               & 1 \\
+      15 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{0}} & 0 & 0 & 0
+                                                               & 1 \\
+      16 & 1 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{0}} & 0 & 1 & 0 & 0
+                                                               & 1 \\
+      17 & 0 & {\color{nordred}\textbf{0}} & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
+                                                               & 1 \\
+      18 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
+                                         & {\color{nordred}\textbf{1}} \\ 
+      19 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 \\
+    \end{tabular}
+  \end{table}
+  Supponendo di voler ricostruire la riga $i=9$, segnalata in rosso nella
+  \textit{matrice PBWT}, si costruiscono le seguenti
+  tabelle \cite{tricks}:
+   \begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/trick.jpg}
+  \end{figure}
+  Dove in rosso si hanno le varie $\pi_k(i)$ calcolate nel processo, ottenute,
+  se necessario, iterando a partire dalle $\pi_k(p)$, segnalate in azzurro. \\
+  Si hanno infatti i seguenti calcoli, ovvero i vari $\pi_j(i)=\pi_j(p)+i-p$,
+  relativi alle permutazioni in colonna $k$ per l'estrazione della riga $9$:
+  \begin{multicols}{2}
+    \begin{itemize}
+      \item $\pi_1(9)=17+9-9=17$
+      \item $\pi_2(17)=4+17-13=8$
+      \item $\pi_3(8)=4+8-8=3$
+      \item $\pi_4(3)=0+3-0=3$
+      \item $\pi_5(3)=0+3-0=3$
+      \item $\pi_6(3)=16+3-3=16$
+      \item $\pi_7(16)=2+16-3=15$
+      \item $\pi_8(15)=2+15-3=14$
+      \item $\pi_9(14)=3+14-12=5$
+      \item $\pi_{10}(5)=1+5-5=1$
+      \item $\pi_{11}(1)=17+1-0=18$
+      % \item $\pi_{12}(3)=16+3-3=16$        
+    \end{itemize}
+  \end{multicols}
+  Sfruttando quindi il valore booleano (non rappresentato nelle tabelle ma
+  esistente) che ci dice con che simbolo inizia una colonna e sapendo che,
+  essendo un pannello binario si alternano le run con simboli $\sigma=0$ e
+  $\sigma=1$, si può ricostruire la riga 9 del pannello originale:
+  \[x_9=100001000011\]
+\end{esempio}
+\textbf{Nel paper non si trattano metodi per effettuare query a tale struttura
+  dati, indicando solo che dovrebbe essere possibile farlo.}

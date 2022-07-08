@@ -144,4 +144,25 @@ In termini di pipeline si procede quindi:
 \end{enumerate}
 
 \subsection{Snakemake}
-\textbf{PARTE DA FARE UNA VOLTA STABILITA LA PIPELINE FINALE}
+L'intera pipeline è stata gestita tramite \textbf{Snakemake} \cite{snakemake},
+un \textit{workflow management system}, uno strumento molto usato in
+\textit{bioinformatica} per creare analisi dati scalabili e riproducibili. Nel
+dettaglio la pipeline comprende, avendo in input un pannello ed una lista di
+quantità di aplotipi di query:
+\begin{itemize}
+  \item scaricamento dei tool e delle loro dipendenze per la \textit{PBWT} di
+  Durbin e la \textit{RLPBWT} proposta in questa tesi
+  \item produzione dell'input per la \textit{PBWT} e della \textit{RLPBWT} per
+  ogni quantità di query richiesta
+  \item produzione delle strutture dati
+  \item esecuzione degli algoritmi per il pattern matching
+  \item produzione di vari grafici relativi sia ai tempi di esecuzione che alla
+  memoria richiesta
+\end{itemize}
+Uno schema delle regole usate è visualizzabile in figura \ref{fig:snake}.
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{img/rules.pdf}
+  \caption{Regole usate in Snakemake per la sperimentazione.}
+  \label{fig:snake}
+\end{figure}

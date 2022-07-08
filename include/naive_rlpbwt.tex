@@ -1,4 +1,5 @@
 \section{RLPBWT naive}
+\label{secrlpbwtnaive}
 Un primo approccio alla \textbf{compressione run-length} è stato quello di
 semplicemente ``adattare'' quanto presentato da Durbin. Soprattutto a causa di
 questo fattore tale approccio è stato nominato \textbf{RLPBWT naive}.\\
@@ -23,7 +24,9 @@ $\sigma=0$. Infatti le run di
 indice pari presentano lo stesso simbolo della prima run e quindi, dato un
 qualsiasi indice di run, è possibile sapere quale sia il simbolo di tale run.\\
 Si memorizzano gli indici delle teste di run in un array $p_k$, di lunghezza
-parti al numero di run in colonna $k$.\\
+parti al numero di run in colonna $k$. Si riconoscono alcune delle informazioni
+viste per la ``bozza'' di \textit{RLPBWT} vista alla sottosezione
+\ref{subsectravis}.\\ 
 Il passaggio successivo è stato quello di capire se le informazioni necessarie
 al mapping fossero tutte necessarie. In altri termini se, data la colonna $k$
 nella \textit{matrice PBWT}, fossero necessari $c[k]$, $u_k$ e $v_k$. In merito
