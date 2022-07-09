@@ -96,12 +96,12 @@ un'altra operazione in modo ``veloce'': le \textbf{Longest Common Extension
   Dato un testo $T$, tale che $|T|=n$, il risultato della \textbf{LCE query} tra
   due posizioni $i$ e $j$, tali che $0\leq i,j<n$, corrisponde al più lungo
   prefisso comune tra le sotto-stringhe che hanno come indice di partenza $i$ e
-  $j$, avendo quindi il più lungo prefisso comune tra $T[i:n-1]$ e $T[j:n-1]$.
+  $j$, avendo quindi il più lungo prefisso comune tra $T[i,n-1]$ e $T[j,n-1]$.
 \end{definizione}
 Sfruttando l'\textit{SLP} del testo $T$ è quindi possibile effettuare due
 \textit{random access} al testo compresso, in $i$ e $j$, per poi ``risalire''
-l'albero al fine di computare il prefisso comune tra $T[i:n-1]$ e
-$T[j:n-1]$. Quindi il calcolo di una \textit{LCE query} di lunghezza $l$ è
+l'albero al fine di computare il prefisso comune tra $T[i,n-1]$ e
+$T[j,n-1]$. Quindi il calcolo di una \textit{LCE query} di lunghezza $l$ è
 effettuabile in tempo:
 \[\mathcal{O}\left(1+\frac{l}{\log n}\right)\]
 \textbf{VERIFICARE BENE COSA SIA $n$}.

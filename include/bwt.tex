@@ -31,7 +31,7 @@ lessicograficamente tutte le possibili \textbf{rotazioni} del testo $T$.
   un testo $T$, tale che $|T|=n$, come la stringa ottenuta dalla concatenazione
   del suffisso $i$-esimo con la restante porzione del testo. Più formalmente si
   ha che, avendo $0\leq i<n$:
-  \[rot_T(i)=T[i:n-1]\cdot T[0:i-1]\]
+  \[rot_T(i)=T[i,n-1]\cdot T[0,i-1]\]
 \end{definizione}
 Data questa definizione quindi la \textit{BWT} del testo $T$ risulta essere
 l'ultima colonna della matrice che si ottiene riordinando tutte le
@@ -195,13 +195,13 @@ Il fine è quindi quello di calcolare i cosiddetti \textbf{Maximal exact matches
 estesi in alcuna direzione.
 \begin{definizione}
   Dato un testo $T$, con $|T|=n$, e un pattern $P$, con $|P|=m$, si definisce
-  una sottostringa $P[i:i+l-1]$, di lunghezza $l$, \textbf{MEM} di $P$ in $T$
+  una sottostringa $P[i,i+l-1]$, di lunghezza $l$, \textbf{MEM} di $P$ in $T$
   se:
   \begin{itemize}
-    \item $P[i:i+l-1]$ è una sottostringa di $T$
-    \item $P[i-1:i+l-1]$ non è una sottostringa di $T$ (non si può estendere a
+    \item $P[i,i+l-1]$ è una sottostringa di $T$
+    \item $P[i-1,i+l-1]$ non è una sottostringa di $T$ (non si può estendere a
     sinistra) 
-    \item $P[i:i+l]$ non è una sottostringa di $T$ (non si può estendere a
+    \item $P[i,i+l]$ non è una sottostringa di $T$ (non si può estendere a
     destra) 
   \end{itemize}
 \end{definizione}
@@ -221,13 +221,13 @@ iniziante in $i$, tra $P$ e un testo $T$, e l'indice di inizio di tale
 sottostringa in $T$.
 \begin{definizione}
   Dato un testo $T$, con $|T|=n$, e un pattern $P$, con $|P|=m$, si definisce
-  \textbf{matching statistics} di $R$ su $T$ un array $MS$, tale che $|MS|=m$
+  \textbf{matching statistics} di $P$ su $T$ un array $MS$, tale che $|MS|=m$
   di coppie $(pos, len)$ tale che:
   \begin{itemize}
-    \item $T[MS[i].pos:MS[i].pos+MS[i].len-1]=P[i:i+MS[i].len-1]$, quindi si ha
+    \item $T[MS[i].pos,MS[i].pos+MS[i].len-1]=P[i,i+MS[i].len-1]$, quindi si ha
     un match tra $P$ e $T$ lungo $MS[i].len$ a partire da $MS[i].pos$ in $T$ e
     da $i$ in $P$
-    \item $P[i:i+MS[i].len]$ non occorre in $T$, quindi il match non è
+    \item $P[i,i+MS[i].len]$ non occorre in $T$, quindi il match non è
     ulteriormente estendibile 
   \end{itemize}
 \end{definizione}
@@ -235,7 +235,7 @@ Una volta calcolato \textit{MS} si ha il seguente lemma.
 \begin{lemma}
   Dato un testo $T$, con $|T|=n$, un pattern $P$, con $|P|=m$, e il
   corrispondente array di matching statistics $MS$ si ha che:
-  \[P[i:i+l-1],\forall 1<i\leq m\]
+  \[P[i,i+l-1],\forall 1<i\leq m\]
   è un \textbf{MEM} di lunghezza $l$ in $T$ sse:
   \[MS[i].len=l\land MS[i-1].len\leq MS[i].len\]
 \end{lemma}
@@ -247,11 +247,11 @@ ottimizzare il processo, quello delle \textbf{threshold}. Questa piccola
 struttura dati memorizza il minimo valore dell''\textit{LCP array} tra due run
 consecutive nel medesimo simbolo nella \textit{BWT}.
 \begin{definizione}
-  Dato un testo $T$ e date $BWT_T[j':j]$ e $BWT_T[k:k']$ due run consecutive
+  Dato un testo $T$ e date $BWT_T[j',j]$ e $BWT_T[k,k']$ due run consecutive
   dello stesso carattere in $BWT_T$. Si definisce la \textbf{threshold}
   posizione:
   \[j< i \leq k\mbox{ tale che } i\mbox{ è l'indice del minimo valore in
-    }LCP[j+1:k],\] 
+    }LCP[j+1,k],\] 
 \end{definizione}
 Rossi et al., nel 2021, sfruttarono tutte le conoscenze relative
 alla \textbf{RLBWT}, all'\textbf{R-index} e alle \textbf{matching statistics}

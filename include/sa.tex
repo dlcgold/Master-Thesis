@@ -6,7 +6,7 @@ l'aspetto temporale che spaziale, chiamata \textbf{Suffix Array (\textit{SA})}
 \begin{definizione}
   Dato un testo $T$, \$-terminato, tale che $|T|=n$, si definisce \textbf{suffix
     array} di $T$, denotato con $SA_T$, un array lungo $n$ di interi, tale che
-  $SA_T[i]=j$ sse il suffisso di ordine $j$, ovvero $T[SA_T[i]:n-1]$, è
+  $SA_T[i]=j$ sse il suffisso di ordine $j$, ovvero $T[SA_T[i],n-1]$, è
   l'$i$-esimo suffisso nell’ordinamento lessicografico dei suffissi di $T$. In
   altri termini quindi il \textbf{suffix array} altro non è che una permutazione
   dell'intervallo di numeri interi $[0,n-1]$.
@@ -14,7 +14,7 @@ l'aspetto temporale che spaziale, chiamata \textbf{Suffix Array (\textit{SA})}
 Grazie a questa definizione si può quindi dire che, presi $i,i'\in \mathbb{N}$
 tali che $0\leq i < i' < n$ allora vale che, indicando con $\prec$
 l'ordinamento lessicografico:
-\[T[SA_T[i]:n-1] \prec T[SA_T[i']:n-1]\]
+\[T[SA_T[i],n-1] \prec T[SA_T[i'],n-1]\]
 Si vede quindi esempio chiarificatore.
 \begin{esempio}
   Si prenda la stringa:
@@ -74,7 +74,7 @@ L'uso del \textit{suffix array} è spesso accompagnato dal \textbf{Longest Commo
   \[LCP_T[i]=
     \begin{cases}
       -1&\mbox{ se } i=0 \lor i=n\\
-      lcp(T[SA_T[i-1]: n],T[SA_T [i]: n])&\mbox{ altrimenti}
+      lcp(T[SA_T[i-1], n],T[SA_T [i], n])&\mbox{ altrimenti}
     \end{cases}
   \]
 \end{definizione}
