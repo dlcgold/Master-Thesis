@@ -302,6 +302,9 @@ studio, evidenziandone pro e contro
 
 
 \chapter{Risultati}
+\label{reschap}
+Verranno ora riportati alcuni risultati sperimentali, ottenuti su pannelli
+simulati, relativi all'implementazione, in \Cplusplus 11, della \textbf{RLPBWT}.
 % sezione strumenti
 \input{include/strumenti}
 % sezione benchmark
@@ -312,13 +315,52 @@ studio, evidenziandone pro e contro
 
 
 \chapter{Conclusioni}
+Fissato l'iniziale obbiettivo di risolvere le problematiche relative alla
+memoria richiesta dall'algoritmo 5 di Durbin, l'implementazione della
+\textbf{RLPBWT}, nel dettaglio basata sull'uso dei \textit{SLP} e \textit{LCE
+  query}, ha riportato risultati molto incoraggianti. Come descritto nel
+capitolo \ref{reschap}, la quantità di memoria richiesta risulta essere
+incredibilmente inferiore. D'altro canto l'algoritmo \textit{matchDynamic} di
+Durbin, per quanto non approfondito nell'articolo del 2014 \cite{pbwt}, risulta
+essere ancor meno esoso di risorse, nonché incredibilmente più veloce dal punto
+di vista dei tempi di calcolo. Lo svantaggio di questo algoritmo è che i
+risultati sono prodotti in ``ordine sparso'' e, giudicando la letteratura degli
+ultimi anni le cui trattazioni si basano sempre sull'algoritmo 5, che non sembra
+essere facilmente riadattabile per la risoluzione di altri task.\\
+Si possono comunque rilevare alcune possibili migliorie in merito
+all'implementazione attuale della \textit{RLPBWT}:
+\begin{itemize}
+  \item si potrebbe pensare ad un metodo per gestire in modo efficiente lo
+  studio di più query contemporaneamente, migliorando i tempi di calcolo
+  complessivi
+  \item studiare eventuali ottimizzazioni per l'algoritmo di mapping e per le
+  strutture dati richieste, studiando, ad esempio, se sia possibile tenere in
+  memoria un solo bitvector $uv_k$ che funzioni in modo similare a quanto si era
+  inizialmente pensato per la \textit{RLPBWT naive}
+  \item migliorare il sistema di serializzazione. Allo stato attuale l'intera
+  struttura viene serializzata e caricata in modo completo. Studiare una
+  strategia efficiente per caricare, di volta in volta, in memoria solo la
+  colonna necessaria ad un dato passo di computazione o comunque un sottoinsieme
+  di colonne
+\end{itemize}
+Nonostante queste possibili migliorie la qualità dei risultati è sufficiente per
+stabilire che una variante \textit{run-length encoded} della \textit{PBWT}, alla
+stregua di quanto analizzato negli ultimi anni sulla \textit{RLBWT} con
+\textit{MONI} \cite{moni} e \textit{PHONI} \cite{phoni}, sia possibile e possa
+permettere, nel prossimo futuro, la memorizzazione compatta delle informazioni
+necessarie allo studio di grandi pannelli di aplotipi. In un futuro in cui le
+tecnologie di sequencing produrranno sempre più dati da sempre più individui,
+avere a disposizione strutture dati efficienti dal punto di vista della
+memorizzazione permetterà uno studio sempre più approfondito dei dati stessi,
+nei campi dei \textit{genome-wide association studies}, della \textit{medicina
+  personalizzata} etc\ldots 
 % sezione sviluppi
 \input{include/sviluppi}
-
 %% BIBLIOGRAFIA
 % \addcontentsline{toc}{chapter}{Bibliografia e sitografia}
 % \printbibliography[title={Bibliografia e sitografia}]
-\addcontentsline{toc}{chapter}{Bibliografia e sitografia}
+%\addcontentsline{toc}{chapter}{Bibliografia}
+\addcontentsline{toc}{chapter}{Riferimenti}
 \bibliographystyle{unsrt}
 \bibliography{thesis}
 
