@@ -235,24 +235,25 @@
   \cleardoublepage
 }
 \chapter{Introduzione}
-Negli ultimi anni si è assistiti ad un cambio di paradigma nel campo della
+Negli ultimi anni si è assistito ad un cambio di paradigma nel campo della
 \textit{bioinformatica}, ovvero il passaggio dallo studio della \textit{sequenza
-  lineare di un singolo genoma} a quello in cui si studia un grande insieme di
-genomi, provenienti da diversi individui, al fine di poter considerare anche le
-\textit{variazioni} o \textit{varianti geniche}. Questo nuovo concetto è stato
-nominato per la prima 
+  lineare di un singolo genoma} a quello di un insieme di
+genomi, provenienti da un gran numero di diversi individui, al fine di poter
+considerare anche le \textit{variazioni} o le \textit{varianti geniche}. 
+Questo nuovo concetto è stato nominato per la prima 
 volta, nel 2005, da Tettelin \cite{tettelin} con il termine
 \textbf{pangenoma}.\\ 
 Grazie ai risultati ottenuti in \textit{pangenomica} si sono permessi
-miglioramenti negli studi sia nel campo della \textit{biologia} che, ad esempio,
-in quello della \textit{medicina personalizzata}, soprattutto grazie ai
+miglioramenti sia nel campo della \textit{biologia} che, ad esempio,
+della \textit{medicina personalizzata}, soprattutto grazie ai
 \textbf{genome-wide association studies (\textit{GWAS})} \cite{gwas}
-\cite{impute5}. In tali studi si 
+\cite{impute5}. Infatti, in tali studi, si 
 necessita di studiare grandi collezioni di genomi al fine di poter identificare
 associazioni tra \textit{varianti geniche} e la propensione ad una certa
 malattia o ad un suo particolare sintomo.\\
 Dando qualche dato quantitativo possiamo pensare al fatto che il genoma umano,
-ad esempio prendendo come reference il \textit{GRCh38.p14}, è composto da circa
+ad esempio prendendo come reference l'\textit{homo sapiens reference
+genome GRCh38.p14}, è composto da circa 
 3.1 miliardi di basi, comportanti circa 59,000 geni \cite{tutorial}. Inoltre, i
 risultati del 
 \textit{1000 Genome Project} hanno portato ad identificare più di 88 milioni di
@@ -263,14 +264,14 @@ di singole basi azotate, 3.6 milioni di piccole \textbf{inserzioni/delezioni
 che coinvolgono più di 50 nucleotidi. Questi numeri fanno capire come, dal punto
 di vista della \textit{computer science}, siano richiesti algoritmi e strutture
 dati efficienti in grado di gestire quest'incredibile mole di dati, considerando
-che è destinata ad aumentare nel prossimo futuro, grazie al miglioramento delle
-tecnologie di sequenziamento (\textbf{Next Generation Sequencing (\textit{NGS})}
-e \textbf{Third-Generation Sequencing}).\\ 
+che tale è destinata ad aumentare nel prossimo futuro, grazie al miglioramento
+delle tecnologie di sequenziamento (\textbf{Next Generation Sequencing
+  (\textit{NGS})} e \textbf{Third-Generation Sequencing}).\\ 
 In tale ottica, sempre da un punto di vista computazionale, il
 \textit{pangenoma} può essere rappresentato in molteplici modi, tramite
 strutture dati che permettano di memorizzare tutte le variazioni tra i genomi
 dei vari individui. Solitamente si hanno due rappresentazioni principali: una
-tramite un \textbf{grafo del pangenoma} e una tramite un \textbf{pannello di
+tramite il \textbf{grafo del pangenoma} e una tramite un \textbf{pannello di
   aplotipi} \cite{pancon}. In entrambi i casi sono necessarie metodologie
 efficienti sia per 
 la memorizzazione della struttura dati che per le interrogazioni alla stessa. In
@@ -281,7 +282,7 @@ genitore. L'informazione combinata di tutti gli aplotipi in un individuo è dett
 invece \textbf{genotipo}.\\
 In questo contesto trova spazio, ovviamente, uno dei problemi fondamentali
 della \textit{bioinformatica}, ovvero quello del \textbf{pattern
-  matching}. Inizialmente tale concetto era relativo allo studio di un breve
+  matching}. Inizialmente tale concetto era relativo allo studio di un piccolo
 pattern all'interno di un testo di grandi dimensioni. Ora, con l'introduzione
 del \textit{pangenoma}, tale problema si è adattato alle nuove strutture
 dati. Si ha, ad esempio, il caso studiato in questa tesi: il pattern matching
