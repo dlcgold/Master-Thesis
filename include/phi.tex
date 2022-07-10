@@ -245,4 +245,49 @@ Si riporta un esempio chiarificatore.
   Si noti che uguali risultati si avrebbero per $k+1$, $k+2$ e $k+3$.
 \end{esempio}
 \textbf{SISTEMARE}\\
- 
+ Ricapitolando, per la variante della \textit{RLPBWT} con \textit{SLP} e
+ \textit{LCE query}, in termini di stime in memoria si
+ hanno, complessivamente, con $r$ numero di run, $M$ altezza della colonna
+ nella \textit{matrice PBWT}, $N$ numero di colonne, $B$ peso di un booleano e
+ $I$ peso di un intero:  
+\begin{itemize}
+  \item per ogni $h_k$, $u_k$ e $v_k$:
+  \[\approx 2\cdot r\cdot \left(2+\log\frac{N\cdot
+        M}{r}\right) +2\cdot 64\cdot 3\cdot N\]
+  Dove l'ultima somma è relativa ai bit aggiuntivi per \textit{rank} e
+  \textit{select} 
+  \item per ogni \textit{prefix array sample}:
+  \[\approx 2\cdot r \cdot I\]
+  \item per l'array $c$:
+  \[\approx N\cdot I\]
+  \item per l'array $start$:
+  \[\approx N\cdot B\]
+  \item per $a_{N-1}$:
+  \[\approx N\cdot I\]
+  \item per i pannelli di bitvector della struttura per $\varphi$ e
+  $\varphi^{-1}$, 
+  indicando con $s$ il numero di simboli $\sigma=1$:
+  \[\approx 2\cdot s\cdot \left(2+\log\frac{N\cdot M}{s}\right) + 2\cdot
+    64\cdot 2\cdot M\]
+   Dove l'ultima somma è relativa ai bit aggiuntivi per \textit{rank} e
+  \item per gli array a supporto dei pannelli per $\varphi$ e
+  $\varphi^{-1}$, indicando con $s$ il numero di simboli $\sigma=1$:
+  \[\approx 2\cdot s\cdot I\]
+\end{itemize}
+Ovvero:
+\[\approx 2\cdot r\cdot \left(2+\log\frac{N\cdot M}{r}\right) +2\cdot s\cdot
+  \left(2+\log\frac{N\cdot M}{s}\right)+2\cdot I\cdot (N+r+s)+B\cdot N+128\cdot
+  (2\cdot M+3\cdot N)\]
+Anticipando quale risultato sperimentale si può verificare, in figura
+\ref{fig:runs}, come tali stime, asintoticamente, siano confermati dalle
+simulazioni. 
+
+\begin{figure}
+  \centering
+  \includegraphics[scale = 0.7]{img/runs.png}
+  \caption{Conffronto tra le stime calcolate per la \textit{RLPBWT} con
+    \textit{LCE} (eslcudendo l'\textit{SLP}) confrontate coi dati sperimentali
+    al variare del numero di run.}
+  \label{fig:runs}
+\end{figure}
+\textbf{FORSE QUESTA PARTE VA MESSA NEI RISULTATI}
