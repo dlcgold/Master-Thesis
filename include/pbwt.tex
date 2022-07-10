@@ -200,11 +200,18 @@ $g_k$. Nel dettaglio $e_k$ tiene traccia dell'inizio del più lungo match,
 terminante in colonna $k$, tra $z$ e un qualche $y_i^k$. L'intervallo
 $[f_k,g_k)\subseteq[0,\ldots,M)$ invece identifica il sotto-intervallo di
 $a_k$ contenente gli indici degli aplotipi appartenetenti a tale match.
-Formalmente si ha quindi che:
-\[z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall i\mbox{
-    t.c. }f_k\leq i < g_k\]
-Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle sequenze per cui si ha tale
-match più lungo.\\
+\begin{definizione}
+  Dato un pannello $X$, con $M$ aplotipi/righe e $N$ colonne, e un aplotipo
+  query $z$, tale che $|z|=n$, si definisce un \textbf{Maximal Exact Matches
+    (\textit{MEM})}, iniziante in colonna $e_k$ e terminante il colonna $k$. tra
+  la query $z$ e le righe del pannello indicizzate dai valori compresi
+  enll'intervallo $[f_k,g_k)$ in $a_k$ sse:
+  \[z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall i\mbox{
+      t.c. }f_k\leq i < g_k\]
+  Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle sequenze per cui si ha tale
+  match più lungo.\\
+\end{definizione}
+
 Bisogna quindi capire come aggiornare $e_k$, $f_k$ e $g_k$ passando dalla
 colonna $k$ alla colonna $k+1$. L'idea è quella per cui, avendo
 $f_{k+1}<g_{k+1}$ allora sicuramente ho ancora delle righe che presentano un

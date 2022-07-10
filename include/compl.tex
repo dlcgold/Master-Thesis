@@ -262,8 +262,8 @@ tempo
 e spazio di una sperimentazione su un pannello di grandi dimensioni:
 $70000\times 46538$ con $30000$ query. Sono riportati anche i risultati delle
 tre varianti basate su \textit{matching statistics} senza l'estensione dei match
-tramite le \textbf{funzioni} $\boldsymbol \phi$ e
-$\boldsymbol\phi^{\mathbf{-1}}$. Si può notare come la struttura dati aggiuntiva
+tramite le \textbf{funzioni} $\boldsymbol \varphi$ e
+$\boldsymbol\varphi^{\mathbf{-1}}$. Si può notare come la struttura dati aggiuntiva
 non comporti praticamente alcuna differenza sostanziale sia in termini di
 memoria che di tempo di calcolo. In merito agli altri risultati si ha che
 seguono tutti il trend già descritto negli esempi precedenti. In particolare si
@@ -272,7 +272,10 @@ nota che:
   \item l'algoritmo 5 di Durbin ha una richiesta di memoria davvero molto
   grande, parlando di circa 40.75 gb di memoria richiesta
   \item l'algoritmo \textit{matchDynamic} di Durbin risulta essere migliore sia
-  dal punto di vista dello spazio richiesto che del tempo d'esecuzione
+  dal punto di vista dello spazio richiesto che del tempo d'esecuzione. Parlando
+  di tempi, infatti, l'intera esecuzione richiede $\sim 22$s, contro i $\sim
+  411$ dell'algoritmo \textit{matchIndexed} e i $\sim 1824$ della
+  \textit{RLPBWT} con \textit{SLP} e \textit{LCE query}
   \item la variante \textit{RLPBWT} con \textit{SLP} e \textit{threshold}, per
   le problematiche già descritte richiede un tempo d'esecuzione importante,
   parlando di circa 2 ore di esecuzione
@@ -286,6 +289,9 @@ nota che:
     variante \textit{matchIndexed} richieda $42736132$ kb di memoria mentre la
     \textit{RLPBWT} con \textit{SLP} e \textit{LCE query} solo $3286424$ kb,
     richiedendo quindi appena il 7\% di memoria richiesta dall'algoritmo 5 di
-    Durbin.} 
+    Durbin. Infine, per quanto la scala logaritmica renda impercettibile tale
+    differenza, la variante \textit{RLPBWT} con pannello richiede $3695968$ kb,
+    quindi circa $380$ mb in più della soluzione basata sull'uso
+    dell'\textit{SLP}. } 
   \label{fig:bigres}
 \end{figure}

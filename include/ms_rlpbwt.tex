@@ -68,7 +68,7 @@ Inoltre, analogamente al caso della variante classica, si ha il seguente lemma.
   Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$
   siti, un aplotipo esterno/pattern $z$, tale che $|z|=N$, e il corrispondente
   array di matching statistics $MS$ si ha che:
-  \[z[i-l+1:i]\]
+  \[z[i-l+1,i]\]
   è un \textbf{MEM} di lunghezza $l$ in con la riga $MS[i].row$ del pannello
   $X$ sse: 
   \[MS[i].len=l\land(i=N\lor MS[i].len\geq MS[i+1].len)\]
@@ -319,7 +319,8 @@ che, come anticipato, permette anche di eseguire efficientemente le \textit{LCE
 \begin{definizione}
   Dato un pannello $X$, $M\times N$, e due righe $x_i$ e $x_j$ tali che $0\leq
   i <m$ e $0\leq j <M$, con $i\neq j$, si definisce \textbf{LCE query} il
-  suffisso comune più lungo tra le due stringhe. Per comodità nella sezione si
+  suffisso comune (o il prefisso se considerato l'ordine inverso) più lungo tra
+  le due righe. Per comodità nella sezione si 
   definisce la funzione: 
   \[LCE_k(x_i,x_j)=l\]
   dove $l$ è la lunghezza del suffisso comune più lungo tra le due stringhe
