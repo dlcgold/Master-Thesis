@@ -275,7 +275,8 @@ tenere in memoria i \textit{sample di prefix array} a inizio e fine di ogni
 run.\\ 
 Grazie all'uso delle \textit{threshold} si è potuto sviluppare un algoritmo
 efficiente dal punto di vista della memoria richiesta per il calcolo delle
-\textit{matching statistics} in due ``sweep'', calcolandone prima le posizioni e
+\textit{matching statistics} in due ``sweep'' sul pattern, calcolandone prima le
+posizioni e 
 poi, tramite \textit{random access} al pannello, anche le
 lunghezze. Tale soluzione richiedeva in memoria
 l'intero pannello, in forma di vettori di
@@ -293,7 +294,7 @@ il termine a una colonna precisata. Calcolando la
 lunghezza di tale suffisso comune è possibile calcolare anche le
 lunghezze delle \textit{matching statistics} contemporaneamente al calcolo delle
 righe della stessa. Quindi, si è ottenuto il calcolo completo di tale array in
-un singolo ``sweep''.\\
+un singolo ``sweep'' sul pattern.\\
 Al fine di risolvere il problema del calcolo dei \textit{MEM}, è
 servito 
 costruire una struttura dati a supporto che permettesse l'estensione, nel
