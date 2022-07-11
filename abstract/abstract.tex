@@ -11,7 +11,8 @@
 \usepackage{typearea}
 
 \hypersetup{
-  pdftitle = {Algoritmi per la trasformata di Burrows-Wheeler Posizionale con compressione run-length},
+  pdftitle = {Algoritmi per la trasformata di Burrows-Wheeler Posizionale con
+    compressione run-length}, 
   pdfauthor = {Davide Cozzi},
   pdfsubject = {Riassunto della tesi},
   pdfpagemode = UseNone
@@ -40,366 +41,270 @@
 \maketitle
 \setlist{leftmargin = 2cm}
 \noindent
-\subsection*{Introduzione}
+%\subsection*{Introduzione}
 Negli ultimi anni si è assistito ad un cambio di paradigma nel campo della
-\textit{bioinformatica}, ovvero il passaggio dallo studio della \textit{sequenza
-  lineare di un singolo genoma} a quello di un insieme di
-genomi, provenienti da un gran numero di diversi individui, al fine di poter
-considerare anche le \textit{varianti geniche}. Questo
-nuovo concetto è stato 
-nominato per la prima 
-volta da Tettelin, nel 2005, con il termine di \textbf{pangenoma}.\\
-Grazie ai risultati ottenuti in \textit{pangenomica} ci sono stati
-miglioramenti sia nel campo della \textit{biologia} che in quello
-della \textit{medicina personalizzata}, soprattutto grazie ai
-\textbf{genome-wide association studies (\textit{GWAS})}. Infatti, in tali
-studi, si necessitano grandi collezioni di genomi al fine di poter
-identificare associazioni tra \textit{varianti geniche} e la propensione
-all'insorgenza di una
-certa malattia o un suo particolare sintomo.\\
-Il genoma umano,
-prendendo come reference l'\textit{homo sapiens reference
-genome GRCh38.p14}, è composto da circa
-3.1 miliardi di basi, comportanti circa 59,000 geni. Inoltre, i risultati del
-\textit{1000 Genome Project} hanno portato a identificare più di 88 milioni di
-varianti tra i genomi sequenziati. Tra esse si hanno, ad esempio, 84.7 milioni
-di \textbf{Single Nucleotide Polymorphisms (\textit{SNPs})}, ovvero differenze
-di singole basi azotate, 3.6 milioni di piccole \textbf{inserzioni/delezioni
-  (\textit{indel})} di basi e circa 60,000 \textbf{varianti strutturali},
-ciascuna formata da più di 50 nucleotidi. Questi numeri fanno capire come siano
-richiesti algoritmi e strutture 
-dati efficienti in grado di gestire quest'incredibile mole di dati, considerando
-che tale quantità è destinata ad aumentare nel prossimo futuro, grazie al
-miglioramento delle tecnologie di sequenziamento (\textbf{Next Generation
-  Sequencing (\textit{NGS})} e \textbf{Third-Generation Sequencing}).\\ 
-In tale ottica, da un punto di vista computazionale, il
-\textit{pangenoma} può essere rappresentato in molteplici modi, tramite
-strutture dati che permettano di memorizzare tutte le varianti tra i genomi
-dei diversi individui. Le due rappresentazioni principali sono:
-il \textbf{grafo del pangenoma} e il \textbf{pannello di
-  aplotipi}. In entrambi i casi sono necessarie metodologie efficienti sia per
-la memorizzazione della struttura dati che per le interrogazioni alla stessa. In
-questa tesi si è studiata la rappresentazione
-tramite \textit{pannello di aplotipi}, dove con \textbf{aplotipo} si intende
-l'insieme di alleli, ovvero di varianti, che un organismo eredita da ogni
-genitore. L'informazione combinata di tutti gli aplotipi in un individuo è detta
-invece \textbf{genotipo}.\\
-In questo contesto trova spazio uno dei problemi fondamentali
-della \textit{bioinformatica}, ovvero quello del \textbf{pattern
-  matching}. Inizialmente tale concetto era relativo allo studio di un piccolo
-pattern all'interno di un testo di grandi dimensioni. Ora, con l'introduzione
-del \textit{pangenoma}, tale problema si è adattato alle nuove strutture
-dati.\\
-\textit{Lo scopo di questa tesi è ottimizzare il problema del
-  pattern 
-matching, tra un aplotipo esterno e un pannello di aplotipi, in una delle
-strutture dati più utilizzat: la \textbf{trasformata di Burrows-Wheeler
-  Posizionale (\textit{PBWT})}. Il 
-progetto di tesi, svolto in collaborazione con il laboratorio BIAS (Università
-degli Studi di Milano Bicocca), il professor
-Gagie (Dalhousie University), la professoressa Boucher e il dottor Rossi
+bioinformatica, ovvero il passaggio dallo studio della sequenza lineare di un
+singolo genoma a quello di un insieme di genomi, provenienti da un gran numero
+di individui, al fine di poter considerare anche le varianti
+  geniche. Questo nuovo concetto è stato nominato per la prima volta da
+Tettelin, nel 2005, con il termine di \textit{pangenoma}. Grazie ai risultati
+ottenuti in pangenomica ci sono stati miglioramenti sia nel 
+campo della biologia che in quello della medicina personalizzata, grazie al
+fatto che, con il pangenoma, si migliora la precisione della rappresentazione di
+multipli genomi e delle loro differenze. 
+
+Il genoma umano di riferimento (GRCh38.p14), è composto da circa
+3.1 miliardi di basi, con più di 88 milioni 
+varianti tra i genomi sequenziati, secondo i risultati ottenuti nel 1000 Genome
+Project. Considerando come la quantità dei dati di sequenziamento sia destinata
+ad aumentare esponenzialmente nei prossimi anni, grazie al
+miglioramento delle tecnologie di sequenziamento (Next Generation Sequencing e
+Third-Generation Sequencing), risulta necessaria la costruzione di algoritmi e
+strutture dati efficienti. 
+In merito, uno degli approcci più usati per rappresentare il pangenoma è un
+pannello di aplotipi, ovvero, computazionalmente, una matrice di $M$
+righe, corrispondenti agli individui, e $N$ colonne, corrispondenti ai siti con
+le varianti. Si specifica che, con il termine
+aplotipo, si intende l'insieme di alleli, ovvero di varianti, che un organismo
+eredita da ogni genitore.
+
+In questo contesto trova spazio uno dei problemi fondamentali della
+bioinformatica, ovvero quello del pattern matching. Inizialmente tale concetto
+  era relativo allo studio di un piccolo pattern all'interno di un testo di
+  grandi dimensioni, ovvero il genoma di riferimento. Ora, con l'introduzione 
+del pangenoma, tale problema si è adattato alle nuove strutture
+dati.
+
+Lo scopo di questa tesi è ottimizzare il problema del pattern 
+matching, inteso come ricerca di match massimali esatti (MEM) tra un aplotipo
+esterno e un pannello di aplotipi, in una delle 
+strutture dati più utilizzata: la \textit{trasformata di Burrows-Wheeler
+  Posizionale (PBWT)}. Il progetto di tesi, svolto in collaborazione con il
+prof. Gagie (Dalhousie University) e la prof.ssa Boucher 
 (University of Florida), ha quindi permesso lo sviluppo di una variante
-\textbf{run-length encoded} della \textbf{PBWT} che permettesse di risolvere il
-problema della ricerca di match massimali esatti (MEM) tra un pannello di
-aplotipi e 
-un aplotipo query.}
-\subsection*{Preliminari}
-Al fine di comprendere al meglio i metodi usati in questa tesi bisogna
-introdurre alcuni concetti preliminari.\\
-Il primo è quello della ben nota \textbf{trasformata Burrows-Wheeler
-  (\textit{BWT})}, una trasformata reversibile che ha permesso di ottenere
-algoritmi efficienti per il pattern matching. Questo è stato permesso grazie
-all'indicizzazione tramite 
-\textbf{FM-index}, un \textit{self-index} che permette di lavorare sulla
-\textit{BWT} senza averla effettivamente in memoria (avendo in memoria solo
-l'indice stesso). La \textit{BWT} è fortemente legata al concetto di
-\textbf{Suffix Array (\textit{SA})}. Infatti, dato un testo $T$ lungo $n$ si ha
-che $SA$ è la lista lessicograficamente ordinata delle posizioni di partenza di
-tutti i suoi suffissi, avendo che $SA[i]=j$ se e solo se $T[j, |T|-1]$ è
-l'$i$-esimo 
-suffisso lessicograficamente minore di $T$, ovvero $T[SA[i],n-1] \prec 
-T[SA[j],n-1]$. A questo punto si può dire che la \textit{BWT} del testo $T$ è
-tale per cui $BWT[i]=T[SA[i]-1]$, se $SA[i]\neq 1$, o \$, altrimenti. Un altro
-concetto spesso usato 
-sono le lunghezze del cosiddetto \textbf{Longest Common Prefix (\textit{LCP})}
-tra ogni suffisso consecutivo in $SA$.\\
-Una caratteristica di questa trasformata è la tendenza a
-produrre una sequenza con caratteri uguali in posizioni
+\textbf{run-length encoded} della \textbf{PBWT}, detta \textbf{RLPBWT}, che
+permettesse di risolvere tale problema.
+\subsection*{Stato dell'arte}
+Si introducono ora i principali algoritmi e le principali strutture dati,
+presenti allo stato dell'arte, posti a fondamento di questo progetto di tesi.
+
+La prima struttura dati che bisogna citare è la  ben nota \textit{trasformata
+  Burrows-Wheeler (BWT)}, una trasformata reversibile che ha permesso di
+ottenere algoritmi efficienti per il pattern matching su un testo.
+La BWT, inoltre, è fortemente legata al concetto di Suffix Array (SA), definito
+come la lista lessicograficamente ordinata delle posizioni di partenza di 
+tutti i suffissi di un testo, e a quello delle lunghezze del Longest Common
+Prefix (LCP) tra ogni suffisso consecutivo indicizzato nel SA.
+
+Durbin, nel 2014, propose una struttura dati ispirata alla BWT, detta
+\textit{Trasformata di Burrows-Wheeler Posizionale (PBWT)}, la quale viene
+costruita a partire da un pannello di aplotipi, rappresentato, riferendosi al
+solo caso bi-allelico, tramite una matrice binaria. Il funzionamento di tale
+struttura dati prevede la costruzione di due insiemi di array, tramite
+l'\textit{ordinamento dei prefissi inverso} ad ogni colonna del pannello.
+Tali insiemi sono detti \textit{insieme dei prefix array} e \textit{insieme dei
+  divergence array}. Il primo, denotato $a$, contiene, per ogni colonna e ogni
+posizione, l'indice dell'aplotipo nel pannello originale riordinato secondo
+l'ordinamento inverso alla data colonna. Quindi, si ha, in ogni colonna, la
+permutazione degli indici di riga secondo l'ordinamento alla colonna $k$-esima.
+Il secondo insieme, invece, indica l'indice della colonna iniziale del suffisso
+comune più lungo, che termina nella colonna nella colonna $k$, tra una riga e la
+sua precedente secondo l'ordinamento inverso ottenuto per la $k$-esima colonna.
+Il pannello ottenuto con le permutazioni dettate dal prefix array viene chiamato
+matrice PBWT.
+
+Cruciale è il fatto che tale struttura permetta di calcolare i MEM tra
+un aplotipo esterno e il pannello in tempo $\mathcal{O}(MN)$, mentre 
+una soluzione naive impiegherebbe un tempo proporzionale a
+$\mathcal{O}(M^2N)$. Il tradeoff di tale algoritmo, conosciuto anche come
+\textit{algoritmo 5 di Durbin}, è la richiesta in termini di spazio. L'autore
+stesso infatti stima la richiesta di $13NM$ byte in memoria per poter eseguire
+l'algoritmo e superare questo limite è l'obiettivo principale di questo progetto
+di tesi. 
+
+Tornando a parlare della BWT, una caratteristica di questa trasformata è la
+tendenza a produrre una sequenza con caratteri uguali in posizioni
 consecutive. Questo fenomeno è dovuto alle ripetizioni di determinate
 sottostringhe nel testo, avendo che tali ripetizioni, per motivazioni
-biologiche, sono frequenti nell'ambito genomico. Al fine di sfruttare tali
-caratteri uguali consecutivi si 
-è quindi ideata la \textbf{trasformata Burrows-Wheeler Run-Length encoded
-  (\textit{RLBWT})} dove una sequenza massimale di caratteri uguali, detta
-\textit{run}, viene memorizzata in modo efficiente come coppia (carattere,
+biologiche, sono frequenti in ambito genomico.
+Al fine di sfruttare tali caratteri uguali consecutivi si 
+è quindi ideata la \textit{trasformata Burrows-Wheeler Run-Length
+  encoded (RLBWT)} dove una sequenza massimale di caratteri uguali, detta 
+run, viene memorizzata in modo efficiente come coppia (carattere,
 lunghezza della run). Ad esempio, la stringa \texttt{aaaaaa} sarebbe memorizzata
-come \texttt{(a,6)}. Alcuni paper recenti hanno proposto un nuovo tipo di
-indicizzazione, tramite il cosiddetto \textbf{r-index}, per questa struttura
-dati compressa, al fine di ottenere un indice che non fosse lineare sulla
-lunghezza del testo ma sul numero di run della sua \textit{BWT}.
-Tale indice include la \textit{RLBWT} e un \textit{Suffix Array sample},
-ovvero i valori del \textit{SA} all’inizio e alla fine di ogni run. Tali
-articoli hanno portato alla produzione di due tool, \textit{MONI} e 
+come \texttt{(a,6)}.
+Alcuni paper recenti hanno proposto un nuovo tipo di
+indicizzazione, il cosiddetto \textit{r-index}, per questa struttura
+dati compressa. In tal modo, si ottiene un indice che non lineare sulla
+lunghezza del testo ma sul numero di run della sua BWT. L'r-index include la
+RLBWT e un suffix array sample, ovvero i valori del SA all’inizio e alla fine di
+ogni run. 
+Tali articoli hanno portato alla produzione di due tool, \textit{MONI} e 
 \textit{PHONI}, alle cui tecniche è fortemente ispirata questa tesi. Queste due
 soluzioni hanno entrambe l'obiettivo di 
-calcolare i \textbf{Maximal Exact Matches (\textit{MEM})} tra un testo $T$,
-lungo $n$, e un pattern $P$, lungo $m$. Si ha infatti che una sottostringa del
-pattern, di lunghezza $l$ e iniziante all'indice $i$, ovvero $P[i,i+l-1]$ è un
-\textit{MEM} di $P$ in $T$ 
-se e solo se $P[i,i+l-1]$ è anche una sottostringa di $T$ ed essa non può essere
-estesa 
-in nessuna direzione, ovvero né $P[i-1,i+l-1]$ né $P[i,i+l]$ sono
-sottostringhe di $T$. L'algoritmo per il calcolo dei \textit{MEM} è direttamente
-correlato alla costruzione dell'array delle \textbf{Matching Statistics
-  (\textit{MS})}, 
-ovvero un array lungo quanto il pattern, di coppie (posizione $pos$, lunghezza
-$len$), tale 
-che 
-$T[MS[i].pos,MS[i].pos+MS[i].len-1]=P[i,i+MS[i].len-1]$ e che $P[i,i+MS[i].len]$ 
-non occorre in $T$. Quindi si ha un match tra $P$ e $T$ lungo $MS[i].len$ a
-partire da $MS[i].pos$ in $T$ e da $i$ in $P$ che non è ulteriormente
-estendibile. Gli autori, per il calcolo delle \textit{Matching Statistics} hanno
-usato, in \textit{MONI}, anche il concetto di \textit{threshold}, definito come
-il minimo valore dell'\textit{array LCP} tra due run consecutive dello stesso
-carattere. Un 
-ulteriore miglioramento si ha avuto in \textit{PHONI} con l'uso delle
-\textbf{LCE query} per il calcolo dell'array $MS$. Si ha che, dato un testo $T$,
-tale che $|T|=n$, il risultato della \textbf{LCE query} tra 
-due posizioni $i$ e $j$, tali che $0\leq i,j<n$, corrisponde al più lungo
-prefisso comune tra le sottostringhe che hanno come indice di partenza $i$ e
-$j$, avendo quindi il più lungo prefisso comune tra $T[i,n-1]$ e
-$T[j,n-1]$.\\
-I concetti appena espressi verranno riformulati in questa tesi, in quanto essa
-tratta la costruzione di una versione \textbf{run-length encoded} della
-\textbf{PBWT}, detta \textbf{RLPBWT}. Questa struttura, ideata da Durbin, nel
-2014 viene costruita a partire da un 
-pannello di aplotipi (nello specifico limitandosi al caso bi-allelico avendo che
-il pannello è composto da simboli nell'alfabeto $\Sigma=\{0,1\}$) e 
-assume in input un pannello $X$, composto da $M$ individui/righe e $N$
-siti/colonne, e produce, tramite l'\textit{ordinamento dei prefissi inverso}, ad
-ogni colonna $k$, due insiemi di array. Tali insiemi sono detti \textbf{insieme
-  dei prefix array} e \textbf{insieme dei divergence array}. Il primo, denotato
-$a$, contiene, per ogni colonna $k$ e ogni posizione $i$, l'indice dell'aplotipo
-$m$ nel pannello originale riordinato secondo l'ordinamento inverso alla colonna
-$k$-esima. Si ha quindi che $a_k[i]=m$ se e solo se $X_m$ 
-(denotando la riga $m$-esima di $X$) è l'$i$-esimo aplotipo secondo
-l'ordinamento inverso fatto in colonna $k$. Il secondo insieme, denotato con
-$d$, indica l'indice della colonna iniziale del suffisso comune più lungo, che
-termina nella colonna $k$, tra una riga e la sua precedente secondo
-l'ordinamento inverso ottenuto per la $k$-esima colonna. Il pannello ottenuto
-con le permutazioni dettate dal \textit{prefix array} viene chiamato
-\textit{matrice PBWT}.\\
-Si può quindi apprezzare il collegamento naturale che si ha tra la \textit{PBWT}
-e la \textit{BWT}, avendo che il \textit{prefix array} della prima corrisponde
-al \textit{suffix array} della seconda mentre il \textit{divergence array} è una
-  diversa rappresentazione dell'\textit{array LCP}. \\ 
-Cruciale è il fatto che tale struttura permetta di calcolare i \textit{MEM} tra
-un aplotipo esterno e il pannello in tempo $\mathcal{O}(MN)$, mentre 
-una 
-soluzione naive impiegherebbe un tempo proporzionale a $\mathcal{O}(M^2N)$. Il
-tradeoff di tale algoritmo, conosciuto anche come \textbf{algoritmo 5 di
-  Durbin}, è la richiesta in termini di spazio. L'autore stesso infatti stima la
-richiesta di $13NM$ byte in memoria per poter eseguire l'algoritmo e superare
-questo limite è l'obiettivo principale di questo progetto di tesi.\\
-Al fine di raggiungere tale obiettivo sono state usate altre nozioni. In primis,
-si sono sfruttate le cosiddette \textbf{strutture dati succinte}, ovvero
-strutture per le quali, assumendo che $\mathcal{X}$ sia il numero di bit
-ottimale per memorizzare dei dati, si richiede uno spazio in memoria pari a
-$\mathcal{X}+o(\mathcal{X})$. Nel dettaglio si sono usati i cosiddetti
-\textbf{bitvector sparsi}, strutture che richiedono in memoria $\approx
-m\left(2+\log\frac{n}{m}\right)$ bit, con $n$ lunghezza del bitvector e $m$
-numero di simboli $\sigma=1$ in esso. L'efficienza delle operazioni che si
-possono fare con tali strutture dati, incredibilmente efficienti dal punto di
-vista dello spazio occupato, sono uno dei punti cruciali del funzionamento della
-\textit{RLPBWT}.\\
-Infine, per memorizzare il pannello in modo compatto, si è usata una
-struttura dati, detta \textbf{Straight-Line Programs (\textit{SLP})}. Tale
-struttura è una \textbf{grammatica context-free}, che
-genera una e una sola parola, la quale permette sia di effettuare \textit{random
-access} al testo, non in tempo costante, che di calcolare le \textit{LCE
-query} in modo efficiente. 
-\subsection*{Metodi}
-Il processo per ottenere la \textit{RLPBWT} è stato incrementale,
-iniziando con la creazione di una variante naive, basata sulle intuizioni avute
-a fine 2021 da Gagie, il quale propose una prima variante della struttura senza
-però specificare come effettuare query alla stessa. Tale proposta, inoltre,
-presentava alcune ridondanze tra i dati memorizzati.\\
-Il primo approccio aveva come obiettivo l'ottenere un riadattamento ``diretto''
-dell'\textit{algoritmo 5 di Durbin}, pur tenendo in memoria informazioni legate
-principalmente alle run della \textit{matrice PBWT}. Per quanto si siano trovate
-soluzioni interessanti per gestire il \textit{mapping} tra una colonna e la sua
-successiva (ma anche tra una colonna e la sua precedente), per poter
-``seguire'' una riga del pannello originale nella 
-\textit{matrice PBWT}, si dovute memorizzare anche quantità non relative alle
-run.  Infatti, è risultato necessario memorizzare l'intero
-\textit{divergence array} (in forma di \textit{LCP array} quindi
-memorizzando la lunghezza del prefisso comune in ordine inverso e non la colonna
-d'inizio dello stesso), al fine di poter computare i \textit{MEM} con
-un aplotipo esterno. Inoltre, l'assenza delle informazioni relative al
-\textit{prefix array} ha impedito di poter annotare quali righe del pannello
-presentassero un match massimale esatto, terminante in una certa colonna, con
-l'aplotipo query, avendo solo 
-informazioni relative alla cardinalità di tale sottoinsieme di righe. Le
-informazioni in memoria si è 
-stimato non fossero ottimali, non solo per il \textit{divergence array}, ma anche
-perché non veniva utilizzato alcun approccio tramite \textit{strutture dati
-  succinte}. Si è quindi deciso di
-cambiare approccio al problema, ispirandosi ai risultati già ottenuti per la
-\textit{RLBWT}. In primis le strutture necessarie al mapping e
-all'indicizzazione delle run sono state sostituite da \textit{bitvector
-  sparsi}, creando una prima variante della \textit{RLPBWT} basata su
-\textit{bitvector}. Ovviamente tale sostituzione non risolveva i limiti dati
-dall'avere in memoria il \textit{divergence array} e l'algoritmo di ricerca dei
-\textit{MEM} era ancora basato su quello di Durbin. \\
+calcolare i MEM tra un testo e un pattern, ovvero sottostringhe del pattern che
+sono anche sottostringhe del testo, avendo che tale match non può essere esteso,
+in entrambe le direzioni, senza introdurre un mismatch. 
+
+Gli autori hanno rilevato come il calcolo dei MEM sia direttamente
+correlato alla costruzione dell'array delle \textit{Matching Statistics (MS)}.
+Tale array, lungo quanto il pattern e formato da coppie (posizione $pos$,
+lunghezza $len$), annota, per ogni posizione del pattern, la lunghezza $len$ di
+un match, anche non massimale, con una sottostringa nel testo avente
+indice iniziale $pos$. Estraendo da tali match i MEM si possono poi ottenere
+tutte altre occorrenze del medesimo MEM nel testo. 
+Gli autori, per il calcolo delle MS, hanno
+usato, in MONI, anche il concetto di \textit{threshold}, definito come
+il minimo valore dell'array LCP tra due run consecutive dello stesso
+carattere. Un ulteriore miglioramento si è registrato in \textit{PHONI} con
+l'uso delle \textit{LCE query} per il calcolo dell'array MS. Infatti, tale
+struttura, dati due indici del testo $i$ e $j$, restituisce il più lungo
+prefisso comune tra il suffisso $i$-esimo e il suffisso $j$-esimo.
+
+Si può quindi apprezzare il collegamento naturale che si ha tra la PBWT
+e la BWT, avendo, ad esempio, che il prefix array della prima corrisponde
+al suffix array della seconda mentre il divergence array è una
+diversa rappresentazione dell'array LCP. Anche grazie a queste premesse, si è
+basato il progetto di tesi sulla costruzione di una versione run-length encoded
+della PBWT.
+
+% Al fine di raggiungere tale obiettivo sono state usate altre nozioni. In primis,
+% si sono sfruttate le cosiddette \textbf{strutture dati succinte}, ovvero
+% strutture per le quali, assumendo che $\mathcal{X}$ sia il numero di bit
+% ottimale per memorizzare dei dati, si richiede uno spazio in memoria pari a
+% $\mathcal{X}+o(\mathcal{X})$. Nel dettaglio si sono usati i cosiddetti
+% \textbf{bitvector sparsi}, strutture che richiedono in memoria $\approx
+% m\left(2+\log\frac{n}{m}\right)$ bit, con $n$ lunghezza del bitvector e $m$
+% numero di simboli $\sigma=1$ in esso. L'efficienza delle operazioni che si
+% possono fare con tali strutture dati, incredibilmente efficienti dal punto di
+% vista dello spazio occupato, sono uno dei punti cruciali del funzionamento della
+% \textit{RLPBWT}.\\
+% Infine, per memorizzare il pannello in modo compatto, si è usata una
+% struttura dati, detta \textbf{Straight-Line Programs (\textit{SLP})}. Tale
+% struttura è una \textbf{grammatica context-free}, che
+% genera una e una sola parola, la quale permette sia di effettuare \textit{random
+% access} al testo, non in tempo costante, che di calcolare le \textit{LCE
+% query} in modo efficiente. 
+\subsection*{Contributo}
+L'idea con la quale si è sviluppata questa tesi vede, come punto di partenza,
+alcuni primi risultati teorici, presenti in letteratura, che caratterizzavano
+una variante run-length encoded della PBWT. Purtroppo, tale proposta presentava
+alcune ridondanze nei dati memorizzati e non caratterizzava alcuna tecnica
+algoritmica per il calcolo di MEM.
+
+% Il primo approccio aveva come obiettivo l'ottenere un riadattamento ``diretto''
+% dell'\textit{algoritmo 5 di Durbin}, pur tenendo in memoria informazioni legate
+% principalmente alle run della \textit{matrice PBWT}. Per quanto si siano trovate
+% soluzioni interessanti per gestire il \textit{mapping} tra una colonna e la sua
+% successiva (ma anche tra una colonna e la sua precedente), per poter
+% ``seguire'' una riga del pannello originale nella 
+% \textit{matrice PBWT}, si dovute memorizzare anche quantità non relative alle
+% run.  Infatti, è risultato necessario memorizzare l'intero
+% \textit{divergence array} (in forma di \textit{LCP array} quindi
+% memorizzando la lunghezza del prefisso comune in ordine inverso e non la colonna
+% d'inizio dello stesso), al fine di poter computare i \textit{MEM} con
+% un aplotipo esterno. Inoltre, l'assenza delle informazioni relative al
+% \textit{prefix array} ha impedito di poter annotare quali righe del pannello
+% presentassero un match massimale esatto, terminante in una certa colonna, con
+% l'aplotipo query, avendo solo 
+% informazioni relative alla cardinalità di tale sottoinsieme di righe. Le
+% informazioni in memoria si è 
+% stimato non fossero ottimali, non solo per il \textit{divergence array}, ma anche
+% perché non veniva utilizzato alcun approccio tramite \textit{strutture dati
+%   succinte}.
+Per quanto l'intuizione iniziale fosse quella di adattare l'algoritmo 5 di
+Durbin all'uso con una struttura run-length encoded, non si è trovato un modo
+per memorizzare i dati del divergence array in modo proporzionale al numero di
+run. Inoltre non si è trovata una soluzione efficiente per utilizzare i sample
+del prefix array ad inizio e fine di ogni run.
+
+Si è quindi deciso di cambiare approccio al problema, ispirandosi ai risultati
+già ottenuti per la RLBWT. Tale approccio si basa anche sull'uso dei bitvector
+sparsi, una struttura dati succinta che permette di memorizzare e interrogare
+vettori binari efficientemente.
+Quindi, le strutture necessarie all'indicizzazione delle run e al cosiddetto
+mapping, ovvero il ``seguire'' una riga dalla sua posizione permutata in una
+certa colonna alla posizione permutata in quella successiva nella matrice PBWT,
+sono state implementate tramite bitvector sparsi, con un numero di simboli
+$\sigma=1$ proporzionale al numero run.
 Al fine di avvicinarsi alle idee proposte in \textit{MONI} e \textit{PHONI} è
-quindi servito uno studio teorico preliminare per ridefinire i concetti
-di: \textit{matching statistics}, \textit{MEM} 
-calcolabili da esse, \textit{threshold} e \textit{LCE query}. Da un punto
-di vista formale, le \textit{matching statistics}
-sono state definite, assumendo un pannello $X$, con $M$ aplotipi, $N$ siti e
-riga arbitraria $i$ indicabile con la dicitura $x_i$, come un array, lungo $N$,
-di 
-coppie (riga $row$, lunghezza $len$) tale per cui
-$x_{MS[i].row}[i-MS[i].len+1,i]=z[i-MS[i].len+1,i]$ mentre $z[i-MS[i].len,i]$
-non è un suffisso terminante in colonna $i$ di un qualsiasi sottoinsieme di
-righe di $X$. In pratica si ha un suffisso comune, lungo $MS[i].len$ e non
-estendibile ulteriormente a sinistra, terminante in
-colonna $i$, tra la query e la riga $MS[i].row$. Data questa definizione,
-inoltre, si ha che $z[i-l+1:i]$ 
-è un \textit{MEM} di lunghezza $l$ tra la query e la riga $MS[i].row$ del
-pannello $X$ se e solo se  $MS[i].len=l\land(i=N-1\lor MS[i].len\geq
-MS[i+1].len)$.\\ 
-Al fine di poter calcolare tale array si è quindi pensato all'utilizzo del
-concetto di \textit{threshold}, anch'esso riadattato alla \textit{matrice PBWT},
-come minimo valore dell'\textit{array LCP} all'interno di una run (comprendendo
-anche la testa, qualora esistente, della run successiva, essendo il suo valore
-\textit{LCP} calcolato sfruttando anche la coda della run corrente). Anche per
-tale informazione si è usato un \textit{bitvector sparso} (avendone, per ogni
-colonna, uno lungo quanto una colonna della \textit{matrice PBWT} e con un
-numero di $\sigma=1$ pari al numero delle run) e, analogamente a
-quanto visto per l'\textit{r-index}, si è provveduto a 
-tenere in memoria i \textit{sample di prefix array} a inizio e fine di ogni
-run.\\ 
-Grazie all'uso delle \textit{threshold} si è potuto sviluppare un algoritmo
-efficiente dal punto di vista della memoria richiesta per il calcolo delle
-\textit{matching statistics} in due ``sweep'' sul pattern, calcolandone prima le
-posizioni e 
-poi, tramite \textit{random access} al pannello, anche le
-lunghezze. Tale soluzione richiedeva in memoria
-l'intero pannello, in forma di vettori di
-bitvector. Esplorando le tecniche presenti negli ultimi sviluppi avuti con la
-\textit{RLBWT} si è giunti all'uso 
-dell'\textit{SLP} e riprendendo quanto fatto in \textit{PHONI} per
-la \textit{RLBWT}, si è anche deciso di risparmiare ulteriore spazio eliminando
+quindi servito uno studio teorico preliminare per ridefinire: matching
+statistics, MEM, threshold e LCE query. In particolare, grazie agli 
+ultimi due concetti, si è potuto non memorizzare il divergence array.
+Parlando di matching statistics, si ha che sono definite tramite un array, lungo
+quanto il pattern e formato da coppie (riga $row$, lunghezza $len$), che, per
+ogni colonna, tiene traccia del suffisso comune che non sia estendibile a
+sinistra, terminate in quella colonna e lungo $len$, tra la riga $row$ del
+pannello e l'aplotipo query. Una volta calcolato tale
+array è possibile estrarre un MEM, terminate in colonna $k$ tra la query e la
+riga $row$, ed estendere, tramite una struttura dati a supporto, tale risultato
+a tutte le altre righe del pannello che presentano il medesimo MEM.
+Il primo metodo di calcolo di tale array è stato basato sull'utilizzo delle
+threshold. Ragionando sulla \textit{matrice PBWT}, una threshold è definita
+come il minimo valore dell'\textit{array LCP} all'interno di una run
+(comprendendo anche la testa, qualora esistente, della run successiva, essendo
+il suo valore \textit{LCP} calcolato sfruttando anche la coda della run
+corrente). L'insieme delle threshold per una certa colonna è stato memorizzato
+come bitvector sparso. Inoltre, si è provveduto a tenere in memoria i
+sample di prefix array a inizio e fine di ogni run.
+
+Grazie all'uso delle threshold si è potuto sviluppare un algoritmo
+efficiente, dal punto di vista della memoria richiesta, per il calcolo delle
+matching statistics in due ``sweep'' sul pattern, calcolandone prima le
+posizioni e poi, tramite random access al pannello, anche le
+lunghezze. Tale soluzione richiedeva in memoria l'intero pannello, per il quale
+si è scelto di usare uno Straight-Line Program (SLP), ovvero una grammatica
+context-free che genera una e una sola parola, molto compatta in memoria, sulla
+quale è possibile effettuare random access (in tempo non costante). Ad esempio,
+un pannello $70000 \times 46538$, che normalmente richiede $\sim 3.3$GB in
+memoria ($\sim 451$MB se compresso tramite GZIP), viene memorizzato, tramite
+SLP, in $\sim 7$MB.
+
+Riprendendo quanto fatto in \textit{PHONI} per
+la RLBWT, si è, poi, deciso di risparmiare ulteriore spazio eliminando
 l'uso delle \textit{threshold}. Per ottenere il calcolo dell'array della
-\textit{matching 
-  statistics} si sono quindi usare le \textit{LCE query}, ridefinite per il
-caso posizionale. Dato un pannello $X$, $M\times N$, e due righe $x_i$ e $x_j$
-tali che $0\leq i <m$ e $0\leq j <M$, con $i\neq j$, si definisce \textbf{LCE
-  query} il suffisso comune più lungo tra le due righe, eventualmente fissando
-il termine a una colonna precisata. Calcolando la
-lunghezza di tale suffisso comune è possibile calcolare anche le
-lunghezze delle \textit{matching statistics} contemporaneamente al calcolo delle
+matching statistics si sono quindi usate le LCE query, ridefinite in questo caso
+come il suffisso comune più lungo tra due righe del pannello, eventualmente
+fissando il termine a una colonna precisata. Il loro calcolo è permesso
+in modo efficiente dall'uso dell'SLP. Calcolando la
+lunghezza di tale suffisso comune, è possibile calcolare anche le
+lunghezze delle matching statistics contemporaneamente al calcolo delle
 righe della stessa. Quindi, si è ottenuto il calcolo completo di tale array in
-un singolo ``sweep'' sul pattern.\\
-Al fine di risolvere il problema del calcolo dei \textit{MEM}, è
-servito 
-costruire una struttura dati a supporto che permettesse l'estensione, nel
-pannello, a tutte le righe che presentassero il \textit{MEM} calcolato con le
-\textit{matching statistics}. Infatti, con il calcolo di tale array, si aveva
-nozione di una sola delle righe, $MS[i].row$, presentanti un match massimale
-esatto, lungo 
-$MS[i].len$, fino alla colonna $i$. Anche tale struttura, seguendo l'ormai
-evidente correlazione tra \textit{BWT} e \textit{PBWT} (nonché delle rispettive
-implementazioni \textit{run-length}), si è basata su concetti precedentemente
-teorizzati, ovvero le \textbf{funzioni} $\boldsymbol\varphi$ e
-$\boldsymbol\varphi^{\mathbf{-1}}$. Infatti, tali
-funzioni, dato un certo indice di suffisso, ne restituivano i due valori
-adiacenti nel \textit{SA}. In
-modo analogo si è creata una struttura dati che, data una colonna $k$ e un
-indice di riga, permettesse di ottenere i valori adiacenti all'indice di riga
-dato nel \textit{prefix array} ottenuto in colonna $k$. Per le proprietà date
-dalla costruzione della \textit{PBWT} tutte le righe che presentano un match
-massimale esatto terminante in colonna $k$ hanno indici adiacenti nel
-\textit{prefix array}. Quindi, ipotizzando un match massimale esatto terminante
-in $i$, partendo da 
-$MS[i].row$, si possono computare tutte le altre righe del pannello che
-presentano il medesimo \textit{MEM}, terminante in una certa colonna, con
-l'aplotipo query. Tale 
-struttura è costituita 
-da due insiemi (uno per $\varphi$ e uno per $\varphi^{-1}$), di cardinalità pari
-  al numero di righe, di \textit{bitvector sparsi} con una quantità di simboli 
-$\sigma=1$ pari alle volte che la riga è testa/coda di una run nella
-\textit{matrice PBWT}. A questi insiemi
-se ne aggiungono altri due, sempre di cardinalità
-$M$, formati da vettori lunghi 
-quanto il numero di volte che la rispettiva riga è testa/coda di una run.\\
-Ricapitolando, per computare tutti i \textit{MEM}, si hanno in
-memoria, per ogni colonna: un \textit{bitvector sparso} per identificare le run,
-due \textit{bitvector sparsi} per permettere il mapping tramite il numero di
-simboli $\sigma=0$ e $\sigma=1$ fino ad un certo 
-indice (infatti il mapping tra due colonne adiacenti è basato su un algoritmo
-che sfrutta il sorting stabile che si usa per creare la \textit{matrice PBWT}),
-un booleano per capire se la prima run è composta da simboli $\sigma=0$ 
-(avendo che poi le run hanno simboli alternati), il valore
-complessivo di zeri nella colonna della \textit{matrice PBWT} e, eventualmente,
-un \textit{bitvector sparso} per le \textit{threshold} (non in memoria se si
-volessero usare le \textit{LCE query}). In aggiunta l'intera struttura ha in
-memoria il pannello sotto forma di \textit{SLP} e la struttura atta a computare
-le funzioni $\varphi$ e $\varphi^{-1}$ (nonché il solo \textit{prefix array}
-$a_{N-1}$ per il calcolo delle due strutture dedicate).\\
-\textit{Per concludere questa sezione si segnala che la
-  variante 
-della \textbf{RLPBWT} basata su \textbf{SLP} e \textbf{LCE query} è stata
-considerata come il risultato finale ottenuto in questo progetto di tesi.}
-\subsection*{Risultati}
-L'obiettivo della tesi era quello di concentrarsi sui limiti
-dell'\textit{algoritmo 5 di Durbin} dal punto di vista della memoria
-richiesta. L'utilizzo di strutture dati succinte, la scelta di memorizzare il
-pannello tramite \textit{SLP} e la necessità di ridurre al minimo le
-informazioni in memoria hanno comportato inevitabilmente un aumento dei tempi di
-calcolo. Tale aumento è davvero molto importante, passando
-da $\sim 411$ s, ottenuti con l'implementazione originale di Durbin, a $\sim
-1824$ s 
-ottenuti con la \textit{RLPBWT} con \textit{SLP} e \textit{LCE query} prendendo
-ad esempio 
-un pannello $70000 \times 46538$ e volendo calcolare i \textit{MEM} con $30000$
-query. \\
-Analizzando però meglio i risultati relativi in termini di memoria richiesta si
-sono ottenuti dati confortanti. In primis, risulta interessante approfondire la
-memoria utilizzata dall'\textit{SLP} per il pannello, avendo che, per un
-pannello 
-$100000\times 358653$, che normalmente occupa $\sim 
-35$\textit{gb} (nel formato \texttt{.macs} usato per l'input), si produce un
-\textit{SLP} che pesa appena $\sim 15$\textit{mb}.\\
-In secondo luogo si ricorda che, secondo le stime di Durbin, gli array necessari
-al funzionamento dell'algoritmo 5 richiedono $\sim 13NM$ bytes e,
-prendendo un pannello $70000 \times 46538$, sarebbero
-necessari $\sim 40$\textit{gb} di memoria. Sperimentalmente si sono registrati
-picchi di memoria prossimi a quel valore mentre, per la \textit{RLPBWT} con
-\textit{SLP} e \textit{LCE query}, il picco è stato di appena $\sim
-3$\textit{gb}. In pratica la soluzione \textit{run-length} ha richiesto il 7\%
-della memoria della soluzione di Durbin.\\
-Esplorando il codice di Durbin si è scoperta
-l'esistenza di un algoritmo non approfondito nel paper. In questo caso il
-calcolo dei \textit{MEM} con un pannello di query prevede la fusione di
-quest'ultimo 
-con il pannello principale e alla costruzione di un'unica \textit{matrice PBWT},
-per poi procedere con il calcolo dei match massimali interni 
-al pannello stesso. Tale soluzione può quindi giovare del fatto che non richieda
-tutte le strutture necessarie al mapping tra le colonne e al sistema di
-indicizzazione sul \textit{prefix array} atto a tenere traccia dei
-match. Inoltre necessita solo delle informazioni (\textit{prefix array} e
-\textit{divergence array}), calcolate dinamicamente, della colonna corrente.
-Tale algoritmo è risultato essere superiore sia in termini di tempi
-(confrontandosi coi risultati appena descritti si parla di $20$\textit{s} di
-esecuzione) che di memoria (essendo stimata una memoria proporzionale a
-$\mathcal{O}(N+M)$, confermata dal fatto che il picco di memoria in esecuzione
-sia stato di appena $10,084$\textit{kb}). Del resto tale algoritmo produce i
-risultati in ordine sparso e, constatando come in letteratura siano presenti
-solo estensioni e varianti dell'\textit{algoritmo 5}, probabilmente impedisce un
-facile riadattamento alla risoluzione di altre problematiche che non siano il
-calcolo dei \textit{MEM} con una o più query.
+un singolo ``sweep'' sul pattern, passando da un tempo proporzionale a
+$\mathcal{O}(2N)$ a uno proporzionale a 
+$\mathcal{O}(N)$. Si noti che il calcolo dei MEM viene fatto contemporaneamente
+al calcolo delle lunghezze delle matching statistics quindi, con l'uso delle LCE
+query, si è ridotto sia lo spazio necessario in memoria per la RLPBWT che il
+tempo di calcolo dei MEM.
+
+\subsection*{Risultati sperimentali}
+L'obiettivo della fase sperimentale è stato quello di confrontarsi con
+l'algoritmo 5 di Durbin, permettendo di verificare la
+riduzione della memoria necessaria al calcolo di MEM. L'importanza di ottenere
+dati quantitativi è anche dovuta al limite 
+dato dalla non forte caratterizzazione asintotica, dal punto di vista della
+complessità temporale, delle operazioni con le strutture dati succinte, fattore
+che potrebbe comportare errori di 
+valutazione. L'uso di tali strutture comporta, in ogni caso, un aumento atteso
+dei tempi di calcolo.
+
+Per questa sintesi, si è scelto di riportare alcuni risultati relativi ad un
+pannello $70,000 \times 46,538$, che è stato interrogato con $30,000$ query, al
+fine di ridurre la fluttuazione statistica dei risultati.
+I risultati qui riportati, relativi alla PBWT, sono stati ottenuti usando
+l'implementazione ufficiale della stessa. Per la RLPBWT, invece, si sono usate
+le LCE query. 
+
+In merito al tempo di calcolo si è ottenuto il risultato atteso avendo che con
+la PBWT si ottiene il calcolo dei MEM in $\sim 411$s 
+mentre con la RLPBWT in $\sim 1824$s, ovvero poco più del quadruplo del tempo.
+Si è passato quindi ad analizzare i risultati in termini di memoria. Secondo le
+stime di Durbin, gli array necessari al funzionamento dell'algoritmo 5
+richiederebbero $\sim 13NM$ bytes, implicando, per il pannello in analisi, $\sim
+40$GB di memoria. Anche sperimentalmente si sono registrati 
+picchi di memoria prossimi ai $40$GB di memoria, confermando le stime. Invece,
+per la RLPBWT il picco registrato è stato di appena $\sim 3$GB, richiedendo
+circa il $93$\% di memoria in meno rispetto alla soluzione di Durbin.
 \subsection*{Conclusioni}
 In conclusione, si rileva come i risultati prefissati siano stati raggiunti,
 producendo una struttura dati efficiente in memoria per la risoluzione del
@@ -408,33 +313,42 @@ esterno.
 Si segnala inoltre come siano possibili diversi sviluppi futuri, come
 un'ulteriore ottimizzazione della struttura, sia in termini 
 di gestione del mapping che, eventualmente, di gestione di più query
-contemporaneamente. \\
-Inoltre sono possibili diverse generalizzazioni rispetto alle caratteristiche
+contemporaneamente. In merito a quest'ultimo si segnala, infatti, come Durbin
+abbia proposto anche un algoritmo per il calcolo di MEM tra un pannello di
+aplotipi e un pannello di query, fondendoli in un unico pannello su cui
+costruire la PBWT e calcolare i match interni al pannello stesso. Tale
+implementazione, nel setup di test 
+descritto nella sezione precedente (che si noti comportare il perfetto input per
+tale soluzione), risulta essere molto performante sia in
+termini di tempo ($\sim 22$s) che di memoria utilizzata ($\sim
+10,084$KB) durante l'esecuzione. 
+
+Inoltre, sono possibili diverse generalizzazioni rispetto alle caratteristiche
 del pannello. Per quanto i pannelli di aplotipi prodotti dal sequencing del
 genoma umano raramente presentino siti multi-allelici si ha una 
 presenza stimata, al momento, di circa il 2\% di siti tri-allelici, avendo che
 tale percentuale risulti fortemente sottostimata. Una prima generalizzazione
 quindi sarebbe quella di studiare pannelli multi-allelici, riformulando la
-\textit{RLPBWT} al fine di poter funzionare anche con pannelli costruiti su un
-alfabeto arbitrario (dovendo rinunciare a diverse ottimizzazioni che permette il
-caso binario). Un'altra generalizzazione interessante riguarda l'ammissione di
+RLPBWT al fine di poter funzionare anche con pannelli costruiti su un
+alfabeto arbitrario. Un'altra generalizzazione interessante riguarda
+l'ammissione di 
 dati mancanti all'interno del pannello stesso. La maggior parte delle soluzioni
 attualmente sviluppate sono basate su una forte assunzione: non si hanno dati
-mancanti. Una variante della \textit{RLPBWT} che sia quindi in grado di
-lavorare, eventualmente con \textit{algoritmi parametrici} o \textit{algoritmi
-  approssimati}, 
+mancanti. Una variante della RLPBWT che sia quindi in grado di
+lavorare, eventualmente con algoritmi parametrici o algoritmi
+  approssimati, 
 su pannelli in cui sono presenti wildcard per rappresentare tali dati,
-permetterebbe di fare studi più completi su dati reali, estendendone gli usi nei
-campi della \textit{medicina personalizzata}, dei \textit{GWAS} etc$\ldots$.\\ 
-Si segnala, infine, come la \textit{RLPBWT} sia potenzialmente in grado di
+permetterebbe di fare studi più completi su dati reali, migliorandone gli usi,
+ad esempio, nel campo della medicina personalizzata.\\ 
+Si segnala, infine, come la RLPBWT sia potenzialmente in grado di
 risolvere 
-efficientemente anche altri task, come ad esempio la ricerca di \textbf{k-MEM},
-ovvero \textit{MEM} con un aplotipo esterno che coinvolgano
+efficientemente anche altri task, come ad esempio la ricerca di k-MEM,
+ovvero MEM con un aplotipo esterno che coinvolgano
 esattamente $k$ righe nel pannello. \\
 Le potenzialità di tale struttura sono quindi molteplici e, grazie al ridotto
 consumo di memoria, si hanno le giuste premesse perché venga utilizzata per
 gestire e interrogare grosse moli di dati reali, incrementando le capacità di
 studio, previsione e inferenza che si possono avere grazie allo studio del
-\textit{pangenoma}.
+pangenoma.
 \end{document}
-% LocalWords:  pangenoma naive
+% LocalWords:  pangenoma naive sottostringa
