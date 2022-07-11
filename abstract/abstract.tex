@@ -1,13 +1,21 @@
-\documentclass[a4paper,11pt, oneside]{article}
-\usepackage[left=15mm, right=15mm, top=15mm, bottom=15mm]{geometry}
-% \documentclass[a4paper,11pt, oneside]{article}
-% \usepackage[left=15mm, right=15mm, top=15mm, bottom=15mm]{geometry}
+\documentclass[a4paper,11pt, oneside,italian]{article}
+
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{framed}
 \usepackage{xcolor}
 \usepackage{amsmath}
 \usepackage{enumitem}
+\usepackage{relsize}
+\usepackage{microtype}
+\usepackage{typearea}
+
+\hypersetup{
+  pdftitle = {Algoritmi per la trasformata di Burrows-Wheeler Posizionale con compressione run-length},
+  pdfauthor = {Davide Cozzi},
+  pdfsubject = {Riassunto della tesi},
+  pdfpagemode = UseNone
+}
 
 
 \usepackage{fancyhdr}
@@ -16,10 +24,9 @@
 % \fancyhead[LO,RE]{\slshape \leftmark}
 \fancyfoot[C]{\thepage}
 
-\title{\vspace{-1.75cm}Algoritmi per la trasformata di Burrows-Wheeler
+\title{Algoritmi per la trasformata di Burrows-Wheeler
   Posizionale con compressione run-length} 
-\author{Davide Cozzi, 829827, 
-  \href{mailto:d.cozzi@campus.unimib.it}{d.cozzi@campus.unimib.it}} 
+\author{Davide Cozzi\\\smaller matr.~829827}
 \date{}
 \makeatletter
 \renewcommand{\paragraph}{%
@@ -431,4 +438,3 @@ studio, previsione e inferenza che si possono avere grazie allo studio del
 \textit{pangenoma}.
 \end{document}
 % LocalWords:  pangenoma naive
-  
