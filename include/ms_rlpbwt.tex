@@ -69,13 +69,13 @@ Inoltre, analogamente al caso della variante classica, si ha il seguente lemma.
   siti, un aplotipo esterno/pattern $z$, tale che $|z|=N$, e il corrispondente
   array di matching statistics $MS$ si ha che:
   \[z[i-l+1,i]\]
-  è un \textbf{MEM} di lunghezza $l$ in con la riga $MS[i].row$ del pannello
+  è uno \textbf{SMEM} di lunghezza $l$ in con la riga $MS[i].row$ del pannello
   $X$ sse: 
   \[MS[i].len=l\land(i=N-1\lor MS[i].len\geq MS[i+1].len)\]
 \end{lemma}
 \textit{Si vedrà in sezione \ref{secphi} come calcolare, a partire da tali
-  \emph{MEM}, tutte le righe del panello per le quali si ha lo stesso
-  \textup{MEM}}.\\
+  \emph{SMEM}, tutte le righe del panello per le quali si ha lo stesso
+  \textup{SMEM}}.\\
 Il calcolo dell'array $MS$ di $z$ rispetto al pannello $X$ si basa su due fasi:
 \begin{enumerate}
   \item la fase di \textbf{extension}
@@ -160,7 +160,7 @@ esempio di array $MS$.
       & {\color{nordgreen}4}\\
     \end{tabular}
   \end{table}
-  Dove si possono riconoscere i vari \textit{MEM}, la cui colonna di fine è
+  Dove si possono riconoscere i vari \textit{SMEM}, la cui colonna di fine è
   segnalata in verde, secondo la definizione data
   sopra (anche in questo caso i dettagli del calcolo
   verranno esplicitati successivamente). 
@@ -296,8 +296,8 @@ Si hanno tre casi possibili:
   si trova un mismatch, calcolando la lunghezza $l$ del suffisso comune tra esse
   e memorizzando tale valore: $MS[i].len=l$
 \end{enumerate}
-In fase di costruzione delle lunghezze è possibile anche riportare i
-\textit{MEM}, terminanti in colonna $i$, qualora:
+In fase di costruzione delle lunghezze è possibile anche riportare gli
+\textit{SMEM}, terminanti in colonna $i$, qualora:
 \begin{itemize}
   \item $MS[i].len\geq MS[i+1].len \land MS[i].len\neq 0$
   \item si è arrivati a fine array, avendo $i=N-1\land MS[i].len\neq 0$

@@ -202,10 +202,11 @@ $[f_k,g_k)\subseteq[0,\ldots,M)$ invece identifica il sotto-intervallo di
 $a_k$ contenente gli indici degli aplotipi appartenetenti a tale match.
 \begin{definizione}
   Dato un pannello $X$, con $M$ aplotipi/righe e $N$ colonne, e un aplotipo
-  query $z$, tale che $|z|=n$, si definisce un \textbf{Maximal Exact Matches
-    (\textit{MEM})}, iniziante in colonna $e_k$ e terminante il colonna $k$. tra
+  query $z$, tale che $|z|=n$, si definisce un \textbf{Set-Maximal Exact Matches
+    (\textit{SMEM})}, iniziante in colonna $e_k$ e terminante il colonna
+  $k$, tra 
   la query $z$ e le righe del pannello indicizzate dai valori compresi
-  enll'intervallo $[f_k,g_k)$ in $a_k$ sse:
+  nell'intervallo $[f_k,g_k)$ in $a_k$ sse:
   \[z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall i\mbox{
       t.c. }f_k\leq i < g_k\]
   Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle sequenze per cui si ha tale
