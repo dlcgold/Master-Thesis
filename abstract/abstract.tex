@@ -48,7 +48,7 @@ singolo genoma a quello di un insieme di genomi, provenienti da un gran numero
 di individui, al fine di poter considerare anche le varianti
   geniche. Questo nuovo concetto è stato nominato per la prima volta da
 Tettelin, nel 2005, con il termine di \textit{pangenoma}. Grazie ai risultati
-ottenuti in pangenomica ci sono stati miglioramenti sia nel 
+ottenuti in pangenomica, ci sono stati miglioramenti sia nel 
 campo della biologia che in quello della medicina personalizzata, grazie al
 fatto che, con il pangenoma, si migliora la precisione della rappresentazione di
 multipli genomi e delle loro differenze. 
@@ -60,7 +60,7 @@ Project. Considerando come la quantità dei dati di sequenziamento sia destinata
 ad aumentare esponenzialmente nei prossimi anni, grazie al
 miglioramento delle tecnologie di sequenziamento (Next Generation Sequencing e
 Third-Generation Sequencing), risulta necessaria la costruzione di algoritmi e
-strutture dati efficienti. 
+strutture dati efficienti per gestire una tale informazione. 
 In merito, uno degli approcci più usati per rappresentare il pangenoma è un
 pannello di aplotipi, ovvero, computazionalmente, una matrice di $M$
 righe, corrispondenti agli individui, e $N$ colonne, corrispondenti ai siti con
@@ -76,7 +76,7 @@ del pangenoma, tale problema si è adattato alle nuove strutture
 dati.
 
 Lo scopo di questa tesi è ottimizzare il problema del pattern 
-matching, inteso come ricerca di match massimali esatti (MEM) tra un aplotipo
+matching, inteso come ricerca dei set-maximal exact match (SMEM) tra un aplotipo
 esterno e un pannello di aplotipi, in una delle 
 strutture dati più utilizzata: la \textit{trasformata di Burrows-Wheeler
   Posizionale (PBWT)}. Il progetto di tesi, svolto in collaborazione con il
@@ -106,21 +106,20 @@ Tali insiemi sono detti \textit{insieme dei prefix array} e \textit{insieme dei
   divergence array}. Il primo, denotato $a$, contiene, per ogni colonna e ogni
 posizione, l'indice dell'aplotipo nel pannello originale riordinato secondo
 l'ordinamento inverso alla data colonna. Quindi, si ha, in ogni colonna, la
-permutazione degli indici di riga secondo l'ordinamento alla colonna $k$-esima.
+permutazione degli indici di riga secondo l'ordinamento inverso alla colonna
+$k$-esima. 
 Il secondo insieme, invece, indica l'indice della colonna iniziale del suffisso
 comune più lungo, che termina nella colonna nella colonna $k$, tra una riga e la
 sua precedente secondo l'ordinamento inverso ottenuto per la $k$-esima colonna.
 Il pannello ottenuto con le permutazioni dettate dal prefix array viene chiamato
 matrice PBWT.
-
-Cruciale è il fatto che tale struttura permetta di calcolare i MEM tra
+Cruciale è il fatto che tale struttura permetta di calcolare gli SMEM tra
 un aplotipo esterno e il pannello in tempo $\mathcal{O}(MN)$, mentre 
 una soluzione naive impiegherebbe un tempo proporzionale a
 $\mathcal{O}(M^2N)$. Il tradeoff di tale algoritmo, conosciuto anche come
-\textit{algoritmo 5 di Durbin}, è la richiesta in termini di spazio. L'autore
-stesso infatti stima la richiesta di $13NM$ byte in memoria per poter eseguire
-l'algoritmo e superare questo limite è l'obiettivo principale di questo progetto
-di tesi. 
+\textit{algoritmo 5 di Durbin}, è la richiesta in termini di spazio ($13NM$
+bytes secondo l'autore) e superare questo limite è l'obiettivo principale di
+questo progetto di tesi. 
 
 Tornando a parlare della BWT, una caratteristica di questa trasformata è la
 tendenza a produrre una sequenza con caratteri uguali in posizioni
@@ -142,7 +141,8 @@ ogni run.
 Tali articoli hanno portato alla produzione di due tool, \textit{MONI} e 
 \textit{PHONI}, alle cui tecniche è fortemente ispirata questa tesi. Queste due
 soluzioni hanno entrambe l'obiettivo di 
-calcolare i MEM tra un testo e un pattern, ovvero sottostringhe del pattern che
+calcolare i maximal exact match (MEM) tra un testo e un pattern, ovvero
+sottostringhe del pattern che 
 sono anche sottostringhe del testo, avendo che tale match non può essere esteso,
 in entrambe le direzioni, senza introdurre un mismatch. 
 
@@ -190,8 +190,7 @@ L'idea con la quale si è sviluppata questa tesi vede, come punto di partenza,
 alcuni primi risultati teorici, presenti in letteratura, che caratterizzavano
 una variante run-length encoded della PBWT. Purtroppo, tale proposta presentava
 alcune ridondanze nei dati memorizzati e non caratterizzava alcuna tecnica
-algoritmica per il calcolo di MEM.
-
+algoritmica per il calcolo degli SMEM.
 % Il primo approccio aveva come obiettivo l'ottenere un riadattamento ``diretto''
 % dell'\textit{algoritmo 5 di Durbin}, pur tenendo in memoria informazioni legate
 % principalmente alle run della \textit{matrice PBWT}. Per quanto si siano trovate
@@ -229,16 +228,17 @@ sono state implementate tramite bitvector sparsi, con un numero di simboli
 $\sigma=1$ proporzionale al numero run.
 Al fine di avvicinarsi alle idee proposte in \textit{MONI} e \textit{PHONI} è
 quindi servito uno studio teorico preliminare per ridefinire: matching
-statistics, MEM, threshold e LCE query. In particolare, grazie agli 
+statistics (e conseguente calcolo degli SMEM), threshold e LCE query. In
+particolare, grazie agli  
 ultimi due concetti, si è potuto non memorizzare il divergence array.
 Parlando di matching statistics, si ha che sono definite tramite un array, lungo
 quanto il pattern e formato da coppie (riga $row$, lunghezza $len$), che, per
 ogni colonna, tiene traccia del suffisso comune che non sia estendibile a
 sinistra, terminate in quella colonna e lungo $len$, tra la riga $row$ del
 pannello e l'aplotipo query. Una volta calcolato tale
-array è possibile estrarre un MEM, terminate in colonna $k$ tra la query e la
+array è possibile estrarre uno SMEM, terminate in colonna $k$ tra la query e la
 riga $row$, ed estendere, tramite una struttura dati a supporto, tale risultato
-a tutte le altre righe del pannello che presentano il medesimo MEM.
+a tutte le altre righe del pannello che presentano il medesimo SMEM.
 Il primo metodo di calcolo di tale array è stato basato sull'utilizzo delle
 threshold. Ragionando sulla \textit{matrice PBWT}, una threshold è definita
 come il minimo valore dell'\textit{array LCP} all'interno di una run
@@ -272,15 +272,15 @@ lunghezze delle matching statistics contemporaneamente al calcolo delle
 righe della stessa. Quindi, si è ottenuto il calcolo completo di tale array in
 un singolo ``sweep'' sul pattern, passando da un tempo proporzionale a
 $\mathcal{O}(2N)$ a uno proporzionale a 
-$\mathcal{O}(N)$. Si noti che il calcolo dei MEM viene fatto contemporaneamente
-al calcolo delle lunghezze delle matching statistics quindi, con l'uso delle LCE
-query, si è ridotto sia lo spazio necessario in memoria per la RLPBWT che il
-tempo di calcolo dei MEM.
+$\mathcal{O}(N)$. Si noti che il calcolo degli SMEM viene fatto
+contemporaneamente al calcolo delle lunghezze delle matching statistics quindi,
+con l'uso delle LCE query, si è ridotto sia lo spazio necessario in memoria per
+la RLPBWT che il tempo di calcolo degli SMEM.
 
 \subsection*{Risultati sperimentali}
 L'obiettivo della fase sperimentale è stato quello di confrontarsi con
 l'algoritmo 5 di Durbin, permettendo di verificare la
-riduzione della memoria necessaria al calcolo di MEM. L'importanza di ottenere
+riduzione della memoria necessaria al calcolo degli SMEM. L'importanza di ottenere
 dati quantitativi è anche dovuta al limite 
 dato dalla non forte caratterizzazione asintotica, dal punto di vista della
 complessità temporale, delle operazioni con le strutture dati succinte, fattore
@@ -296,7 +296,7 @@ l'implementazione ufficiale della stessa. Per la RLPBWT, invece, si sono usate
 le LCE query. 
 
 In merito al tempo di calcolo si è ottenuto il risultato atteso avendo che con
-la PBWT si ottiene il calcolo dei MEM in $\sim 411$s 
+la PBWT si ottiene il calcolo degli SMEM in $\sim 411$s 
 mentre con la RLPBWT in $\sim 1824$s, ovvero poco più del quadruplo del tempo.
 Si è passato quindi ad analizzare i risultati in termini di memoria. Secondo le
 stime di Durbin, gli array necessari al funzionamento dell'algoritmo 5
@@ -308,13 +308,13 @@ circa il $93$\% di memoria in meno rispetto alla soluzione di Durbin.
 \subsection*{Conclusioni}
 In conclusione, si rileva come i risultati prefissati siano stati raggiunti,
 producendo una struttura dati efficiente in memoria per la risoluzione del
-calcolo dei \textit{MEM} tra un pannello di aplotipi e un aplotipo
+calcolo degli SMEM tra un pannello di aplotipi e un aplotipo
 esterno.  
 Si segnala inoltre come siano possibili diversi sviluppi futuri, come
 un'ulteriore ottimizzazione della struttura, sia in termini 
 di gestione del mapping che, eventualmente, di gestione di più query
 contemporaneamente. In merito a quest'ultimo si segnala, infatti, come Durbin
-abbia proposto anche un algoritmo per il calcolo di MEM tra un pannello di
+abbia proposto anche un algoritmo per il calcolo degli SMEM tra un pannello di
 aplotipi e un pannello di query, fondendoli in un unico pannello su cui
 costruire la PBWT e calcolare i match interni al pannello stesso. Tale
 implementazione, nel setup di test 
@@ -325,7 +325,7 @@ termini di tempo ($\sim 22$s) che di memoria utilizzata ($\sim
 
 Inoltre, sono possibili diverse generalizzazioni rispetto alle caratteristiche
 del pannello. Per quanto i pannelli di aplotipi prodotti dal sequencing del
-genoma umano raramente presentino siti multi-allelici si ha una 
+genoma umano raramente presentino siti multi-allelici, si ha una 
 presenza stimata, al momento, di circa il 2\% di siti tri-allelici, avendo che
 tale percentuale risulti fortemente sottostimata. Una prima generalizzazione
 quindi sarebbe quella di studiare pannelli multi-allelici, riformulando la
@@ -342,8 +342,8 @@ permetterebbe di fare studi più completi su dati reali, migliorandone gli usi,
 ad esempio, nel campo della medicina personalizzata.\\ 
 Si segnala, infine, come la RLPBWT sia potenzialmente in grado di
 risolvere 
-efficientemente anche altri task, come ad esempio la ricerca di k-MEM,
-ovvero MEM con un aplotipo esterno che coinvolgano
+efficientemente anche altri task, come ad esempio la ricerca di k-SMEM,
+ovvero SMEM con un aplotipo esterno che coinvolgano
 esattamente $k$ righe nel pannello. \\
 Le potenzialità di tale struttura sono quindi molteplici e, grazie al ridotto
 consumo di memoria, si hanno le giuste premesse perché venga utilizzata per
