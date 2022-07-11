@@ -67,7 +67,6 @@ righe, corrispondenti agli individui, e $N$ colonne, corrispondenti ai siti con
 le varianti. Si specifica che, con il termine
 aplotipo, si intende l'insieme di alleli, ovvero di varianti, che un organismo
 eredita da ogni genitore.
-
 In questo contesto trova spazio uno dei problemi fondamentali della
 bioinformatica, ovvero quello del pattern matching. Inizialmente tale concetto
   era relativo allo studio di un piccolo pattern all'interno di un testo di
@@ -160,7 +159,6 @@ carattere. Un ulteriore miglioramento si è registrato in \textit{PHONI} con
 l'uso delle \textit{LCE query} per il calcolo dell'array MS. Infatti, tale
 struttura, dati due indici del testo $i$ e $j$, restituisce il più lungo
 prefisso comune tra il suffisso $i$-esimo e il suffisso $j$-esimo.
-
 Si può quindi apprezzare il collegamento naturale che si ha tra la PBWT
 e la BWT, avendo, ad esempio, che il prefix array della prima corrisponde
 al suffix array della seconda mentre il divergence array è una
@@ -286,7 +284,9 @@ dato dalla non forte caratterizzazione asintotica, dal punto di vista della
 complessità temporale, delle operazioni con le strutture dati succinte, fattore
 che potrebbe comportare errori di 
 valutazione. L'uso di tali strutture comporta, in ogni caso, un aumento atteso
-dei tempi di calcolo.
+dei tempi di calcolo. Le simulazioni sono state effettuate su pannelli simulati
+tramite uno dei software più usati in bioinformatica per generare pannelli di
+aplotipi. 
 
 Per questa sintesi, si è scelto di riportare alcuni risultati relativi ad un
 pannello $70,000 \times 46,538$, che è stato interrogato con $30,000$ query, al
