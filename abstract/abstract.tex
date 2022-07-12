@@ -109,10 +109,10 @@ e fine del match sono i medesimi sia sul pannello, in termini di indici di
 colonna, che sull'aplotipo query. Tale 
 vincolo, da cui deriva il termine
 ``posizionale'', non è soddisfacibile dalla BWT ed è dovuto al fatto che ogni 
-colonna (o indice della query) rappresentano un preciso sito per una specifica
+colonna (o indice della query) rappresenta un preciso sito per una specifica
 variante genica. Il tradeoff di questo algoritmo, conosciuto anche come
 \textit{algoritmo 5 di Durbin}, è la richiesta in termini di spazio ($13NM$
-bytes secondo l'autore) e superare questo limite è l'obiettivo principale di
+bytes secondo l'autore). Superare questo limite è l'obiettivo principale di
 questo progetto di tesi.
 
 Brevemente, il funzionamento della PBWT prevede la costruzione di due insiemi di
@@ -133,7 +133,7 @@ BWT.
 % sua precedente secondo l'ordinamento inverso ottenuto per la $k$-esima colonna.
 % Il pannello ottenuto con le permutazioni dettate dal prefix array, viene
 % chiamato matrice PBWT.
-Un'altro obiettivo raggiunto negli ultimi anni è stato quello di studiare la
+Un altro obiettivo raggiunto negli ultimi anni è stato quello di studiare la
 costruzione di un'unica BWT partendo da multipli genomi.
 A tal fine si è sfruttata una caratteristica della BWT, ovvero la
 tendenza a produrre una sequenza con caratteri uguali in posizioni
@@ -170,8 +170,8 @@ Tale array, lungo quanto il pattern e formato da coppie (posizione $pos$,
 lunghezza $len$), annota, per ogni posizione del pattern, la lunghezza $len$ di
 un match, anche non massimale, con una sottostringa nel testo avente
 indice iniziale $pos$. Estraendo da tali match i MEM si possono poi ottenere
-tutte altre occorrenze del medesimo MEM nel testo. 
-In MONI,per il calcolo delle MS, è stato
+tutte le altre occorrenze del medesimo MEM nel testo. 
+In MONI, per il calcolo delle MS, è stato
 usato anche il concetto di \textit{threshold}, definito come
 il minimo valore dell'array LCP tra due run consecutive dello stesso
 carattere. Un ulteriore miglioramento si è registrato in \textit{PHONI} con
@@ -249,9 +249,9 @@ quindi servito uno studio teorico preliminare per ridefinire: matching
 statistics (e conseguente calcolo degli SMEM), threshold e LCE query. In
 particolare, grazie agli  
 ultimi due concetti, si è potuto non memorizzare il divergence array.
-Parlando di matching statistics, si ha che sono definite tramite un array, lungo
-quanto il pattern e formato da coppie (riga $row$, lunghezza $len$), che, per
-ogni colonna, tiene traccia del suffisso comune che non sia estendibile a
+Parlando di matching statistics, si ha che esse sono definite tramite un array,
+lungo quanto il pattern e formato da coppie (riga $row$, lunghezza $len$), che,
+per ogni colonna, tiene traccia del suffisso comune che non sia estendibile a
 sinistra, terminate in quella colonna e lungo $len$, tra la riga $row$ del
 pannello e l'aplotipo query. Una volta calcolato tale
 array è possibile estrarre uno SMEM, terminate in colonna $k$ tra la query e la
@@ -302,8 +302,8 @@ ottenere dati quantitativi è anche dovuta al limite
 dato dalla non forte caratterizzazione asintotica, dal punto di vista della
 complessità temporale, delle operazioni con le strutture dati succinte, fattore
 che potrebbe comportare errori di 
-valutazione limitandosi a stime teoriche. L'uso di tali strutture comporta un
-aumento atteso  
+valutazione limitandosi a stime teoriche. L'uso di tali strutture, in ogni caso,
+comporta un aumento atteso  
 dei tempi di calcolo. Le simulazioni sono state effettuate su pannelli simulati
 tramite uno dei software più usati in bioinformatica per generare pannelli di
 aplotipi. 
@@ -323,7 +323,7 @@ stime di Durbin, gli array necessari al funzionamento dell'algoritmo 5
 richiederebbero $\sim 13NM$ bytes, implicando, per il pannello in analisi, $\sim
 40$GB di memoria. Anche sperimentalmente si sono registrati 
 picchi di memoria prossimi ai $40$GB di memoria, confermando le stime. Invece,
-per la RLPBWT il picco registrato è stato di appena $\sim 3$GB, richiedendo
+per la RLPBWT, il picco registrato è stato di appena $\sim 3$GB, richiedendo
 circa il $92.5$\% di memoria in meno rispetto alla soluzione di Durbin.
 \subsection*{Conclusioni}
 In conclusione, la RLPBWT proposta è stata in grado di ridurre sensibilmente la
@@ -353,7 +353,7 @@ mancati, molto rilevante a causa della non perfezione delle tecnologie di
 sequenziamento, risulta essere un problema aperto in bioinformatica. Sarà
 quindi richiesto lo sviluppo di nuove metodologie, basate, eventualmente,
 su algoritmi parametrici o algoritmi approssimati, per la risoluzione del
-problema del calcolo degli SMEM.
+problema del calcolo degli SMEM su pannelli di questo tipo.
 % Per quanto i pannelli di aplotipi prodotti dal sequencing del
 % genoma umano raramente presentino siti multi-allelici, si ha una 
 % presenza stimata, al momento, di circa il 2\% di siti tri-allelici, avendo che
