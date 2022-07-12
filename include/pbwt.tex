@@ -4,11 +4,12 @@ Presentata nel 2014 da Richard Durbin la \textbf{Positional Burrows-Wheeler
   Transform (\textit{PBWT})} \cite{pbwt}, traducibile con \textit{trasformata di
   Burrows-Wheeler posizionale}, è una struttura efficiente per la memorizzazione
 e l'interrogazione di pannelli di aplotipi.\\
-Formalmente si considera un pannello $X$ di $M$ aplotipi $x_i$, $i=0,\ldots,
+Formalmente si considera un pannello $X$ di $M$ aplotipi $x_i$, con $i=0,\ldots,
 M-1$, su $N$ siti, indicizzati tramite $k=0,\ldots, N-1$, tale che tutti i siti
-sono considerati biallelici. Da un punto di vista computazionale quest'ultima
+sono considerati biallelici. 
+Da un punto di vista computazionale, quest'ultima
 assunzione comporta che il pannello $X$ è costruito sull'alfabeto $\Sigma
-=\{0,1\}$, avendo quindi che:
+=\{0,1\}$, avendo quindi:
 \[x_i[k]=\{0,1\}\]
 Si consideri che l'alfabeto è \textit{ordinato}, avendo che $0\prec 1$.\\
 Prima di proseguire con la trattazione è bene fornire la descrizione di alcuni
@@ -25,11 +26,17 @@ formalismi utilizzati:
   destra o sinistra che comporti un ulteriore match, avendo quindi che:
   \[(k_1=0\lor s[k_1-1]\neq t[k_1-1])\land (k_2=N\lor s[k_2]\neq t[k_2] )\]
   \item comparando una sequenza $s$ ad un pannello di aplotipi $X$ si definisce
-  che $s$ ha un \textbf{set-maximal match} con $x_i$, che inizia alla
+  che $s$ ha un \textbf{set-maximal exact match (SMEM)} con $x_i$, che inizia alla
   colonna $k_1$ e termina alla colonna $k_2-1$, sse tale match è
   \textit{localmente massimale} e non si ha alcun altro match di $s$ con un
-  altro $x_j$ che include l'intervallo $[k_1,k_2)$
+  altro $x_j$ che include ed estende l'intervallo $[k_1,k_2)$. Si ha che $s$
+  può avere uno \textit{SMEM} con più di un aplotipo del pannello
 \end{itemize}
+Si noti che il match tra le due sequenze nella \textit{PBWT} è tale sse iniziano
+entrambi nella stessa colonna e terminano nella stessa colonna. Questo vincolo, da
+cui deriva il termine ``posizionale'' e che, di fatto, impedisce l'uso degli
+algoritmi tradizionali visti con la \textit{BWT}, è dato dal fatto che una
+colonna rappresenta un preciso sito di una variante genica. \\
 La costruzione di questa struttura dati si basa, ad ogni colonna $k$, sul
 riordinamento lessicografico delle sequenze di aplotipi basato sull'ordinamento
 inverso dei prefissi terminanti in colonna $k-1$. I valori presenti in colonna
@@ -202,7 +209,7 @@ $[f_k,g_k)\subseteq[0,\ldots,M)$ invece identifica il sotto-intervallo di
 $a_k$ contenente gli indici degli aplotipi appartenetenti a tale match.
 \begin{definizione}
   Dato un pannello $X$, con $M$ aplotipi/righe e $N$ colonne, e un aplotipo
-  query $z$, tale che $|z|=n$, si definisce un \textbf{Set-Maximal Exact Matches
+  query $z$, tale che $|z|=n$, si definisce un \textbf{Set-Maximal Exact Match
     (\textit{SMEM})}, iniziante in colonna $e_k$ e terminante il colonna
   $k$, tra 
   la query $z$ e le righe del pannello indicizzate dai valori compresi

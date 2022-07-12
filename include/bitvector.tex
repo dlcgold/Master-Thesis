@@ -1,43 +1,51 @@
 \section{Bitvector}
 \label{bvsec}
-\textbf{TUTTE LE TABELLE VANNO VERIFICATE!!!}\\
+Nonostante quale primo risultati isolato si identifica, con la tesi di Jacobson
+del 1988 \cite{succinct}, l'inizio dello studio delle \textbf{strutture dati
+  succinte}. Jacobson, con questo termine, denota quelle strutture dati che
+usano, con $N$ numero dei differenti oggetti da memorizzare, $\log N+o(\log N)$
+bit. Ad esempio, assumendo un array di $n$ bit, una struttura dati succinta
+utilizzerebbe $n+o(n)$ bit, avendo infatti $N=2^n$ \cite{navarro}.\\
 Nell'ambito delle \textit{strutture dati succinte}, una delle strutture dati
 principali, ormai sviluppatasi in molteplici varianti, è quella denominata
-\textbf{bit vector}.
+\textbf{bitvector}.
 \begin{definizione}
-  Si definisce un \textbf{bit vector} $B$ come un array di lunghezza $n$,
+  Si definisce un \textbf{bitvector} $B$ come un array di lunghezza $n$,
   popolato da elementi binari. Formalmente si ha quindi:
   \[B[i]=\{0,1\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
   In alternativa si potrebbe avere come formalismo:
   \[B[i]=\{\bot,\top\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
 \end{definizione}
-Nel corso degli ultimi anni si sono sviluppate diverse varianti dei \textit{bit
-  vector}, finalizzate ad offrire diversi costi di complessità spaziale e
+Nel corso degli ultimi anni si sono sviluppate diverse varianti dei
+\textit{bitvector}, finalizzate ad offrire diversi costi di complessità spaziale
+e 
 diversi tempi computazionali per le principali funzioni offerte.\\
 Il primo vantaggio di questa struttura dati, nelle varianti che si andranno poi
-a nominare, è quella di garantire \textit{random access} in tempo costante pur
+a nominare, è quella di garantire \textit{random access} in tempo costante, pur
 sfruttando varie tecniche per la memorizzazione efficiente della stessa in
 memoria. Lo spazio necessario per l'implementazione, presente nella
 \textbf{Succinct Data Structure Library (\textit{SDSL})} \cite{sdsl}, una delle
   principali librerie (scritta in \Cplusplus 11) per strutture dati succinte,
   delle principali varianti è visualizzabile in tabella 
-\ref{tab:bvspace}. Il secondo vantaggio consiste nel fatto che i \textit{bit
-  vector} permettono l'implementazione efficiente di due funzioni:
+\ref{tab:bvspace}. Il secondo vantaggio consiste nel fatto che i
+\textit{bitvector} permettono l'implementazione efficiente di due funzioni: 
 \begin{enumerate}
   \item la \textbf{funzione rank}
   \item la \textbf{funzione select}
 \end{enumerate}
-Tali funzioni, al costo di $\mathcal{O}(n)$ bit aggiuntivi, possono essere
-supportate in tempo costante. Questo è però un discorso prettamente teorico,
-infatti si vedrà come, nelle implementazioni in \textit{SDSL}, le complessità
-temporali delle due funzioni non siano mai entrambe costanti.
-% tabella dello spazio occupato dalle varianti dei bit vector
+Tali funzioni, al costo teorico di $o(n)$ bit aggiuntivi, possono
+essere supportate in tempo costante. Questo è però un discorso prettamente
+teorico, infatti si vedrà come, nelle implementazioni in \textit{SDSL}, le
+complessità temporali delle due funzioni possano variare a seconda
+dell'implementazione, sia in termini di bit aggiuntivi che di complessità
+temporale. 
+% tabella dello spazio occupato dalle varianti dei bitvector
 \begin{table}[H]
   \small
   \centering
   \caption{Stime dello spazio occupato per la memorizzazione di alcune varianti
-    di \textit{bit vector}. Si 
-    assume un bit vector di lunghezza $n$ con un numero di bit posti pari a
+    di \textit{bitvector}. Si 
+    assume un bitvector di lunghezza $n$ con un numero di bit posti pari a
     1 (o $\top$) pari a $m$. $K$ indica un valore costante.} 
   \begin{tabular}{c|c}
     \textbf{Variante} & \textbf{Spazio occupato}\\
@@ -57,18 +65,17 @@ temporali delle due funzioni non siano mai entrambe costanti.
 \subsection{Funzione rank}
 La prima funzione che si approfondisce è la \textbf{funzione rank}. Tale
 funzione permette di calcolare il \textit{rango} di un dato elemento del
-bit vector $B$, $|B|=n$. In altri termini, data una certa posizione $i$ del
-\textit{bit vector}, la funzione restituisce il numero di 1 presenti fino a
-quella data posizione, escluda. Più formalmente si ha:
+bitvector $B$, lungo $n$. In altri termini, data una certa posizione $i$ del
+\textit{bitvector}, la funzione restituisce il numero di 1 presenti fino a
+quella data posizione, esclusa. Più formalmente si ha:
 \[rank_B(i)=\sum_{k=0}^{k<i}B[k],\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
-Come detto, da un punto di vista teorico, al costo di $\mathcal{O}(n)$ bit
+Come detto, da un punto di vista teorico, al costo di $o(n)$ bit
 aggiuntivi in memoria tale funzione sarebbe supportata in tempo
-$\mathcal{O}(1)$. Questo però non risulta vero nelle principali
-implementazioni. La complessità temporale varia infatti a seconda
+$\mathcal{O}(1)$. La complessità temporale varia però a seconda
 dell'implementazione, anche in conseguenza al fatto che si ha una quantità
 diversa di bit aggiuntivi salvati in memoria.
 La tabella con le complessità temporali stimate della \textit{funzione rank},
-per le varianti di \textit{bit vector} implementate in \textit{SDSL}, è
+per le varianti di \textit{bitvector} implementate in \textit{SDSL}, è
 visualizzabile in tabella \ref{tab:rank}.
 % tabella relativa ai costi della funzione rank dei bitvector
 \begin{table}[H]
@@ -76,10 +83,10 @@ visualizzabile in tabella \ref{tab:rank}.
   \centering
   \caption{Complessità temporali stimate della \textit{funzione rank} per alcune
     varianti di \textit{bit 
-      vector}, con la quantità di bit aggiuntivi richiesta. Si assume un bit
-    vector di lunghezza $n$, con un numero di bit 
-    posti pari a 1 (o $\top$) pari a $m$, e un numero $k$ di valori prima della
-    posizione richiesta.} 
+      vector}, con la quantità di bit aggiuntivi richiesta. Si assume un
+    bitvector di lunghezza $n$, con un numero di bit  
+    posti pari a 1 (o $\top$) pari a $m$, e un numero $k$ di simboli $\sigma=1$
+    prima della posizione richiesta.} 
   \begin{tabular}{c|c|c}
     \textbf{Variante} & \textbf{Bit aggiuntivi} & \textbf{Complessità
                                                   temporale}\\ 
@@ -90,31 +97,30 @@ visualizzabile in tabella \ref{tab:rank}.
     \hline\xrowht{15pt}
     \textit{$H_0$-compressed bitvector} & $80$ & $\mathcal{O}(k)$\\
     \hline\xrowht{15pt}
-    \textit{Sparse bitvector} & $64$ & $\mathcal{O}\left(\log\frac{n}{m}\right)$\\ 
+    \textit{Sparse bitvector} & $64$
+                              & $\mathcal{O}\left(\log\frac{n}{m}\right)$\\  
   \end{tabular}
   \label{tab:rank}
 \end{table}
 \subsection{Funzione select}
 La seconda funzione fondamentale è la \textbf{funzione select}. Tale funzione
 permette, dato un valore intero $i$, di calcolare l'indice dell'$i$-esimo valore
-pari a 1 nel \textit{bit vector} $B$, tale che $|B|=n$. Più formalmente si ha
+pari a 1 nel \textit{bitvector} $B$, lungo $n$. Più formalmente si ha
 che:
 \[select_B(i)=\min\{j < n\,|\,\,rank_B(j+1)=1\},\,\,\forall i \mbox{ t.c. }
   0<i\leq rank_B(n)\]
 Anche in questo caso vale lo stesso discorso fatto per la \textit{funzione rank}
 in merito alla complessità temporale e ai bit aggiuntivi. La tabella con le
 complessità temporali stimate della \textit{funzione select}, 
-per le varianti di \textit{bit vector} implementate in \textit{SDSL}, è
+per le varianti di \textit{bitvector} implementate in \textit{SDSL}, è
 visualizzabile in tabella \ref{tab:select}.\\
 % tabella relativa ai costi della funzione select dei bitvector
 \begin{table}[H]
   \small
   \centering
   \caption{Complessità temporali stimate della \textit{funzione select} per
-    alcune varianti di \textit{bit 
-      vector}, con la quantità di bit aggiuntivi richiesta. Si assume un bit
-    vector di lunghezza $n$, con un numero di bit 
-    posti pari a 1 (o $\top$) pari a $m$.} 
+    alcune varianti di \textit{bitvector}, con la quantità di bit aggiuntivi
+    richiesta. Si assume un bitvector di lunghezza $n$.} 
   \begin{tabular}{c|c|c}
     \textbf{Variante} & \textbf{Bit aggiuntivi} & \textbf{Complessità
                                                   temporale}\\ 
@@ -131,7 +137,7 @@ visualizzabile in tabella \ref{tab:select}.\\
 \end{table}
 Si può quindi vedere un semplice esempio esplicativo.
 \begin{esempio}
-  Ipotizziamo di avere il seguente bit vector $B$, di lunghezza $n=14$:
+  Ipotizziamo di avere il seguente bitvector $B$, di lunghezza $n=14$:
   \begin{center}
     \begin{tikzpicture} [nodes in empty cells,
       nodes={minimum width=0.6cm, minimum height=0.6cm},
@@ -154,9 +160,9 @@ Si può quindi vedere un semplice esempio esplicativo.
   \[\mathtt{rank}(6)=3\]
   \[\mathtt{select}(5) =9\]
 \end{esempio}
-Da un punto di vista pratico si vedrà nel corso di questa tesi come l'uso di
-tali strutture, nel dettaglio l'uso dei \textit{bit vector plain} e dei
-\textit{bit vector sparsi}, sia fondamentale sia nella costruzione delle
+Da un punto di vista pratico, si vedrà. nel corso di questa tesi, come l'uso di
+tali strutture, nel dettaglio l'uso dei \textit{plain bitvector} e dei
+\textit{bitvector sparsi}, sia fondamentale sia nella costruzione delle
 \textit{strutture run-length encoded} che nelle interrogazioni alle stesse.
 
 

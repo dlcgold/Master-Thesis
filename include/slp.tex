@@ -1,31 +1,27 @@
 \section{Straight-Line Program}
 \label{slpsec}
-% Algorithmics on SLP-Compressed Strings: A Survey
-% Practical Random Access to SLP-Compressed Texts
-% PHONI: Streamed Matching Statistics with Multi-Genome References
-% Indexing Highly Repetitive String Collections
 Nel contesto \textit{bioinformatico} una delle principali problematiche è la
 gestione di testi molto estesi. Pensiamo, ad esempio, al caso umano. Il primo
 cromosoma, il più lungo tra i cromosomi umani, conta circa $247.249.719$
 \textit{bps} (paia di basi), nonostante, è bene segnalare, l'uomo
 non sia affatto l'essere vivente con il genoma più esteso. Fatta questa breve
-premessa è facile comprendere l'importanza degli algoritmi e delle strutture
+premessa, è facile comprendere l'importanza degli algoritmi e delle strutture
 dati atte alla compressione di testi.\\
-Per questa tesi si è provveduto all'uso di uno di tali algoritmi di
-compressione, ovvero i \textbf{Straight-line programs (\textit{SLPs})}. Parlando
-in termini generici un \textit{SLP} è una \textbf{grammatica context-free} che
+Per questa tesi si è provveduto all'uso di uno di tali strutture compresse
+compresse, ovvero i \textbf{Straight-Line Programs (\textit{SLP})}. In termini
+generici, un \textit{SLP} è una \textbf{grammatica context-free} che 
 genera una e una sola parola \cite{slpsurvey}. Si parla, a causa di ciò, di
 \textbf{grammar-based compression}.
 \begin{definizione}
   Sia dato un alfabeto finito $\Sigma$ per i simboli terminali. Sia data una
   stringa $s=a_1,a_2,\ldots, a_n\in\Sigma^{*}$, lunga $n$ e costruita
   sull'alfabeto $\Sigma$. Si ha quindi che $a_i\in\Sigma$, $\forall i \mbox{
-    t.c. }1\leq i\leq n$, denotando con $alph(s)=\{a_1,a_2,\ldots
-  a_n\}$ l'insieme dei simboli della stringa $s$.\\
+    t.c. }1\leq i\leq n$ e si denota, con $alph(s)=\{a_1,a_2,\ldots
+  a_n\}$, l'insieme dei simboli della stringa $s$.\\
   Un \textbf{SLP} sull'alfabeto $\Sigma$ è una grammatica context-free
-  $\mathcal{A}$: 
+  $\mathcal{A}$ tale che: 
   \[\mathcal{A}=\left(\mathcal{V}, \Sigma, \mathcal{S}, \mathcal{P}\right)\]
-  dove:
+  Dove:
   \begin{itemize}
     \item $\mathcal{V}$ è l'insieme dei simboli non terminali
     \item $\Sigma$ è l'insieme dei simboli terminali
@@ -46,10 +42,10 @@ genera una e una sola parola \cite{slpsurvey}. Si parla, a causa di ciò, di
   Si ha quindi che la grandezza dell'SLP è calcolabile come:
   \[|\mathcal{A}| = \sum_{(A,\alpha)\in\mathcal{P}}|\alpha|\]
 \end{definizione}
-Si ha quindi che il linguaggio generato da un \textit{SLP}, $\mathcal{A}$,
-consiste in una singola parola, denotata da $eval{\mathcal{A}}$. \\
+Il linguaggio $\mathcal{A}$ generato da un \textit{SLP}
+consiste in una singola parola, denotata da $eval(\mathcal{A})$. \\
 A partire dall'\textit{SLP} $\mathcal{A}$ si genera quindi un \textbf{albero
-  di derivazione}, che nel dettaglio è un \textit{albero radicato e ordinato},
+  di derivazione}, che, nel dettaglio, è un \textit{albero radicato e ordinato}
 dove la \textit{radice} è etichettata con $\mathcal{S}$, ogni \textit{nodo
   interno} è etichettato con un simbolo di $\mathcal{V}\cup\Sigma$ e ogni foglia
 è etichettata con un simbolo di $\Sigma$.\\
@@ -75,22 +71,22 @@ Si vede quindi un esempio chiarificatore \cite{slpgagie}.
     \includegraphics[width=\textwidth]{img/slpgagie.pdf}
   \end{figure}
 \end{esempio}
-Nel 2020, Gagie et al. \cite{slpgagie}, a cui si rimanda per approfondimenti,
-proposero una variante degli \textit{SLPs} che garantisse miglioramenti
-prestazionali per il \textit{random access} alla grammatica stessa. Sfruttando,
-ad esempio, i \textit{bit vector sparsi} si è quindi potuto garantire
+Nel 2020, Gagie et al. \cite{slpgagie} 
+proposero un articolo, a cui si rimanda per approfondimenti, su una variante
+degli \textit{SLP} che garantisse miglioramenti 
+prestazionali per il \textit{random access} al testo memorizzato sotto forma di
+\textit{SLP}.\\
+Si stima che il tempo necessario al
 \textit{random access} su un testo $T$, tale che $|T|=n$, compresso tramite
-\textit{SLP}, in tempo:
-\[\mathcal{O}(\log n)\]
-\textbf{VERIFICARE BENE COSA SIA $n$}.\\
+\textit{SLP}, sia $\mathcal{O}\left(\log n\right)$.\\
 L'uso di tale variante degli \textit{SLP} è stato cruciale, come si vedrà più
 avanti in questa tesi, per la costruzione della versione run-length encoded sia
 della \textbf{Burrows-Wheeler Transform (\textit{BWT})} che della
 \textbf{Positional Burrows-Wheeler Transform (\textit{PBWT})}.
 \subsection{Longest Common Extension}
-Oltre a permettere un veloce \textit{random access} alla testo compresso, la
-variante degli \textit{SLPs} proposta da Gagie et al. permette di effettuare
-un'altra operazione in modo ``veloce'': le \textbf{Longest Common Extension
+Oltre a permettere \textit{random access} alla testo compresso, 
+l'uso degli \textit{SLP} permette di effettuare 
+un'altra operazione in modo efficiente: le \textbf{Longest Common Extension
   (\textit{LCE}) queries}.
 \begin{definizione}
   Dato un testo $T$, tale che $|T|=n$, il risultato della \textbf{LCE query} tra
@@ -101,7 +97,6 @@ un'altra operazione in modo ``veloce'': le \textbf{Longest Common Extension
 Sfruttando l'\textit{SLP} del testo $T$ è quindi possibile effettuare due
 \textit{random access} al testo compresso, in $i$ e $j$, per poi ``risalire''
 l'albero al fine di computare il prefisso comune tra $T[i,n-1]$ e
-$T[j,n-1]$. Quindi il calcolo di una \textit{LCE query} di lunghezza $l$ è
-effettuabile in tempo:
-\[\mathcal{O}\left(1+\frac{l}{\log n}\right)\]
-\textbf{VERIFICARE BENE COSA SIA $n$}.
+$T[j,n-1]$.\\
+Si stima che il calcolo di una \textit{LCE query} sia effettuabile
+effettuabile in tempo: $\mathcal{O}\left(\log n\right)$.
