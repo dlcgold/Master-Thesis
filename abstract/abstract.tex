@@ -42,7 +42,7 @@
 \setlist{leftmargin = 2cm}
 \noindent
 %\subsection*{Introduzione}
-Negli ultimi anni si è assistito ad un cambio di paradigma nel campo della
+Negli ultimi anni si è assistito a un cambio di paradigma nel campo della
 bioinformatica, ovvero il passaggio dallo studio della sequenza lineare di un
 singolo genoma a quello di un insieme di genomi, provenienti da un gran numero
 di individui, al fine di poter considerare anche le varianti
@@ -58,8 +58,8 @@ Il genoma umano di riferimento (GRCh38.p14), è composto da circa
 varianti tra i genomi sequenziati, secondo i risultati ottenuti nel 1000 Genome
 Project. Considerando come la quantità dei dati di sequenziamento sia destinata
 ad aumentare esponenzialmente nei prossimi anni, grazie al
-miglioramento delle tecnologie di sequenziamento (Next Generation Sequencing e
-Third-Generation Sequencing), risulta necessaria la costruzione di algoritmi e
+miglioramento delle tecnologie di sequenziamento, risulta necessaria la
+costruzione di algoritmi e   
 strutture dati efficienti per gestire una tale informazione. 
 In merito, uno degli approcci più usati per rappresentare il pangenoma è un
 pannello di aplotipi, ovvero, computazionalmente, una matrice di $M$
@@ -67,6 +67,7 @@ righe, corrispondenti agli individui, e $N$ colonne, corrispondenti ai siti con
 le varianti. Si specifica che, con il termine
 aplotipo, si intende l'insieme di alleli, ovvero di varianti, che un organismo
 eredita da ogni genitore.
+
 In questo contesto trova spazio uno dei problemi fondamentali della
 bioinformatica, ovvero quello del pattern matching. Inizialmente tale concetto
   era relativo allo studio di un piccolo pattern all'interno di un testo di
@@ -84,57 +85,75 @@ prof. Gagie (Dalhousie University) e la prof.ssa Boucher
 \textbf{run-length encoded} della \textbf{PBWT}, detta \textbf{RLPBWT}, che
 permettesse di risolvere tale problema.
 \subsection*{Stato dell'arte}
-Si introducono ora i principali algoritmi e le principali strutture dati,
-presenti allo stato dell'arte, posti a fondamento di questo progetto di tesi.
-
-La prima struttura dati che bisogna citare è la  ben nota \textit{trasformata
-  Burrows-Wheeler (BWT)}, una trasformata reversibile che ha permesso di
-ottenere algoritmi efficienti per il pattern matching su un testo.
+Parlando pattern matching tra un pattern e un testo, una delle strutture dati
+che bisogna citare è la ben nota \textit{trasformata 
+  Burrows-Wheeler (BWT)}, una trasformata reversibile che ha permesso, anche
+memorizzando in modo compatto il testo, di ottenere algoritmi efficienti per il
+pattern matching. 
 La BWT, inoltre, è fortemente legata al concetto di Suffix Array (SA), definito
 come la lista lessicograficamente ordinata delle posizioni di partenza di 
 tutti i suffissi di un testo, e a quello delle lunghezze del Longest Common
 Prefix (LCP) tra ogni suffisso consecutivo indicizzato nel SA.
 
+Invece, allo scopo di risolvere il problema del calcolo degli SMEM tra un
+pannello di aplotipi e un aplotipo esterno,
 Durbin, nel 2014, propose una struttura dati ispirata alla BWT, detta
-\textit{Trasformata di Burrows-Wheeler Posizionale (PBWT)}, la quale viene
-costruita a partire da un pannello di aplotipi, rappresentato, riferendosi al
-solo caso bi-allelico, tramite una matrice binaria. Il funzionamento di tale
-struttura dati prevede la costruzione di due insiemi di array, tramite
-l'\textit{ordinamento dei prefissi inverso} ad ogni colonna del pannello.
-Tali insiemi sono detti \textit{insieme dei prefix array} e \textit{insieme dei
-  divergence array}. Il primo, denotato $a$, contiene, per ogni colonna e ogni
-posizione, l'indice dell'aplotipo nel pannello originale riordinato secondo
-l'ordinamento inverso alla data colonna. Quindi, si ha, in ogni colonna, la
-permutazione degli indici di riga secondo l'ordinamento inverso alla colonna
-$k$-esima. 
-Il secondo insieme, invece, indica l'indice della colonna iniziale del suffisso
-comune più lungo, che termina nella colonna nella colonna $k$, tra una riga e la
-sua precedente secondo l'ordinamento inverso ottenuto per la $k$-esima colonna.
-Il pannello ottenuto con le permutazioni dettate dal prefix array, viene
-chiamato matrice PBWT.
+\textit{Trasformata di Burrows-Wheeler Posizionale (PBWT)}. Tale trasformata
+viene costruita a partire da un pannello di aplotipi, rappresentato, riferendosi
+al solo caso bi-allelico, tramite una matrice binaria.
 Cruciale è il fatto che tale struttura permetta di calcolare gli SMEM tra
 un aplotipo esterno e il pannello in tempo $\mathcal{O}(MN)$, mentre 
-una soluzione naive impiegherebbe un tempo proporzionale a
-$\mathcal{O}(M^2N)$. Il tradeoff di tale algoritmo, conosciuto anche come
+una soluzione naive impiegherebbe $\mathcal{O}(M^2N)$. Gli SMEM sono tali per
+cui gli indici di inizio 
+e fine del match sono i medesimi sia sul pannello, in termini di indici di
+colonna, che sull'aplotipo query. Tale 
+vincolo, da cui deriva il termine
+``posizionale'', non è soddisfacibile dalla BWT ed è dovuto al fatto che ogni 
+colonna (o indice della query) rappresentano un preciso sito per una specifica
+variante genica. Il tradeoff di questo algoritmo, conosciuto anche come
 \textit{algoritmo 5 di Durbin}, è la richiesta in termini di spazio ($13NM$
 bytes secondo l'autore) e superare questo limite è l'obiettivo principale di
-questo progetto di tesi. 
+questo progetto di tesi.
 
-Tornando a parlare della BWT, una caratteristica di questa trasformata è la
+Brevemente, il funzionamento della PBWT prevede la costruzione di due insiemi di
+array, tramite 
+l'\textit{ordinamento dei prefissi inverso} a ogni colonna del pannello, detti
+\textit{insieme dei prefix array} e \textit{insieme dei divergence array}. Per
+ogni colonna, secondo l'ordinamento dettato dalla stessa, i due array presentano
+un comportamento analogo a quanto visto per il suffix array e l'array LCP nella
+BWT.
+
+%  Il primo, denotato $a$, contiene, per ogni colonna e ogni
+% posizione, l'indice dell'aplotipo nel pannello originale riordinato secondo
+% l'ordinamento inverso alla data colonna. Quindi, si ha, in ogni colonna, la
+% permutazione degli indici di riga secondo l'ordinamento inverso alla colonna
+% $k$-esima. 
+% Il secondo insieme, invece, indica l'indice della colonna iniziale del suffisso
+% comune più lungo, che termina nella colonna nella colonna $k$, tra una riga e la
+% sua precedente secondo l'ordinamento inverso ottenuto per la $k$-esima colonna.
+% Il pannello ottenuto con le permutazioni dettate dal prefix array, viene
+% chiamato matrice PBWT.
+Un'altro obiettivo raggiunto negli ultimi anni è stato quello di studiare la
+costruzione di un'unica BWT partendo da multipli genomi.
+A tal fine si è sfruttata una caratteristica della BWT, ovvero la
 tendenza a produrre una sequenza con caratteri uguali in posizioni
-consecutive. Questo fenomeno è dovuto alle ripetizioni di determinate
-sottostringhe nel testo, avendo che tali ripetizioni, per motivazioni
-biologiche, sono frequenti in ambito genomico.
-Al fine di sfruttare tali caratteri uguali consecutivi si 
-è quindi ideata la \textit{trasformata Burrows-Wheeler Run-Length
-  encoded (RLBWT)} dove una sequenza massimale di caratteri uguali, detta 
-run, viene memorizzata in modo efficiente come coppia (carattere,
-lunghezza della run). Ad esempio, la stringa \texttt{aaaaaa} sarebbe memorizzata
-come \texttt{(a,6)}.
-Alcuni paper recenti hanno proposto un nuovo tipo di
-indicizzazione, il cosiddetto \textit{r-index}, per questa struttura
-dati compressa. In tal modo, si ottiene un indice che non è lineare sulla
-lunghezza del testo ma sul numero di run della sua BWT. L'r-index include la
+consecutive, a causa delle ripetizioni di determinate
+sottostringhe nel testo. Partendo da molte sequenze genomiche concatenate si
+hanno, ovviamente, molte regioni ripetute che comportano tali sequenze massimali
+di caratteri uguali nella BWT, dette run.
+% Questo fenomeno è dovuto alle ripetizioni di determinate
+% sottostringhe nel testow, avendo che tali ripetizioni, per motivazioni
+% biologiche, sono frequenti in ambito genomico.
+
+Si è quindi ideata la \textit{trasformata Burrows-Wheeler Run-Length
+  encoded (RLBWT)} dove ogni run viene memorizzata in modo efficiente come
+coppia (carattere, lunghezza della run). Ad esempio, la stringa \texttt{aaaaaa}
+sarebbe memorizzata come \texttt{(a,6)}.
+Alcuni paper recenti hanno proposto, per questa struttura
+dati compressa, un nuovo tipo di indicizzazione: il cosiddetto \textit{r-index}.
+Tale indice non è lineare sulla lunghezza del testo ma sul numero di run della
+sua BWT, riducendo lo spazio in 
+memoria richiesto dall'indice stesso. L'r-index include la
 RLBWT e un suffix array sample, ovvero i valori del SA all’inizio e alla fine di
 ogni run. 
 Tali articoli hanno portato alla produzione di due tool, \textit{MONI} e 
@@ -145,23 +164,24 @@ sottostringhe del pattern che
 sono anche sottostringhe del testo, avendo che tale match non può essere esteso,
 in entrambe le direzioni, senza introdurre un mismatch. 
 
-Gli autori hanno rilevato come il calcolo dei MEM sia direttamente
+Si noti che il calcolo dei MEM è direttamente
 correlato alla costruzione dell'array delle \textit{Matching Statistics (MS)}.
 Tale array, lungo quanto il pattern e formato da coppie (posizione $pos$,
 lunghezza $len$), annota, per ogni posizione del pattern, la lunghezza $len$ di
 un match, anche non massimale, con una sottostringa nel testo avente
 indice iniziale $pos$. Estraendo da tali match i MEM si possono poi ottenere
 tutte altre occorrenze del medesimo MEM nel testo. 
-Gli autori, per il calcolo delle MS, hanno
-usato, in MONI, anche il concetto di \textit{threshold}, definito come
+In MONI,per il calcolo delle MS, è stato
+usato anche il concetto di \textit{threshold}, definito come
 il minimo valore dell'array LCP tra due run consecutive dello stesso
 carattere. Un ulteriore miglioramento si è registrato in \textit{PHONI} con
 l'uso delle \textit{LCE query} per il calcolo dell'array MS. Infatti, tale
 struttura, dati due indici del testo $i$ e $j$, restituisce il più lungo
 prefisso comune tra il suffisso $i$-esimo e il suffisso $j$-esimo del testo.
-Si può quindi apprezzare il collegamento naturale che si ha tra la PBWT
-e la BWT, avendo, ad esempio, che il prefix array della prima corrisponde
-al suffix array della seconda mentre il divergence array è una
+
+Si denota, infine, un collegamento naturale che si ha tra la PBWT
+e la BWT, avendo, ad esempio, che il prefix array, in una certa colonna, della
+prima corrisponde al suffix array della seconda mentre il divergence array è una
 diversa rappresentazione dell'array LCP. Anche grazie a queste premesse, si è
 basato il progetto di tesi sulla costruzione RLPBWT a partire dalle tecniche
 teorizzate per la RLBWT.
@@ -254,7 +274,7 @@ lunghezze. Tale soluzione richiedeva in memoria l'intero pannello, per il quale
 si è scelto di usare uno Straight-Line Program (SLP), ovvero una grammatica
 context-free che genera una e una sola parola, molto compatta in memoria, sulla
 quale è possibile effettuare random access (in tempo non costante). Ad esempio,
-un pannello $70000 \times 46538$, che normalmente richiede $\sim 3.3$GB in
+un pannello $70,000 \times 46,538$, che normalmente richiede $\sim 3.3$GB in
 memoria ($\sim 451$MB se compresso tramite GZIP), viene memorizzato, tramite
 SLP, in $\sim 7$MB.
 
@@ -296,8 +316,8 @@ l'implementazione ufficiale della stessa. Per la RLPBWT, invece, si è utilizzat
 l'implementazione con le LCE query. 
 
 In merito al tempo di calcolo si è ottenuto il risultato atteso: con
-la PBWT si ottiene il calcolo degli SMEM in $\sim 411$s 
-mentre con la RLPBWT in $\sim 1824$s, ovvero poco più del quadruplo del tempo.
+la PBWT si ottiene il calcolo degli SMEM in $411$s 
+mentre con la RLPBWT in $1824$s, ovvero poco più del quadruplo del tempo.
 Si è passato quindi ad analizzare i risultati in termini di memoria. Secondo le
 stime di Durbin, gli array necessari al funzionamento dell'algoritmo 5
 richiederebbero $\sim 13NM$ bytes, implicando, per il pannello in analisi, $\sim
@@ -306,40 +326,50 @@ picchi di memoria prossimi ai $40$GB di memoria, confermando le stime. Invece,
 per la RLPBWT il picco registrato è stato di appena $\sim 3$GB, richiedendo
 circa il $92.5$\% di memoria in meno rispetto alla soluzione di Durbin.
 \subsection*{Conclusioni}
-In conclusione, si rileva come gli obiettivi prefissati siano stati raggiunti,
-producendo una struttura dati efficiente in memoria per la risoluzione del
-calcolo degli SMEM tra un pannello di aplotipi e un aplotipo
+In conclusione, la RLPBWT proposta è stata in grado di ridurre sensibilmente la
+quantità di memoria necessaria per la risoluzione del 
+problema del calcolo degli SMEM tra un pannello di aplotipi e un aplotipo
 esterno.  
-Si segnala, inoltre, come siano possibili diversi sviluppi futuri come
+Si segnala, inoltre, come siano possibili diversi sviluppi futuri. Tra di essi
+si ha
 un'ulteriore ottimizzazione della struttura, sia in termini 
 di gestione del mapping che, eventualmente, di gestione di più query
 contemporaneamente. In merito a quest'ultimo sviluppo si segnala che Durbin
 ha proposto anche un algoritmo per il calcolo degli SMEM tra un pannello di
-aplotipi e un pannello di query, fondendoli in un unico pannello su cui
-costruire la PBWT e calcolare i match interni al pannello stesso. Tale
+aplotipi e un pannello di query. Questo algoritmo è basato sulla creazione di un
+unico pannello, su cui 
+costruire la PBWT, e sul calcolo dei match interni al pannello stesso. Tale
 implementazione, nel setup di test 
 descritto nella sezione precedente (che si noti comportare il perfetto input per
 tale soluzione), risulta essere molto performante sia in
-termini di tempo ($\sim 22$s) che di memoria utilizzata ($\sim
-10,084$KB) durante l'esecuzione. 
+termini di tempo ($22$s) che di memoria utilizzata ($10,084$KB) durante
+l'esecuzione.  
 
 Inoltre, sono possibili diverse generalizzazioni rispetto alle caratteristiche
-del pannello. Per quanto i pannelli di aplotipi prodotti dal sequencing del
-genoma umano raramente presentino siti multi-allelici, si ha una 
-presenza stimata, al momento, di circa il 2\% di siti tri-allelici, avendo che
-tale percentuale risulti fortemente sottostimata. Una prima generalizzazione
-quindi sarebbe quella di studiare pannelli multi-allelici, riformulando la
-RLPBWT al fine di poter funzionare anche con pannelli costruiti su un
-alfabeto arbitrario. Un'altra generalizzazione interessante riguarda
-l'ammissione di 
-dati mancanti all'interno del pannello stesso. La maggior parte delle soluzioni
-attualmente sviluppate sono basate su una forte assunzione: non si hanno dati
-mancanti. Una variante della RLPBWT che sia quindi in grado di
-lavorare, eventualmente con algoritmi parametrici o algoritmi
-  approssimati, 
-su pannelli in cui sono presenti wildcard per rappresentare tali dati,
-permetterebbe di fare studi più completi su dati reali, migliorandone gli usi,
-ad esempio, nel campo della medicina personalizzata.\\ 
+del pannello, come ad esempio pannelli multi-allelici o con dati mancanti. Tali
+caratteristiche sono, infatti, comuni in dati reali. In particolare, la gestione
+di dati 
+mancati, molto rilevante a causa della non perfezione delle tecnologie di
+sequenziamento, risulta essere un problema aperto in bioinformatica. Sarà
+quindi richiesto lo sviluppo di nuove metodologie, basate, eventualmente,
+su algoritmi parametrici o algoritmi approssimati, per la risoluzione del
+problema del calcolo degli SMEM.
+% Per quanto i pannelli di aplotipi prodotti dal sequencing del
+% genoma umano raramente presentino siti multi-allelici, si ha una 
+% presenza stimata, al momento, di circa il 2\% di siti tri-allelici, avendo che
+% tale percentuale risulti fortemente sottostimata. Una prima generalizzazione
+% quindi sarebbe quella di studiare pannelli multi-allelici, riformulando la
+% RLPBWT al fine di poter funzionare anche con pannelli costruiti su un
+% alfabeto arbitrario. Un'altra generalizzazione interessante riguarda
+% l'ammissione di 
+% dati mancanti all'interno del pannello stesso. La maggior parte delle soluzioni
+% attualmente sviluppate sono basate su una forte assunzione: non si hanno dati
+% mancanti. Una variante della RLPBWT che sia quindi in grado di
+% lavorare, eventualmente con algoritmi parametrici o algoritmi
+%   approssimati, 
+% su pannelli in cui sono presenti wildcard per rappresentare tali dati,
+% permetterebbe di fare studi più completi su dati reali, migliorandone gli usi,
+% ad esempio, nel campo della medicina personalizzata.\\ 
 Si segnala, infine, come la RLPBWT sia potenzialmente in grado di
 risolvere 
 efficientemente anche altri task, come ad esempio la ricerca di k-SMEM,
