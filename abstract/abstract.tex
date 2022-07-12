@@ -110,8 +110,8 @@ $k$-esima.
 Il secondo insieme, invece, indica l'indice della colonna iniziale del suffisso
 comune più lungo, che termina nella colonna nella colonna $k$, tra una riga e la
 sua precedente secondo l'ordinamento inverso ottenuto per la $k$-esima colonna.
-Il pannello ottenuto con le permutazioni dettate dal prefix array viene chiamato
-matrice PBWT.
+Il pannello ottenuto con le permutazioni dettate dal prefix array, viene
+chiamato matrice PBWT.
 Cruciale è il fatto che tale struttura permetta di calcolare gli SMEM tra
 un aplotipo esterno e il pannello in tempo $\mathcal{O}(MN)$, mentre 
 una soluzione naive impiegherebbe un tempo proporzionale a
@@ -133,7 +133,7 @@ lunghezza della run). Ad esempio, la stringa \texttt{aaaaaa} sarebbe memorizzata
 come \texttt{(a,6)}.
 Alcuni paper recenti hanno proposto un nuovo tipo di
 indicizzazione, il cosiddetto \textit{r-index}, per questa struttura
-dati compressa. In tal modo, si ottiene un indice che non lineare sulla
+dati compressa. In tal modo, si ottiene un indice che non è lineare sulla
 lunghezza del testo ma sul numero di run della sua BWT. L'r-index include la
 RLBWT e un suffix array sample, ovvero i valori del SA all’inizio e alla fine di
 ogni run. 
@@ -158,13 +158,13 @@ il minimo valore dell'array LCP tra due run consecutive dello stesso
 carattere. Un ulteriore miglioramento si è registrato in \textit{PHONI} con
 l'uso delle \textit{LCE query} per il calcolo dell'array MS. Infatti, tale
 struttura, dati due indici del testo $i$ e $j$, restituisce il più lungo
-prefisso comune tra il suffisso $i$-esimo e il suffisso $j$-esimo.
+prefisso comune tra il suffisso $i$-esimo e il suffisso $j$-esimo del testo.
 Si può quindi apprezzare il collegamento naturale che si ha tra la PBWT
 e la BWT, avendo, ad esempio, che il prefix array della prima corrisponde
 al suffix array della seconda mentre il divergence array è una
 diversa rappresentazione dell'array LCP. Anche grazie a queste premesse, si è
-basato il progetto di tesi sulla costruzione di una versione run-length encoded
-della PBWT.
+basato il progetto di tesi sulla costruzione RLPBWT a partire dalle tecniche
+teorizzate per la RLBWT.
 
 % Al fine di raggiungere tale obiettivo sono state usate altre nozioni. In primis,
 % si sono sfruttate le cosiddette \textbf{strutture dati succinte}, ovvero
@@ -209,8 +209,8 @@ algoritmica per il calcolo degli SMEM.
 % stimato non fossero ottimali, non solo per il \textit{divergence array}, ma anche
 % perché non veniva utilizzato alcun approccio tramite \textit{strutture dati
 %   succinte}.
-Per quanto l'intuizione iniziale fosse quella di adattare l'algoritmo 5 di
-Durbin all'uso con una struttura run-length encoded, non si è trovato un modo
+Inoltre, per quanto l'intuizione iniziale fosse quella di adattare l'algoritmo 5
+di Durbin all'uso con una struttura run-length encoded, non si è trovato un modo
 per memorizzare i dati del divergence array in modo proporzionale al numero di
 run. Inoltre non si è trovata una soluzione efficiente per utilizzare i sample
 del prefix array ad inizio e fine di ogni run.
@@ -239,9 +239,9 @@ riga $row$, ed estendere, tramite una struttura dati a supporto, tale risultato
 a tutte le altre righe del pannello che presentano il medesimo SMEM.
 Il primo metodo di calcolo di tale array è stato basato sull'utilizzo delle
 threshold. Ragionando sulla \textit{matrice PBWT}, una threshold è definita
-come il minimo valore dell'\textit{array LCP} all'interno di una run
+come l'indice del massimo valore del divergence array all'interno di una run
 (comprendendo anche la testa, qualora esistente, della run successiva, essendo
-il suo valore \textit{LCP} calcolato sfruttando anche la coda della run
+il suo valore del divergence array calcolato sfruttando anche la coda della run
 corrente). L'insieme delle threshold per una certa colonna è stato memorizzato
 come bitvector sparso. Inoltre, si è provveduto a tenere in memoria i
 sample di prefix array a inizio e fine di ogni run.
@@ -260,17 +260,16 @@ SLP, in $\sim 7$MB.
 
 Riprendendo quanto fatto in \textit{PHONI} per
 la RLBWT, si è, poi, deciso di risparmiare ulteriore spazio eliminando
-l'uso delle \textit{threshold}. Per ottenere il calcolo dell'array della
+l'uso delle \textit{threshold}. Per ottenere il calcolo dell'array delle
 matching statistics si sono quindi usate le LCE query, ridefinite in questo caso
 come il suffisso comune più lungo tra due righe del pannello, eventualmente
 fissando il termine a una colonna precisata. Il loro calcolo è permesso
 in modo efficiente dall'uso dell'SLP. Calcolando la
-lunghezza di tale suffisso comune, è possibile calcolare anche le
+lunghezza di tale suffisso comune, è possibile computare anche le
 lunghezze delle matching statistics contemporaneamente al calcolo delle
-righe della stessa. Quindi, si è ottenuto il calcolo completo di tale array in
+righe. Quindi, si è ottenuto il calcolo completo di tale array in
 un singolo ``sweep'' sul pattern, passando da un tempo proporzionale a
-$\mathcal{O}(2N)$ a uno proporzionale a 
-$\mathcal{O}(N)$. Si noti che il calcolo degli SMEM viene fatto
+$2N$ a uno proporzionale a $N$. Si noti che il calcolo degli SMEM viene fatto
 contemporaneamente al calcolo delle lunghezze delle matching statistics quindi,
 con l'uso delle LCE query, si è ridotto sia lo spazio necessario in memoria per
 la RLPBWT che il tempo di calcolo degli SMEM.
@@ -278,12 +277,13 @@ la RLPBWT che il tempo di calcolo degli SMEM.
 \subsection*{Risultati sperimentali}
 L'obiettivo della fase sperimentale è stato quello di confrontarsi con
 l'algoritmo 5 di Durbin, permettendo di verificare la
-riduzione della memoria necessaria al calcolo degli SMEM. L'importanza di ottenere
-dati quantitativi è anche dovuta al limite 
+riduzione della memoria necessaria al calcolo degli SMEM. L'importanza di
+ottenere dati quantitativi è anche dovuta al limite 
 dato dalla non forte caratterizzazione asintotica, dal punto di vista della
 complessità temporale, delle operazioni con le strutture dati succinte, fattore
 che potrebbe comportare errori di 
-valutazione. L'uso di tali strutture comporta, in ogni caso, un aumento atteso
+valutazione limitandosi a stime teoriche. L'uso di tali strutture comporta un
+aumento atteso  
 dei tempi di calcolo. Le simulazioni sono state effettuate su pannelli simulati
 tramite uno dei software più usati in bioinformatica per generare pannelli di
 aplotipi. 
@@ -292,10 +292,10 @@ Per questa sintesi, si è scelto di riportare alcuni risultati relativi ad un
 pannello $70,000 \times 46,538$, che è stato interrogato con $30,000$ query, al
 fine di ridurre la fluttuazione statistica dei risultati.
 I risultati qui riportati, relativi alla PBWT, sono stati ottenuti usando
-l'implementazione ufficiale della stessa. Per la RLPBWT, invece, si sono usate
-le LCE query. 
+l'implementazione ufficiale della stessa. Per la RLPBWT, invece, si è utilizzata
+l'implementazione con le LCE query. 
 
-In merito al tempo di calcolo si è ottenuto il risultato atteso avendo che con
+In merito al tempo di calcolo si è ottenuto il risultato atteso: con
 la PBWT si ottiene il calcolo degli SMEM in $\sim 411$s 
 mentre con la RLPBWT in $\sim 1824$s, ovvero poco più del quadruplo del tempo.
 Si è passato quindi ad analizzare i risultati in termini di memoria. Secondo le
@@ -304,17 +304,17 @@ richiederebbero $\sim 13NM$ bytes, implicando, per il pannello in analisi, $\sim
 40$GB di memoria. Anche sperimentalmente si sono registrati 
 picchi di memoria prossimi ai $40$GB di memoria, confermando le stime. Invece,
 per la RLPBWT il picco registrato è stato di appena $\sim 3$GB, richiedendo
-circa il $93$\% di memoria in meno rispetto alla soluzione di Durbin.
+circa il $92.5$\% di memoria in meno rispetto alla soluzione di Durbin.
 \subsection*{Conclusioni}
-In conclusione, si rileva come i risultati prefissati siano stati raggiunti,
+In conclusione, si rileva come gli obiettivi prefissati siano stati raggiunti,
 producendo una struttura dati efficiente in memoria per la risoluzione del
 calcolo degli SMEM tra un pannello di aplotipi e un aplotipo
 esterno.  
-Si segnala inoltre come siano possibili diversi sviluppi futuri, come
+Si segnala, inoltre, come siano possibili diversi sviluppi futuri come
 un'ulteriore ottimizzazione della struttura, sia in termini 
 di gestione del mapping che, eventualmente, di gestione di più query
-contemporaneamente. In merito a quest'ultimo si segnala, infatti, come Durbin
-abbia proposto anche un algoritmo per il calcolo degli SMEM tra un pannello di
+contemporaneamente. In merito a quest'ultimo sviluppo si segnala che Durbin
+ha proposto anche un algoritmo per il calcolo degli SMEM tra un pannello di
 aplotipi e un pannello di query, fondendoli in un unico pannello su cui
 costruire la PBWT e calcolare i match interni al pannello stesso. Tale
 implementazione, nel setup di test 
