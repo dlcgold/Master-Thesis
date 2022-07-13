@@ -46,13 +46,12 @@ Negli ultimi anni si è assistito a un cambio di paradigma nel campo della
 bioinformatica, ovvero il passaggio dallo studio della sequenza lineare di un
 singolo genoma a quello di un insieme di genomi, provenienti da un gran numero
 di individui, al fine di poter considerare anche le varianti
-  geniche. Questo nuovo concetto è stato nominato per la prima volta da
+  geniche. Questo nuovo concetto è stato introdotto da
 Tettelin, nel 2005, con il termine di \textit{pangenoma}. Grazie ai risultati
 ottenuti in pangenomica, ci sono stati miglioramenti sia nel 
 campo della biologia che in quello della medicina personalizzata, grazie al
 fatto che, con il pangenoma, si migliora la precisione della rappresentazione di
 multipli genomi e delle loro differenze. 
-
 Il genoma umano di riferimento (GRCh38.p14), è composto da circa
 3.1 miliardi di basi, con più di 88 milioni 
 varianti tra i genomi sequenziati, secondo i risultati ottenuti nel 1000 Genome
@@ -68,8 +67,8 @@ pannello di aplotipi, ovvero, da un punto di vista computazionale, una matrice
 di $M$ 
 righe, corrispondenti agli individui, e $N$ colonne, corrispondenti ai siti con
 le varianti. Si specifica che, con il termine
-aplotipo, si intende l'insieme di alleli, ovvero di varianti, che un organismo
-eredita da ogni genitore.
+aplotipo, si intende l'insieme di alleli, ovvero di varianti che, a meno di
+mutazioni, un organismo eredita da ogni genitore.
 
 In questo contesto trova spazio uno dei problemi fondamentali della
 bioinformatica, ovvero quello del pattern matching. Inizialmente tale problema
@@ -79,8 +78,8 @@ Ora, con l'introduzione del pangenoma, il problema deve essere risolto sulle
 nuove strutture 
 di rappresentazione del pangenoma.
 
-Lo scopo di questa tesi è progettare strutture dati e algoritmi per risolvere il
-problema del pattern 
+Lo scopo di questa tesi è progettare strutture dati e algoritmi efficienti per
+risolvere il problema del pattern 
 matching, inteso come ricerca dei set-maximal exact match (SMEM) tra un aplotipo
 esterno e un pannello di aplotipi, in una delle 
 strutture dati più utilizzata per la rappresentazione del pangenoma: la
@@ -89,12 +88,10 @@ strutture dati più utilizzata per la rappresentazione del pangenoma: la
 Prof.~Gagie (Dalhousie University) e Prof.~Boucher 
 (University of Florida), ha quindi permesso lo sviluppo di una variante
 \textbf{run-length encoded} della \textbf{PBWT}, detta \textbf{RLPBWT}, che
-permettesse di risolvere questo problema riducendo la memoria impiegata rispetto
+risolve questo problema riducendo la memoria impiegata rispetto
 alla soluzione attualmente allo stato dell'arte.
 
-
 \subsection*{Stato dell'arte}
-
 Gli algoritmi più efficienti per risolvere il problema del pattern matching tra
 un pattern e un testo 
 sono attualmente basati sulla \emph{Trasformata di Burrows-Wheeler (BWT)}.
@@ -113,21 +110,23 @@ viene costruita a partire da un pannello di aplotipi, rappresentato, riferendosi
 al solo caso bi-allelico, tramite una matrice binaria.
 La PBWT permette di calcolare gli SMEM tra
 un aplotipo esterno e il pannello in tempo $\mathcal{O}(MN)$, mentre 
-una soluzione naive impiegherebbe $\mathcal{O}(M^2N)$. Gli SMEM sono tali per
-cui gli indici di inizio 
-e fine del match sono i medesimi sia sul pannello, in termini di indici di
-colonna, che sull'aplotipo query. Tale
-vincolo, da cui deriva il termine
+una soluzione semplice impiegherebbe $\mathcal{O}(M^2N)$.
+% Gli SMEM sono tali per
+% cui gli indici di inizio 
+% e fine del match sono i medesimi sia sul pannello, in termini di indici di
+% colonna, che sull'aplotipo query.
+La motivazione essenziale della PBWT è considerare match, e quindi anche SMEM,
+dove anche le posizioni di inizio e fine sono rispettate.
+Tale vincolo, da cui deriva il termine
 ``posizionale'', non è soddisfacibile dalla BWT ed è dovuto al fatto che ogni 
 colonna (o indice della query) rappresenta un preciso sito per una specifica
-variante genica. Il tradeoff di questo algoritmo, conosciuto anche come
-\textit{algoritmo 5 di Durbin}, è la richiesta in termini di spazio ($13NM$
+variante genica. Il tradeoff di questo algoritmo è la richiesta in termini di
+spazio ($13NM$ 
 bytes). Superare questo limite è l'obiettivo principale di
 questo progetto di tesi.
-
 Il funzionamento della PBWT prevede la costruzione di due insiemi di
 array, tramite 
-l'\textit{ordinamento dei prefissi inverso} a ogni colonna del pannello, detti
+l'\textit{ordinamento dei prefissi inversi} a ogni colonna del pannello, detti
 \textit{insieme dei prefix array} e \textit{insieme dei divergence array}. Per
 ogni colonna, secondo l'ordinamento dettato dalla stessa, i due array presentano
 un comportamento analogo a quanto visto per il suffix array e l'array LCP nella
@@ -213,7 +212,8 @@ teorizzate per la RLBWT.
 % struttura è una \textbf{grammatica context-free}, che
 % genera una e una sola parola, la quale permette sia di effettuare \textit{random
 % access} al testo, non in tempo costante, che di calcolare le \textit{LCE
-% query} in modo efficiente. 
+% query} in modo efficiente.
+
 \subsection*{Contributo}
 L'idea con la quale si è sviluppata questa tesi vede, come punto di partenza,
 alcuni primi risultati teorici, presenti in letteratura, che caratterizzavano
@@ -240,7 +240,8 @@ degli SMEM.
 % stimato non fossero ottimali, non solo per il \textit{divergence array}, ma anche
 % perché non veniva utilizzato alcun approccio tramite \textit{strutture dati
 %   succinte}.
-Infatti, un adattamento dell'algoritmo 5 di Durbin all'uso con una struttura
+Infatti, un adattamento dell'algoritmo per il calcolo degli SMEM proposto da
+Durbin all'uso con una struttura 
 run-length encoded non sembra essere possibile mantenendo lo spazio impiegato
 per memorizzare i dati del divergence array proporzionale al numero di 
 run. Inoltre non sembra possibile trovare una soluzione efficiente per
@@ -250,7 +251,11 @@ Nel lavoro di tesi si è quindi deciso di cambiare approccio al problema,
 ispirandosi ai risultati già ottenuti per la RLBWT. Tale approccio si basa anche
 sull'uso dei bitvector 
 sparsi, una struttura dati succinta che permette di memorizzare e interrogare
-vettori binari efficientemente.
+vettori binari efficientemente. Infatti tali strutture permettono due
+operazioni, dette rank e select, in tempo costante. La prima permette di
+conteggiare il 
+numero di simboli $\sigma=1$ fino ad una certa posizione mentre la seconda di
+ottenere l'indice sul bitvector dell'$i$-esimo simbolo $\sigma=1$.
 Quindi, le strutture necessarie all'indicizzazione delle run e al cosiddetto
 mapping, ovvero il ``seguire'' una riga dalla sua posizione permutata in una
 certa colonna alla posizione permutata in quella successiva nella matrice PBWT,
@@ -260,8 +265,8 @@ Al fine di avvicinarsi alle idee proposte in \textit{MONI} e \textit{PHONI} è
 quindi servito uno studio teorico preliminare per ridefinire: matching
 statistics (e conseguente calcolo degli SMEM), threshold e LCE query. In
 particolare, grazie agli  
-ultimi due concetti, si è potuto non memorizzare il divergence array.
-Parlando di matching statistics, si ha che esse sono definite tramite un array,
+ultimi due concetti, si è potuto evitare di memorizzare il divergence array.
+Le matching statistics sono definite tramite un array,
 lungo quanto il pattern e formato da coppie (riga $row$, lunghezza $len$), che,
 per ogni colonna, tiene traccia del suffisso comune che non sia estendibile a
 sinistra, terminate in quella colonna e lungo $len$, tra la riga $row$ del
@@ -277,7 +282,6 @@ il suo valore del divergence array calcolato sfruttando anche la coda della run
 corrente). L'insieme delle threshold per una certa colonna è stato memorizzato
 come bitvector sparso. Inoltre, si è provveduto a tenere in memoria i
 sample di prefix array a inizio e fine di ogni run.
-
 Grazie all'uso delle threshold si è potuto sviluppare un algoritmo
 efficiente, dal punto di vista della memoria richiesta, per il calcolo delle
 matching statistics in due ``sweep'' sul pattern, calcolandone prima le
@@ -285,9 +289,10 @@ posizioni e poi, tramite random access al pannello, anche le
 lunghezze. Tale soluzione richiedeva in memoria l'intero pannello, per il quale
 si è scelto di usare uno Straight-Line Program (SLP), ovvero una grammatica
 context-free che genera una e una sola parola, molto compatta in memoria, sulla
-quale è possibile effettuare random access (in tempo non costante).
-Ad esempio, un pannello $70,000 \times 46,538$ richiede per essere rappresentato
-in forma non compressa circa 3.3GB di memoria, mentre tramite SLP richiede
+quale è possibile effettuare random access (in tempo $\mathcal{O}(\log s)$ dove
+$s$ è la lunghezza della parola prodotta tramite l'SLP).
+Ad esempio, un pannello $70.000 \times 46.538$ richiede per essere rappresentato
+in forma non compressa circa 3,3GB di memoria, mentre tramite SLP richiede
 solamente in 7MB. Per riferimento, comprimere il pannello con una tecnica
 standard (GZip) richiede 451MB. 
 
@@ -300,30 +305,29 @@ in modo efficiente dall'uso dell'SLP. Calcolando la
 lunghezza di tale suffisso comune, è possibile computare anche le
 lunghezze delle matching statistics contemporaneamente al calcolo delle
 righe. Quindi, si è ottenuto il calcolo completo di tale array in
-un singolo ``sweep'' sul pattern, passando da un tempo proporzionale a
-$2N$ a uno proporzionale a $N$. Si noti che il calcolo degli SMEM viene fatto
+un singolo ``sweep'' sul pattern, dimezzando il numero di passaggi sulla
+struttura dati. Si noti che il calcolo degli SMEM viene fatto
 contemporaneamente al calcolo delle lunghezze delle matching statistics quindi,
 con l'uso delle LCE query, si è ridotto sia lo spazio necessario in memoria per
 la RLPBWT che il tempo di calcolo degli SMEM.
 
 \subsection*{Risultati sperimentali}
 L'obiettivo della fase sperimentale è stato quello di confrontarsi con
-l'algoritmo 5 di Durbin al fine 
+l'algoritmo di Durbin per il calcolo degli SMEM sulla PBWT al fine 
 (1) di verificare se la RLPBWT riducesse la memoria necessaria al calcolo degli
 SMEM e (2) di quantificare l'aumento dei tempi di calcolo.
 Infatti, per quanto riguarda (1), la caratterizzazione asintotica teorica non è
 sufficientemente stringente da garantire una riduzione in pratica, in quanto
 fortemente dipendente dalle caratteristiche dei dati impiegati.
 Per quanto riguarda (2), un aumento dei tempi è atteso in quanto la RLPBWT,
-a differenza dell'algoritmo 5 di Durbin, utilizza strutture dati succinte che
+a differenza dell'algoritmo di Durbin, utilizza strutture dati succinte che
 comportano tempi di calcolo superiori per le operazioni di accesso e/o
 interrogazione. 
-
 I test sono stati effettuati su pannelli simulati realisticamente
 tramite uno dei software più usati in bioinformatica per generare pannelli di
 aplotipi (MaCS).
 Per questa sintesi, si è scelto di riportare alcuni risultati relativi ad un
-pannello $70,000 \times 46,538$, che è stato interrogato con $30,000$ query, al
+pannello $70.000 \times 46.538$, che è stato interrogato con $30.000$ query, al
 fine di ridurre la fluttuazione statistica dei risultati.
 I risultati qui riportati, relativi alla PBWT, sono stati ottenuti usando
 l'implementazione ufficiale della stessa. Per la RLPBWT, invece, si è utilizzata
@@ -333,15 +337,14 @@ In merito al tempo di calcolo si è ottenuto il risultato atteso: con
 la PBWT si ottiene il calcolo degli SMEM in 411s
 mentre con la RLPBWT in 1824s, ovvero poco più del quadruplo del tempo.
 Si è passato, quindi, ad analizzare i risultati in termini di memoria. Secondo
-le stime di Durbin, gli array necessari al funzionamento dell'algoritmo 5
+le stime di Durbin, gli array necessari al funzionamento del suo algoritmo
 richiederebbero $\sim13NM$ bytes, implicando, per il pannello in analisi, circa
 40GB di memoria. 
 Anche sperimentalmente si sono registrati
 picchi di memoria prossimi ai 40GB di memoria, confermando le stime. Invece,
 per la RLPBWT, il picco registrato è stato di appena $\sim$ 3GB,
-cioè si è ottenuta una riduzione del 92.5\% di memoria rispetto alla soluzione
+cioè si è ottenuta una riduzione del 92,5\% di memoria rispetto alla soluzione
 allo stato dell'arte. 
-
 \subsection*{Conclusioni e sviluppi futuri}
 In conclusione, la RLPBWT proposta è stata in grado di ridurre sensibilmente la
 quantità di memoria necessaria per la risoluzione del 
@@ -361,7 +364,7 @@ costruire la PBWT, e sul calcolo dei match interni al pannello stesso. Tale
 implementazione, nel setup di test 
 descritto nella sezione precedente (che si noti comportare il perfetto input per
 tale soluzione), risulta essere molto performante sia in
-termini di tempo ($22$s) che di memoria utilizzata ($10,084$KB) durante
+termini di tempo ($22$s) che di memoria utilizzata ($10.084$KB) durante
 l'esecuzione.  
 
 Inoltre, sono possibili diverse generalizzazioni rispetto alle caratteristiche
@@ -388,13 +391,7 @@ problema del calcolo degli SMEM su pannelli di questo tipo.
 %   approssimati, 
 % su pannelli in cui sono presenti wildcard per rappresentare tali dati,
 % permetterebbe di fare studi più completi su dati reali, migliorandone gli usi,
-% ad esempio, nel campo della medicina personalizzata.\\ 
-
-Si segnala, infine, come la RLPBWT sia potenzialmente in grado di
-risolvere 
-efficientemente anche altri task, come ad esempio la ricerca di k-SMEM,
-ovvero SMEM con un aplotipo esterno che coinvolgano
-esattamente $k$ righe nel pannello.
+% ad esempio, nel campo della medicina personalizzata.\\
 
 Le potenzialità di tale struttura sono quindi molteplici e, grazie al ridotto
 consumo di memoria, si hanno le giuste premesse perché venga utilizzata per
