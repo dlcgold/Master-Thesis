@@ -15,21 +15,22 @@ Si consideri che l'alfabeto è \textit{ordinato}, avendo che $0\prec 1$.\\
 Prima di proseguire con la trattazione è bene fornire la descrizione di alcuni
 formalismi utilizzati:
 \begin{itemize}
-  \item si denota, per una qualsiasi sequenza $s$, con $s[k_1,k_2)$ la
-  \textbf{sottostringa} di $s$ che inizia alla colonna $k_1$ e termina alla colonna
-  $k_2-1$
-  \item date due sequenze $t$ e $s$, si definisce un \textbf{match} tra le due
-  sequenze sse $s[k_1,k_2)=t[k_1,k_2)$, avendo che tale match inizia alla
+  \item si denota, per una qualsiasi riga $x_i$, con $x_i[k_1,k_2)$ la
+  \textbf{sottostringa} di $x_i$ che inizia alla colonna $k_1$ e termina alla
+  colonna $k_2-1$
+  \item date due righe $x_i$ e $x_j$, si definisce un \textbf{match} tra le due
+  righe sse $x_i[k_1,k_2)=x_j[k_1,k_2)$, avendo che tale match inizia alla
   colonna $k_1$ e termina alla colonna $k_2-1$
-  \item un match tra due sequenze $s$ e $t$, come definito al punto precedente,
+  \item un match tra due righe $x_i$ e $x_j$, come definito al punto precedente,
   è definito \textbf{localmente massimale} sse non si ha alcuna estensione a
   destra o sinistra che comporti un ulteriore match, avendo quindi che:
-  \[(k_1=0\lor s[k_1-1]\neq t[k_1-1])\land (k_2=N\lor s[k_2]\neq t[k_2] )\]
-  \item comparando una sequenza $s$ ad un pannello di aplotipi $X$ si definisce
-  che $s$ ha un \textbf{set-maximal exact match (SMEM)} con $x_i$, che inizia alla
-  colonna $k_1$ e termina alla colonna $k_2-1$, sse tale match è
-  \textit{localmente massimale} e non si ha alcun altro match di $s$ con un
-  altro $x_j$ che include ed estende l'intervallo $[k_1,k_2)$. Si ha che $s$
+  \[(k_1=0\lor x_i[k_1-1]\neq x_j[k_1-1])\land (k_2=N\lor x_i[k_2]\neq x_j[k_2]
+    )\] 
+  \item comparando una sequenza $z$ ad un pannello di aplotipi $X$ si definisce
+  che $s$ ha un \textbf{set-maximal exact match (SMEM)} con $x_i$, che inizia
+  alla colonna $k_1$ e termina alla colonna $k_2-1$, sse tale match è
+  \textit{localmente massimale} e non si ha alcun altro match di $z$ con un
+  altro $x_j$ che include ed estende l'intervallo $[k_1,k_2)$. Si ha che $z$
   può avere uno \textit{SMEM} con più di un aplotipo del pannello
 \end{itemize}
 Si noti che il match tra le due sequenze nella \textit{PBWT} è tale sse iniziano

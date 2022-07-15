@@ -86,6 +86,8 @@
 \usetikzlibrary{arrows,shapes,backgrounds,petri} 
 \usetikzlibrary{automata,positioning}
 \usetikzlibrary{matrix}
+\usepackage[textsize=scriptsize, textwidth = 25mm]{todonotes}
+\newcommand{\dc}[1]{\todo[backgroundcolor=yellow]{\textbf{DC} #1}}
 % \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -285,28 +287,28 @@ computazionale e bioinformatico, necessari a
 comprendere questa tesi. Nel capitolo \ref{metchap} verranno discussi i
 contributi di questa tesi, descrivendo le soluzioni algoritmiche e le
 metodologie utilizzate per raggiungere gli obiettivi prefissati. Nel capitolo
-\ref{reschap} si discuteranno i risultati sperimentali ottenuti durante la
+\ref{reschap} si discuteranno i risultati ottenuti durante la
 sperimentazione. Infine, nel capitolo \ref{conchap}, si trarranno le conclusioni
 di questo progetto di tesi discutendone anche i prospetti futuri.
+\dc{L'intera introduzione va estesa}
 \chapter{Preliminari}
 \label{prechap}
-In questo capitolo verranno specificati tutti i concetti fondamentali atti a
-comprendere i metodi usati in questa tesi. Verranno, quindi, introdotti i
-fondamenti teorici presenti allo stato 
-dell'arte che hanno permesso lo sviluppo della tesi.\\
-Si introdurranno i \textit{bitvector} e
-gli \textit{straight-line programs}, fondamentali per la \textit{run-length
-  encoded Burrows-Wheeler Transform}. Anche quest'ultima verrà introdotta, dopo
-la versione classica della trasformata, per la quale saranno necessari i
-concetti di \textit{suffix array} e \textit{longest common prefix array}. Si
-introdurrà infine la \textit{Positional Burrows-Wheeler Transform}.
-\begin{shaded}
-  \noindent
-  Si specifica inoltre che, con la notazione $T[i,j]$ si intende la
-  sottostringa 
-  del testo/sequenza/riga/colonna $T$, iniziante all'indice $i$ e terminante
-  all'indice $j$ incluso.
-\end{shaded}
+In questo capitolo verranno specificati tutti i concetti fondamentali, allo
+stato dell'arte, atti a comprendere i metodi usati in questa tesi.
+Si introdurranno i concetti di:
+\begin{itemize}
+  \item bitvector
+  \item straight-line program e longest common extension query
+  \item suffix array e longest common prefix
+  \item trasformata di Burrows-Wheeler e la sua variante run-length encoded
+  \item trasformata di Burrows-Wheeler posizionale
+\end{itemize}
+L'unione di tutte queste strutture e di queste tecniche ha permesso la creazione
+della \textit{RLPBWT}.
+\noindent
+\textit{A livello di notazione, si specifica inoltre che, con la notazione
+  $T[i,j]$ si intende la sottostringa del testo/sequenza/riga/colonna $T$,
+  iniziante all'indice $i$ e terminante all'indice $j$ incluso.}
 
 % sezione introduzione biologia
 %\input{include/bio}

@@ -48,11 +48,10 @@ A partire dall'\textit{SLP} $\mathcal{A}$ si genera quindi un \textbf{albero
   di derivazione}, che, nel dettaglio, è un \textit{albero radicato e ordinato}
 dove la \textit{radice} è etichettata con $\mathcal{S}$, ogni \textit{nodo
   interno} è etichettato con un simbolo di $\mathcal{V}\cup\Sigma$ e ogni foglia
-è etichettata con un simbolo di $\Sigma$.\\
-Si vede quindi un esempio chiarificatore \cite{slpgagie}.
+è etichettata con un simbolo di $\Sigma$.
 \begin{esempio}
   \label{ese:slpgagie}
-  Si prenda la seguente stringa:
+  Si prenda, ad esempio \cite{slpgagie}, la seguente stringa:
   \[s=\mbox{GATTAGATACAT}\,\$\mbox{GATTACATAGAT}\]
   Si potrebbe produrre il seguente \emph{SLP}:
   \[\mbox{S}\to \mbox{ZWAY}\,\$\mbox{ZYAW}\]
@@ -78,7 +77,8 @@ prestazionali per il \textit{random access} al testo memorizzato sotto forma di
 \textit{SLP}.\\
 Si stima che il tempo necessario al
 \textit{random access} su un testo $T$, tale che $|T|=n$, compresso tramite
-\textit{SLP}, sia $\mathcal{O}\left(\log n\right)$.\\
+\textit{SLP}, sia in tempo:
+\[\mathcal{O}\left(\log (eval(\mathcal{A}))\right)\]
 L'uso di tale variante degli \textit{SLP} è stato cruciale, come si vedrà più
 avanti in questa tesi, per la costruzione della versione run-length encoded sia
 della \textbf{Burrows-Wheeler Transform (\textit{BWT})} che della
@@ -98,5 +98,6 @@ Sfruttando l'\textit{SLP} del testo $T$ è quindi possibile effettuare due
 \textit{random access} al testo compresso, in $i$ e $j$, per poi ``risalire''
 l'albero al fine di computare il prefisso comune tra $T[i,n-1]$ e
 $T[j,n-1]$.\\
-Si stima che il calcolo di una \textit{LCE query} sia effettuabile
-effettuabile in tempo: $\mathcal{O}\left(\log n\right)$.
+Si stima che il calcolo di una \textit{LCE query} sia
+effettuabile in tempo:
+\[\mathcal{O}\left(\log (eval(\mathcal{A}))\right)\]

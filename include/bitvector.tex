@@ -1,44 +1,47 @@
 \section{Bitvector}
 \label{bvsec}
-Nonostante quale primo risultati isolato si identifica, con la tesi di Jacobson
+Nonostante qualche primo risultato isolato, si identifica, con la tesi di
+dottorato di Jacobson 
 del 1988 \cite{succinct}, l'inizio dello studio delle \textbf{strutture dati
   succinte}. Jacobson, con questo termine, denota quelle strutture dati che
 usano, con $N$ numero dei differenti oggetti da memorizzare, $\log N+o(\log N)$
 bit. Ad esempio, assumendo un array di $n$ bit, una struttura dati succinta
-utilizzerebbe $n+o(n)$ bit, avendo infatti $N=2^n$ \cite{navarro}.\\
-Nell'ambito delle \textit{strutture dati succinte}, una delle strutture dati
-principali, ormai sviluppatasi in molteplici varianti, è quella denominata
-\textbf{bitvector}.
+utilizza $n+o(n)$ bit, avendo infatti $N=2^n$ \cite{navarro}.\\
+Un anno dopo, Jacobson \cite{jacobson} notò come una delle \textit{strutture
+  dati succinte} fondamentali allo sviluppo di altre strutture efficienti in
+memoria fossero i cosiddetti \textbf{bitvector}.
 \begin{definizione}
   Si definisce un \textbf{bitvector} $B$ come un array di lunghezza $n$,
   popolato da elementi binari. Formalmente si ha quindi:
-  \[B[i]=\{0,1\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
-  In alternativa si potrebbe avere come formalismo:
-  \[B[i]=\{\bot,\top\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
+  \[B[i]\in\{0,1\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
+  In alternativa si potrebbe avere, come formalismo:
+  \[B[i]\in\{\bot,\top\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
 \end{definizione}
 Nel corso degli ultimi anni si sono sviluppate diverse varianti dei
 \textit{bitvector}, finalizzate ad offrire diversi costi di complessità spaziale
 e 
 diversi tempi computazionali per le principali funzioni offerte.\\
-Il primo vantaggio di questa struttura dati, nelle varianti che si andranno poi
-a nominare, è quella di garantire \textit{random access} in tempo costante, pur
+Il primo vantaggio di questa struttura dati è quella di garantire \textit{random
+  access} in tempo costante, pur 
 sfruttando varie tecniche per la memorizzazione efficiente della stessa in
-memoria. Lo spazio necessario per l'implementazione, presente nella
-\textbf{Succinct Data Structure Library (\textit{SDSL})} \cite{sdsl}, una delle
-  principali librerie (scritta in \Cplusplus 11) per strutture dati succinte,
-  delle principali varianti è visualizzabile in tabella 
+memoria. A tal proposito, lo spazio necessario per l'implementazione, presente
+nella \textbf{Succinct Data Structure Library (\textit{SDSL})} \cite{sdsl} (una
+delle principali librerie, scritta in \Cplusplus 11, per strutture dati
+succinte) delle principali varianti è visualizzabile in tabella 
 \ref{tab:bvspace}. Il secondo vantaggio consiste nel fatto che i
 \textit{bitvector} permettono l'implementazione efficiente di due funzioni: 
 \begin{enumerate}
   \item la \textbf{funzione rank}
   \item la \textbf{funzione select}
 \end{enumerate}
-Tali funzioni, al costo teorico di $o(n)$ bit aggiuntivi, possono
-essere supportate in tempo costante. Questo è però un discorso prettamente
-teorico, infatti si vedrà come, nelle implementazioni in \textit{SDSL}, le
-complessità temporali delle due funzioni possano variare a seconda
-dell'implementazione, sia in termini di bit aggiuntivi che di complessità
-temporale. 
+Un'implementazione naive delle stesse richiederebbe tempo $\mathcal{O}(n)$,
+dovendo scansionare l'intero \textup{bitvector}. In realtà, tali funzioni, al
+costo teorico di $o(n)$ bit aggiuntivi, possono 
+essere supportate in tempo costante. Si noti però che, nelle implementazioni di
+\textit{SDSL}, le complessità temporali delle due funzioni possono variare, sia
+in termini di bit aggiuntivi che di complessità temporale, a seconda della
+tipologia di \textit{bitvector}.
+\dc{Mi è sembrato utile riportare tali tabelle}
 % tabella dello spazio occupato dalle varianti dei bitvector
 \begin{table}[H]
   \small
@@ -46,7 +49,7 @@ temporale.
   \caption{Stime dello spazio occupato per la memorizzazione di alcune varianti
     di \textit{bitvector}. Si 
     assume un bitvector di lunghezza $n$ con un numero di bit posti pari a
-    1 (o $\top$) pari a $m$. $K$ indica un valore costante.} 
+    1 (o $\top$) pari a $m$. $K$ indica un valore costante di interleaved.} 
   \begin{tabular}{c|c}
     \textbf{Variante} & \textbf{Spazio occupato}\\
     \hline\xrowht{15pt}
@@ -60,7 +63,7 @@ temporale.
   \end{tabular}
   \label{tab:bvspace}
 \end{table}
-
+\dc{CHECK su cosa sia $K$}
 
 \subsection{Funzione rank}
 La prima funzione che si approfondisce è la \textbf{funzione rank}. Tale
@@ -82,8 +85,8 @@ visualizzabile in tabella \ref{tab:rank}.
   \small
   \centering
   \caption{Complessità temporali stimate della \textit{funzione rank} per alcune
-    varianti di \textit{bit 
-      vector}, con la quantità di bit aggiuntivi richiesta. Si assume un
+    varianti di \textit{bitvector}, con la quantità di bit aggiuntivi
+    richiesta. Si assume un 
     bitvector di lunghezza $n$, con un numero di bit  
     posti pari a 1 (o $\top$) pari a $m$, e un numero $k$ di simboli $\sigma=1$
     prima della posizione richiesta.} 
