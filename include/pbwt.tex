@@ -3,13 +3,38 @@
 Presentata nel 2014 da Richard Durbin la \textbf{Positional Burrows-Wheeler
   Transform (\textit{PBWT})} \cite{pbwt}, traducibile con \textit{trasformata di
   Burrows-Wheeler posizionale}, è una struttura efficiente per la memorizzazione
-e l'interrogazione di pannelli di aplotipi.\\
+e l'interrogazione di \textbf{pannelli di aplotipi}.\\
+La costruzione di tali pannelli avviene tramite il riconoscimento delle
+variazioni di un singolo nucleotide tra le sequenze genomiche di diversi
+individui, ovvero dei cosiddetti \textbf{Single-Nucleotide Polymorphism
+  (\textit{SNP})}. Ogni 
+variazione identificata per un certo nucleotide in una posizione specifica viene
+detto \textbf{allele}. La combinazione di tutte le \textit{varianti alleliche},
+ereditate, a meno di mutazioni, da ogni genitore, forma l'\textbf{aplotipo} di
+un certo individuo. Come visibile in figura \ref{fig:haplo} \cite{haplo}, la 
+costruzione parte dai
+vari sequenziamenti (nell'immagine relativi a diversi cromosomi ma il
+procedimento è uguale partendo da diversi individui) da cui si identificano le
+varianti alleliche. Da queste ultime si costruiscono gli aplotipi da cui si
+estraggono i cosiddetti \textit{tag SNPs}, ovvero le possibili alternative per
+uan certa variante allelica. Questi ultimi, rappresentati per
+l'uomo da due caratteri vista la sua natura \textit{diploide}, formano,
+potenzialmente, l'alfabeto del pannello. 
+L’informazione combinata di tutti gli aplotipi in un individuo è detta,
+invece, \textbf{genotipo}.
+\begin{figure}
+  \centering
+  \includegraphics[scale = 0.3]{img/haplo.jpg}
+  \caption{Schema di ottenimento del pannello di aplotipi.}
+  \label{fig:haplo}
+\end{figure}
 Formalmente si considera un pannello $X$ di $M$ aplotipi $x_i$, con $i=0,\ldots,
 M-1$, su $N$ siti, indicizzati tramite $k=0,\ldots, N-1$, tale che tutti i siti
 sono considerati biallelici. 
 Da un punto di vista computazionale, quest'ultima
 assunzione comporta che il pannello $X$ è costruito sull'alfabeto $\Sigma
-=\{0,1\}$, avendo quindi:
+=\{0,1\}$, avendo quindi la sostituzione dei \textit{tag SNPs}, per un certo
+sito, con tale alfabeto. Ne segue che:
 \[x_i[k]=\{0,1\}\]
 Si consideri che l'alfabeto è \textit{ordinato}, avendo che $0\prec 1$.\\
 Prima di proseguire con la trattazione è bene fornire la descrizione di alcuni
@@ -557,7 +582,7 @@ A tal fine, nel 2020, Rubinacci et al. proposero \textbf{IMPUTE5}
   imputation} in grado di studiare pannelli di grandi dimensioni.\\
 \textbf{CAPIRE SE DIRE ALTRO}
 %\subsubsection{Recenti sviluppi}
-% LocalWords:  pseudocodice
+% LocalWords:  pseudocodice aplotipi
 \subsection{Una prima proposta run-length encoded}
 \label{subsectravis}
 A fine 2021, Gagie et al. \cite{tricks} inizio a teorizzare una variante

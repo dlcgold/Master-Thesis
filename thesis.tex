@@ -1,5 +1,5 @@
 \documentclass[a4paper,12pt, oneside]{book}
-
+%\documentclass[a4paper,12pt, oneside, draft]{book}
 % \usepackage{fullpage}
 \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
@@ -86,8 +86,14 @@
 \usetikzlibrary{arrows,shapes,backgrounds,petri} 
 \usetikzlibrary{automata,positioning}
 \usetikzlibrary{matrix}
+
 \usepackage[textsize=scriptsize, textwidth = 25mm]{todonotes}
 \newcommand{\dc}[1]{\todo[backgroundcolor=yellow]{\textbf{DC} #1}}
+\newcommand{\gdv}[1]{\todo[backgroundcolor=blue]{\textbf{GDV} #1}}
+\newcommand{\pb}[1]{\todo[backgroundcolor=red]{\textbf{PB} #1}}
+\newcommand{\yp}[1]{\todo[backgroundcolor=green]{\textbf{YP} #1}}
+\newcommand{\rr}[1]{\todo[backgroundcolor=pink]{\textbf{RR} #1}}
+
 % \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -168,7 +174,7 @@
   \vspace{48mm}
 
   \noindent
-  {\large \textbf{Relatore:} \textit{Prof Raffaella Rizzi}} \\
+  {\large \textbf{Relatore:} \textit{Prof. Raffaella Rizzi}} \\
 
   \noindent
   {\large \textbf{Correlatore:} \textit{Dott. Yuri Pirola}}
@@ -202,7 +208,7 @@
 \newtheorem{esercizio}{Esercizio}
 
 \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
-\renewcommand{\bibname}{Bibliografia e sitografia}
+\renewcommand{\bibname}{Riferimenti}
 \renewcommand{\chaptermark}[1]{%
   \markboth{\chaptername
     \ \thechapter.\ #1}{}}
@@ -308,7 +314,8 @@ della \textit{RLPBWT}.
 \noindent
 \textit{A livello di notazione, si specifica inoltre che, con la notazione
   $T[i,j]$ si intende la sottostringa del testo/sequenza/riga/colonna $T$,
-  iniziante all'indice $i$ e terminante all'indice $j$ incluso.}
+  iniziante all'indice $i$ e terminante all'indice $j$ incluso. Qualora si
+  avesse $j>i$ allora si parla di sottostringa nulla $\varepsilon$.}
 
 % sezione introduzione biologia
 %\input{include/bio}
@@ -422,7 +429,7 @@ nei campi dei \textit{genome-wide association studies}, della \textit{medicina
 \addcontentsline{toc}{chapter}{Riferimenti}
 \bibliographystyle{unsrt}
 \bibliography{thesis}
-
+\dc{Sistemare tutte le citazione coi DOI}
 \appendix
 % \chapter{Tabelle}
 % \input{include/tabelle}

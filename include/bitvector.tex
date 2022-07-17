@@ -49,7 +49,8 @@ tipologia di \textit{bitvector}.
   \caption{Stime dello spazio occupato per la memorizzazione di alcune varianti
     di \textit{bitvector}. Si 
     assume un bitvector di lunghezza $n$ con un numero di bit posti pari a
-    1 (o $\top$) pari a $m$. $K$ indica un valore costante di interleaved.} 
+    1 (o $\top$) pari a $m$. $K$ indica la \textit{block size} per
+    l'\textit{interleave}.}  
   \begin{tabular}{c|c}
     \textbf{Variante} & \textbf{Spazio occupato}\\
     \hline\xrowht{15pt}
@@ -63,7 +64,6 @@ tipologia di \textit{bitvector}.
   \end{tabular}
   \label{tab:bvspace}
 \end{table}
-\dc{CHECK su cosa sia $K$}
 
 \subsection{Funzione rank}
 La prima funzione che si approfondisce è la \textbf{funzione rank}. Tale
@@ -88,8 +88,8 @@ visualizzabile in tabella \ref{tab:rank}.
     varianti di \textit{bitvector}, con la quantità di bit aggiuntivi
     richiesta. Si assume un 
     bitvector di lunghezza $n$, con un numero di bit  
-    posti pari a 1 (o $\top$) pari a $m$, e un numero $k$ di simboli $\sigma=1$
-    prima della posizione richiesta.} 
+    posti pari a 1 (o $\top$) pari a $m$, e un numero $k$ di \textit{rank
+      sample}.}  
   \begin{tabular}{c|c|c}
     \textbf{Variante} & \textbf{Bit aggiuntivi} & \textbf{Complessità
                                                   temporale}\\ 
@@ -138,7 +138,6 @@ visualizzabile in tabella \ref{tab:select}.\\
   \end{tabular}
   \label{tab:select}
 \end{table}
-Si può quindi vedere un semplice esempio esplicativo.
 \begin{esempio}
   Ipotizziamo di avere il seguente bitvector $B$, di lunghezza $n=14$:
   \begin{center}
@@ -163,9 +162,9 @@ Si può quindi vedere un semplice esempio esplicativo.
   \[\mathtt{rank}(6)=3\]
   \[\mathtt{select}(5) =9\]
 \end{esempio}
-Da un punto di vista pratico, si vedrà. nel corso di questa tesi, come l'uso di
+Si vedrà, nel corso di questa tesi, come l'uso di
 tali strutture, nel dettaglio l'uso dei \textit{plain bitvector} e dei
-\textit{bitvector sparsi}, sia fondamentale sia nella costruzione delle
-\textit{strutture run-length encoded} che nelle interrogazioni alle stesse.
+\textit{bitvector sparsi}, sia fondamentale per lo studio delle due strutture
+\textit{run-length encoded}.
 
 

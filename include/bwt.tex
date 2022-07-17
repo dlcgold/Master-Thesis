@@ -4,24 +4,26 @@ Introdotta nel 1994 da Burrows e Wheeler con lo scopo di comprimere testi, la
 \textbf{Burrows-Wheeler Transform} \cite{bwt} è divenuta ormai uno standard nel
 campo dell'\textit{algoritmica su stringhe} e della \textit{bioinformatica},
 grazie ai suoi molteplici vantaggi sia dal punto di vista della complessità
-temporale che da quello della complessità spaziale.\\
+temporale che da quello dell'efficienza in memoria.\\
 Nel dettaglio la \textit{BWT} è una \textit{trasformata reversibile} che
 permette una \textit{compressione lossless}, quindi senza perdita
 d'informazione. Tale trasformazione viene costruita a partire dal riordinamento
-dei caratteri del testo in input, fattore che ha 
-portato all'evidenza per cui caratteri uguali tendono ad essere posti
-consecutivamente all'interno della stringa prodotta dalla trasformata.
+dei caratteri del testo in input, riordinando lessicograficamente le cosiddette
+\textbf{rotazioni} del testo. Interessante è la proprietà per cui caratteri
+uguali tendono ad essere posti consecutivamente all'interno della stringa
+prodotta dalla trasformata. Questa proprietà è causata dalle ripetizioni di
+sottostringhe all'interno del testo stesso.
 \begin{definizione}
   Dato un testo $T$ \$-terminato, tale che $|T|=n$, si definisce la
   \textbf{Burrows-Wheeler Transform (\textit{BWT})} di $T$, denotata con
   $BWT_T$, come un array di caratteri lungo $n$ dove l'elemento $i$-esimo è il
   carattere che precede l'$i$-esimo suffisso $T$ nel riordinamento
-  lessicografico. Più formalmente si ha che, con $0\leq i<n$:
+  lessicografico. Più formalmente si ha che:
   \[BWT_T[i]=
     \begin{cases}
       T[SA_T[i]-1]&\mbox{ se } SA_T[i]\neq 1\\
       \$&\mbox{ altrimenti}
-    \end{cases}
+    \end{cases},\,\, \forall i\in\{0,n-1\}
   \]
 \end{definizione}
 In termini più pratici, la \textit{BWT} di un testo è calcolabile riordinando
@@ -31,29 +33,30 @@ lessicograficamente tutte le possibili \textbf{rotazioni} del testo $T$.
   un testo $T$ lungo $n$, denotata con $rot_T(i)$, come la stringa ottenuta
   dalla concatenazione 
   del suffisso $i$-esimo con la restante porzione del testo. Più formalmente si
-  ha che, avendo $0\leq i<n$ e denotando con $X\cdot Y$ la concatenazione tra
+  ha che, denotando con $X\cdot Y$ la concatenazione tra
   la stringa $X$ e la stringa $Y$:
-  \[rot_T(i)=T[i,n-1]\cdot T[0,i-1]\]
+  \[rot_T(i)=T[i,n-1]\cdot T[0,i-1],\,\,\forall i\in\{0,n-1\}\]
 \end{definizione}
 Data questa definizione, quindi, la \textit{BWT} del testo $T$ risulta essere
-l'ultima colonna della matrice che si ottiene riordinando tutte le
+l'ultima colonna della matrice, detta \textbf{Burrows-Wheeler Matrix
+  (\textit{BWM})}, che si ottiene riordinando tutte le 
 \textit{rotazioni} di $T$, che altro non sono che i suffissi già riordinati per
 il calcolo del \textit{SA} a cui viene concatenata la parte restante del
 testo.\\
 Un altro array spesso utilizzato insieme alla \textit{BWT} è il cosiddetto
 \textbf{array $\mathbf{F}$}, lungo $|T|$, che è l'array formato
-dalla prima colonna della matrice delle rotazioni. In pratica l'array $F$ è
-banalmente l'array formato dal riordinamento 
-lessicografico dei caratteri del testo $T$.\\
+dalla prima colonna della \textit{BWM}. In pratica l'array $F$ è.
+banalmente, l'array formato dal riordinamento 
+lessicografico dei caratteri del testo $T$.
 \begin{esempio}
   Si prenda la stringa:
   \[s=\mbox{mississippi\$},\,\,|s|=12\]
-  Si produce la seguente matrice delle rotazioni riordinate:
+  Si produce la $BWM_T$, da cui si estraggono $F_T$ e $BWT_T$:
   \begin{table}[H]
     \centering
     \footnotesize
     \begin{tabular}{c|c|c|c|c} 
-      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & \textbf{Rotazione}
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & $\mathbf{BWM_T}$
       & $\mathbf{BWT_T}$\\ 
       \hline
       0 & 11 & \$ & \$mississippi & i\\
@@ -70,13 +73,11 @@ lessicografico dei caratteri del testo $T$.\\
       11 & 2 & s & ssissippi\$mi & i\\
     \end{tabular}
   \end{table}
-  Avendo quindi:
-  \[F_T=\mbox{\$iiiimppssss}\mbox{ e }BWT_T=\mbox{ipssm\$pissii}\]
 \end{esempio}
 L'importanza di questa trasformata è dovuta soprattutto al fatto che sia
 \textit{reversibile}, implicando quindi che a partire da $BWT_T$ è possibile
 ricostruire $T$. Questo è possibile grazie ad una proprietà intrinseca della
-trasformata che viene riassunta nel cosiddetto \textbf{LF-mapping}.
+trasformata che viene riassunta nel concetto di \textbf{LF-mapping}.
 \begin{definizione}
   Dato un testo $T$, tale che $|T|=n$, data la sua $BWT_T$ e il suo array $F_T$
   si definisce \textbf{LF-mapping} come la proprietà per la quale l'$i$-esima
@@ -88,19 +89,31 @@ Grazie a questa definizione è possibile partire dall'ultimo carattere del testo
 \begin{esempio}
   Si riprende l'esempio precedente, avendo:
   \[BWT_T=\mbox{ipssm\$pissii}\mbox{ e }F_T=\mbox{\$iiiimppssss}\]
-  Si comincia dal simbolo \$ in $BWT_T$, che è l'ultimo carattere di $T$. Si
-  inoltre ha che esso corrisponde al primo, e unico \$ in $F_T$, all'indice
+  E avendo i seguenti caratteri associati dall'\textit{LF-mapping}:
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.33]{img/lf.pdf}
+  \end{figure}
+  Si comincia dal simbolo '\$' in $BWT_T$, che è l'ultimo carattere di $T$. Si
+  ha che esso corrisponde al primo e unico simbolo '\$' in $F_T$, all'indice
   $0$. Tale simbolo, per l'ovvia proprietà delle rotazioni è preceduto dal
-  simbolo $BWT_T[0]=i$ in $T$. Quindi $i$ precederà \$ in $T$. Si sa inoltre che
-  tale $i$ è il primo $i$ in $BWT_T$. Si cerca quindi il primo $i$ in $F_T$,
+  simbolo $BWT_T[0]=\mbox{'i'}$ in $T$. Quindi $\mbox{'i'}$ precederà '\$' in
+  $T$:
+  \[T=\ldots\mbox{i\$}\]
+  Si sa inoltre che
+  tale $\mbox{'i'}$ è il primo $\mbox{'i'}$ in $BWT_T$. Si cerca quindi il primo
+  simbolo $\mbox{'i'}$ anche in $F_T$,
   sapendo che sono lo stesso simbolo nel testo. A questo punto il simbolo allo
-  stesso indice di tale $i$ nella $BWT_T$ sarà il simbolo che precede $i$ nel
-  testo. Proseguendo a ritroso si ricostruisce l'intero testo:
+  stesso indice di tale $\mbox{'i'}$ nella $BWT_T$, ovvero il simbolo
+  $\mbox{'p'}$, sarà il simbolo che precede $\mbox{'i'}$ nel testo:
+  \[T=\ldots\mbox{pi\$}\]
+  Proseguendo a ritroso si ricostruisce l'intero testo:
   \[T=\mbox{mississippi\$}\]
 \end{esempio}
+\dc{Questo esempio serve davvero?}
 \subsubsection{FM-index}
 Tramite l'uso dell'\textit{LF-mapping} è possibile risolvere il problema di
-ricerca di un pattern all'interno del testo, tramite la cosiddetta
+ricerca di un pattern all'interno del testo, tramite l'algoritmo nominato
 \textbf{backward search}. Questa tecnica consiste nell'iterare il pattern da
 destra a sinistra e
 salvare, di volta in volta, un intervallo sul \textit{suffix array}. Nel
@@ -110,7 +123,7 @@ $i$-esimo del pattern. Tale intervallo viene quindi esteso usando il carattere
 $P[i-1]$ selezionando il nuovo intervallo sul \textit{suffix array}. Tale
 aggiornamento è detto \textbf{backward step} e consiste nell'aggiornare
 l'intervallo sul suffix array a quei suffissi del testo che, estesi a sinistra
-col il carattere $(i-1)$-esimo del pattern, presentano un match con $P[i-1,
+col carattere $(i-1)$-esimo del pattern, presentano un match con $P[i-1,
 |P|-1]$.\\  
 Usando la \textit{BWT} è possibile usare due funzioni, dette $C$ e $Occ$, per
 computare la \textit{backward search}.
@@ -125,7 +138,7 @@ computare la \textit{backward search}.
 \begin{definizione}
   Dato un testo \$-terminato $T$, lungo $n$ e costruito su alfabeto $\Sigma$, e
   la sua $BWT_T$, si definisce la funzione $Occ$, tale che:
-  \[Occ:\Sigma\cup \$\times [0,n]\to \mathbb{N}\]
+  \[Occ:\Sigma\cup \$\times \{0,n\}\to \mathbb{N}\]
   avendo che, dato un carattere $\sigma\in\Sigma$ e una posizione $i$ della
   $BWT_T$, $Occ(\sigma,i)$ restituisce il numero di occorrenze del carattere
   $\sigma$ nei primi $i$ elementi di $BWT_T$.
@@ -133,13 +146,13 @@ computare la \textit{backward search}.
 Questa coppia di funzioni prende il nome di \textbf{FM-index} \cite{fm}, il
 quale è definito essere un \textit{self index} in quanto è possibile tenere in
 memoria solo l'indice per ottenere i risultati medesimi della $BWT_T$,
-ricordando anche che da essa si può ottenere il testo $T$.
+ricordando anche che da essa si può ricostruire il testo $T$.
 \begin{esempio}
   Si prenda la stringa:
   \[T=\mbox{mississippi\$},\,\,|s|=12\]
   Che produce:
   \[BWT_T=\mbox{ipssm\$pissii}\]
-  Si ha che:
+  Si ha, per $C(\sigma)$:
   \begin{table}[H]
     \centering
     \begin{tabular}{c|c}
@@ -176,19 +189,20 @@ ricordando anche che da essa si può ottenere il testo $T$.
     \end{tabular}
   \end{table}
 \end{esempio}
-Grazie all'\textit{FM-index} è possibile eseguire il \textbf{backward step},
-dato un simbolo $\sigma$ del pattern e il precedente intervallo $[f,g)$ su
-$SA_T$, aggiornando $f$ e $g$, inizializzate rispettivamente a 0 e $n$, nel 
-seguente modo: 
+Dato un simbolo $\sigma$ del pattern e il precedente intervallo $[f,g)$ su
+$SA_T$, eseguire il \textbf{backward step}, tramite l'\textit{FM-index},
+aggiornando $f$ e $g$ nel seguente modo: 
 \[f'=C(\sigma)+Occ(\sigma, f),\quad g'=C(\sigma)+Occ(\sigma, g)\]
-Ritornando il nuovo intervallo $[f', g')$ sse $f'< g'$.\\
+Ritornando il nuovo intervallo $[f, g)\gets [f', g')$ sse $f'< g'$.
+Si segnala che tali variabili sono inizializzate con $f=0$ e $g=n$.\\
 Tale calcolo altro non è che l'\textit{LF-mapping}. Infatti, partendo da un
 intervallo su $SA_T$ (che è anche un intervallo su $BWT_T$), si identifica quali
 suffissi sono preceduti dal simbolo del pattern voluto. Tale simbolo, se il
 pattern ha un'occorrenza fino al carattere in analisi, sarà presente in
 sottointervallo di $[f,g)$ sulla $BWT_T$. Una volta identificati tali caratteri
-su $BWT_T$ si usano $C(\sigma)$ e $Occ(\sigma, i)$, per mappare tali caratteri
-su $F_T$, identificando il nuovo intervallo $[f,g)$.
+su $BWT_T$ si usano $C(\sigma)$ e $Occ(\sigma, i)$, per trovare tali caratteri
+su $F_T$, calcolando il nuovo intervallo $[f,g)$.
+\dc{capire se dire meglio}
 \begin{esempio}
   Si assuma il pattern $P=\mbox{iss}$ da voler ricercare nel testo
   $T=\mbox{mississippi\$}$. 
@@ -212,7 +226,29 @@ su $F_T$, identificando il nuovo intervallo $[f,g)$.
     \centering
     \scriptsize
     \begin{tabular}{c|c|c|c|c} 
-      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & \textbf{Rotazione}
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & $\mathbf{BWM_T}$
+      & $\mathbf{BWT_T}$\\ 
+      \hline
+      {\color{nordred}{0}} & 11 & \$ & {\color{nordred}{\$}}mississippi & i\\
+      {\color{nordred}{1}} & 10 & i & {\color{nordred}{i}}\$mississipp & p\\
+      {\color{nordred}{2}} & 7 & i & {\color{nordred}{i}}ppi\$mississ
+      & {\color{nordgreen}{s}}\\
+      {\color{nordred}{3}} & 4 & i & {\color{nordred}{i}}ssippi\$miss
+      & {\color{nordgreen}{s}}\\
+      {\color{nordred}{4}} & 1 & i & {\color{nordred}{i}}ssissippi\$m & m\\
+      {\color{nordred}{5}} & 0 & m & {\color{nordred}{m}}ississippi\$ & \$\\
+      {\color{nordred}{6}} & 9 & p & {\color{nordred}{p}}i\$mississip & p\\
+      {\color{nordred}{7}} & 8 & p & {\color{nordred}{p}}pi\$mississi & i\\
+      {\color{nordred}{8}} & 6 & s & {\color{nordred}{s}}ippi\$missis
+      & {\color{nordgreen}{s}}\\
+      {\color{nordred}{9}} & 3 & s & {\color{nordred}{s}}issippi\$mis
+      & {\color{nordgreen}{s}}\\
+      {\color{nordred}{10}} & 5 & s & {\color{nordred}{s}}sippi\$missi & i\\
+      {\color{nordred}{11}} & 2 & s & {\color{nordred}{s}}sissippi\$mi & i\\
+    \end{tabular}
+    $\implies$
+    \begin{tabular}{c|c|c|c|c} 
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & $\mathbf{BWM_T}$
       & $\mathbf{BWT_T}$\\ 
       \hline
       0 & 11 & \$ & \$mississippi & i\\
@@ -223,14 +259,20 @@ su $F_T$, identificando il nuovo intervallo $[f,g)$.
       5 & 0 & m & mississippi\$ & \$\\
       6 & 9 & p & pi\$mississip & p\\
       7 & 8 & p & ppi\$mississi & i\\
-      {\color{nordred}{8}} & 6 & s & {\color{nordred}{s}}ippi\$missis & s\\
-      {\color{nordred}{9}} & 3 & s & {\color{nordred}{s}}issippi\$mis & s\\
+      {\color{nordred}{8}} & 6 & s & {\color{nordred}{s}}ippi\$missis
+      & {\color{nordgreen}{s}}\\
+      {\color{nordred}{9}} & 3 & s & {\color{nordred}{s}}issippi\$mis
+      & {\color{nordgreen}{s}}\\
       {\color{nordred}{10}} & 5 & s & {\color{nordred}{s}}sippi\$missi & i\\
       {\color{nordred}{11}} & 2 & s & {\color{nordred}{s}}sissippi\$mi & i\\
     \end{tabular}
-    \quad
+  \end{table}
+  \[\Downarrow\]
+  \begin{table}[H]
+    \centering
+    \scriptsize
     \begin{tabular}{c|c|c|c|c} 
-      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & \textbf{Rotazione}
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & $\mathbf{BWM_T}$
       & $\mathbf{BWT_T}$\\ 
       \hline
       0 & 11 & \$ & \$mississippi & i\\
@@ -243,24 +285,23 @@ su $F_T$, identificando il nuovo intervallo $[f,g)$.
       7 & 8 & p & ppi\$mississi & i\\
       8 & 6 & s & sippi\$missis & s\\
       9 & 3 & s & sissippi\$mis & s\\
-      {\color{nordred}{10}} & 5 & s & {\color{nordred}{ss}}ippi\$missi & i\\
-      {\color{nordred}{11}} & 2 & s & {\color{nordred}{ss}}issippi\$mi & i\\
+      {\color{nordred}{10}} & 5 & s & {\color{nordred}{ss}}ippi\$missi
+      & {\color{nordgreen}{i}}\\
+      {\color{nordred}{11}} & 2 & s & {\color{nordred}{ss}}issippi\$mi
+      & {\color{nordgreen}{i}}\\
     \end{tabular}
-  \end{table}
-  \begin{table}[H]
-    \centering
-    \footnotesize
+    $\implies$
     \begin{tabular}{c|c|c|c|c} 
-      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & \textbf{Rotazione}
+      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & $\mathbf{BWM_T}$
       & $\mathbf{BWT_T}$\\ 
       \hline
       0 & 11 & \$ & \$mississippi & i\\
       1 & 10 & i & i\$mississipp & p\\
       2 & 7 & i & ippi\$mississ & s\\
-      {\color{nordred}{3}} & {\color{nordgreen}{4}} & i
-                           & {\color{nordred}{iss}}ippi\$miss & s\\
-      {\color{nordred}{4}} & {\color{nordgreen}{1}} & i
-                           & {\color{nordred}{iss}}issippi\$m & m\\
+      {\color{nordred}{3}} & {\color{nordgreen}{\underline{4}}} & i
+                                        & {\color{nordred}{iss}}ippi\$miss & s\\
+      {\color{nordred}{4}} & {\color{nordgreen}{\underline{1}}} & i
+                                        & {\color{nordred}{iss}}issippi\$m & m\\
       5 & 0 & m & mississippi\$ & \$\\
       6 & 9 & p & pi\$mississip & p\\
       7 & 8 & p & ppi\$mississi & i\\
@@ -285,7 +326,7 @@ uguali, mediante coppie:
   Vediamo un breve esempio.\\
   Si ipotizzi di avere la seguente stringa:
   \[s=\mbox{aaaacctgggggg}\]
-  Una sua memorizzazione run-length sarebbe:
+  Una sua memorizzazione run-length sarebbe del tipo:
   \[\{(a,4),(c,2),(t,1),(g,6)\}\]
 \end{esempio}
 \subsection{RLBWT r-index}
@@ -475,7 +516,8 @@ l'uso delle \textbf{LCE query}, riducendo l'algoritmo ad un solo \textit{sweep}
 sull'array $MS$ (permettendo un uso ``online'' dell'algoritmo), ma si
 esplicitò anche l'uso delle \textit{funzioni} $\mathbf{\varphi}$ e
 $\mathbf{\varphi^{-1}}$ e dell'$PLCP_T$ per il riconoscimento di tutte le
-occorrenze di ogni \textit{MEM} tra un pattern e un testo.\\
+occorrenze di ogni \textit{MEM} tra un pattern e un testo, nel modo 
+riportato all'algoritmo \ref{algo:expand} \cite{phoni}.\\
 A tal fine si sfrutta infatti il seguente teorema \cite{gagie2020}.
 \begin{teorema}
   Dato un testo $T$, tale che $|t|=n$, si può memorizzare $T$ in
@@ -494,3 +536,30 @@ hanno a
 disposizione i valori $MS[i].len$.\\ 
 Per ulteriori approfondimenti si rimanda al paper di \textit{PHONI}
 \cite{phoni}.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{all\_occ}{$MS$, $i$, $j$, $P$, $T$}
+    \If{$MS[i].len<j-i+1$}
+    \State \textbf{return}
+    \EndIf
+    \State $p\gets MS[i].pos$
+    \State $occ\gets [\,\,]$
+    \State $push(occ, p)$
+    \While {$PLCP[p]\geq j-i+1$}
+    \State $p\gets \varphi(p)$
+    \State $push(occ, p)$
+    \EndWhile
+    \State $p\gets \varphi^{-1}(MS[i].pos)$
+    \While {$p\neq null\land PLCP[p]\geq j-i+1$}
+    \State $push(occ, p)$
+    \State $p\gets \varphi^{-1}(p)$
+    \EndWhile
+    \State \textbf{return} $occ$
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per il calcolo della lista di tutte le occorrenze di una
+  sottostringa del pattern, $P[i,j]$, in un testo $T$, a partire dall'array
+  delle matching statistics $MS$.}
+  \label{algo:expand}
+\end{algorithm}
