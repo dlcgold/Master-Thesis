@@ -501,6 +501,37 @@ per ideare \textbf{MONI:\textit{ A Pangenomics Index for Finding MEMs}}
   del pattern. Contemporaneamente a tale calcolo, l'algoritmo annota gli
   eventuali \textit{MEM}
 \end{itemize}
+Nel dettaglio, per computare i valori $MS[i].pos$, si procede scorrendo il
+pattern $P$, lungo $m$, da destra a sinistra. Brevemente i passi dell'algoritmo
+sono i seguenti: 
+\begin{enumerate}
+  \item si inizia cercando l'ultima occorrenza, di indice $q$, di $P[i]$,
+  $i=m-1$, in $BWT_T$, ``virtualmente'' essendo essa in memorizzata in modo
+  compatto tramite compressione \textit{run-length}
+  \item si procede tramite \textit{LF-mapping} a partire da $q$, arrivando in
+  una nuova posizione $q$
+  \item si memorizza $MS[i].pos = SA_T[q]$
+  \item a questo punto si hanno due alternative:
+  \begin{itemize}
+    \item se $BWT_T[q]=P[i-1]$ si procede con il mapping come in 2)
+    \item se $BWT_T[q]\neq P[i-1]$ si deve selezionare un nuovo $q$ tale per cui
+    $BWT_T[q]=P[i-1]$. Questo può essere o l'indice della coda della run
+    precedente di simboli $P[i-1]$ o la testa della run successiva di simboli
+    $P[i-1]$. Qualora non si debba scegliere, ovvero la run attuale non è
+    preceduta/succeduta da una run di simboli $P[i-1]$, si sceglie,
+    rispettivamente, la testa della run successiva o la coda della run
+    precedente di simboli $P[i-1]$. Altrimenti si usa la threshold relativa la
+    carattere $P[i-1]$, la cui posizione viene denotata $t$. Qualora si ha che
+    $q<t$ si procede scegliendo la coda della run precedente mentre, avendo
+    $q\geq t$, si seleziona la testa della run successiva. La scelta basata
+    sulla posizione della threshold è dettata dal fatto che, in tal modo, si
+    seleziona, di volta in volta, il suffisso più lungo che presenta un match
+    con il suffisso, esteso a sinistra con $P[i-1]$, del pattern. Una volta
+    scelto il nuovo $q$ si procede con il mapping come in 2)
+    \dc{ridire meglio e dimostrare}
+  \end{itemize}
+  \item si itera fino ad esaurimento del pattern
+\end{enumerate}
 Questa pubblicazione è stata uno dei punti di partenza per
 riadattare quanto studiato sulla \textit{RLBWT} classica al fine di ottenere
 risultati analoghi per la \textit{RLPBWT}.\\
@@ -530,13 +561,36 @@ Si è quindi potuto migliorare e semplificare l'\textbf{algoritmo di Bannai}
 usato in \textit{MONI}. Infatti, sfruttando le
 \textit{LCE query}, avendo il testo $T$ in memoria sotto forma di \textit{SLP},
 è possibile computare contemporaneamente sia i vari
-$MS[i].pos$ che i vari $MS[i].len$. Inoltre, come nel caso dell'\textit{algoritmo
+$MS[i].pos$ che i vari $MS[i].len$. Infatti, a differenza di quanto visto in
+\textit{MONI}, qualora si debba effettuare la scelta la si fa in base al
+risultato delle \textit{LCE query}, che comporta anche il calcolo di
+$MS[i].len$. Sfruttando, infatti, $MS[i+1].len$ e la lunghezza del risultati
+dell'\textit{LCE query} è possibile tenere conto di eventuali overlap tra i
+match e computare correttamente $MS[i].len$. Alternativamente, qualora si possa
+proseguire avendo un match tra  
+$BWT_T[q]$ e $P[i-1]$, il calcolo $MS[i].len$ avviene a partire da
+$MS[i+1].len$, incrementandolo di uno avendo aggiunto un carattere a sinistra.
+Inoltre, come nel caso dell'\textit{algoritmo
   di Bannai}, si ha anche il computo dei \textit{MEM} nel momento in cui si
 hanno a 
-disposizione i valori $MS[i].len$.\\ 
-Per ulteriori approfondimenti si rimanda al paper di \textit{PHONI}
+disposizione i valori $MS[i].len$.
+Il riconoscimento della run a cui appartiene un certo indice e degli indici
+delle teste delle run avviene tramite l'uso di \textit{bitvector}. Infatti,
+$\forall \sigma \in \Sigma$, con $\Sigma$ alfabeto in uso, si ha un
+\textit{bitvector} $B_{\sigma}$, lungo $n$ (ovvero quanto il testo), tale che:
+\[B_{\sigma}[i]=
+  \begin{cases}
+    1&\mbox{se } BWT_T[i]=\sigma\\
+    0&\mbox{altrimenti}
+  \end{cases}
+ \]
+L'algoritmo \ref{algo:phonims} \cite{phoni}
+riporta il calcolo completo dell'array $MS$ presente in \textit{PHONI}, la cui
+complessità temporale è stimata in:
+\[\mathcal{O}(m\log\log n)\]
+\dc{Spiegare molto meglio e verificare tempo}
+Per ulteriori approfondimenti si rimanda al paper di riferimento
 \cite{phoni}.
-
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{all\_occ}{$MS$, $i$, $j$, $P$, $T$}
@@ -563,3 +617,44 @@ Per ulteriori approfondimenti si rimanda al paper di \textit{PHONI}
   delle matching statistics $MS$.}
   \label{algo:expand}
 \end{algorithm}
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{Compute\_MS}{$P$, $T$, $SA_T$, $BWT_T$}
+    \State $MS\gets [(pos:\,\,0,len:\,\,0)\ldots (0,0)]$
+     \Comment $|P|=m$, $|T|=n$, $|MS|=m$
+    \State $q\gets select_{P[m-1]}(1)$
+    \State $MS[m-1]\gets (SA_T[q]-1,1)$, $q\gets LF(q)$
+    \For {$i=m-2$ \textbf{to} $0$}
+    \If{$BWT_T[q]=P[i]$}
+    \State $MS[i]\gets (MS[i+1].pos-1,MS[i+1].len+1)$, $q\gets LF(q)$
+    \Else
+    \State $c\gets rank_{P[i]}(q)$
+    \State $q'\gets select_{P[i]}(c)$, $q''\gets select_{P[i]}(c+1)$
+    \State $l'\gets \min\left(MS[i+1].len, \left|LCE(SA_T[q'],
+    MS[i+1].pos)\right|\right)$
+    \State $l''\gets \min\left(MS[i+1].len, \left|LCE(SA_T[q''],
+    MS[i+1].pos)\right|\right)$ 
+    \EndIf
+    \If {$l''\geq l'$}
+    \State $MS[i]\gets (SA_T[q']-1,l'+1)$, $q\gets LF(q')$
+    \Else
+    \State $MS[i]\gets (SA_T[q'']-1,l''+1)$, $q\gets LF(q'')$
+    \EndIf
+    \EndFor
+    \State \textbf{return} $MS$
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per il calcolo dell'array $MS$ in \textit{PHONI}. Per
+  semplicità si ignorano i casi in cui $q$, $q'$ e $q''$ non sono definiti. Si
+  assume inoltre che $P[m-1]$ occorre in $T$. Con $LF(\cdot)$ si intende il
+  calcolo dell'\textit{LF-mapping}}
+  \label{algo:phonims}
+\end{algorithm}
+\begin{esempio}
+  Si ripropone il solito esempio, con:
+  \[T=\mbox{mississippi\$ e }P=\mbox{iss}\]
+  Studiando il calcolo dell'array delle \textit{matching statistics} sia con
+  \textit{MONI} che con \textit{PHONI}.
+  \dc{TERMINARE}
+\end{esempio}
