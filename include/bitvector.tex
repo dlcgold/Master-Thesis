@@ -13,9 +13,15 @@ memoria fossero i cosiddetti \textbf{bitvector}.
 \begin{definizione}
   Si definisce un \textbf{bitvector} $B$ come un array di lunghezza $n$,
   popolato da elementi binari. Formalmente si ha quindi:
-  \[B[i]\in\{0,1\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
+  \begin{equation}
+    \label{eq:bvdef1}
+    B[i]\in\{0,1\},\,\,\forall i \mbox{ t.c. } 0\leq i < n
+  \end{equation}
   In alternativa si potrebbe avere, come formalismo:
-  \[B[i]\in\{\bot,\top\},\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
+  \begin{equation}
+    \label{eq:bvdef2}
+    B[i]\in\{\bot,\top\},\,\,\forall i \mbox{ t.c. } 0\leq i < n
+  \end{equation}
 \end{definizione}
 Nel corso degli ultimi anni si sono sviluppate diverse varianti dei
 \textit{bitvector}, finalizzate ad offrire diversi costi di complessità spaziale
@@ -66,12 +72,18 @@ tipologia di \textit{bitvector}.
 \end{table}
 
 \subsection{Funzione rank}
-La prima funzione che si approfondisce è la \textbf{funzione rank}. Tale
-funzione permette di calcolare il \textit{rango} di un dato elemento del
-bitvector $B$, lungo $n$. In altri termini, data una certa posizione $i$ del
-\textit{bitvector}, la funzione restituisce il numero di 1 presenti fino a
-quella data posizione, esclusa. Più formalmente si ha:
-\[rank_B(i)=\sum_{k=0}^{k<i}B[k],\,\,\forall i \mbox{ t.c. } 0\leq i < n\]
+La prima funzione che si approfondisce è la \textbf{funzione rank}.
+Tale funzione permette di calcolare il \textit{rango} di un dato elemento del
+bitvector.
+\begin{definizione}
+  Dato un bitvector $B$, lungo $n$, e data una certa posizione $i$ del
+  \textit{bitvector}, la \textbf{funzione rank} restituisce il numero di 1
+  presenti fino a quella data posizione, esclusa. Più formalmente si ha che:
+  \begin{equation}
+    \label{eq:rankbv}
+    rank_B(i)=\sum_{k=0}^{k<i}B[k],\,\,\forall i \mbox{ t.c. } 0\leq i < n
+\end{equation}
+\end{definizione}
 Come detto, da un punto di vista teorico, al costo di $o(n)$ bit
 aggiuntivi in memoria tale funzione sarebbe supportata in tempo
 $\mathcal{O}(1)$. La complessità temporale varia però a seconda
@@ -106,12 +118,20 @@ visualizzabile in tabella \ref{tab:rank}.
   \label{tab:rank}
 \end{table}
 \subsection{Funzione select}
-La seconda funzione fondamentale è la \textbf{funzione select}. Tale funzione
-permette, dato un valore intero $i$, di calcolare l'indice dell'$i$-esimo valore
-pari a 1 nel \textit{bitvector} $B$, lungo $n$. Più formalmente si ha
-che:
-\[select_B(i)=\min\{j < n\,|\,\,rank_B(j+1)=1\},\,\,\forall i \mbox{ t.c. }
-  0<i\leq rank_B(n)\]
+La seconda funzione fondamentale è la \textbf{funzione select}, la quale
+permettere di ottenere l'indice di un simbolo $\sigma=1$ nel bitvector.
+\begin{definizione}
+  Dato un bitvector $B$, lungo $n$, e dato un valore intero $i$, la
+  \textbf{funzione select} calcola l'indice dell'$i$-esimo valore
+  pari a 1 nel \textit{bitvector} $B$, lungo $n$. Più formalmente si ha, quindi,
+  che:
+  \begin{equation}
+    \label{eq:selectbv}
+    select_B(i)=\min\{j < n\,|\,\,rank_B(j+1)=1\},\,\,\forall i \mbox{ t.c. }
+    0<i\leq rank_B(n)
+  \end{equation}
+\end{definizione}
+
 Anche in questo caso vale lo stesso discorso fatto per la \textit{funzione rank}
 in merito alla complessità temporale e ai bit aggiuntivi. La tabella con le
 complessità temporali stimate della \textit{funzione select}, 

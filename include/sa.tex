@@ -10,14 +10,17 @@ memoria che di complessità temporale. Tale struttura venne denotata
   si definisce \textbf{suffix 
     array} di $T$, denotato con $SA_T$, un di interi array lungo $n$, tale che
   $SA_T[i]=j$ sse il suffisso di ordine $j$, ovvero $T[j,n-1]$, è
-  l'$i$-esimo suffisso nell’ordinamento lessicografico dei suffissi di $T$. \\
+  l'$i$-esimo suffisso nell’ordinamento lessicografico dei suffissi di $T$. Ne
+  segue che, presi $i,i'\in \mathbb{N}$
+  tali che $0\leq i < i' < n$ allora vale che, indicando con $\prec$
+  l'ordinamento lessicografico:
+  \begin{equation}
+    \label{eq:saord}
+    T[SA_T[i],n-1] \prec T[SA_T[i'],n-1]
+  \end{equation}
   Il \textbf{suffix array} è quindi una permutazione dei numeri interi in
   $\{0,n-1\}$. 
 \end{definizione}
-Grazie a questa definizione, si può quindi dire che, presi $i,i'\in \mathbb{N}$
-tali che $0\leq i < i' < n$ allora vale che, indicando con $\prec$
-l'ordinamento lessicografico:
-\[T[SA_T[i],n-1] \prec T[SA_T[i'],n-1]\]
 \begin{esempio}
   Si prenda la stringa:
   \[s=\mbox{mississippi\$},\,\,|s|=12\]
@@ -74,12 +77,14 @@ dati, detta \textbf{Longest Common Prefix}.
   da $SA_T$. Più formalmente
   $LCP_T$ è un array tale che, avendo $0\leq i\leq n$ e indicando con $lcp(x,y)$
   il più lungo prefisso comune tra le stringhe $x$ e $y$:
-  \[LCP_T[i]=
+  \begin{equation}
+    \label{eq:lcpdef}
+    LCP_T[i]=
     \begin{cases}
       -1&\mbox{ se } i=0 \lor i=n\\
       \left|lcp(T[SA_T[i-1], n],T[SA_T [i], n])\right|&\mbox{ altrimenti}
     \end{cases}
-  \]
+  \end{equation}
 \end{definizione}
 \begin{esempio}
   Riprendendo l'esempio precedente si avrebbe quindi:
@@ -110,9 +115,15 @@ tramite \textit{SA} e \textit{LCP}, in quanto non centrali per il resto della
 trattazione, risulta comunque interessante riportare le complessità
 temporali. Si ha quindi che, per l'algoritmo di query su \textit{SA} senza l'uso
 dell'\textit{LCP}, si ha, per un testo lungo $n$ e un pattern lungo $m$:
-\[\mathcal{O}(m\log n)\]
+\begin{equation}
+  \label{eq:satime}
+  \mathcal{O}(m\log n)
+\end{equation}
 Con l'uso dell'\textit{LCP} questo si riduce a:
-\[\mathcal{O}(m+\log n)\]
+\begin{equation}
+  \label{eq:salcptime}
+  \mathcal{O}(m+\log n)
+\end{equation}
 Per ulteriori approfondimenti in merito agli algoritmi di pattern matching
 basati su \textit{suffix array} e ai relativi \textit{acceleratori}, si rimanda
 al testo di Gusfield \cite{gusfield1997}.
@@ -125,7 +136,10 @@ trovi tale suffisso nel \textit{suffix array}.
 \begin{definizione}
   Dato il \textbf{suffix array} $SA_T$, costruito su un testo $T$ di lunghezza
   $n$, si definisce l'\textbf{inverse suffix array}, denotato con $ISA_T$, come:
-  \[ISA_T[i]=j\iff SA_T[j]=i,\,\,\forall i\in\{0,n-1\}\]
+  \begin{equation}
+    \label{eq:isadef}
+    ISA_T[i]=j\iff SA_T[j]=i,\,\,\forall i\in\{0,n-1\}
+  \end{equation}
 \end{definizione}
 
 \begin{esempio}
@@ -166,31 +180,23 @@ permettendo di ottenere gli stessi risultati di quest'ultimo. Un'altro vantaggio
   Si definisce il \textbf{permuted longest-common-prefix array}, denotato con
   $PLCP_T$, costruito a partire da un testo $T$ di lunghezza $n$, come un
   array tale per cui \cite{phoni}:
-  \[PLCP_T[p]=
+  \begin{equation}
+    \label{eq:plcpdef1}
+    PLCP_T[p]=
     \begin{cases}
       -1&\mbox{se }ISA_T[p]=0\\
       LCP_T[ISA_T[p]]&\mbox{altrimenti}
     \end{cases},\,\,\forall p\in\{0,n-1\}
-  \]
+  \end{equation}
   Quindi, i valori sono in ordine di posizione, ovvero l'ordine originale dato
   dagli indici dei suffissi, e non
   lessicografico. In altri termini, si ha una permutazione dei valori di $LCP_T$
   tale per cui \cite{plcp}:
-  \[PLCP_T[SA_T[p]] = LCP_T[p],\,\,\,\forall p\in\{1,n-1\}\]
+  \begin{equation}
+    \label{eq:plcpdef2}
+    PLCP_T[SA_T[p]] = LCP_T[p],\,\,\,\forall p\in\{1,n-1\}
+  \end{equation}
 \end{definizione}
-Ciò che permette una rappresentazione compatta del \textit{PLCP} è descritto nel
-seguente lemma \cite{plcp3}.
-\begin{lemma}
-  Dato un testo $T$, tale che $|T|=n$, si ha che:
-  \[PCLP_T[i]\geq PLCP_T[i-1]-1,\,\,\forall i\in\{1,n-1\}\]
-\end{lemma}
-Grazie a tale lemma si può memorizzare l'\textit{PLCP sparso}. Dato un intero
-$q$, per il quale calcolo (basato sul lemma precedente) si rimanda al paper di
-Kasai \cite{plcp3}, si ha che 
-tale variante sparsa, lunga $\left\lfloor\frac{n}{q}\right\rfloor$, memorizza
-ogni $q$-esimo valore del \textit{PLCP}, avendo che, denotando la variante
-sparsa $PLCP_q$:
-\[PLCP_q[i]=PLCP_T[iq]\]
 \begin{esempio}
   Riprendendo l'esempio precedente si avrebbe quindi:
   \begin{table}[H]
@@ -216,6 +222,28 @@ sparsa $PLCP_q$:
     \end{tabular}
   \end{table}
 \end{esempio}
+Ciò che permette una rappresentazione compatta del \textit{PLCP} è descritto nel
+seguente lemma \cite{plcp3}.
+\begin{lemma}
+  Dato un testo $T$, tale che $|T|=n$, si ha che:
+  \begin{equation}
+    \label{eq:plcpdef3}
+    PCLP_T[i]\geq PLCP_T[i-1]-1,\,\,\forall i\in\{1,n-1\}
+  \end{equation}
+\end{lemma}
+Grazie a tale lemma si può memorizzare l'\textit{PLCP sparso}.
+\begin{definizione}
+  Dato un intero
+  $q$, per il quale calcolo (basato sul lemma precedente) si rimanda al paper di
+  Kasai \cite{plcp3}, si definisce \textbf{array PCLP sparso}, lungo
+  $\left\lfloor\frac{n}{q}\right\rfloor$ e denotato $PLCP_q$, l'array che
+  memorizza ogni $q$-esimo valore del \textit{PLCP}, avendo che:
+  \begin{equation}
+    \label{eq:plcpdef4}
+    PLCP_q[i]=PLCP_T[iq]
+  \end{equation}
+\end{definizione}
+\dc{Capire se serve variante sparsa e se serve esempio}
 \subsection{Funzioni phi e phi invertito}
 L'ultimo concetto che si introduce sono le \textbf{funzioni}
 $\boldsymbol\varphi$ e $\mathbf{\boldsymbol\varphi^{-1}}$, usate per poter
@@ -229,18 +257,22 @@ di un \textbf{match massimale esatto (\textit{MEM})} in $T$ \cite{phoni}.
   Dato un testo $T$ di lunghezza $n$ si definiscono le funzioni, che di fatto
   sono permutazioni dei valori di $SA_T$, $\boldsymbol\varphi$ e
   $\mathbf{\boldsymbol\varphi^{-1}}$ come \cite{phoni}: 
-  \[\varphi(p)=
+  \begin{equation}
+    \label{eq:phidef1}
+    \varphi(p)=
     \begin{cases}
       null&\mbox{se } ISA_T[p]=0\\
       SA_T[ISA_T[p]-1]&\mbox{altrimenti}
     \end{cases},\,\,\forall p\in\{0,n-1\}
-  \]
-   \[\varphi(p)^{-1}=
+  \end{equation}
+  \begin{equation}
+    \label{eq:phiinvdef1}
+    \varphi(p)^{-1}=
     \begin{cases}
       null&\mbox{se } ISA_T[p]=n-1\\
       SA_T[ISA_T[p]+1]&\mbox{altrimenti}
     \end{cases},\,\,\forall p\in\{0,n-1\}
-  \]
+  \end{equation}
   Si noti che si ha il valore $null$ quando, rispettivamente, si studia il
   primo e l'ultimo valore del \textit{suffix array} in quanto non hanno, sempre
   rispettivamente, l'antecedente e il successore.   Infatti, semplicemente, tali
@@ -248,8 +280,14 @@ di un \textbf{match massimale esatto (\textit{MEM})} in $T$ \cite{phoni}.
   esistenti, di $SA_T$ adiacenti ad un valore del suffix array dato.\\
   Analogamente, sempre coi medesimi vincoli, possono essere definite come
   \cite{plcp}: 
-  \[\varphi[SA[p]]=SA[p-1]\]
-  \[\varphi^{-1}[SA[p]]=SA[p+1]\]
+  \begin{equation}
+    \label{eq:phidef2}
+    \varphi[SA[p]]=SA[p-1]
+  \end{equation}
+  \begin{equation}
+    \label{eq:phiinvdef2}
+    \varphi^{-1}[SA[p]]=SA[p+1]
+  \end{equation}
 
 \end{definizione}
 \begin{esempio}

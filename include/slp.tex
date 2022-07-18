@@ -20,15 +20,21 @@ genera una e una sola parola \cite{slpsurvey}, parlando, quindi, di
   a_n\}$, l'insieme dei simboli della stringa $s$.\\
   Si definisce \textbf{SLP}, costruito sull'alfabeto $\Sigma$, una grammatica
   context-free $\mathcal{A}$ tale che: 
-  \[\mathcal{A}=\left(\mathcal{V}, \Sigma, \mathcal{S}, \mathcal{P}\right)\]
+  \begin{equation}
+    \label{eq:slpdef}
+    \mathcal{A}=\left(\mathcal{V}, \Sigma, \mathcal{S}, \mathcal{P}\right)
+  \end{equation}
   Dove:
   \begin{itemize}
     \item $\mathcal{V}$ è l'insieme dei simboli non terminali
     \item $\Sigma$ è l'insieme dei simboli terminali
     \item $\mathcal{S}\in \mathcal{V}$ è il simbolo iniziale non terminale
     \item $\mathcal{P}$ è l'insieme delle produzioni, avendo che:
-    \[\mathcal{P}\subseteq \mathcal{V}\times\left(\mathcal{V}\cup
-        \Sigma\right)^{*}\] 
+    \begin{equation}
+      \label{eq:slpprod}
+      \mathcal{P}\subseteq \mathcal{V}\times\left(\mathcal{V}\cup
+        \Sigma\right)^{*}
+    \end{equation}
   \end{itemize}
   Tale grammatica, per essere un \textit{SLP}, deve soddisfare due proprietà:
   \begin{enumerate}
@@ -41,7 +47,10 @@ genera una e una sola parola \cite{slpsurvey}, parlando, quindi, di
     \dc{verificare questo secondo punto}
   \end{enumerate}
   Si ha quindi che la grandezza dell'SLP è calcolabile come:
-  \[|\mathcal{A}| = \sum_{(A,\alpha)\in\mathcal{P}}|\alpha|\]
+  \begin{equation}
+    \label{eq:slplen}
+    |\mathcal{A}| = \sum_{(A,\alpha)\in\mathcal{P}}|\alpha|
+  \end{equation}
   Il linguaggio $\mathcal{A}$ generato da un \textit{SLP}
   consiste in una singola parola, denotata da $eval(\mathcal{A})$.
 \end{definizione}
@@ -55,12 +64,16 @@ dove la \textit{radice} è etichettata con $\mathcal{S}$, ogni \textit{nodo
   Si prenda, ad esempio \cite{slpgagie}, la seguente stringa:
   \[s=\mbox{GATTAGATACAT}\,\$\mbox{GATTACATAGAT}\]
   Si potrebbe produrre il seguente \emph{SLP}:
-  \[\mbox{S}\to \mbox{ZWAY}\,\$\mbox{ZYAW}\]
-  \[\mbox{Z}\to \mbox{WX}\]
-  \[\mbox{Y}\to \mbox{CV}\]
-  \[\mbox{X}\to \mbox{TA}\]
-  \[\mbox{W}\to \mbox{GV}\]
-  \[\mbox{V}\to \mbox{AT}\]
+  \begin{multicols}{2}
+    \begin{itemize}
+      \item $\mbox{S}\to \mbox{ZWAY}\,\$\mbox{ZYAW}$
+      \item $\mbox{Z}\to \mbox{WX}$
+      \item $\mbox{Y}\to \mbox{CV}$
+      \item $\mbox{X}\to \mbox{TA}$
+      \item $\mbox{W}\to \mbox{GV}$
+      \item $\mbox{V}\to \mbox{AT}$
+    \end{itemize}
+  \end{multicols}
   Al quale corrisponde il seguente \emph{albero di derivazione}:
   \begin{figure}[H]
     \centering
@@ -79,7 +92,10 @@ anche tramite l'uso dei \textit{bitvector sparsi}.\\
 Si stima che il tempo necessario al
 \textit{random access} su un testo $T$ compresso tramite
 \textit{SLP}, sia in tempo:
-\[\mathcal{O}\left(\log (eval(\mathcal{A}))\right)\]
+\begin{equation}
+  \label{eq:slptime}
+  \mathcal{O}\left(\log (eval(\mathcal{A}))\right)
+\end{equation}
 L'uso di tale variante degli \textit{SLP} è stato cruciale, come si vedrà più
 avanti in questa tesi, per la costruzione della versione run-length encoded sia
 della \textbf{Burrows-Wheeler Transform (\textit{BWT})} che della
@@ -99,7 +115,10 @@ Sfruttando l'\textit{SLP} del testo $T$ è quindi possibile effettuare due
 \textit{random access} al testo compresso, in $i$ e $j$, per poi ``risalire''
 l'albero al fine di computare il prefisso comune tra le due sottostringhe.\\
 Si stima che il calcolo di una \textit{LCE query} sia effettuabile in tempo:
-\[\mathcal{O}\left(\log (eval(\mathcal{A}))\right)\]
+\begin{equation}
+  \label{eq:lcetime}
+  \mathcal{O}\left(\log (eval(\mathcal{A}))\right)
+\end{equation}
 I due concetti di \textit{SLP} e \textit{LCE query} verranno generalizzati, in
 questa tesi, all'uso su matrici permettendo una rappresentazione compatta in
 memoria, con \textit{random access}, per un pannello di aplotipi.
