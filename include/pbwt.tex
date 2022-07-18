@@ -170,7 +170,12 @@ Fatte queste premesse possiamo quindi fornire una definizione formale di
   \textbf{divergence array}.  
 \end{definizione}
 L'algoritmo per la costruzione di $a_{k+1}$ e $d_{k+1}$ a partire da $a_k$ e
-$d_k$ è disponibile all'algoritmo \ref{algo:durbin1}.
+$d_k$ è disponibile all'algoritmo \ref{algo:durbin1}. Si può quindi notare come
+il costo della costruzione dei due insiemi di array sia:
+\begin{equation}
+  \label{eq:pbwtadtime}
+  \mathcal{O}(NM)
+\end{equation}
 \dc{Serve altro? Serve spiegare i dettagli dell'algoritmo?}
 \begin{algorithm}
   \small
@@ -209,9 +214,10 @@ ricordiamo un'ulteriore definizione.
     prefix array} $a_k$, avendo che:
   \[\alpha_k[i]=j \iff a_k[j]=i\]
 \end{definizione}
-Già solo grazie a queste prime definizioni è possibile notare la forte
-correlazione che sussiste tra \textit{BWT} e \textit{PBWT}. Nella seguente
-tabella si ricordano tali correlazioni:
+Grazie a queste prime definizioni è possibile notare alcune prime forti
+correlazioni, fattore chiave nello sviluppo di questa tesi, che sussistono tra
+\textit{BWT} e \textit{PBWT} (e le rispettive varianti \textit{run-length
+  encoded}. Nella seguente tabella si ricordano queste prime correlazioni:
 \begin{table}[H]
   \centering
   \begin{tabular}{c|c}
@@ -222,11 +228,7 @@ tabella si ricordano tali correlazioni:
     $LCP_T$ & $d_k$ o $l_k$\\            
   \end{tabular}
 \end{table}
-Tale correlazione, che verrà estesa più avanti, è il fattore chiave che ha
-permesso lo sviluppo di questa tesi. Avendo che i concetti relativi alla
-\textit{BWT} hanno un corrispondente nella \textit{PBWT}, si può infatti
-ipotizzare che lo stesso valga per le rispettive varianti \textit{run-length
-  encoded}. 
+
 \begin{esempio}
   \label{es:pbwt1}
   Si assuma il seguente pannello $X$ e di voler calcolare $y^6$:
@@ -308,7 +310,7 @@ ipotizzare che lo stesso valga per le rispettive varianti \textit{run-length
   \end{tabular}
 \end{table}
 \end{esempio}
-\subsection{Match con aplotipo esterno}
+\subsection{Match massimali con aplotipo esterno}
 Durbin, nel suo articolo, propone diversi algoritmi per l'uso effettivo della
 sua trasformata. Ad esempio, viene proposto un algoritmo per il calcolo
 di match interni ad $X$ più lunghi di una lunghezza minima $L$ e uno per la
@@ -338,22 +340,29 @@ match tra un pattern e un testo.
     z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall i\mbox{
       t.c. }f_k\leq i < g_k
   \end{equation}
-  Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle sequenze per cui si ha tale
-  \textit{SMEM}.
+  Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle righe per le quali si ha
+  tale \textit{SMEM}.
 \end{definizione}
-
-Bisogna quindi capire come aggiornare $e_k$, $f_k$ e $g_k$ passando dalla
-colonna $k$ alla colonna $k+1$. L'idea è quella per cui, avendo
+Bisogna quindi come aggiornare $e_k$, $f_k$ e $g_k$ passando dalla
+colonna $k$ alla colonna $k+1$. Si procede esattamente come visto per la
+\textbf{backward search}, selezionando, per calcolare  $[f_{k+1},g_{k+1})$, il
+sottointervallo di $[f_k,g_k)$ in cui si hanno aplotipi che possono essere estesi
+a destra con il simbolo $z[k+1]$. L'idea è quella per cui, avendo
 $f_{k+1}<g_{k+1}$ allora sicuramente ho ancora delle righe che presentano un
-match che parte da $e_k=e_{k+1}$ e termina in $k$ che può essere esteso in
+match che parte da $e_{k+1}=e_{k}$ e termina in $k$ che può essere esteso in
 $k+1$. In caso contrario, avendo $f_{k+1}=g_{k+1}$, non si hanno match
 estendibili e quindi si può concludere che quelli terminanti in colonna $k$
-erano match massimali, dovendo poi aggiornare $e_{k+1}$ ottenedo i relativi
-$f_{k+1}$ e $g_{k+1}$. Bisogna quindi capire come funzioni la
-variante dell'\textbf{LF-mapping}, guidato dal carattere corrente dell'aplotipo
-query, all'interno della \textbf{PBWT}, per ottenere $f_{k+1}$ e $g_{k+1}$ a
-partire da $f_k$ e $g_k$ (e di conseguenza $e_{k+1}$).\\ 
-Per effettuare il mapping abbiamo bisogno di tre componenti:
+erano match massimali. In questo secondo caso bisogna poi aggiornare $e_{k+1}$,
+ottenedo i relativi $f_{k+1}$ e $g_{k+1}$, al fine di trovare la nuova colonna
+da cui parte lo \textit{SMEM} successivo e le righe del pannello per le quali si
+ha tale \textit{SMEM}. \\
+Bisogna, quindi, capire come funzioni la
+variante del \textbf{backward-step} visto per la \textit{BWT}. Tale mapping,
+guidato dal carattere corrente dell'aplotipo query, permette di ottenere
+$f_{k+1}$ e $g_{k+1}$ a partire da $f_k$ e $g_k$ .\\ 
+Per effettuare il mapping abbiamo bisogno di tre componenti, che,
+intuitivamente, svolgono la medesima funzione di $C$ e $Occ$ per la
+\textit{BWT}: 
 \begin{enumerate}
   \item l'array $c$ tale per cui $c[k]=j$ sse la colonna $k$ contiene $j$
   occorrenze di 0
@@ -364,55 +373,94 @@ Per effettuare il mapping abbiamo bisogno di tre componenti:
 \end{enumerate}
 Tali valori possono essere computati e memorizzati in fase di costruzione della
 \textbf{PBWT}, come visibile direttamente nell'algoritmo \ref{algo:durbin1} per
-quanto riguarda $u$ e $v$, avendone già la computazione. Per quanto riguarda $c$
+quanto riguarda $u$ e $v$. Per quanto riguarda $c$
 si ha che potrebbe essere banalmente calcolato anch'esso in fase di costruzione
 della \textbf{PBWT}, tenendo ogni volta traccia del numero di 0 incontrati
 nella colonna $k$-esima.\\
 Sfruttando i valori di questi 3 array possiamo quindi effettuare il mapping,
-definito per comodità da una funzione, rappresentabile in pseudocodice come
-nell'algoritmo \ref{algo:lf}:
-\[w_k:\{0,\ldots,M\}\times\Sigma\to \{0,\ldots,M\}\]
+definito, per comodità, da una funzione, rappresentabile in pseudocodice come
+nell'algoritmo \ref{algo:pbwtlf}:
+\begin{equation}
+  \label{eq:pbwtw1}
+  w_k:\{0,\ldots,M\}\times\Sigma\to \{0,\ldots,M\}
+\end{equation}
 tale per cui:
-\[w_k(i,\sigma)=
+\begin{equation}
+  \label{eq:pbwtw2}
+  w_k(i,\sigma)=
   \begin{cases}
     u_k[i]&\mbox{ se }\sigma=0\\
     v_k[i]+c[k]&\mbox{ se }\sigma=1
   \end{cases}
-\]
-Infatti, come confermato anche dall'algoritmo di costruzione stesso, si ha che:
-\[a_{k+1}\left[w_k\left(i,y_i^k[k]\right)\right]=a_k[i]\]
+\end{equation}
+Interessante notare, come confermato anche dall'algoritmo di costruzione stesso,
+che si ha:
+\begin{equation}
+  \label{eq:pbwt3}
+  a_{k+1}\left[w_k\left(i,y_i^k[k]\right)\right]=a_k[i]
+\end{equation}
+Avendo che tale mapping permette di ``seguire'' una determinata riga
+all'interno delle varie permutazioni dettate dai vari $a_k$.
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{$w$}{$k,i,s, c_k, u_k, v_k$}
+    \If{$s = 0$}
+    \State \textbf{return} $u_k[i]$
+    \Else
+    \State \textbf{return} $c_k+v_k[i]$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per l'LF-mapping nella PBWT.}
+  \label{algo:pbwtlf}
+\end{algorithm}
 \begin{esempio}
-  Vediamo un piccolo esempio chiarificatore, riprendendo il precedente.\\
-  Per praticità riporta che:
+  Vediamo un piccolo esempio chiarificatore, riprendendo l'esempio
+  \ref{es:pbwt1}, ricordando che:
   \[a_5=[14,15,17,0,4,5,6,7,9,10,16,8,11,12,13,18,19,1,2,3]\]
   \[\alpha_5=[3,17,18,19,4,5,6,7,11,8,9,12,13,14,0,1,10,2,15,16]\]
   \[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
   \[\alpha_6=[2,12,13,14,16,17,18,19,6,3,4,7,8,9,0,1,5,15,10,11]\]
-  Si ha quindi, ad esempio, con $k=5$ e $i=2$, che:
+  Si ha, ad esempio, con $k=5$ e $i=2$, che:
   \[a_{6}\left[w_5\left(2,y_2^5[5]\right)\right]=a_5[2]\]
   Avendo:
   \[w_5\left(2,y_2^5[5]\right)=w_5\left(2,1\right)=v_5[2]+c[5]=0+15=15\]
   Si ha che:
   \[a_{6}[15]=17=a_5[2]\]
+  Dimostrando come con tale funzione si possa, di fatto, ``seguire'' la riga 17,
+  capendo da quale posizione arrivi della colonna permutata precedente.
 \end{esempio}
-Ai fini dell'algoritmo serve però il ``passaggio inverso'' rispetto a quello
-indicato da questa equazione, ovvero passare dalla colonna $k$ alla colonna
-$k+1$. Quindi, pensando alla permutazione inversa del \textbf{prefix array}, si
-ha che:
-\[\alpha_{k+1}[i]=w_k(\alpha_k[i],x_i[k])\]
+\noindent
+Pensando alla permutazione inversa del \textbf{prefix array}, si
+ottiene un risultato interessante, permettendo di ottenere risultati per la
+colonna $k+1$ a partire dalla colonna $k$-esima:
+\begin{equation}
+  \label{eq:pbwtw4}
+  \alpha_{k+1}[i]=w_k(\alpha_k[i],x_i[k])
+\end{equation}
 \begin{esempio}
   Si riprendono i dati dell'esempio precedente e si vuole calcolare, sempre con
   $k=5$ e $i=2$:
   \[\alpha_{6}[2]=w_5(\alpha_5[2],x_2[5])=w_5(18,0)=13\]
   Come volevasi dimostrare.
 \end{esempio}
-L'ultima equazione ci suggerisce quindi che l'LF-mapping sopra definito
+\dc{Capire se dire altro su $w()$}
+L'ultima equazione ci suggerisce quindi che la funzione $w$
 consente il corretto aggiornamento di $f_k$ e $g_k$.
-Definendo quindi:
-\[f_{k+1}=w_k(f,z[k])\]
+Definendo, infatti:
+\begin{equation}
+  \label{eq:pbwtq5}
+  f_{k+1}=w_k(f_k,z[k])
+\end{equation}
 si ha che $f_{k+1}$ sarà l'indice, in $a_{k+1}$, della prima sequenza $y_j^k$,
-con $j\geq f$, per la quale $y_j^k[k]=z[k]$. Analogamente si ha anche:
-\[g_{k+1}=w_k(g,z[k])\]
+con $j\geq f_k$, per la quale $y_j^k[k]=z[k]$. Analogamente, pensando alla prima
+sequenza per cui si ha un mismatch dopo l'aggiornamento dell'intervallo, si
+calcola: 
+\begin{equation}
+  \label{eq:pbwtq6}
+  g_{k+1}=w_k(g_k,z[k])
+\end{equation}
 Si hanno quindi, dopo il calcolo di $f_{k+1}$ e $g_{k+1}$ due possibili casi:
 \begin{enumerate}
   \item si ha che $f_{k+1}<g_{k+1}$, quindi si hanno ancora match che partono da
@@ -678,7 +726,7 @@ A tal fine, nel 2020, Rubinacci et al. proposero \textbf{IMPUTE5}
   imputation} in grado di studiare pannelli di grandi dimensioni.\\
 \textbf{CAPIRE SE DIRE ALTRO}
 %\subsubsection{Recenti sviluppi}
-% LocalWords:  pseudocodice aplotipi
+% LocalWords:  pseudocodice aplotipi mismatch
 \subsection{Una prima proposta run-length encoded}
 \label{subsectravis}
 A fine 2021, Gagie et al. \cite{tricks} inizio a teorizzare una variante
