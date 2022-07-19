@@ -15,12 +15,12 @@ memoria fossero i cosiddetti \textbf{bitvector}.
   popolato da elementi binari. Formalmente si ha quindi:
   \begin{equation}
     \label{eq:bvdef1}
-    B[i]\in\{0,1\},\,\,\forall i \mbox{ t.c. } 0\leq i < n
+    B[i]\in\{0,1\},\,\,\forall\, i \mbox{ t.c. } 0\leq i < n
   \end{equation}
   In alternativa si potrebbe avere, come formalismo:
   \begin{equation}
     \label{eq:bvdef2}
-    B[i]\in\{\bot,\top\},\,\,\forall i \mbox{ t.c. } 0\leq i < n
+    B[i]\in\{\bot,\top\},\,\,\forall\, i \mbox{ t.c. } 0\leq i < n
   \end{equation}
 \end{definizione}
 Nel corso degli ultimi anni si sono sviluppate diverse varianti dei
@@ -81,7 +81,7 @@ bitvector.
   presenti fino a quella data posizione, esclusa. Più formalmente si ha che:
   \begin{equation}
     \label{eq:rankbv}
-    rank_B(i)=\sum_{k=0}^{k<i}B[k],\,\,\forall i \mbox{ t.c. } 0\leq i < n
+    rank_B(i)=\sum_{k=0}^{k<i}B[k],\,\,\forall\, i \mbox{ t.c. } 0\leq i < n
 \end{equation}
 \end{definizione}
 Come detto, da un punto di vista teorico, al costo di $o(n)$ bit
@@ -127,7 +127,7 @@ permettere di ottenere l'indice di un simbolo $\sigma=1$ nel bitvector.
   che:
   \begin{equation}
     \label{eq:selectbv}
-    select_B(i)=\min\{j < n\,|\,\,rank_B(j+1)=1\},\,\,\forall i \mbox{ t.c. }
+    select_B(i)=\min\{j < n\,|\,\,rank_B(j+1)=1\},\,\,\forall\, i \mbox{ t.c. }
     0<i\leq rank_B(n)
   \end{equation}
 \end{definizione}

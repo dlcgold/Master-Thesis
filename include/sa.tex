@@ -138,7 +138,7 @@ trovi tale suffisso nel \textit{suffix array}.
   $n$, si definisce l'\textbf{inverse suffix array}, denotato con $ISA_T$, come:
   \begin{equation}
     \label{eq:isadef}
-    ISA_T[i]=j\iff SA_T[j]=i,\,\,\forall i\in\{0,n-1\}
+    ISA_T[i]=j\iff SA_T[j]=i,\,\,\forall\, i\in\{0,n-1\}
   \end{equation}
 \end{definizione}
 
@@ -186,7 +186,7 @@ permettendo di ottenere gli stessi risultati di quest'ultimo. Un'altro vantaggio
     \begin{cases}
       -1&\mbox{se }ISA_T[p]=0\\
       LCP_T[ISA_T[p]]&\mbox{altrimenti}
-    \end{cases},\,\,\forall p\in\{0,n-1\}
+    \end{cases},\,\,\forall\, p\in\{0,n-1\}
   \end{equation}
   Quindi, i valori sono in ordine di posizione, ovvero l'ordine originale dato
   dagli indici dei suffissi, e non
@@ -194,7 +194,7 @@ permettendo di ottenere gli stessi risultati di quest'ultimo. Un'altro vantaggio
   tale per cui \cite{plcp}:
   \begin{equation}
     \label{eq:plcpdef2}
-    PLCP_T[SA_T[p]] = LCP_T[p],\,\,\,\forall p\in\{1,n-1\}
+    PLCP_T[SA_T[p]] = LCP_T[p],\,\,\,\forall\, p\in\{1,n-1\}
   \end{equation}
 \end{definizione}
 \begin{esempio}
@@ -228,7 +228,7 @@ seguente lemma \cite{plcp3}.
   Dato un testo $T$, tale che $|T|=n$, si ha che:
   \begin{equation}
     \label{eq:plcpdef3}
-    PCLP_T[i]\geq PLCP_T[i-1]-1,\,\,\forall i\in\{1,n-1\}
+    PCLP_T[i]\geq PLCP_T[i-1]-1,\,\,\forall\, i\in\{1,n-1\}
   \end{equation}
 \end{lemma}
 Grazie a tale lemma si può memorizzare l'\textit{PLCP sparso}.
@@ -263,7 +263,7 @@ di un \textbf{match massimale esatto (\textit{MEM})} in $T$ \cite{phoni}.
     \begin{cases}
       null&\mbox{se } ISA_T[p]=0\\
       SA_T[ISA_T[p]-1]&\mbox{altrimenti}
-    \end{cases},\,\,\forall p\in\{0,n-1\}
+    \end{cases},\,\,\forall\, p\in\{0,n-1\}
   \end{equation}
   \begin{equation}
     \label{eq:phiinvdef1}
@@ -271,7 +271,7 @@ di un \textbf{match massimale esatto (\textit{MEM})} in $T$ \cite{phoni}.
     \begin{cases}
       null&\mbox{se } ISA_T[p]=n-1\\
       SA_T[ISA_T[p]+1]&\mbox{altrimenti}
-    \end{cases},\,\,\forall p\in\{0,n-1\}
+    \end{cases},\,\,\forall\, p\in\{0,n-1\}
   \end{equation}
   Si noti che si ha il valore $null$ quando, rispettivamente, si studia il
   primo e l'ultimo valore del \textit{suffix array} in quanto non hanno, sempre

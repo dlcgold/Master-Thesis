@@ -23,7 +23,7 @@ sottostringhe all'interno del testo stesso.
     \begin{cases}
       T[SA_T[i]-1]&\mbox{ se } SA_T[i]\neq 1\\
       \$&\mbox{ altrimenti}
-    \end{cases},\,\, \forall i\in\{0,n-1\}
+    \end{cases},\,\, \forall\, i\in\{0,n-1\}
   \]
 \end{definizione}
 In termini più pratici, la \textit{BWT} di un testo è calcolabile riordinando
@@ -35,7 +35,7 @@ lessicograficamente tutte le possibili \textbf{rotazioni} del testo $T$.
   del suffisso $i$-esimo con la restante porzione del testo. Più formalmente si
   ha che, denotando con $X\cdot Y$ la concatenazione tra
   la stringa $X$ e la stringa $Y$:
-  \[rot_T(i)=T[i,n-1]\cdot T[0,i-1],\,\,\forall i\in\{0,n-1\}\]
+  \[rot_T(i)=T[i,n-1]\cdot T[0,i-1],\,\,\forall\, i\in\{0,n-1\}\]
 \end{definizione}
 Data questa definizione, quindi, la \textit{BWT} del testo $T$ risulta essere
 l'ultima colonna della matrice, detta \textbf{Burrows-Wheeler Matrix
@@ -471,7 +471,7 @@ Una volta calcolato l'array \textit{MS} si ha il seguente lemma.
 \begin{lemma}
   Dato un testo $T$, un pattern $P$ lungo $m$ e il
   corrispondente array di matching statistics $MS$, si ha che:
-  \[P[i,i+l-1],\forall 0<i\leq m\]
+  \[P[i,i+l-1],\forall\, 0<i\leq m\]
   è un \textbf{MEM} di lunghezza $l$ in $T$ sse:
   \[MS[i].len=l\land MS[i-1].len\leq MS[i].len\]
   Inoltre, qualora si avesse $i=0$, si ha che $P[0,l-1]$ è un \textbf{MEM} di
@@ -584,7 +584,7 @@ hanno a
 disposizione i valori $MS[i].len$.
 Il riconoscimento della run a cui appartiene un certo indice e degli indici
 delle teste delle run avviene tramite l'uso di \textit{bitvector}. Infatti,
-$\forall \sigma \in \Sigma$, con $\Sigma$ alfabeto in uso, si ha un
+$\forall\, \sigma \in \Sigma$, con $\Sigma$ alfabeto in uso, si ha un
 \textit{bitvector} $B_{\sigma}$, lungo $n$ (ovvero quanto il testo), tale che:
 \[B_{\sigma}[i]=
   \begin{cases}
