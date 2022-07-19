@@ -19,12 +19,15 @@ sottostringhe all'interno del testo stesso.
   $BWT_T$, come un array di caratteri lungo $n$ dove l'elemento $i$-esimo è il
   carattere che precede l'$i$-esimo suffisso $T$ nel riordinamento
   lessicografico. Più formalmente si ha che:
-  \[BWT_T[i]=
+  \begin{equation}
+    \label{eq:bwt1}
+    BWT_T[i]=
     \begin{cases}
       T[SA_T[i]-1]&\mbox{ se } SA_T[i]\neq 1\\
       \$&\mbox{ altrimenti}
     \end{cases},\,\, \forall\, i\in\{0,n-1\}
-  \]
+  \end{equation}
+  
 \end{definizione}
 In termini più pratici, la \textit{BWT} di un testo è calcolabile riordinando
 lessicograficamente tutte le possibili \textbf{rotazioni} del testo $T$.
@@ -35,7 +38,10 @@ lessicograficamente tutte le possibili \textbf{rotazioni} del testo $T$.
   del suffisso $i$-esimo con la restante porzione del testo. Più formalmente si
   ha che, denotando con $X\cdot Y$ la concatenazione tra
   la stringa $X$ e la stringa $Y$:
-  \[rot_T(i)=T[i,n-1]\cdot T[0,i-1],\,\,\forall\, i\in\{0,n-1\}\]
+  \begin{equation}
+    \label{eq:bwt2}
+    rot_T(i)=T[i,n-1]\cdot T[0,i-1],\,\,\forall\, i\in\{0,n-1\}
+  \end{equation}
 \end{definizione}
 Data questa definizione, quindi, la \textit{BWT} del testo $T$ risulta essere
 l'ultima colonna della matrice, detta \textbf{Burrows-Wheeler Matrix
@@ -130,7 +136,10 @@ computare la \textit{backward search}.
 \begin{definizione}
   Dato un testo \$-terminato $T$, lungo $n$ e costruito su alfabeto $\Sigma$, si
   definisce la funzione $C$, tale che:
-  \[C:\Sigma\cup \$\to \mathbb{N}\]
+  \begin{equation}
+    \label{eq:bwt4}
+    C:\Sigma\cup \$\to \mathbb{N}
+  \end{equation}
   avendo che, dato un carattere $\sigma\in\Sigma$, $C(\sigma)$ restituisce il
   numero di 
   occorrenze dei caratteri lessicograficamente più piccoli di $\sigma$ in $T$.
@@ -138,7 +147,10 @@ computare la \textit{backward search}.
 \begin{definizione}
   Dato un testo \$-terminato $T$, lungo $n$ e costruito su alfabeto $\Sigma$, e
   la sua $BWT_T$, si definisce la funzione $Occ$, tale che:
-  \[Occ:\Sigma\cup \$\times \{0,n\}\to \mathbb{N}\]
+  \begin{equation}
+    \label{eq:bwt5}
+    Occ:\Sigma\cup \$\times \{0,n\}\to \mathbb{N}
+  \end{equation}
   avendo che, dato un carattere $\sigma\in\Sigma$ e una posizione $i$ della
   $BWT_T$, $Occ(\sigma,i)$ restituisce il numero di occorrenze del carattere
   $\sigma$ nei primi $i$ elementi di $BWT_T$.
@@ -192,7 +204,10 @@ ricordando anche che da essa si può ricostruire il testo $T$.
 Dato un simbolo $\sigma$ del pattern e il precedente intervallo $[f,g)$ su
 $SA_T$, eseguire il \textbf{backward step}, tramite l'\textit{FM-index},
 aggiornando $f$ e $g$ nel seguente modo: 
-\[f'=C(\sigma)+Occ(\sigma, f),\quad g'=C(\sigma)+Occ(\sigma, g)\]
+\begin{equation}
+  \label{eq:bwt6}
+  f'=C(\sigma)+Occ(\sigma, f),\quad g'=C(\sigma)+Occ(\sigma, g)
+\end{equation}
 Ritornando il nuovo intervallo $[f, g)\gets [f', g')$ sse $f'< g'$.
 Si segnala che tali variabili sono inizializzate con $f=0$ e $g=n$.\\
 Tale calcolo altro non è che l'\textit{LF-mapping}. Infatti, partendo da un
@@ -329,7 +344,7 @@ uguali, mediante coppie:
   Una sua memorizzazione run-length sarebbe del tipo:
   \[\{(a,4),(c,2),(t,1),(g,6)\}\]
 \end{esempio}
-\subsection{RLBWT r-index}
+\subsection{RLBWT e r-index}
 In questa direzione, nel 2005, M\"{a}niken e Navarro proposero la
 \textbf{Run-Length encoded Burrows–Wheeler Transform (\textit{RLBWT})}
 \cite{rlbwt}.
@@ -338,7 +353,10 @@ In questa direzione, nel 2005, M\"{a}niken e Navarro proposero la
   come la rappresentazione \textit{run-length encoded} della $BWT_T$,
   denotandola con $RLBWT_T$. Si noti che, avendo $r$ come numero di run nella
   $BWT_T$: 
-  \[|RLBWT_T|=r\]
+  \begin{equation}
+    \label{eq:rlbwt1}
+    |RLBWT_T|=r
+  \end{equation}
 \end{definizione}
 L'uso di tale
 struttura risulta particolarmente efficiente, ad esempio, volendo creare
@@ -351,7 +369,7 @@ di memorizzare:
 \begin{itemize}
   \item una stringa $c$, tale che $|c|=r$, contenente un solo carattere per ogni
   run della $BWT_T$
-  \item un bitvector $bv$, longo quanto la $BWT_T$, tale che $bv[i]=1$ sse
+  \item un bitvector $bv$, lungo quanto $BWT_T$, tale che $bv[i]=1$ sse
   $BWT_T[i]$ è il primo carattere, detto anche \textit{testa}, di una run 
 \end{itemize}
 \begin{esempio}
@@ -366,7 +384,10 @@ M\"{a}niken e Navarro hanno proposto anche il seguente teorema.
   Dato un testo $T$, tale che $|T|=n$, se ne può costruire la \textit{RLBWT} in
   uno spazio $\mathcal{O}(r)$ tale per cui si possono conteggiare tutte le
   occorrenze di un pattern $P$, tale che $|P|=m$, in tempo:
-  \[\mathcal{O}(m\log n)\]
+  \begin{equation}
+    \label{eq:rlbwt2}
+    \mathcal{O}(m\log n)
+  \end{equation}
 \end{teorema}
 \noindent
 La struttura dati dietro questo risultato ha preso il nome di \textbf{r-index}.
@@ -396,7 +417,10 @@ fondamentale in questo ambito.
   che $|P|=m$, si può computare l'intervallo sulla $BWT_T$ contenente i $k$
   caratteri precedenti le occorrenze di $P$ in $T$ in spazio $\mathcal{O}(r)$ e
   in tempo: 
-  \[\mathcal{O}(m\log\log n)\]
+  \begin{equation}
+    \label{eq:rlbwt3}
+    \mathcal{O}(m\log\log n)
+  \end{equation}
 \end{teorema}
 Questo risultato dimostra come identificare \textbf{un} \textit{SA sample}
 nell'intervallo 
@@ -413,7 +437,10 @@ Tale risultato si riassume nel seguente teorema.
   Dato un testo $T$, tale che $|T|=n$, si può memorizzare $T$ in spazio
   $\mathcal{O}(r)$ tale che si possano trovare tutte le $k$ occorrenze di un
   pattern $P$, lungo $m$, in tempo:
-  \[\mathcal{O}((m+k)\log\log n)\]
+  \begin{equation}
+    \label{eq:rlbwt4}
+    \mathcal{O}((m+k)\log\log n)
+  \end{equation}
 \end{teorema}
 Nel dettaglio, i risultati di Gagie portarono a definire l'\textbf{r-index}
 tramite l'uso dei valori del \textit{SA} all'inizio e alla fine di ogni run come
@@ -471,14 +498,19 @@ Una volta calcolato l'array \textit{MS} si ha il seguente lemma.
 \begin{lemma}
   Dato un testo $T$, un pattern $P$ lungo $m$ e il
   corrispondente array di matching statistics $MS$, si ha che:
-  \[P[i,i+l-1],\forall\, 0<i\leq m\]
+  \begin{equation}
+    \label{eq:rlbwt5}
+    P[i,i+l-1],\forall\, 0<i\leq m
+  \end{equation}
   è un \textbf{MEM} di lunghezza $l$ in $T$ sse:
-  \[MS[i].len=l\land MS[i-1].len\leq MS[i].len\]
+  \begin{equation}
+    \label{eq:rlbwt6}
+    MS[i].len=l\land MS[i-1].len\leq MS[i].len
+  \end{equation}
   Inoltre, qualora si avesse $i=0$, si ha che $P[0,l-1]$ è un \textbf{MEM} di
   lunghezza $l$ in $T$ sse:
-  % \[\]
   \begin{equation}
-    \label{eq:ms2}
+    \label{eq:rlbwt7}
     MS[0].len=l\land MS[0].len\geq MS[1].len
   \end{equation}
   \dc{Secondo caso da verificare}
@@ -491,10 +523,13 @@ struttura dati memorizza il minimo valore dell'\textit{LCP array} tra due run
 consecutive del medesimo simbolo nella \textit{BWT}.
 \begin{definizione}
   Dato un testo $T$ e date $BWT_T[j',j]$ e $BWT_T[k,k']$ due run consecutive
-  dello stesso carattere in $BWT_T$. Si definisce \textbf{threshold} la
+  dello stesso carattere in $BWT_T$, si definisce \textbf{threshold} la
   posizione:
-  \[j< i \leq k\mbox{ tale che } i\mbox{ è l'indice del minimo valore in
-    }LCP[j+1,k],\] 
+  \begin{equation}
+    \label{eq:rlbwt8}
+    j< i \leq k\mbox{ tale che } i\mbox{ è l'indice del minimo valore in
+    }LCP[j+1,k] 
+  \end{equation}
 \end{definizione}
 Rossi et al., nel 2021, sfruttarono tutte le conoscenze relative
 alla \textbf{RLBWT}, all'\textbf{r-index} e alle \textbf{matching statistics}
@@ -563,7 +598,10 @@ A tal fine si sfrutta infatti il seguente teorema \cite{gagie2020}.
   $\mathcal{O}(r)$, con $r$ numero di run, tale che, dato un indice
   $p\in\{0,n-1\}$ si possano computare $\varphi(p)$, $\varphi^{-1}(p)$ e
   $PLCP[p]$ in tempo:
-  \[\mathcal{O}(\log\log n)\]
+  \begin{equation}
+    \label{eq:rlpbwt9}
+    \mathcal{O}(\log\log n)
+  \end{equation}
 \end{teorema}
 Si è quindi potuto migliorare e semplificare l'\textbf{algoritmo di Bannai}
 usato in \textit{MONI}. Infatti, sfruttando le
@@ -586,16 +624,21 @@ Il riconoscimento della run a cui appartiene un certo indice e degli indici
 delle teste delle run avviene tramite l'uso di \textit{bitvector}. Infatti,
 $\forall\, \sigma \in \Sigma$, con $\Sigma$ alfabeto in uso, si ha un
 \textit{bitvector} $B_{\sigma}$, lungo $n$ (ovvero quanto il testo), tale che:
-\[B_{\sigma}[i]=
+\begin{equation}
+  \label{eq:rlbwt10}
+  B_{\sigma}[i]=
   \begin{cases}
     1&\mbox{se } BWT_T[i]=\sigma\\
     0&\mbox{altrimenti}
   \end{cases}
- \]
+\end{equation}
 L'algoritmo \ref{algo:phonims} \cite{phoni}
 riporta il calcolo completo dell'array $MS$ presente in \textit{PHONI}, la cui
 complessità temporale è stimata in:
-\[\mathcal{O}(m\log\log n)\]
+\begin{equation}
+  \label{eq:rlbwt11}
+  \mathcal{O}(m\log\log n)
+\end{equation}
 \dc{Spiegare molto meglio e verificare tempo}
 Per ulteriori approfondimenti si rimanda al paper di riferimento
 \cite{phoni}.
@@ -667,14 +710,14 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   \[T=\mbox{mississippi\$ e }P=\mbox{miss}\]
   Studiando il calcolo dell'array delle \textit{matching statistics} sia con
   \textit{MONI} che con \textit{PHONI}. Si assume che $|T|=n$ e $|P|=m$.\\
-  Si hanno:
+  Si hanno, avendo in ultima colonna i 5 \textit{bitvector} relativi alle
+  threshold per ogni simbolo:
   \begin{table}[H]
     \centering
     \footnotesize
     \begin{tabular}{c|c|c|c|c|c|c|c|c|c|c} 
       \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & $\mathbf{BWM_T}$
-      & $\mathbf{BWT_T}$ & $B_{\$}$ & $B_i$ & $B_m$ & $B_p$ & $B_s$ & $thr$
-                                                                      \$imps\\  
+      & $\mathbf{BWT_T}$ & $B_{\$}$ & $B_i$ & $B_m$ & $B_p$ & $B_s$ & \$imps\\  
       \hline
       0 & 11 & \$ & \$mississippi & i & 0 & 1 & 0 & 0 & 0 & 11111\\
       1 & 10 & i & i\$mississipp & p & 0 & 0 & 0 & 1 & 0 & 01000\\

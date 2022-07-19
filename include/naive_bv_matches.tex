@@ -9,7 +9,7 @@ come con la \textit{PBWT} classica. Avendo memorizzato solo informazioni
 relative alle \textit{run} bisogna quindi, ogni volta, ricondurre l'indice alla
 run corretta:
 \begin{itemize}
-  \item nella \textit{RLPBWT naive} si risale all'indice di run a cui appartiene
+  \item nella \textit{RLPBWT na\"{i}ve} si risale all'indice di run a cui appartiene
   un certo indice, in colonna $k$, in $\{0,M\}$ scorrendo l'array $p_k$
   \item nella \textit{RLPBWT con bitvector} la medesima operazione viene risolta
   usando la funzione $rank_{h_k}$
@@ -33,7 +33,7 @@ $rank_{h_k}$ e $select_{h_k}$ per risalire all'indice in colonna $k$, calcolando
 prima l'indice di run e l'eventuale offset, per il quale il mapping porta
 all'indice $i'$ in colonna $k+1$, seguendo ``virtualmente'' la riga $x_j$ del
 pannello originale.\\
-Per quanto riguarda la \textit{RLPBWT naive} si ha lo pseudo codice per il
+Per quanto riguarda la \textit{RLPBWT na\"{i}ve} si ha lo pseudo codice per il
 mapping inverso consultabile all'algoritmo \ref{algo:lfrev} mentre per quanto
 riguarda la \textit{RLPBWT con bitvector} si ha l'algoritmo
 \ref{algo:lfrevbv}.\\
@@ -43,7 +43,7 @@ ottenendo, ad ogni step, i medesimi valori per $e_k$, $f_k$ e $g_k$. Le uniche
 differenze sono:
 \begin{itemize}
   \item il calcolo del mapping necessità dell'estrazione dei valori $u$ e $v$,
-  tenendo conto esplicito degli offset nel caso della \textit{RLPBWT naive}
+  tenendo conto esplicito degli offset nel caso della \textit{RLPBWT na\"{i}ve}
   \item non si ha \textit{random access} al pannello quindi bisogna procedere
   ogni volta con il'inverso del mapping e il calcolo del simbolo a partire
   dall'indice della run

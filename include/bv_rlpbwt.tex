@@ -1,19 +1,21 @@
-\section{RLPBWT con bitvectors}
+\section{RLPBWT con bitvector}
 \label{secrlpbwtbv}
 Al fine di compiere un ulteriore passo verso la formulazione di una struttura
 dati efficiente dal punto di vista dello spazio in memoria per la
-\textbf{RLPBWT}, si è provveduto a modificare la versione \textit{naive} al fine
-di introdurre l'uso dei \textbf{bitvectors}. Questo è stato fatto al fine di
+\textbf{RLPBWT}, si è provveduto a modificare la versione \textit{na\"{i}ve} al
+fine 
+di introdurre l'uso dei \textbf{bitvector sparsi}. Questo è stato fatto al fine
+di 
 ottenere una rappresentazione in memoria della stessa che fosse ancora più
 efficiente. Come si vedrà questa versione intermedia non comporterà un
 miglioramento effettivo del consumo di memoria ma permetterà di avere la base su
 cui costruire le versioni successive.\\
 L'idea è quindi quella di sostituire, data una colonna $k$, quanto necessario a
-rappresentare le run (ovvero il vettore $p_k$ della variante naive) e quanto
+rappresentare le run (ovvero il vettore $p_k$ della variante na\"{i}ve) e quanto
 necessario a permettere il mapping (ovvero il vettore $uv_k$).\\
 In primis, per poter localizzare le run nella $k$-esima colonna, si è scelto di
-usare un \textit{bitvector}, che denominiamo per praticità $h_k$, tale che
-$|h_k|=N$. Formalmente si ha che:
+usare un \textit{bitvector sparso}, che denominiamo per praticità $h_k$, tale
+che $|h_k|=N$. Formalmente si ha che:
 \[h_k[i]=
   \begin{cases}
     1&\mbox{se } y^k[i]\neq y^k[i+1]\lor i==N-1\\
@@ -25,7 +27,7 @@ corrispondenti alla fine di una run.\\
 Empiricamente ci si aspettano ``poche'' run all'interno di una colonna della
 \textit{matrice PBWT}, per quanto già discusso nella sezione
 \ref{secpbwt}. Avendo poche run ci si aspetta anche ``pochi'' 1 all'interno di
-$h_k$, di conseguenza si è optato per usare gli \textbf{sparse bitvector} per la
+$h_k$, di conseguenza si è optato per usare i \textit{bitvector sparsi} per la
 memorizzazione in memoria di ogni $h_k$, ricordando che, secondo quanto
 riportato per la libreria \textit{SDSL} \cite{sdsl}, tale variante richiede in
 memoria, indicando con $r$ il numero di run:
@@ -33,7 +35,7 @@ memoria, indicando con $r$ il numero di run:
 \textbf{VERIFICARE CHE SIANO BITS}\\
 Più elaborata è la rappresentazione dei vettori $u_k$ e $v_k$. In questo caso si
 è deciso, a differenza della rappresentazione unica vista nella \textit{RLPBWT
-  naive}, di optare per due \textit{sparse bitvector}. In particolare, per il
+  na\"{i}ve}, di optare per due \textit{bitvector sparsi}. In particolare, per il
 vettore $u_k$, tale che $|u_k|=c[k]$, si ha che:
 \[u_k[i]=
   \begin{cases}
@@ -58,7 +60,7 @@ Si noti che:
 \[rank_{h_k}(|h_k-1|)+1=([rank_{u_k}(|u_k-1|)+1)+[rank_{v_k}(|v_k-1|)+1\]
 Ovvero il numero di 1 presenti in $h_k$ è pari alla somma di quelli presenti in
 $u_k$ e $v_k$. Ne segue che, anche per questi ultimi due vettori, la scelta di
-usare \textit{sparse bitvector} per la loro memorizzazione sia giustificata
+usare \textit{bitvector sparsi} per la loro memorizzazione sia giustificata
 dalla poca quantità, empiricamente, di simboli $\sigma=1$.\\
 Si vede un esempio chiarificatore.
 \begin{esempio}
@@ -87,7 +89,7 @@ Si vede un esempio chiarificatore.
 \end{esempio}
 Le restanti informazioni, ovvero, per la colonna $k$, il valore $c[k]$, il
 booleano $start^k$ e l'LCP array $l_k$ sono le medesime della variante
-\textit{naive} della \textit{RLPBWT} (motivo per quale solo a breve si
+\textit{na\"{i}ve} della \textit{RLPBWT} (motivo per quale solo a breve si
 tratterà l'algoritmo di match).\\
 Lo pseudocodice relativo alla costruzione della colonna $k$-esima della
 \textbf{RLPBWT con bitvector} è disponile all'algoritmo \ref{algo:cosbv} (dove
@@ -140,7 +142,7 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
     Si noti che si usa $\frac{run}{2}$ in quanto, essendo in una run di indice
     pari si hanno precedentemente lo stesso numero di run per $\sigma=0$ e per
     $\sigma=1$ e quindi si considera lo stesso numero di ``run'' nei due
-    bitvector $u_k$ e $v_k$.\\
+    \textit{bitvector sparsi} $u_k$ e $v_k$.\\
     A questo punto, sempre per il ragionamento per cui solo uno tra $u$ e $v$
     non è costante all'interno di una run si ha che o $pre_u$ o $pre_v$ è tale
     costante mentre l'altro valore deve essere calcolato considerando l'offset:
@@ -156,7 +158,8 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
     \[run_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1\]
     \[run_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)\]
     mentre se la prima run non è di zeri si devono invertire i due valori. Si sa
-    quindi quali ``run'' considerare sui due bitvector $u_k$ e $v_k$.\\
+    quindi quali ``run'' considerare sui due \textit{bitvector sparsi} $u_k$ e
+    $v_k$.\\ 
     Posso quindi procedere come nel caso precedente, avendo:
     \[pre_u=select_{u_k}(run_u)+1\]
     \[pre_v=select_{v_k}(run_v)+1\]

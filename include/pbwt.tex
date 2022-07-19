@@ -605,6 +605,13 @@ empiricamente accettabile come \textit{caso medio}:
   \label{eq:pbwtsmem6}
   Avg.\,\,\,\mathcal{O}(N+c)
 \end{equation}
+In ogni caso, una soluzione na\"{i}ve, impiegherebbe tempo:
+\begin{equation}
+  \label{eq:pbwtsmem7}
+  \mathcal{O}(N^2M)
+\end{equation}
+Si comprende, quindi, come tale algoritmo e tale struttura siano stati
+rivoluzionari per lo studio di pannelli di aplotipi.
 \begin{algorithm}
   \begin{algorithmic}[1]   
     \Function{Find\_Set\_Maximal\_Matches\_From\_Z}{$z$}
@@ -871,52 +878,22 @@ Il paper presenta anche il metodo per l'estrazione della $i$-esima riga:
   operazione si avrà $k=1$). Infine, si estrae il simbolo relativo a tale run 
   \item si ripete la procedura dal punto 2) per ogni colonna $k$
 \end{enumerate}
-Si segnala che, nel paper, non vengono specificati metodi per
-effettuare query a 
-tale struttura dati, indicando solo che dovrebbe essere possibile farlo.\\
 Inoltre,
 vengono proposti ulteriori ottimizzazioni, basate sul metodo detto
 \textbf{fractional cascading}. Con tale rappresentazione, si riesce a ridurre il
 numero di run che devono essere scansionate nel passaggio 3. Questo risultato
 ha un tradeoff in termini di spazio. Infatti, aumentando il numero totale di
-righe in tutte le tabelle di un fattore $\left(1+\frac{1}{d}\right)$, è
+righe in tutte le tabelle di un fattore al più $\left(1+\frac{1}{d}\right)$, è
 possibile garantire che si avranno al più $d$ iterazioni, in ogni tabella, per
-ottenere l'estrazione del simbolo desiderato.
+ottenere l'estrazione del simbolo desiderato.\\
+\textit{Si segnala che, nel paper, non vengono specificati metodi per
+effettuare query a 
+tale struttura dati, indicando solo che dovrebbe essere possibile interrogare
+tale struttura a tabelle}.\\
+Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
 \begin{esempio}
-  Si assuma la \textit{matrice PBWT} vista all'esempio \ref{es:pbwt1}.
-  Supponendo di voler ricostruire la riga $i=9$. \\
-  Si costruiscono quindi le seguenti tabelle \cite{tricks}:
-   \begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{img/trick.jpg}
-  \end{figure}
-  Dove in rosso si hanno le varie $\pi_k(i)$ calcolate nel processo, ottenute,
-  se necessario, iterando a partire dalle $\pi_k(p)$, segnalate in azzurro. \\
-  Si hanno infatti i seguenti calcoli, ovvero i vari $\pi_j(i)=\pi_j(p)+i-p$,
-  relativi alle permutazioni in colonna $k$ per l'estrazione della riga $9$:
-  \begin{multicols}{2}
-    \begin{itemize}
-      \item $\pi_1(9)=17+9-9=17$
-      \item $\pi_2(17)=4+17-13=8$
-      \item $\pi_3(8)=4+8-8=3$
-      \item $\pi_4(3)=0+3-0=3$
-      \item $\pi_5(3)=0+3-0=3$
-      \item $\pi_6(3)=16+3-3=16$
-      \item $\pi_7(16)=2+16-3=15$
-      \item $\pi_8(15)=2+15-3=14$
-      \item $\pi_9(14)=3+14-12=5$
-      \item $\pi_{10}(5)=1+5-5=1$
-      \item $\pi_{11}(1)=17+1-0=18$
-      % \item $\pi_{12}(3)=16+3-3=16$        
-    \end{itemize}
-  \end{multicols}
-  Sfruttando quindi il valore booleano (non rappresentato nelle tabelle ma
-  esistente) che ci dice con che simbolo inizia una colonna e sapendo che,
-  essendo un pannello binario si alternano le run con simboli $\sigma=0$ e
-  $\sigma=1$, si può ricostruire la riga 9 del pannello originale:
-  \[x_9=100001000011\]
-  L'intero ragionamento può essere visualizzato nella \textit{matrice PBWT},
-  dove in rosso sono segnati i simboli appartenenti alla riga 9:
+   Supponendo di voler ricostruire la riga $i=9$, si assuma la \textit{matrice
+     PBWT}, avendo che in rosso sono segnati i simboli appartenenti alla riga 9: 
   \begin{table}[H]
     \centering
     \footnotesize
@@ -956,6 +933,37 @@ ottenere l'estrazione del simbolo desiderato.
       19 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 \\
     \end{tabular}
   \end{table}
+  Si costruiscono quindi le seguenti tabelle \cite{tricks}:
+   \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{img/trick.jpg}
+  \end{figure}
+  Nelle tabelle, in rosso, si hanno le varie $\pi_k(i)$ calcolate nel processo,
+  ottenute, 
+  se necessario, iterando a partire dalle $\pi_k(p)$, segnalate in azzurro. \\
+  Si hanno infatti i seguenti calcoli, ovvero i vari $\pi_j(i)=\pi_j(p)+i-p$ 
+  relativi alle permutazioni in colonna $k$, per l'estrazione della riga $9$:
+  \begin{multicols}{2}
+    \begin{itemize}
+      \item $\pi_1(9)=17+9-9=17$
+      \item $\pi_2(17)=4+17-13=8$
+      \item $\pi_3(8)=4+8-8=3$
+      \item $\pi_4(3)=0+3-0=3$
+      \item $\pi_5(3)=0+3-0=3$
+      \item $\pi_6(3)=16+3-3=16$
+      \item $\pi_7(16)=2+16-3=15$
+      \item $\pi_8(15)=2+15-3=14$
+      \item $\pi_9(14)=3+14-12=5$
+      \item $\pi_{10}(5)=1+5-5=1$
+      \item $\pi_{11}(1)=17+1-0=18$
+      % \item $\pi_{12}(3)=16+3-3=16$        
+    \end{itemize}
+  \end{multicols}
+  Sfruttando quindi il valore booleano (non rappresentato nelle tabelle ma
+  esistente) che ci dice con che simbolo inizia una colonna e sapendo che,
+  essendo un pannello binario si alternano le run con simboli $\sigma=0$ e
+  $\sigma=1$, si può ricostruire la riga 9 del pannello originale:
+  \[x_9=100001000011\]
 \end{esempio}
 
 % LocalWords:  pseudocodice aplotipi mismatch

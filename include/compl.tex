@@ -2,7 +2,7 @@
 Al fine di analizzare i risultati ottenuti si sono confrontate 5 varianti della
 \textit{RLPBWT}:
 \begin{itemize}
-  \item \textit{RLPBWT naive}
+  \item \textit{RLPBWT na\"{i}ve}
   \item \textit{RLPBWT con bitvector}
   \item \textit{RLPBWT con pannello completo e threshold}
   \item \textit{RLPBWT con pannello compresso (SLP) e threshold}
@@ -95,7 +95,7 @@ tramite l'\textit{SLP}, particolarmente ``compatta''.
 \subsubsection{Strutture dati}
 Si analizzano ora le due strutture dati, confrontando lo spazio richiesto dalle
 varie sotto-strutture per effettuare il match con una query esterna, descritte
-alle sezioni \ref{secpbwt}, \ref{secrlpbwtnaive}, \ref{secrlpbwtbv} e
+alle sezioni \ref{secpbwt}, \ref{secrlpbwtna\"{i}ve}, \ref{secrlpbwtbv} e
 \ref{secrlpbwtms}.\\
 Si precisa che i dati ora descritti sono stati calcolati nel seguente modo:
 \begin{itemize}
@@ -144,7 +144,7 @@ proposta in questa tesi.
 %   \centering
 %   \tiny
 %   \begin{tabular}{c|c|c|c|c|c|c|c|c}
-%     \textbf{Altezza} & \textbf{Larghezza} & \textbf{Naive}
+%     \textbf{Altezza} & \textbf{Larghezza} & \textbf{Na\"{I}Ve}
 %     & \textbf{Bitvector} & \textbf{Pannello}
 %     & \textbf{SLP-Thr} & \textbf{SLP-LCE} & \textbf{Indexed}&
 %                                                               \textbf{Dynamic}\\
@@ -207,12 +207,12 @@ punto di vista dello spazio richiesto, pur avendo ottime performance
 temporali. Dal punto di vista invece delle varianti della \textit{RLPBWT} si
 nota come:
 \begin{itemize}
-  \item la \textit{RLPBWT naive}, priva dell'uso dei bitvector e
+  \item la \textit{RLPBWT na\"{i}ve}, priva dell'uso dei bitvector e
   dell'\textit{SLP}, risulti essere la più performante, anche se, si ricordi,
   non permette di identificare quali righe stiano effettivamente matchando ma
   solo quante
   \item la \textit{RLPBWT con bitvector}, avente lo stesso limite della variante
-  naive, presenta anche maggiori costi in termini di memoria di quest'ultima,
+  na\"{i}ve, presenta anche maggiori costi in termini di memoria di quest'ultima,
   avendo anch'essa ancora l'\textit{LCP array} completo ma anche tutte le
   informazioni memorizzate in bitvector, che aumentano, come anticipato, i tempi
   di calcolo. La chiave delle varianti che sfruttano

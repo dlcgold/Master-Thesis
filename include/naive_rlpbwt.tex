@@ -1,8 +1,8 @@
-\section{RLPBWT naive}
-\label{secrlpbwtnaive}
+\section{RLPBWT na\"{i}ve}
+\label{secrlpbwtna\"{i}ve}
 Un primo approccio alla \textbf{compressione run-length} è stato quello di
 semplicemente ``adattare'' quanto presentato da Durbin. Soprattutto a causa di
-questo fattore tale approccio è stato nominato \textbf{RLPBWT naive}.\\
+questo fattore tale approccio è stato nominato \textbf{RLPBWT na\"{i}ve}.\\
 L'idea è stata quella di capire quali informazioni fossero necessarie al fine di
 poter calcolare i match. Si è quindi partiti studiando quanto memorizzato da
 Durbin stesso, pensando ad eventuali alternative.\\
@@ -115,11 +115,11 @@ presentato più avanti nella tesi, è limitato al poter sapere quante righe
 matchano e non quali.\\
 \textbf{INSERIRE ALGORITMO DI COSTRUZIONE}\\
 In conclusione si riporta quindi un esempio dei dati memorizzati, per una data
-colonna, nella \textit{RLPBWT naive}.
+colonna, nella \textit{RLPBWT na\"{i}ve}.
 \begin{esempio}
   Sia data la seguente colonna:
   \[y^5=00101111000000000000\]
-  Per la \textit{RLPBWT naive} si hanno in memoria:
+  Per la \textit{RLPBWT na\"{i}ve} si hanno in memoria:
   \[p_5=[0,2,3,4,8]\]
   \[uv_5=[0,2,1,3,5]\]
   \[c[5]=15\]
@@ -130,7 +130,7 @@ Si ha quindi già una forte riduzione dello spazio in memoria occupato dalla
 struttura, questo nonostante la memorizzazione completa dell\textit{LCP array}.
 Riprendendo quindi l'esempio già visto per la \textit{PBWT}, dato un panello di
 medie dimensioni, con $N = 30000$ e$ M = 100000$, si ha che l'uso della
-\textit{RLPBWT naive} richiede $\sim 8.17$ gigabytes di memoria (rispetto ai
+\textit{RLPBWT na\"{i}ve} richiede $\sim 8.17$ gigabytes di memoria (rispetto ai
 $\sim 40.76$ gigabytes della \textit{PBWT}).\\
 \textit{La spiegazione dell'algoritmo di match è rimandata a dopo l'introduzione
   della seconda variante, ovvero della \textbf{RLPBWT con bitvector}, in quanto

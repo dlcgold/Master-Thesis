@@ -109,8 +109,9 @@ Durbin, nel 2014, propose una struttura dati ispirata alla BWT, detta
 viene costruita a partire da un pannello di aplotipi, rappresentato, riferendosi
 al solo caso bi-allelico, tramite una matrice binaria.
 La PBWT permette di calcolare gli SMEM tra
-un aplotipo esterno e il pannello in tempo $\mathcal{O}(MN)$, mentre 
-una soluzione semplice impiegherebbe $\mathcal{O}(M^2N)$.
+un aplotipo esterno e il pannello in tempo $Avg.\,\,\,\mathcal{O}(N+c)$ (dove 
+$c$ è il numero complessivo di SMEM), mentre 
+una soluzione semplice impiegherebbe $\mathcal{O}(N^2M)$.
 % Gli SMEM sono tali per
 % cui gli indici di inizio 
 % e fine del match sono i medesimi sia sul pannello, in termini di indici di
