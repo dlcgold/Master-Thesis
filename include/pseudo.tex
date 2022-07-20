@@ -4,7 +4,7 @@
 \begin{algorithm}
   \scriptsize
   \begin{algorithmic}[1]
-    \Function{build\_bv}{$col,\,\, pref,\,\, div$}
+    \Function{build\_ms}{$col,\,\, pref,\,\, div$}
     \State $c\gets 0,\,\,u\gets 0,\,\,v\gets 0,\,\,u'\gets 0,\,\, v'\gets
     0,\,\,curr_{lcs}\gets 0,\,\,tmp_{thr}\gets 0,\,\,tmp_{beg}\gets 0$
     \State $start \gets \top,\,\,beg_{run}\gets \top,\,\,push_{zero}\gets
@@ -79,13 +79,13 @@
     \EndIf
     \State \textit{build rank/select for the four bitvectors}
     \State \textbf{return}
-    $(start,\,\,c,\,\,runs,\,\,zeros,\,\,ones,\,\,samples_{beg},\,\,
+    $(start,\,\,c,\,\,runs,\,\,zeros,\,\,ones,\,\,,\,\,thr,\,\,samples_{beg},\,\,
     samples_{end},\,\,div)$  
     \EndFunction
   \end{algorithmic}
   \caption{{\footnotesize{Algoritmo per la costruzione di una colonna della
-  \textit{RLPBWT} con bitvectors}}}
-  \label{algo:cosbv}
+  \textit{RLPBWT} con matching statistics}}}
+  \label{algo:cosms}
 \end{algorithm}
 
 \begin{algorithm}

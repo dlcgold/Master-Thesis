@@ -41,33 +41,40 @@ memoria, indicando con $r$ il numero di run:
 Più elaborata è la rappresentazione dei vettori $u_k$ e $v_k$. In questo caso si
 è deciso, a differenza della rappresentazione unica vista nella \textit{RLPBWT
   na\"{i}ve}, di optare per due \textit{bitvector sparsi}. In particolare, per il
-vettore $u_k$, tale che $|u_k|=c[k]$, si ha che:
-\[u_k[i]=
+vettore $u_k$, tale che $|u_k|=c[k]$, si ha che, $\forall
+i\in\{0,\ldots,|u_k|-1\}$: 
+\begin{equation}
+  \label{eq:bv3}
+  u_k[i]=
   \begin{cases}
     1&\mbox{se }i \mbox{ è il numero di simboli che contiene la
     }rank_{u_k}(i)\mbox{-esima run di 0}\\
     0&\mbox{altrimenti}
-  \end{cases},
-\]
-\vspace{-5mm}
-\[\forall i\in\{0,\ldots,|u_k|-1\}\]
-Analogamente si definisce $v_k$, tale che $|v_k|=N-c[k]$ come:
-\[v_k[i]=
+  \end{cases}
+\end{equation}
+Analogamente si definisce $v_k$, avendo $|v_k|=M-c[k]$ e $\forall
+i\in\{0,\ldots,|v_k|-1\}$, come: 
+\begin{equation}
+  \label{eq:bv4}
+  v_k[i]=
   \begin{cases}
     1&\mbox{se }i \mbox{ è il numero di simboli che contiene la
     }rank_{v_k}(i)\mbox{-esima run di 1}\\
     0&\mbox{altrimenti}
-  \end{cases},
-\]
-\vspace{-5mm}
-\[\forall i\in\{0,\ldots,|v_k|-1\}\]
+  \end{cases}
+\end{equation}
 Si noti che:
-\[rank_{h_k}(|h_k-1|)+1=([rank_{u_k}(|u_k-1|)+1)+[rank_{v_k}(|v_k-1|)+1\]
+\begin{equation}
+  \label{eq:bv5}
+  rank_{h_k}(|h_k|-1)+1=(rank_{u_k}(|u_k|-1)+1)+(rank_{v_k}(|v_k|-1)+1)
+\end{equation}
 Ovvero il numero di 1 presenti in $h_k$ è pari alla somma di quelli presenti in
-$u_k$ e $v_k$. Ne segue che, anche per questi ultimi due vettori, la scelta di
-usare \textit{bitvector sparsi} per la loro memorizzazione sia giustificata
-dalla poca quantità, empiricamente, di simboli $\sigma=1$.\\
-Si vede un esempio chiarificatore.
+$u_k$ e $v_k$. Si noti che i vari $+1$ sono dovuti al fatto che la funzione
+$rank(i)$ esclude dal computo la posizione $i$ stessa e tutti e tre i bitvector,
+per costruzione, presentano $\sigma=1$ in ultima posizione. Ne segue che, anche
+per questi ultimi due bitvector, la scelta di 
+usare \textit{bitvector sparsi} per la loro memorizzazione sia giustificata,
+empiricamente, dalla poca quantità attesa di simboli $\sigma=1$.
 \begin{esempio}
   \label{es:bv1}
   Sia data la seguente colonna:
@@ -75,7 +82,7 @@ Si vede un esempio chiarificatore.
   Si ha quindi che:
   \[h_5=01110001000000000001\]
   Avendo appunto un numero di run pari a:
-  \[rank_{h_5}(|h_5|)+1=4+1=5\]
+  \[rank_{h_5}(|h_5|-1)+1=4+1=5\]
   In merito alle run composte da simboli $\sigma=0$ si ha che:
   \[u_5=011000000000001\]
   Avendo infatti che si segnalano:
@@ -91,59 +98,151 @@ Si vede un esempio chiarificatore.
     \item la prima run è composta da un solo simbolo $\sigma=1$
     \item la seconda run è composta da quattro $\sigma=1$
   \end{itemize}
+  Si conferma, inoltre, quanto detto nell'equazione \ref{eq:bv5}, avendo:
+  \[rank_{h_5}(|h_5|-1)+1=5 = (rank_{u_5}(13)+1)+(rank_{v_5}(4)+1)=(2+1)+(1+1)=5\]
 \end{esempio}
 Le restanti informazioni, ovvero, per la colonna $k$, il valore $c[k]$, il
-booleano $start^k$ e l'LCP array $l_k$ sono le medesime della variante
-\textit{na\"{i}ve} della \textit{RLPBWT} (motivo per quale solo a breve si
+booleano $start_k$ e l'LCP array $l_k$ sono le medesime della variante
+\textit{na\"{i}ve} della \textit{RLPBWT} (motivo per il quale solo a breve si
 tratterà l'algoritmo di match).\\
 Lo pseudocodice relativo alla costruzione della colonna $k$-esima della
-\textbf{RLPBWT con bitvector} è disponile all'algoritmo \ref{algo:cosbv} (dove
+\textit{RLPBWT con bitvector} è disponile all'algoritmo \ref{algo:cosbv} (dove
 sono presenti anche le istruzioni per le varianti che verranno trattate in
-seguito).\\
-\textbf{CAPIRE SE METTERE UNO PSEUDO A PARTE}\\
-Bisogna spiegare come, data un indice di aplotipo $i\in\{0,\ldots,N-1\}$ e una
+seguito).
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{build\_bv}{$col,\,\, pref,\,\, div$}
+    \State $c\gets 0,\,\,u\gets 0,\,\,v\gets 0,\,\,u'\gets 0,\,\, v'\gets
+    0,\,\,curr_{lcs}\gets 0$
+    \State $start \gets \top,\,\,beg_{run}\gets \top,\,\,push_{zero}\gets
+    \bot,\,\,push_{one}\gets \bot$
+    \For {\textit{every} $k\in\left[0,\,\, M\right)$}
+    \If{$k=0\land col[pref[k]]=1$}
+    \State $start \gets \bot$
+    \EndIf
+    \If{$col[k]=0$}
+    \State $c\gets c+1$
+    \EndIf
+    \EndFor
+    \State $runs\gets[0..0]$
+    \Comment bitvector sparso per le run, di lunghezza $M+1$
+    \State $zeros\gets[0..0]$
+    \Comment bitvector sparso per $u_k$, di lunghezza $c[k]$
+    \State $ones\gets[0..0]$
+    \Comment bitvector sparso per $v_k$, di lunghezza $M-c$
+    \If{$start$}
+    \State $push_{one}\gets \top$
+    \Else
+    \State $push_{zero}\gets \top$
+    \EndIf
+    \For {\textit{every} $k\in\left[0,\,\, M\right)$}
+    \If{$beg_{run}$}
+    \State $u\gets u',\,\,v\gets v',\,\,beg_{run}\gets \bot$
+    \EndIf
+    \If{$col[pref[k]]=1$}
+    \State $v'\gets v'+1$
+    \Else
+    \State $u'\gets u'+1$
+    \EndIf
+    \If{$k=M-1\lor col[pref[k]]\neq col[pref[k+1]]$}
+    \State $runs[k]\gets 1$
+    \If{$push_{one}$}
+    \If{$v\neq 0$}
+    \State $ones[k-1]=1$
+    \EndIf
+    \State $swap(push_{zero},\,\,push_{one})$
+    \Else
+    \If{$u\neq 0$}
+    \State $zeros[k-1]=1$
+    \EndIf
+    \State $swap(push_{zero},\,\,push_{one})$
+    \EndIf
+    \State $beg_{run}\gets \top$
+    \EndIf
+    \EndFor
+    \If{$|zeros|\neq 0$}
+    \State $zeros[|zeros|-1]\gets 1$
+    \EndIf
+    \If{$|ones|\neq 0$}
+    \State $ones[|ones|-1]\gets 1$
+    \EndIf
+    \State \textit{build rank/select for the three bitvectors}
+    \State \textbf{return}
+    $(start,\,\,c,\,\,runs,\,\,zeros,\,\,ones,\,\,div)$  
+    \EndFunction
+  \end{algorithmic}
+  \caption{{\footnotesize{Algoritmo per la costruzione di una colonna della
+  \textit{RLPBWT} con bitvectors}}}
+  \label{algo:cosbv}
+\end{algorithm}
+
+Bisogna spiegare come, dato un indice di aplotipo $i\in\{0,\ldots,M-1\}$ e una
 colonna $k$, estrarre $u'_k[i]$ e $v'_k[i]$, ovvero come se si stesse usando la
 \textit{PBWT} classica, a partire dagli attuali $u_k[i]$ e $v_k[i]$. Ovviamente,
-se $i=0$, si ha che $u'_k[0]=v'_k[0]=0$. In caso contrario bisogna capire la run
+se $i=0$, si ha che $u'_k[0]=v'_k[0]=0$. In caso contrario bisogna, in primis,
+calcolare la run 
 in cui si trova l'indice $i$. Questo si ottiene direttamente sfruttando $h_k$:
-\[run = rank_{h_k}(i)\]
+\begin{equation}
+  \label{eq:bv7}
+  run = rank_{h_k}(i)
+\end{equation}
 Una volta calcolato l'indice di run si hanno tre possibilità:
 \begin{enumerate}
   \item si ha che $run=0$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$
   allora:
-  \[(u,v)=
+  \begin{equation}
+    \label{eq:bv8}
+    (u,v)=
     \begin{cases}
       (i,0)&\mbox{se } b=0\\
       (0,i)&\mbox{altrimenti}
     \end{cases}
-  \]
+  \end{equation}
   \item si ha che $run=1$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$. In
   tal caso bisogna per prima cosa individuare l'indice di inizio della seconda
   run, sfruttando $h_k$:
-  \[beg = select_{h_k}(1)+1\]
+  \begin{equation}
+    \label{eq:bv9}
+    beg = select_{h_k}(1)+1
+  \end{equation}
   A questo punto si ha il numero di simboli della prima run, indicizzata a 0, e,
   calcolando la distanza tra l'indice di riga e quello di inizio della prima
   run, avendo che:
-  \[(u,v)=
+  \begin{equation}
+    \label{eq:bv10}
+    (u,v)=
     \begin{cases}
       (beg,i-beg)&\mbox{se } b=0\\
       (i-beg,beg)&\mbox{altrimenti}
     \end{cases}
-  \]
+  \end{equation}
   \item si ha che $run=j$, con $j\in\{2,r-1\}$. Anche in questo caso  si procede
   calcolando l'indice di inizio della run:
-  \[beg = select_{h_k}(run)+1\]
+  \begin{equation}
+    \label{eq:bv11}
+    beg = select_{h_k}(run)+1
+  \end{equation}
   e l'offset rispetto all'indice $i$ dato:
-  \[offset = i-beg\]
+  \begin{equation}
+    \label{eq:bv12}
+    offset = i-beg
+  \end{equation}
   Poi, sfruttando la solita dicotomia fornita dal caso binario in studio, si
   hanno due casi: 
   \begin{enumerate}
     \item si è in una run di indice pari.
     Si sfruttano poi $u_k$ e $v_k$ per sapere l'indice della precedente run con
     simboli $\sigma=0$:
-    \[pre_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1\]
+    \begin{equation}
+      \label{eq:bv13}
+      pre_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
     e quello della run con simboli simboli $\sigma=1$:
-    \[pre_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1\]
+    \begin{equation}
+      \label{eq:bv14}
+      pre_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
     Si noti che si usa $\frac{run}{2}$ in quanto, essendo in una run di indice
     pari si hanno precedentemente lo stesso numero di run per $\sigma=0$ e per
     $\sigma=1$ e quindi si considera lo stesso numero di ``run'' nei due
@@ -151,33 +250,49 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
     A questo punto, sempre per il ragionamento per cui solo uno tra $u$ e $v$
     non è costante all'interno di una run si ha che o $pre_u$ o $pre_v$ è tale
     costante mentre l'altro valore deve essere calcolato considerando l'offset:
-    \[(u,v)=
+    \begin{equation}
+      \label{eq:bv15}
+      (u,v)=
       \begin{cases}
         (pre_u+offset,pre_v)&\mbox{se } b=0\\
         (pre_u,pre_v+offset)&\mbox{altrimenti}
       \end{cases}
-    \]
+    \end{equation}
     \item ci si trova in una run di indice dispari, quindi non si hanno
     precedentemente lo stesso numero di run per i due simboli. Bisogna quindi
     calcolare quante siano tali run. Se la prima run è di zeri:
-    \[run_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1\]
-    \[run_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)\]
+    \begin{equation}
+      \label{eq:bv16}
+      run_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
+    \begin{equation}
+      \label{eq:bv17}
+      run_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)
+    \end{equation}
     mentre se la prima run non è di zeri si devono invertire i due valori. Si sa
     quindi quali ``run'' considerare sui due \textit{bitvector sparsi} $u_k$ e
     $v_k$.\\ 
     Posso quindi procedere come nel caso precedente, avendo:
-    \[pre_u=select_{u_k}(run_u)+1\]
-    \[pre_v=select_{v_k}(run_v)+1\]
+    \begin{equation}
+      \label{eq:bv18}
+      pre_u=select_{u_k}(run_u)+1
+    \end{equation}
+    \begin{equation}
+      \label{eq:bv19}
+      pre_v=select_{v_k}(run_v)+1
+    \end{equation}
     E potendo quindi restituire:
-    \[(u,v)=
+    \begin{equation}
+      \label{eq:bv20}
+      (u,v)=
       \begin{cases}
         (pre_u,pre_v+offset)&\mbox{se } b=0\\
         (pre_u+offset,pre_v)&\mbox{altrimenti}
       \end{cases}
-    \]
+    \end{equation}
   \end{enumerate}
 \end{enumerate}
-\textbf{SPIEGAZIONE DA MIGLIORARE}
+\dc{Sistemare}
 \begin{esempio}
   Si prendano i dati e i risultati ottenuti all'esempio \ref{es:bv1}. Si
   vogliono calcolare $u$ e $v$ per $i=6$.\\
