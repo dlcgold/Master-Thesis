@@ -1,70 +1,3 @@
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{$w$}{$k,i,s, c_k, u_k, v_k$}
-    \If{$s = 0$}
-    \State \textbf{return} $u_k[i]$
-    \Else
-    \State \textbf{return} $c_k+v_k[i]$
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \caption{Algoritmo per l'LF-mapping nella PBWT.}
-  \label{algo:lf}
-\end{algorithm}
-
-% TODO COSTRUZIONE NAIVE
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{build\_naive}{$col,\,\, pref,\,\, div$}
-    \State $c\gets 0,\,\,u\gets 0,\,\,v\gets 0,\,\,u'\gets 0,\,\, v'\gets
-    0,\,\,run\gets 0$
-    \State $start \gets \top,\,\,beg_{run}\gets \top,\,\,push_{zero}\gets
-    \bot,\,\,push_{one}\gets \bot$
-    \State $rows\gets []$
-    \For {\textit{every} $k\in\left[0,\,\, height\right)$}
-    \If{$k=0\land col[pref[k]]=1$}
-    \State $start \gets \bot$
-    \EndIf
-    \If{$col[k]=0$}
-    \State $c\gets c+1$
-    \EndIf
-    \EndFor
-    \If{$start$}
-    \State $push_{one}\gets \top$
-    \Else
-    \State $push_{zero}\gets \top$
-    \EndIf
-    \For{\textit{every} $k\in[0,height)$}
-    \If{$beg_{run}$}
-    \State $u\gets u',\,\,v\gets v'$
-    \State $beg_{run}\gets \bot$
-    \EndIf
-    \If{$col[pref[k]]=1$}
-    \State $v'\gets v'+1$
-    \Else
-    \State $u'\gets u'+1$
-    \EndIf
-    \If{$k=0\lor col[pref[k]]\neq col[pref[k-1]]$}
-    \State $run\gets k$
-    \EndIf
-    \If{$k=height-1\lor col[pref[k]]\neq col[pref[k+1]]$}
-    \If {$push_{one}$}
-    \State $push(rows, (run, v))$
-    \State $swap(push_{one}, push_{zero})$
-    \Else
-      \State $push(rows, (run, u))$
-    \State $swap(push_{one}, push_{zero})$
-    \EndIf
-    \State $beg_{run}\gets \top$
-    \EndIf
-    \EndFor
-    \State \textbf{return} $(start, c, rows, div)$
-    \EndFunction
-  \end{algorithmic}
-  \label{algo:buildnaive}
-  \caption{\footnotesize{Algoritmo per la costruzione di una colonna della
-  \textit{RLPBWT} naive}}  
-\end{algorithm}
 
 
 
@@ -173,33 +106,7 @@
   \label{algo:extrchar}
 \end{algorithm}
 
-\begin{algorithm}
-  \footnotesize
-  \begin{algorithmic}[1]
-    \Function{uvtrick}{$k,\,\, i$}
-    \Comment $k$ indice di colonna, $i$ indice di run
-    \If{$i = 0$}
-    \State \textbf{return} $(0,\,\,0)$
-    \ElsIf{$i\mod 2=0$}
-    \State $u\gets uv_k[i-1],\,\,v\gets uv_k[i]$
-    \If{$start^k$}
-    \State \textbf{return} $(u,\,\,v)$
-    \Else
-    \State \textbf{return} $(v,\,\,u)$
-    \EndIf
-    \Else
-    \State $u\gets uv_k[i],\,\,v\gets uv_k[i-1]$
-    \If{$start^k$}
-    \State \textbf{return} $(u,\,\,v)$
-    \Else
-    \State \textbf{return} $(v,\,\,u)$
-    \EndIf
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \caption{Algoritmo per uvtrick naive}
-  \label{algo:uvnaive}
-\end{algorithm}
+
 
 \begin{algorithm}
   \footnotesize
@@ -422,7 +329,7 @@
     \For {\textit{every} $k\in\left[0,\,\, |z|\right)$}
     \State $f_{run}\gets index\_to\_run(f,k),\,\,g_{run}\gets
     index\_to\_run(g,k)$
-    \State $f_{off}\gets f-p_k[f_{run}],\,\,f_{off}\gets g-p_k[g_{run}]$
+    \State $f_{off}\gets f-p_k[f_{run}],\,\,g_{off}\gets g-p_k[g_{run}]$
     \If{$z[k]=0$}
     \State \textbf{if} $get\_symbol(start^k, f_{run})=1$ \textbf{then}
     $f_{off}\gets 0$

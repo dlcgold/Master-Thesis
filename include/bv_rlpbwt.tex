@@ -15,13 +15,15 @@ rappresentare le run (ovvero il vettore $p_k$ della variante na\"{i}ve) e quanto
 necessario a permettere il mapping (ovvero il vettore $uv_k$).\\
 In primis, per poter localizzare le run nella $k$-esima colonna, si è scelto di
 usare un \textit{bitvector sparso}, che denominiamo per praticità $h_k$, tale
-che $|h_k|=N$. Formalmente si ha che:
-\[h_k[i]=
+che $|h_k|=M$. Formalmente si ha che:
+\begin{equation}
+  \label{eq:bv1}
+  h_k[i]=
   \begin{cases}
-    1&\mbox{se } y^k[i]\neq y^k[i+1]\lor i==N-1\\
+    1&\mbox{se } y^k_{i}[k]\neq y^k_{i+1}[k]\lor i=M-1\\
     0&\mbox{altrimenti}
-  \end{cases},\forall i\in \{0,\ldots,N-1\}
-\]
+  \end{cases},\forall i\in \{0,\ldots,M-1\}
+\end{equation}
 Informalmente, quindi, si ha che si ha 1 in $h_k$ in tutti gli indici
 corrispondenti alla fine di una run.\\
 Empiricamente ci si aspettano ``poche'' run all'interno di una colonna della
@@ -31,8 +33,11 @@ $h_k$, di conseguenza si è optato per usare i \textit{bitvector sparsi} per la
 memorizzazione in memoria di ogni $h_k$, ricordando che, secondo quanto
 riportato per la libreria \textit{SDSL} \cite{sdsl}, tale variante richiede in
 memoria, indicando con $r$ il numero di run:
-\[\approx r\left(2+\log\frac{|h_k|}{r}\right)\mbox{ bit}\]
-\textbf{VERIFICARE CHE SIANO BITS}\\
+\begin{equation}
+  \label{eq:bv2}
+  \approx r\left(2+\log\frac{|h_k|}{r}\right)\mbox{ bit}
+\end{equation}
+\dc{Verificare che siano bit}
 Più elaborata è la rappresentazione dei vettori $u_k$ e $v_k$. In questo caso si
 è deciso, a differenza della rappresentazione unica vista nella \textit{RLPBWT
   na\"{i}ve}, di optare per due \textit{bitvector sparsi}. In particolare, per il

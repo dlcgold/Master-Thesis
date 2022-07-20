@@ -1,50 +1,59 @@
 \section{RLPBWT na\"{i}ve}
-\label{secrlpbwtna\"{i}ve}
+\label{secrlpbwtnaive}
 Un primo approccio alla \textbf{compressione run-length} è stato quello di
-semplicemente ``adattare'' quanto presentato da Durbin. Soprattutto a causa di
-questo fattore tale approccio è stato nominato \textbf{RLPBWT na\"{i}ve}.\\
-L'idea è stata quella di capire quali informazioni fossero necessarie al fine di
-poter calcolare i match. Si è quindi partiti studiando quanto memorizzato da
-Durbin stesso, pensando ad eventuali alternative.\\
-Il dato fondamentale che la \textit{PBWT} tiene in memoria è \textit{il pannello
-  $X$, con random access}. Ovviamente memorizzare l'intero pannello non era
+adattare quanto presentato da Durbin \cite{pbwt} a quanto visto, con diverse
+modifiche strutturali, nell'articolo di
+Gagie et al. \cite{tricks}. Tale approccio è stato nominato \textbf{RLPBWT
+  na\"{i}ve}.\\ 
+Il punto di partenza è stato capire quali informazioni fossero necessarie al
+fine di poter calcolare gli \textit{SMEM}. Si è quindi partiti studiando quanto
+memorizzato da Durbin stesso, pensando ad eventuali alternative, basandosi sul
+concetto di ``tabella'', per le informazioni relative alle run, di Gagie.\\
+Il dato fondamentale che la \textit{PBWT} tiene in memoria è il pannello
+$X$, con $M$ righe/aplotipi e $N$ colonne/siti, con \textit{random
+  access}. Ovviamente memorizzare l'intero pannello non era 
 possibile. D'altro canto l'idea dietro la 
 \textbf{RLPBWT} è quella di memorizzare con \textit{compressione run-length}
-la \textit{matrice PBWT}. La soluzione iniziale è stata quindi quella di
+la \textit{matrice PBWT}. La soluzione iniziale è stata, quindi, quella di
 memorizzare gli indici delle \textit{teste di run}, ovvero gli indici iniziali
 di ogni run. Ovviamente questa informazione non è sufficiente per poter sapere
 se una run sia composta da simboli $\sigma=0$ o simboli
 $\sigma=1$. Fortunatamente, essendo lo studio limitato, come per la
-\textit{PBWT}, a pannelli costruiti su alfabeto binario, $\Sigma=\{0,1\}$, si è
+\textit{PBWT}, a pannelli costruiti su alfabeto binario $\Sigma=\{0,1\}$, si è
 potuto sfruttare il fatto che le run si alternano tra un carattere e
-l'altro. Basta quindi tenere in memoria anche un valore booleano, nominato
-$start^k$, che permetta di 
+l'altro. Basta quindi tenere in memoria anche, come
+anticipato alla sottosezione \ref{subsectravis}, un valore booleano nominato
+$start_k$, che permetta di 
 capire se, in colonna $k$, la prima run sia una run di simboli
 $\sigma=0$. Infatti le run di 
 indice pari presentano lo stesso simbolo della prima run e quindi, dato un
-qualsiasi indice di run, è possibile sapere quale sia il simbolo di tale run.\\
+qualsiasi indice di run, è possibile sapere quale sia il simbolo corrispondente
+a tale run.\\ 
 Si memorizzano gli indici delle teste di run in un array $p_k$, di lunghezza
-parti al numero di run in colonna $k$. Si riconoscono alcune delle informazioni
-viste per la ``bozza'' di \textit{RLPBWT} vista alla sottosezione
-\ref{subsectravis}.\\ 
+pari al numero di run in colonna $k$. In pratica si memorizza un indice $i$ sse:
+\begin{equation}
+  \label{eq:naive1}
+  y_{i-1}^k[k]\neq y_i^k[k]
+\end{equation}
 Il passaggio successivo è stato quello di capire se le informazioni necessarie
 al mapping fossero tutte necessarie. In altri termini se, data la colonna $k$
 nella \textit{matrice PBWT}, fossero necessari $c[k]$, $u_k$ e $v_k$. In merito
-al valore $c[k]$, per quanto calcolabile in tempo $\mathcal{O}(r)$, dove $r$ è
+al valore $c[k]$, per quanto calcolabile, ipotizzando di avere solo $p_k$, in
+tempo $\mathcal{O}(r)$, dove $r$ è 
 il numero di run della colonna $k$-esima, si è deciso che si potesse calcolarlo
 in fase di costruzione delle \textit{RLPBWT} e memorizzarlo esattamente come per
 la \textit{PBWT}. In merito invece ai vettori $u_k$ e $v_k$ si è cercato un modo
 per ottenerne una rappresentazione che implicasse avere un solo valore per ogni
 run della colonna. In altri termini si è cercato di capire se fosse possibile
 tenere in memoria $r$ valori che permettessero di effettuare comunque il
-mapping, a partire da un indice arbitrario $i\in\{0,\ldots,N-1\}$. Anche in
+mapping, a partire da un indice arbitrario $i\in\{0,\ldots,M-1\}$. Anche in
 questo caso l'alternanza data dal caso binario ha permesso di trovare una
 semplice soluzione. I valori di $u_k$ e $v_k$ crescono infatti in modo
-alternato. A seconda del simbolo $\sigma$ rappresentato in una data run infatti
-si avrà che solo i valori dell'array relativo a tale simbolo, nel range di
-indici di quella run, verranno incrementati ad ogni passo di una unità. Per fare
-un semplice esempio, se siamo in una run di 0 e iteriamo virtualmente
-all'interno di tale run, solo i valori di $u_k$, in quel
+alternato. Infatti, a seconda del simbolo $\sigma$ rappresentato in una data
+run, si ha che solo i valori dell'array relativo a tale simbolo, nel range di
+indici di quella run, verranno incrementati, ad ogni passo, di una
+unità. Facendo un semplice esempio, se siamo in una run di 0 e iteriamo
+virtualmente all'interno di tale run, solo i valori di $u_k$, in quel
 range di indici, cresceranno di volta in volta di uno mentre per $v_k$, nello
 stesso range, si avrà sempre lo stesso valore.
 \begin{esempio}
@@ -72,16 +81,17 @@ stesso range, si avrà sempre lo stesso valore.
       & 5 & 5 & 5
     \end{tabular}
   \end{table}
+  Dove si nota l'alternanza di crescita dei valori sopra descritta.
 \end{esempio}
-Grazie a questa alternanza è quindi possibile memorizzare, per ogni indice di
+Grazie a questo comportamento è possibile memorizzare, per ogni indice di
 testa di run $i$, tale che $i\neq 0$, solo il valore di $u_k[i]$ o $v_k[i]$,
 rispettivamente se sia una run su simboli $\sigma=1$ o $\sigma=0$. Questo in
 quanto, se si analizza una run di zeri si avrà che solo i valori di $v_k$, nel
 range della run, verranno incrementati ad ogni step. Per $i=0$ banalmente si ha
 che $u_k[i]=v_k[i]=0$.\\
-Memorizzando i valori di $u_k$ e $v_k$ in un array $uv_k$, tale che
-$|uv_k|=|r|$, dove $r$ è il numero di run alla colonna $k$-esima, e dato
-$i\in\{0,\ldots, r-1\}$, a seconda che la colonna presenti o meno la prima run
+Memorizzando i valori di $u_k$ e $v_k$ in un array $uv_k$, tale che $|uv_k|=r$,
+con $r$ numero di run, e dato $i\in\{0,\ldots, r-1\}$, a seconda che la colonna
+presenti o meno la prima run  
 con simboli $\sigma=0$, si possono estrarre, in tempo costante, i valori di
 $u_k$ e $v_k$ per una data testa di run. Nel dettaglio, dato $i\in{0,\ldots,
   r-1}$:
@@ -94,7 +104,8 @@ $u_k$ e $v_k$ per una data testa di run. Nel dettaglio, dato $i\in{0,\ldots,
     \item la prima run è di simboli $\sigma=1$ e quindi si ottiene
     $u_k[p[i]]=uv_k[i]$ e $v_k[p[i]]=uv_k[i-1]$
   \end{itemize}
-  \item se $i\mod 2 \neq 0$ si hanno due casi:
+  \item se $i\mod 2 \neq 0$ si hanno due casi, che sono l'inverso della
+  situazione descritta precedentemente:
   \begin{itemize}
     \item la prima run è di simboli $\sigma=0$ e quindi si ottiene
     $u_k[p[i]]=uv_k[i]$ e $v_k[p[i]]=uv_k[i-1]$
@@ -102,20 +113,114 @@ $u_k$ e $v_k$ per una data testa di run. Nel dettaglio, dato $i\in{0,\ldots,
     $u_k[p[i]]=uv_k[i-1]$ e $v_k[p[i]]=uv_k[i]$   
   \end{itemize}
 \end{itemize}
-Lo pseudocodice relativo a quanto appena detto è consultabile all'algoritmo
-\ref{algo:uvnaive}.\\
+Tale operazione è eseguibile in tempo costante (assumendo \textit{random access}
+in tempo costante all'array $uv_k$) e lo pseudocodice relativo a
+quanto appena detto è consultabile all'algoritmo \ref{algo:uvnaive}.\\
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{uvtrick}{$k,\,\, i$}
+    \Comment $k$ indice di colonna, $i$ indice di run
+    \If{$i = 0$}
+    \State \textbf{return} $(0,\,\,0)$
+    \ElsIf{$i\mod 2=0$}
+    \State $u\gets uv_k[i-1],\,\,v\gets uv_k[i]$
+    \If{$start_k$}
+    \State \textbf{return} $(u,\,\,v)$
+    \Else
+    \State \textbf{return} $(v,\,\,u)$
+    \EndIf
+    \Else
+    \State $u\gets uv_k[i],\,\,v\gets uv_k[i-1]$
+    \If{$start_k$}
+    \State \textbf{return} $(u,\,\,v)$
+    \Else
+    \State \textbf{return} $(v,\,\,u)$
+    \EndIf
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per uvtrick naive}
+  \label{algo:uvnaive}
+\end{algorithm}
 In questa prima soluzione, infine, si è deciso di non mantenere in memoria il
 \textit{prefix array} e di mantenere completamente il \textit{divergence
   array}, sotto forma di \textit{LCP array}, per poter, da un punto di vista
-informale, reimplementare l'algoritmo 
-5 di Durbin solo con meno informazioni in memoria. Il non memorizzare il
+informale, implementare l'\textit{algoritmo 
+5} di Durbin solo con meno informazioni in memoria. Il non memorizzare il
 \textit{prefix array}, d'altro canto, impedisce di identificare con precisione
-le righe del pannello per cui si ha un match quindi l'algoritmo, che verrà
+le righe del pannello per cui si ha un certo \textit{SMEM} quindi l'algoritmo,
+che verrà 
 presentato più avanti nella tesi, è limitato al poter sapere quante righe
 matchano e non quali.\\
-\textbf{INSERIRE ALGORITMO DI COSTRUZIONE}\\
-In conclusione si riporta quindi un esempio dei dati memorizzati, per una data
-colonna, nella \textit{RLPBWT na\"{i}ve}.
+Ricapitolando, per la \textit{RLPBWT na\"{i}ve} si hanno in memoria, per ogni
+colonna $k$:
+\begin{itemize}
+  \item $start_k$, con il booleano atto a capire il simbolo della prima run
+  \item $p_k$, con gli indici delle teste di run
+  \item $uv_k$, coi valori compatti di $u_k$ e $v_k$ per le teste di run
+  \item $c[k]$, per sapere il numero totale di simboli $\sigma=0$ nella colonna
+  $k$ della \textit{matrice PBWT}
+  \item $l_k$, ovvero l'intero \textit{array LCP} alla colonna $k$
+\end{itemize}
+% TODO COSTRUZIONE NAIVE
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{build\_naive}{$col,\,\, pref,\,\, div$}
+    \State $c\gets 0,\,\,u\gets 0,\,\,v\gets 0,\,\,u'\gets 0,\,\, v'\gets
+    0,\,\,run\gets 0$
+    \State $start \gets \top,\,\,beg_{run}\gets \top,\,\,push_{zero}\gets
+    \bot,\,\,push_{one}\gets \bot$
+    \State $rows\gets []$
+    \For {\textit{every} $k\in\left[0,\,\, M\right)$}
+    \If{$k=0\land col[pref[k]]=1$}
+    \State $start \gets \bot$
+    \EndIf
+    \If{$col[k]=0$}
+    \State $c\gets c+1$
+    \EndIf
+    \EndFor
+    \If{$start$}
+    \State $push_{one}\gets \top$
+    \Else
+    \State $push_{zero}\gets \top$
+    \EndIf
+    \For{\textit{every} $k\in[0,M)$}
+    \If{$beg_{run}$}
+    \State $u\gets u',\,\,v\gets v'$
+    \State $beg_{run}\gets \bot$
+    \EndIf
+    \If{$col[pref[k]]=1$}
+    \State $v'\gets v'+1$
+    \Else
+    \State $u'\gets u'+1$
+    \EndIf
+    \If{$k=0\lor col[pref[k]]\neq col[pref[k-1]]$}
+    \State $run\gets k$
+    \EndIf
+    \If{$k=M-1\lor col[pref[k]]\neq col[pref[k+1]]$}
+    \If {$push_{one}$}
+    \State $push(rows, (run, v))$
+    \State $swap(push_{one}, push_{zero})$
+    \Else
+    \State $push(rows, (run, u))$
+    \State $swap(push_{one}, push_{zero})$
+    \EndIf
+    \State $beg_{run}\gets \top$
+    \EndIf
+    \EndFor
+    \State \textbf{return} $(start, c, rows, div)$
+    \EndFunction
+  \end{algorithmic}
+  \caption{\footnotesize{Algoritmo per la costruzione di una colonna della
+  \textit{RLPBWT} naive}}
+  \label{algo:buildnaive}
+\end{algorithm}
+La costruzione di ogni colonna, analizzabile nell'algoritmo
+\ref{algo:buildnaive}, ha costo $\mathcal{O}(M)$, dovendo scorrere l'intera
+colonna nella \textit{matrice PBWT} per produrre una colonna della
+\textit{RLPBWT na\"{i}ve}.
 \begin{esempio}
   Sia data la seguente colonna:
   \[y^5=00101111000000000000\]
@@ -125,13 +230,29 @@ colonna, nella \textit{RLPBWT na\"{i}ve}.
   \[c[5]=15\]
   \[l_5=[0,5,4,1,3,5,5,5,5,5,5,0,5,5,5,2,5,1,5,5]\]
 \end{esempio}
-\textbf{QUI MANCA SPEIGAZIONE OFFSET}\\
-Si ha quindi già una forte riduzione dello spazio in memoria occupato dalla
+Si hanno quindi le informazioni relative alle teste di run. Ipotizzando di avere
+un indice $i\in\{0,\ldots,M-1\}$ è comunque possibile risalire ai valori
+$u_k[i]$ e $v_k[i]$, sfruttando l'\textit{offset} dell'indice rispetto alla
+testa della run a cui appartiene. Banalmente, ipotizzando di essere in una run
+di simboli $\sigma=0$ con testa di run all'indice $p$, si avranno, avendo
+ottenuto $u_k[p]$ e $v_k[p]$ da $uv_k[p]$:
+\begin{equation}
+  \label{eq:naive2}
+  v_k[i]=v_k[p]
+\end{equation}
+\begin{equation}
+  \label{eq:naive3}
+  u_k[i]=u_k[p]+(i-p)
+\end{equation}
+Qualora la run fosse di simboli $\sigma=1$ basterebbe fare il ragionamento
+invertito.\\ 
+Con questa prima implementazione si ha già una forte riduzione dello spazio in
+memoria occupato dalla 
 struttura, questo nonostante la memorizzazione completa dell\textit{LCP array}.
 Riprendendo quindi l'esempio già visto per la \textit{PBWT}, dato un panello di
-medie dimensioni, con $N = 30000$ e$ M = 100000$, si ha che l'uso della
-\textit{RLPBWT na\"{i}ve} richiede $\sim 8.17$ gigabytes di memoria (rispetto ai
-$\sim 40.76$ gigabytes della \textit{PBWT}).\\
+medie dimensioni, con $N=30000$ e $M=100000$, si ha che l'uso della
+\textit{RLPBWT na\"{i}ve} richiede $\sim 8.17$GB di memoria (rispetto ai
+$\sim 40.76$GB della \textit{PBWT}).\\
 \textit{La spiegazione dell'algoritmo di match è rimandata a dopo l'introduzione
   della seconda variante, ovvero della \textbf{RLPBWT con bitvector}, in quanto
   le due versioni condividono, ad un alto livello di astrazione, il medesimo
