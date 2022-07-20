@@ -28,7 +28,26 @@ capire se, in colonna $k$, la prima run sia una run di simboli
 $\sigma=0$. Infatti le run di 
 indice pari presentano lo stesso simbolo della prima run e quindi, dato un
 qualsiasi indice di run, è possibile sapere quale sia il simbolo corrispondente
-a tale run.\\ 
+a tale run. L'implementazione, che richiede tempo costante, di questo concetto è
+visualizzabile all'algoritmo \ref{algo:extrchar}.
+\begin{algorithm}
+  \footnotesize
+  \begin{algorithmic}[1]
+    \Function{get\_symbol}{$s, \,\,r$}
+    \Comment $s=\top$ sse la prima run ha simbolo $\sigma=0$, $r$ indice di run
+    \If{$s$}
+    \State \textbf{if} $r\bmod 2 = 0$ \textbf{then} \textbf{return} $0$
+    \textbf{else} \textbf{return} $1$
+    \Else
+    \State \textbf{if} $r\bmod 2 = 0$ \textbf{then} \textbf{return} $1$
+    \textbf{else} \textbf{return} $0$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per estrazione simbolo da una run in una colonna}
+  \label{algo:extrchar}
+\end{algorithm}
+
 Si memorizzano gli indici delle teste di run in un array $p_k$, di lunghezza
 pari al numero di run in colonna $k$. In pratica si memorizza un indice $i$ sse:
 \begin{equation}
@@ -253,6 +272,7 @@ Riprendendo quindi l'esempio già visto per la \textit{PBWT}, dato un panello di
 medie dimensioni, con $N=30000$ e $M=100000$, si ha che l'uso della
 \textit{RLPBWT na\"{i}ve} richiede $\sim 8.17$GB di memoria (rispetto ai
 $\sim 40.76$GB della \textit{PBWT}).\\
+\dc{Dopo sperimentazione mettere misure delle serializzazioni}
 \textit{La spiegazione dell'algoritmo di match è rimandata a dopo l'introduzione
   della seconda variante, ovvero della \textbf{RLPBWT con bitvector}, in quanto
   le due versioni condividono, ad un alto livello di astrazione, il medesimo

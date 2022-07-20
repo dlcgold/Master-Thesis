@@ -108,7 +108,15 @@ tratterà l'algoritmo di match).\\
 Lo pseudocodice relativo alla costruzione della colonna $k$-esima della
 \textit{RLPBWT con bitvector} è disponile all'algoritmo \ref{algo:cosbv} (dove
 sono presenti anche le istruzioni per le varianti che verranno trattate in
-seguito).
+seguito). Assumendo che la complessità in tempo delle costruzioni delle
+strutture a supporto per le funzioni \textit{rank} e \textit{select} dei tre
+bitvector sparsi sia limitata superiormente dalla loro lunghezza massima, ovvero
+$M$, si ha che la costruzione di una colonna per la \textit{RLPBWT con
+  bitvector} avviene in tempo:
+\begin{equation}
+  \label{eq:bvcos}
+  \mathcal{O}(M)
+\end{equation}
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
@@ -167,7 +175,8 @@ seguito).
     \If{$|ones|\neq 0$}
     \State $ones[|ones|-1]\gets 1$
     \EndIf
-    \State \textit{build rank/select for the three bitvectors}
+    \State \textit{costruzione delle strutture per rank/select dei tre
+    bitvector} 
     \State \textbf{return}
     $(start,\,\,c,\,\,runs,\,\,zeros,\,\,ones,\,\,div)$  
     \EndFunction
@@ -303,8 +312,7 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
   Quindi ci si trova nel terzo caso e, nel dettaglio, avendo una run di
   indice dispari. Si calcolano quindi:
   \[run_u=select_{u_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)+1=
-    select_{u_5}(1)+1
-    =1+1=2\] 
+    select_{u_5}(1)+1 =1+1=2\] 
   \[run_v=select_{v_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)=
     select_{v_5}(1)=0\] 
   che non andranno invertiti avendo $start^5=\top$.\\
@@ -316,6 +324,82 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
   Concludendo, avendo $start^5=\top$:
   \[(u,v)=(pre_u, pre_v + offset)=(3,1+2)=(3,3)\]
 \end{esempio}
-L'algoritmo per il calcolo di $u$ e $v$, tenendo in considerazione che tale
+L'algoritmo per il calcolo di $u_k[i]$ e $v_k[i]$, tenendo in considerazione che
+tale 
 metodo verrà usato anche nelle varianti che verranno presentate in seguito della
-\textit{RLPBWT}, è disponibile all'algoritmo \ref{algo:uvbv}.
+\textit{RLPBWT}, è disponibile all'algoritmo \ref{algo:uvbv}. In merito alla
+complessità in tempo del calcolo di $u_k[i]$ e $v_k[i]$, si ha che essa è
+limitata superiormente dal costo della \textit{funzione rank} su
+\textit{bitvector sparsi}, essendo la \textit{funzione select} disponibile in
+tempo costante. Ne segue che, avendo $r$ run nella colonna $k$, si ha un tempo
+proporzionale a:
+\begin{equation}
+  \label{eq:bvuvtime}
+  \mathcal{O}\left(\log\frac{M}{r}\right)
+\end{equation}
+
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{uvtrick}{$k,\,\, i$}
+    \Comment $k$ is column index, $i$ row index
+    \If{$i = 0$}
+    \State \textbf{return} $(0,\,\,0)$
+    \EndIf
+    \State $run \gets rank_h^{k}(i)$
+    \If{$run=0$}
+    \If{$start_k$}
+    \State \textbf{return} $(i,\,\, 0)$
+    \Else
+    \State \textbf{return} $(0, \,\,i)$
+    \EndIf
+    \ElsIf{$run=1$}
+    \If{$start_k$}
+    \State \textbf{return} $(select_h^{k}(run)+1,\,\, i-(select_h^{k}(run)+1))$
+    \Else
+    \State \textbf{return} $(i-(select_h^{k}(run)+1),\,\, select_h^{k}(run)+1)$
+    \EndIf
+    \Else
+    \If{$run\bmod 2 = 0$}
+    \State $pre_u\gets
+    select_u^{k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$ 
+    \State $pre_v\gets
+    select_v^{k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$ 
+    \State $offset \gets i -(select_h^{k}(run)+1)$
+    \If{$start_k$}
+    \State \textbf{return} $(pre_u+offset,\,\, pre_v)$
+    \Else
+    \State \textbf{return} $(pre_u, \,\,pre_v+offset)$
+    \EndIf
+    \Else
+    \State $run_u\gets \left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$
+    \State $run_v\gets \left\lfloor\frac{run}{2}\right\rfloor$
+    \If{$\neg start_k$}
+    \State $swap(run_u, run_v)$
+    \EndIf
+    \State $pre_u\gets select_u^{k}(run_u)+1$
+    \State $pre_v\gets select_v^{k}(run_v)+1$
+    \State $offset \gets i -(select_h^{k}(run)+1)$
+    \If{$start_k$}
+    \State \textbf{return} $(pre_u, \,\,pre_v+offset)$
+    \Else
+    \State \textbf{return} $(pre_u+offset, \,\,pre_v)$
+    \EndIf
+    \EndIf
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per uvtrick con bitvector}
+  \label{algo:uvbv}
+\end{algorithm}
+\dc{Serve altro?}
+Con questa prima implementazione, di fatto, non si ha un miglioramento in
+memoria rispetto alla variante na\"{i}ve bensì un lieve peggioramento.
+Riprendendo quindi l'esempio già visto per la \textit{RLPBWT na\"{i}ve}, dato un
+panello di 
+medie dimensioni, con $N=30000$ e $M=100000$, si ha che l'uso della
+\textit{RLPBWT con bitvector} richiede $\sim 8.26$GB di memoria (rispetto ai
+$\sim 8.17$GB della \textit{RLPBWT na\"{i}ve}). Nonostante ciò questa versione
+risulta essere di cruciale importanza, in vista del cambio di paradigma che si
+vedrà con le successive due versioni.\\
+\dc{Dopo sperimentazione mettere misure delle serializzazioni}

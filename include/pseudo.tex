@@ -88,78 +88,8 @@
   \label{algo:cosms}
 \end{algorithm}
 
-\begin{algorithm}
-  \footnotesize
-  \begin{algorithmic}[1]
-    \Function{get\_symbol}{$s, \,\,r$}
-    \Comment $s=\top$ iff column start with 0, $r$ run index
-    \If{$s$}
-    \State \textbf{if} $r\bmod 2 = 0$ \textbf{then} \textbf{return} $0$
-    \textbf{else} \textbf{return} $1$
-    \Else
-    \State \textbf{if} $r\bmod 2 = 0$ \textbf{then} \textbf{return} $1$
-    \textbf{else} \textbf{return} $0$
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \caption{Algoritmo per estrazione simbolo da una run in una colonna}
-  \label{algo:extrchar}
-\end{algorithm}
 
 
-
-\begin{algorithm}
-  \footnotesize
-  \begin{algorithmic}[1]
-    \Function{uvtrick}{$k,\,\, i$}
-    \Comment $k$ is column index, $i$ row index
-    \If{$i = 0$}
-    \State \textbf{return} $(0,\,\,0)$
-    \EndIf
-    \State $run \gets rank_h^{k}(i)$
-    \If{$run=0$}
-    \If{$start^k$}
-    \State \textbf{return} $(i,\,\, 0)$
-    \Else
-    \State \textbf{return} $(0, \,\,i)$
-    \EndIf
-    \ElsIf{$run=1$}
-    \If{$start^k$}
-    \State \textbf{return} $(select_h^{k}(run)+1,\,\, i-(select_h^{k}(run)+1))$
-    \Else
-    \State \textbf{return} $(i-(select_h^{k}(run)+1),\,\, select_h^{k}(run)+1)$
-    \EndIf
-    \Else
-    \If{$run\bmod 2 = 0$}
-    \State $pre_u\gets select_u^{k}(\frac{run}{2})+1$
-    \State $pre_v\gets select_v^{k}(\frac{run}{2})+1$
-    \State $offset \gets i -(select_h^{k}(run)+1)$
-    \If{$start^k$}
-    \State \textbf{return} $(pre_u+offset,\,\, pre_v)$
-    \Else
-    \State \textbf{return} $(pre_u, \,\,pre_v+offset)$
-    \EndIf
-    \Else
-    \State $run_u\gets (\frac{run}{2})+1$
-    \State $run_v\gets \frac{run}{2}$
-    \If{$\neg start^k$}
-    \State $swap(run_u, run_v)$
-    \EndIf
-    \State $pre_u\gets select_u^{k}(run_u)+1$
-    \State $pre_v\gets select_v^{k}(run_v)+1$
-    \State $offset \gets i -(select_h^{k}(run)+1)$
-    \If{$start^k$}
-    \State \textbf{return} $(pre_u, \,\,pre_v+offset)$
-    \Else
-    \State \textbf{return} $(pre_u+offset, \,\,pre_v)$
-    \EndIf
-    \EndIf
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \caption{Algoritmo per uvtrick con bitvector}
-  \label{algo:uvbv}
-\end{algorithm}
 \begin{algorithm}
   \footnotesize
   \begin{algorithmic}[1]
