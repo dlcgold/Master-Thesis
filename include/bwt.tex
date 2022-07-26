@@ -552,35 +552,77 @@ sono i seguenti:
   $i=m-1$, in $BWT_T$, ``virtualmente'' essendo essa in memorizzata in modo
   compatto tramite compressione \textit{run-length}
   \item si procede tramite \textit{LF-mapping} a partire da $q$, arrivando in
-  una nuova posizione $q$
+  una nuova posizione $q$ per le medesime motivazione descritte precedentemente
+  nel caso della \textit{BWT}
   \item si memorizza $MS[i].pos = SA_T[q]$
   \item a questo punto si hanno due alternative:
   \begin{itemize}
-    \item se $BWT_T[q]=P[i-1]$ si procede con il mapping come in 2)
+    \item se $BWT_T[q]=P[i-1]$ si procede con il mapping come in 2.
     \item se $BWT_T[q]\neq P[i-1]$ si deve selezionare un nuovo $q$ tale per cui
     $BWT_T[q]=P[i-1]$. Questo può essere o l'indice della coda della run
     precedente di simboli $P[i-1]$ o la testa della run successiva di simboli
     $P[i-1]$. Qualora non si debba scegliere, ovvero la run attuale non è
     preceduta/succeduta da una run di simboli $P[i-1]$, si sceglie,
     rispettivamente, la testa della run successiva o la coda della run
-    precedente di simboli $P[i-1]$. Altrimenti si usa la threshold relativa la
+    precedente di simboli $P[i-1]$. Altrimenti si usa la threshold relativa al
     carattere $P[i-1]$, la cui posizione viene denotata $t$. Qualora si ha che
     $q<t$ si procede scegliendo la coda della run precedente mentre, avendo
     $q\geq t$, si seleziona la testa della run successiva. La scelta basata
     sulla posizione della threshold è dettata dal fatto che, in tal modo, si
     seleziona, di volta in volta, il suffisso più lungo che presenta un match
     con il suffisso, esteso a sinistra con $P[i-1]$, del pattern. Una volta
-    scelto il nuovo $q$ si procede con il mapping come in 2)
+    scelto il nuovo $q$ si procede con il mapping come in 2.
     \dc{ridire meglio e dimostrare}
   \end{itemize}
   \item si itera fino ad esaurimento del pattern
 \end{enumerate}
+Lo pseudocodice è visualizzabile all'algoritmo \ref{algo:bannai}.\\
 Questa pubblicazione è stata uno dei punti di partenza per
 riadattare quanto studiato sulla \textit{RLBWT} classica al fine di ottenere
 risultati analoghi per la \textit{RLPBWT}.\\
 Per ulteriori dettagli sull'implementazione, sul calcolo delle
 \textit{threshold} e sui risultati sperimentali si rimanda direttamente al paper
 di \textit{MONI} \cite{moni}.
+\begin{algorithm}
+  \footnotesize
+  \begin{algorithmic}[1]
+    \Function{COMPUTE\_MS}{$P,\,\, T,\,\,SA_T,\,\,BWT_T$}
+    \State $MS\gets[(pos : 0, len : 0) \ldots (0, 0)]$
+    \Comment $|P| = m$, $|T| = n$, $|MS| = m$
+    \State $q\gets\mbox{posizione dell'ultima occorrenza di }P[m-1] \mbox{ in }
+    BWT_T$
+    \State $pos \gets SA_T[q]$
+    \For {\textit{every} $i\in[0,m-1]$}
+    \If{$BWT_T[q]\neq P[i]$}
+    \If{$BWT_T[q]\mbox{ è prima della relativa threshold per } P[i]$}
+    \State $q\gets\mbox{posizione dell'occorrenza precedente di }P[i] \mbox{ in
+    } BWT_T$
+    \Else
+    \State $q\gets\mbox{posizione dell'occorrenza successiva di }P[i] \mbox{ in
+    } BWT_T$
+    \EndIf
+    \State $pos\gets SA_T[q]$
+    \EndIf
+    \State $MS[i].pos \gets pos$
+    \State $q\gets LF(q),\,\,pos\gets pos-1$
+    \EndFor
+    \For {\textit{every} $i\in[0,m-1]$}
+    \State $MS[i].len\gets MS[i-1].len-1$
+    \While {$P[i+MS[i].len]=T[MS[i].pos+MS[i].len]$}
+    \State  $MS[i].len\gets MS[i].len+1$
+    \EndWhile
+    \EndFor
+    \State \textbf{return} $MS$
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo di Bannai per il calcolo dell'array \textit{MS} tra un
+  pattern $P$ e un testo $T$. Per
+  semplicità si ignorano i casi in cui $q$ non è definito. Si
+  assume inoltre che $P[m-1]$ occorre in $T$. Con $LF(\cdot)$ si intende il
+  calcolo dell'\textit{LF-mapping}.}
+  \label{algo:bannai}
+\end{algorithm}
+\dc{Sistemare pseudo Bannai}
 \subsection{Uso delle LCE query}
 Nel 2021, Boucher, Gagie, Rossi et al. proposero un ulteriore miglioramento di
 quanto fatto in \textit{MONI}, con \textbf{PHONI: \textit{Streamed Matching
@@ -701,7 +743,7 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   \caption{Algoritmo per il calcolo dell'array $MS$ in \textit{PHONI}. Per
   semplicità si ignorano i casi in cui $q$, $q'$ e $q''$ non sono definiti. Si
   assume inoltre che $P[m-1]$ occorre in $T$. Con $LF(\cdot)$ si intende il
-  calcolo dell'\textit{LF-mapping}}
+  calcolo dell'\textit{LF-mapping}.}
   \label{algo:phonims}
 \end{algorithm}
 \begin{esempio}
