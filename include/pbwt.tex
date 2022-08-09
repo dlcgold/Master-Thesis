@@ -377,9 +377,9 @@ quanto riguarda $u$ e $v$. Per quanto riguarda $c$
 si ha che potrebbe essere banalmente calcolato anch'esso in fase di costruzione
 della \textbf{PBWT}, tenendo ogni volta traccia del numero di 0 incontrati
 nella colonna $k$-esima.\\
-Sfruttando i valori di questi 3 array possiamo quindi effettuare il mapping,
-definito, per comodità, da una funzione, rappresentabile in pseudocodice come
-nell'algoritmo \ref{algo:pbwtlf}:
+Sfruttando i valori di questi 3 array possiamo quindi effettuare lo step/mapping
+alla colonna successiva,
+definito, per comodità, da una funzione:
 \begin{equation}
   \label{eq:pbwtw1}
   w_k:\{0,\ldots,M\}\times\Sigma\to \{0,\ldots,M\}
@@ -393,8 +393,10 @@ tale per cui:
     v_k[i]+c[k]&\mbox{ se }\sigma=1
   \end{cases}
 \end{equation}
-Interessante notare, come confermato anche dall'algoritmo di costruzione stesso,
-che si ha:
+Tale funzione è rappresentabile in pseudocodice come nell'algoritmo
+\ref{algo:pbwtlf}. \\
+Risulta interessante notare, come confermato anche dall'algoritmo di costruzione
+stesso, che si ha:
 \begin{equation}
   \label{eq:pbwt3}
   a_{k+1}\left[w_k\left(i,y_i^k[k]\right)\right]=a_k[i]
@@ -412,7 +414,7 @@ all'interno delle varie permutazioni dettate dai vari $a_k$.
     \EndIf
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per l'LF-mapping nella PBWT.}
+  \caption{Algoritmo per il mapping nella PBWT.}
   \label{algo:pbwtlf}
 \end{algorithm}
 \begin{esempio}
@@ -683,7 +685,7 @@ Durbin, si necessitano $\sim 36.32$GB di memoria. Inoltre, una stima
 sperimentale di tale richiesta di memoria può essere confermata con l'esecuzione
 dell'implementazione della \textit{PBWT} di Durbin stesso
 \cite{durbin_gh}. Infatti, monitorando 
-con \texttt{time} il picco di memoria durante l'esecuzione si ha che esso
+con \texttt{time} il picco di memoria durante l'esecuzione, si ha che esso
 corrisponde a $\sim 40.76$GB, comprensivi anche di tutto ciò che è ``a
 contorno'' all'algoritmo stesso. I dati quindi sembrano confermare le stime di
 Durbin, confermando l'alto uso di memoria richiesto dall'\textit{algoritmo

@@ -1,6 +1,6 @@
-\section{Introduzione agli strumenti usati}
-Prima di addentrarci nella discussione dei risultati è bene trattare gli
-strumenti computazionali usati durante la fase di sviluppo.\\
+\section{Descrizione degli esperimenti}
+Prima di addentrarci nella discussione dei risultati è bene introdurre le
+modalità con cui si sono svolti gli esperimenti.\\
 Dal punto di vista dei linguaggi di programmazione si sono usati:
 \begin{itemize}
   \item \textbf{\Cplusplus}, per l'implementazione delle strutture dati e degli
@@ -15,7 +15,9 @@ singoli step verranno approfonditi nel corso del capitolo, si articola nel
 seguente modo: 
 \begin{enumerate}
   \item \textit{\textbf{input:}} pannello binario generato tramite
-  \textbf{MaCS}
+  \textbf{MaCS} oppure un pannello in \textbf{Variant Call Format (VCF)}
+  \cite{vcf}, nel 
+  caso di dati reali, convertito per praticità in formato \textit{MACs}
   \item \textbf{opzionale:} produzione dell'\textbf{SLP} del pannello
   \item \textbf{step intermedio:} estrazione dal pannello in input di un
   pannello di query di grandezza selezionata dall'utente e costruzione della
@@ -37,8 +39,7 @@ utilizzato da Durbin nella sua implementazione della \textbf{PBWT}
   \item la lunghezza del match
 \end{enumerate}
 %Un esempio è visualizzabile alla listing \ref{lst:pbwtres}.
-\subsection{MaCS}
-\textbf{RIVEDERE!}\\
+\paragraph{MaCS}
 \textbf{MaCS} \cite{macs}, sviluppato da Gary K. Chen, è un simulatore di
 \textit{processi coalescenti}, basati sulla \textbf{teoria della
   coalescenza}. Tale teoria è un modello di come gli alleli campionati da una
@@ -99,13 +100,13 @@ Dove:
   processi per i quali si ottengono nuove combinazioni di alleli a partire da un
   \textit{genotipo}, per un sito nel tempo 
 \end{itemize}
-Il risultato, dove si noti vengono selezionati 4 siti dopo la simulazione, del
-comando appena descritto è visualizzabile alla listing \ref{lst:macs}.\\
-\begin{listing}[H]
-  \inputminted[obeytabs]{text}{code/example.macs}
-  \caption{Esempio di output di \textbf{MaCS}.}
-  \label{lst:macs}
-\end{listing}
+% Il risultato, dove si noti vengono selezionati 4 siti dopo la simulazione, del
+% comando appena descritto è visualizzabile alla listing \ref{lst:macs}.\\
+% \begin{listing}[H]
+%   \inputminted[obeytabs]{text}{code/example.macs}
+%   \caption{Esempio di output di \textbf{MaCS}.}
+%   \label{lst:macs}
+% \end{listing}
 % \textbf{MANCA SIGNIFICATO DEGLI ``HEADER'' DI OGNI SITE NEL RISULTATO.}
 % \subsection{SDSL}
 % La libreria più utilizzata nel progetto, come anche in diverse sue dipendenze, è
@@ -124,7 +125,7 @@ comando appena descritto è visualizzabile alla listing \ref{lst:macs}.\\
 %   \item stimare, in certi casi, lo \textbf{spazio in memoria} richiesto per le
 %   varie strutture 
 % \end{itemize}
-\subsection{BigRePair e ShapedSlp}
+\paragraph{BigRePair e ShapedSlp}
 \label{subslp}
 Come introdotto alla sezione \ref{slpsec}, una delle varianti della
 \textbf{RLPBWT}, richiede l'uso, estremamente vantaggioso dal punto di vista
@@ -148,7 +149,10 @@ In termini di pipeline si procede quindi:
   approfonditi) 
 \end{enumerate}
 
-\subsection{Snakemake}
+\subsection{Riproducibilà degli esperimenti}
+Al fine di rendere riproducibili gli esperimenti si è costruita una pipeline
+per l'esecuzione dei vari algoritmi e l'estrazione dei dati quantitativi
+relativi alle performance.\\
 L'intera pipeline è stata gestita tramite \textbf{Snakemake} \cite{snakemake},
 un \textit{workflow management system}, uno strumento molto usato in
 \textit{bioinformatica} per creare analisi dati scalabili e riproducibili. Nel

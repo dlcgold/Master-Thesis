@@ -337,12 +337,17 @@ proporzionale a:
   \label{eq:bvuvtime}
   \mathcal{O}\left(\log\frac{M}{r}\right)
 \end{equation}
+Non dovendo in tal
+caso considerare esplicitamente l'offset il mapping dalla colonna $k$ alla
+colonna $k+1$, guidato da $z[k+1]$, viene fatto come nel caso della
+\textit{PBWT}, come visualizzabile all'algoritmo \ref{algo:lfr}, che presenta
+quindi la medesima complessità del calcolo di $u[i]$ e $v[i]$.
 
 \begin{algorithm}
-  \small
+  %\small
   \begin{algorithmic}[1]
     \Function{uvtrick}{$k,\,\, i$}
-    \Comment $k$ is column index, $i$ row index
+    \Comment  $k$ indice di colonna, $i$ indice di riga
     \If{$i = 0$}
     \State \textbf{return} $(0,\,\,0)$
     \EndIf
@@ -391,6 +396,22 @@ proporzionale a:
   \end{algorithmic}
   \caption{Algoritmo per uvtrick con bitvector}
   \label{algo:uvbv}
+\end{algorithm}
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{lf}{$k,\,\, i, \,\,s$}
+    \Comment $k$ indice di colonna, $i$ indice di riga, $s$ simbolo
+    \State $c\gets c[k]$
+    \State $(u, v) \gets uvtrick(k,\,\,i)$
+    \If{$s = 0$}
+    \State \textbf{return} $u$
+    \Else
+    \State \textbf{return} $c+v$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per il mapping senza offset.}
+  \label{algo:lfr}
 \end{algorithm}
 \dc{Serve altro?}
 Con questa prima implementazione, di fatto, non si ha un miglioramento in

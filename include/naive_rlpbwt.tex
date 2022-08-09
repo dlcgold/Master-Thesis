@@ -253,18 +253,59 @@ Si hanno quindi le informazioni relative alle teste di run. Ipotizzando di avere
 un indice $i\in\{0,\ldots,M-1\}$ è comunque possibile risalire ai valori
 $u_k[i]$ e $v_k[i]$, sfruttando l'\textit{offset} dell'indice rispetto alla
 testa della run a cui appartiene. Banalmente, ipotizzando di essere in una run
-di simboli $\sigma=0$ con testa di run all'indice $p$, si avranno, avendo
+di simboli $\sigma$ con testa di run all'indice $p$, si avranno, avendo
 ottenuto $u_k[p]$ e $v_k[p]$ da $uv_k[p]$:
+% \begin{equation}
+%   \label{eq:naive2}
+%   v_k[i]=v_k[p]
+% \end{equation}
+% \begin{equation}
+%   \label{eq:naive3}
+%   u_k[i]=u_k[p]+(i-p)
+% \end{equation}
 \begin{equation}
+  \small
   \label{eq:naive2}
-  v_k[i]=v_k[p]
+  \begin{cases}
+    v_k[i]=v_k[p]\\
+    u_k[i]=u_k[p]+(i-p)
+  \end{cases},\mbox{sse } y^k_p[k]=0
+  \quad
+  \begin{cases}
+    u_k[i]=u_k[p]\\
+    v_k[i]=v_k[p]+(i-p)
+  \end{cases},\mbox{sse } y^k_p[k]=1
 \end{equation}
-\begin{equation}
-  \label{eq:naive3}
-  u_k[i]=u_k[p]+(i-p)
-\end{equation}
-Qualora la run fosse di simboli $\sigma=1$ basterebbe fare il ragionamento
-invertito.\\ 
+Tenendo conto dell'offset $o$ in modo esplicito è quindi possibile riadattare
+l'algoritmo per il 
+mapping, da intendersi alla stregua del \textit{backward step} visto nel caso
+della \textit{BWT}, dalla colonna $k$ alla colonna $k+1$ guidato da
+$z[k+1]$. Tale soluzione è riportata all'algoritmo \ref{algo:lfoff}.
+Ricordando che si può risalire ai valori $u[p]$ e $v[p]$ in tempo costante,
+anche il mapping da una colonna alla successiva avviene in tempo costante.\\
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{lf\_off}{$k,\,\, i, \,\,s,\,\,o$}
+    \Comment $k$ indice di colonna, $i$ indice di riga
+    \State $(u,v)\gets uvtrick(k,\,\,i)$
+    \Comment $s$ simbolo, $o$ offset
+    \If{$p_k[i]+0=height$}
+    \If{$get\_symbol(start^k, i)=0$}
+    \State $v\gets v-1$
+    \Else
+    \State $u\gets u-1$
+    \EndIf
+    \EndIf
+    \If{$s = 0$}
+    \State \textbf{return} $u+o$
+    \Else
+    \State \textbf{return} $c[k]+v+o$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per mapping con offset nella \textit{RLPBWT naive}.}
+  \label{algo:lfoff}
+\end{algorithm}
 Con questa prima implementazione si ha già una forte riduzione dello spazio in
 memoria occupato dalla 
 struttura, questo nonostante la memorizzazione completa dell\textit{LCP array}.

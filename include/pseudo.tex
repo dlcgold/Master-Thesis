@@ -59,12 +59,12 @@
     \State $push(samples_{end}, pref[k])$
     \If{$push_{one}$}
     \If{$v\neq 0$}
-    \State $ones[k-1]=1$
+    \State $ones[k-1\gets 1$
     \EndIf
     \State $swap(push_{zero},\,\,push_{one})$
     \Else
     \If{$u\neq 0$}
-    \State $zeros[k-1]=1$
+    \State $zeros[k-1]\gets 1$
     \EndIf
     \State $swap(push_{zero},\,\,push_{one})$
     \EndIf
@@ -90,163 +90,6 @@
 
 
 
-\begin{algorithm}
-  \footnotesize
-  \begin{algorithmic}[1]
-    \Function{index\_to\_run}{$k,\,\, i$}
-    \Comment $k$ indice di colonna, $i$ indice di run
-    \State $run\gets 0,\,\,found\gets \bot$
-    \If{$i\geq p_k[|p_k|-1]$}
-    \State \textbf{return} $|p_k|-1$
-    \EndIf
-    \For {\textit{every} $r\in[0,|p_k|-1]$}
-    \If{$p_k[r]\geq i<p_k[r+1]$}
-    \State $run\gets r,\,\,found \gets \top$
-    \State \textbf{break}
-    \EndIf
-    \EndFor
-    \If {$\neg found$}
-    \State $run=|p_k|-1$
-    \EndIf
-    \State \textbf{return} $run$
-    \EndFunction
-  \end{algorithmic}
-  \caption{Algoritmo per convertire un indice in indice di run}
-  \label{algo:itr}
-\end{algorithm}
-
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{lf}{$k,\,\, i, \,\,s$}
-    \Comment $k$ is column index, $i$ row index, $s$ symbol
-    \State $c\gets c[k]$
-    \State $(u, v) \gets uvtrick(k,\,\,i)$
-    \If{$s = 0$}
-    \State \textbf{return} $u$
-    \Else
-    \State \textbf{return} $c+v$
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \label{algo:lfr}
-  \caption{Algoritmo per lf-mapping}
-\end{algorithm}
-
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{lf\_off}{$k,\,\, i, \,\,s,\,\,o$}
-    \Comment $k$ is column index, $i$ row index, $s$ symbol, $o$ offset
-    \State $(u,v)\gets uvtrick(k,\,\,i)$
-    \If{$p_k[i]+0=height$}
-    \If{$get\_symbol(start^k, i)=0$}
-    \State $v\gets v-1$
-    \Else
-    \State $u\gets u-1$
-    \EndIf
-    \EndIf
-    \If{$s = 0$}
-    \State \textbf{return} $u+o$
-    \Else
-    \State \textbf{return} $c[k]+v+o$
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \label{algo:lfro}
-  \caption{Algoritmo per lf-mapping con offset}
-\end{algorithm}
-
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{reverse\_lf}{$k, \,\,i$}
-    \Comment $k$ indice di colonna, $i$ indice di riga
-    \If{$k=0$}
-    \Comment by design
-    \State \textbf{return} $0$
-    \EndIf
-    \State $k\gets k-1$
-    \State $c\gets rlpbwt[k].c$
-    \State $u\gets 0$, $v\gets 0$, $offset\gets 0$, $run \gets 0$,
-    $found\gets \bot$
-    \If {i < c}
-    \State $u\gets i$
-    \State $prev_0\gets 0$, $next_0\gets 0$
-    \For {\textit{every} $j\in [0,|p_k|)$}
-    \State $(prev_0,\_) = uvtrick(k,j)$
-    \State $(next_0,\_) = uvtrick(k,j+1)$
-    \If{$prev_0\leq u<next_0$}
-    \State $run\gets j$,$found\gets \top$
-    \State \textbf{break}
-    \EndIf
-    \EndFor
-    \If{$\neg found$}
-    \State $run \gets |p_k|-1$
-    \EndIf
-    \State $(curr_u,\_)\gets uvtrick(k, run)$, $offset\gets u-curr_u$
-    \State \textbf{return} $p_k[run]+offset$
-    \Else
-
-    \State $v\gets i-c$
-    \State $prev_1\gets 0$, $next_1\gets 0$
-    \For {\textit{every} $j\in [0,|p_k|)$}
-    \State $(\_,prev_1) = uvtrick(k,j)$
-    \State $(\_,next_1) = uvtrick(k,j+1)$
-    \If{$prev_1\leq v<next_1$}
-    \State $run\gets j$,$found\gets \top$
-    \State \textbf{break}
-    \EndIf
-    \EndFor
-    \If{$\neg found$}
-    \State $run \gets |p_k|-1$
-    \EndIf
-    \State $(curr_v,curr_u)\gets uvtrick(k, run)$, $offset\gets v-curr_v$
-    \State \textbf{return} $p_k[run]+offset$
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \caption{Algoritmo per lf-mapping inverso naive}
-  \label{algo:lfrev}
-\end{algorithm}
-
-\begin{algorithm}
-  \begin{algorithmic}[1]
-    \Function{reverse\_lf}{$k, \,\,i$}
-    \Comment $k$ is column index, $i$ row index
-    \If{$k=0$}
-    \Comment by design
-    \State \textbf{return} $0$
-    \EndIf
-    \State $k\gets k-1$
-    \State $c\gets rlpbwt[k].c$
-    \If{$i<c$}
-    \If{$start^k$}
-    \State $run\gets rank_u^{k}(i)\cdot 2$
-    \Else
-    \State $run\gets rank_u^{k}(i)\cdot 2+1$
-    \EndIf
-    \State $i_{run}\gets 0$
-    \If{$run\neq 0$}
-    \State $i_{run}\gets select_h^{k}(run)+1$
-    \EndIf
-    \State $(prev_0,\,\,\_)\gets uvtrick(k,\,\,i_{run})$
-    \State \textbf{return} $i_{run}+(i-prev_0)$
-    \Else
-    \If{$start^k$}
-    \State $run\gets rank_v^{k}(i)\cdot 2+1$
-    \Else
-    \State $run\gets rank_v^{k}(i)\cdot 2$
-    \EndIf
-    \State $i_{run}\gets 0$
-    \If{$run\neq 0$}
-    \State $i_{run}\gets select_h^{k}(run)+1$
-    \EndIf
-    \State $(\_,\,\,prev_1)\gets uvtrick(k,\,\,i_{run})$
-    \State \textbf{return} $i_{run}+(i-(c+prev_1))$
-    \EndIf
-    \EndFunction
-  \end{algorithmic}
-  \caption{Algoritmo per lf-mapping inverso con bitvector}
-  \label{algo:lfrevbv}
-\end{algorithm}
 
 \begin{algorithm}
   \footnotesize
@@ -289,13 +132,13 @@
     \State $f'\gets g'-1$
     \If{$e\geq 1$}
     \State $f_{rev}\gets f',\,\,k'\gets k+1$
-    \State \textbf{while} $k'\neq e-1$ \textbf{do} $f_{rev}\gets reverse\_lf(k',
+    \State \textbf{while} $k'\neq e-1$ \textbf{do} $f_{rev}\gets reverse\_map(k',
     \,\,f_{rev}),\,\,k'\gets k'-1$ 
     \State $run\gets index\_to\_run(f_{rev},k'),\,\,symb\gets
     get\_symbol(start^{k'}, 
     run)$ 
     \While {$e>0\land z[e-1]=symb$}
-    \State $f_{rev}\gets reverse\_lf(e, \,\,f_{rev})$
+    \State $f_{rev}\gets reverse\_map(e, \,\,f_{rev})$
     \State $run\gets index\_to\_run(f_{rev}, e-1),\,\,symb\gets
     get\_symbol(start^{e-1}, run)$ 
     \EndWhile
@@ -307,13 +150,13 @@
     \State $g'\gets f'-1$
     \If{$e\geq 1$}
     \State $f_{rev}\gets f',\,\,k'\gets k+1$
-    \State \textbf{while} $k'\neq e-1$ \textbf{do} $f_{rev}\gets reverse\_lf(k',
+    \State \textbf{while} $k'\neq e-1$ \textbf{do} $f_{rev}\gets reverse\_map(k',
     \,\,f_{rev}),\,\,k'\gets k'-1$ 
     \State $run\gets index\_to\_run(f_{rev},k'),\,\,symb\gets
     get\_symbol(start^{k'}, 
     run)$ 
     \While {$e>0\land z[e-1]=symb$}
-    \State $f_{rev}\gets reverse\_lf(e, \,\,f_{rev})$
+    \State $f_{rev}\gets reverse\_map(e, \,\,f_{rev})$
     \State $run\gets index\_to\_run(f_{rev},e-1),\,\,symb\gets
     get\_symbol(start^{e-1}, run)$ 
     \EndWhile
@@ -366,12 +209,12 @@
     \If{$e\geq 1$}
     \State $f_{rev}\gets f',\,\,k'\gets k+1$
     \While {$k'\neq e-1$}
-    \State $f_{rev}\gets reverse\_lf(k', \,\,f_{rev}),\,\,k'\gets k'-1$
+    \State $f_{rev}\gets reverse\_map(k', \,\,f_{rev}),\,\,k'\gets k'-1$
     \EndWhile
     \State $run\gets rank_h^{k'}(f_{rev}),\,\,symb\gets get\_symbol(start^{k'},
     run)$ 
     \While {$e>0\land z[e-1]=symb$}
-    \State $f_{rev}\gets reverse\_lf(e, \,\,f_{rev})$
+    \State $f_{rev}\gets reverse\_map(e, \,\,f_{rev})$
     \State $run\gets rank_h^{e-1}(f_{rev})$
     \State $symb\gets get\_symbol(start^{e-1}, run)$
     \EndWhile
@@ -384,12 +227,12 @@
     \If{$e\geq 1$}
     \State $f_{rev}\gets f',\,\,k'\gets k+1$
     \While {$k'\neq e-1$}
-    \State $f_{rev}\gets reverse\_lf(k', \,\,f_{rev}),\,\,k'\gets k'-1$
+    \State $f_{rev}\gets reverse\_map(k', \,\,f_{rev}),\,\,k'\gets k'-1$
     \EndWhile
     \State $run\gets rank_h^{k'}(f_{rev}),\,\,symb\gets get\_symbol(start^{k'},
     run)$ 
     \While {$e>0\land z[e-1]=symb$}
-    \State $f_{rev}\gets reverse\_lf(e, \,\,f_{rev})$
+    \State $f_{rev}\gets reverse\_map(e, \,\,f_{rev})$
     \State $run\gets rank_h^{e-1}(f_{rev})$
     \State $symb\gets get\_symbol(start^{e-1}, run)$
     \EndWhile
