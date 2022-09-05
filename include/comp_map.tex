@@ -1,0 +1,754 @@
+\section{Componente per il mapping}
+La prima componente, nelle sue due varianti, che si descrive è quella relativa
+al mapping tra una colonna e la sua successiva. Bisogna quindi memorizzare per
+ogni colonna $k$, in modo proporzionale al numero di run della stessa, le
+informazioni atte a ottenere i medesimi risultati ottenibili con la funzione
+$w(i,\sigma)$, secondo la notazione di Durbin \cite{pbwt}. 
+\subsection{Mapping con intvector}
+La prima variante che si descrive è quella denominata \texttt{MAP-INT}.\\
+L'ispirazione iniziale per tale componente è stata data dall'articolo di Gagie
+et al \cite{tricks}, nonostante si abbiano, di fatto, diverse modifiche
+strutturali. Riprendendo quanto descritto alla sotto-sezione \ref{subsectravis},
+si è quindi deciso di
+memorizzare gli indici delle \textit{teste di run}, ovvero gli indici iniziali
+di ogni run. Ovviamente questa informazione non è sufficiente per poter sapere
+se una run sia composta da simboli $\sigma=0$ o simboli
+$\sigma=1$. Fortunatamente, essendo lo studio limitato, come per la
+\textit{PBWT}, a pannelli costruiti su alfabeto binario $\Sigma=\{0,1\}$, si è
+potuto sfruttare il fatto che le run si alternano tra un carattere e
+l'altro. Basta quindi tenere in memoria un valore booleano nominato
+$start_k$, che permetta di 
+capire se, in colonna $k$, la prima run sia una run di simboli
+$\sigma=0$. Infatti le run di 
+indice pari presentano lo stesso simbolo della prima run e quindi, dato un
+qualsiasi indice di run, è possibile sapere quale sia il simbolo corrispondente
+a tale run. L'implementazione di questo concetto è
+visualizzabile all'algoritmo \ref{algo:extrchar} e richiede tempo costante.
+\begin{algorithm}
+  \footnotesize
+  \begin{algorithmic}[1]
+    \Function{get\_symbol}{$s, \,\,r$}
+    \Comment $s=\top$ sse la prima run ha simbolo $\sigma=0$, $r$ indice di run
+    \If{$s$}
+    \State \textbf{if} $r\bmod 2 = 0$ \textbf{then} \textbf{return} $0$
+    \textbf{else} \textbf{return} $1$
+    \Else
+    \State \textbf{if} $r\bmod 2 = 0$ \textbf{then} \textbf{return} $1$
+    \textbf{else} \textbf{return} $0$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per estrazione simbolo da una run in una colonna}
+  \label{algo:extrchar}
+\end{algorithm}
+
+Si memorizzano gli indici delle teste di run in un array $p_k$, di lunghezza
+pari al numero di run in colonna $k$. In pratica si memorizza un indice $i$ sse:
+\begin{equation}
+  \label{eq:naive1}
+  y_{i-1}^k[k]\neq y_i^k[k]
+\end{equation}
+Il passaggio successivo è stato quello di capire se le informazioni necessarie
+al mapping fossero tutte necessarie. In altri termini se, data la colonna $k$
+nella \textit{matrice PBWT}, fossero necessari $c[k]$, $u_k$ e $v_k$. In merito
+al valore $c[k]$, per quanto calcolabile, ipotizzando di avere solo $p_k$, in
+tempo $\mathcal{O}(r)$, dove $r$ è 
+il numero di run della colonna $k$-esima, si è deciso che si potesse calcolarlo
+in fase di costruzione delle \textit{RLPBWT} e memorizzarlo esattamente come per
+la \textit{PBWT}. In merito invece ai vettori $u_k$ e $v_k$ si è cercato un modo
+per ottenerne una rappresentazione che implicasse avere un solo valore per ogni
+run della colonna. In altri termini si è cercato di capire se fosse possibile
+tenere in memoria $r$ valori che permettessero di effettuare comunque il
+mapping, a partire da un indice arbitrario $i\in\{0,\ldots,M-1\}$. Anche in
+questo caso l'alternanza data dal caso binario ha permesso di trovare una
+semplice soluzione. I valori di $u_k$ e $v_k$ crescono infatti in modo
+alternato. Infatti, a seconda del simbolo $\sigma$ rappresentato in una data
+run, si ha che solo i valori dell'array relativo a tale simbolo, nel range di
+indici di quella run, verranno incrementati, ad ogni passo, di una
+unità. Facendo un semplice esempio, se siamo in una run di 0 e iteriamo
+virtualmente all'interno di tale run, solo i valori di $u_k$, in quel
+range di indici, cresceranno di volta in volta di uno mentre per $v_k$, nello
+stesso range, si avrà sempre lo stesso valore.
+\begin{esempio}
+  Si vede un esempio per chiarire meglio quanto espresso in merito a $u_k$ e
+  $v_k$.\\
+  Sia data la seguente colonna:
+  \[y^5=00101111000000000000\]
+  Si hanno, oltre a $c[5]=15$:
+  \begin{table}[H]
+    \footnotesize
+    \centering
+    \begin{tabular}{c||cc|c|c|cccc|cccccccccccc}
+      & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16
+      & 17 & 18 & 19\\
+      \hline
+      \hline
+      $y^5$ & 0 & 0 & 1 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+      & 0 & 0 & 0\\
+      \hline
+      \hline
+      $u_5$ & 0 & 1 & 2 & 2 & 3 & 3 & 3 & 3 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10
+      & 11 & 12 & 13 & 14\\
+      \hline
+      $v_5$ & 0 & 0 & 0 & 1 & 1 & 2 & 3 & 4 & 5 & 5 & 5 & 5 & 5 & 5 & 5 & 5 & 5
+      & 5 & 5 & 5
+    \end{tabular}
+  \end{table}
+  Dove si nota l'alternanza di crescita dei valori sopra descritta.
+\end{esempio}
+Grazie a questo comportamento è possibile memorizzare, per ogni indice di
+testa di run $i$, tale che $i\neq 0$, solo il valore di $u_k[i]$ o $v_k[i]$,
+rispettivamente se sia una run su simboli $\sigma=1$ o $\sigma=0$. Questo in
+quanto, se si analizza una run di zeri si avrà che solo i valori di $v_k$, nel
+range della run, verranno incrementati ad ogni step. Per $i=0$ banalmente si ha
+che $u_k[i]=v_k[i]=0$.\\
+Memorizzando i valori di $u_k$ e $v_k$ in un array $uv_k$, tale che $|uv_k|=r$,
+con $r$ numero di run, e dato $i\in\{0,\ldots, r-1\}$, a seconda che la colonna
+presenti o meno la prima run  
+con simboli $\sigma=0$, si possono estrarre, in tempo costante, i valori di
+$u_k$ e $v_k$ per una data testa di run. Nel dettaglio, dato $i\in{0,\ldots,
+  r-1}$:
+\begin{itemize}
+  \item se $i=0$ si ha che $u_k[p[i]]=v_k[p[i]]=uv_k[0]=0$
+  \item se $i\mod 2 =0$ si hanno due casi:
+  \begin{itemize}
+    \item la prima run è di simboli $\sigma=0$ e quindi si ottiene
+    $u_k[p[i]]=uv_k[i-1]$ e $v_k[p[i]]=uv_k[i]$
+    \item la prima run è di simboli $\sigma=1$ e quindi si ottiene
+    $u_k[p[i]]=uv_k[i]$ e $v_k[p[i]]=uv_k[i-1]$
+  \end{itemize}
+  \item se $i\mod 2 \neq 0$ si hanno due casi, che sono l'inverso della
+  situazione descritta precedentemente:
+  \begin{itemize}
+    \item la prima run è di simboli $\sigma=0$ e quindi si ottiene
+    $u_k[p[i]]=uv_k[i]$ e $v_k[p[i]]=uv_k[i-1]$
+    \item la prima run è di simboli $\sigma=1$ e quindi si ottiene
+    $u_k[p[i]]=uv_k[i-1]$ e $v_k[p[i]]=uv_k[i]$   
+  \end{itemize}
+\end{itemize}
+Tale operazione è eseguibile in tempo costante lo pseudocodice relativo a
+quanto appena detto è consultabile all'algoritmo \ref{algo:uvnaive}.
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{uvtrick}{$k,\,\, i$}
+    \Comment $k$ indice di colonna, $i$ indice di run
+    \If{$i = 0$}
+    \State \textbf{return} $(0,\,\,0)$
+    \ElsIf{$i\mod 2=0$}
+    \State $u\gets uv_k[i-1],\,\,v\gets uv_k[i]$
+    \If{$start_k$}
+    \State \textbf{return} $(u,\,\,v)$
+    \Else
+    \State \textbf{return} $(v,\,\,u)$
+    \EndIf
+    \Else
+    \State $u\gets uv_k[i],\,\,v\gets uv_k[i-1]$
+    \If{$start_k$}
+    \State \textbf{return} $(u,\,\,v)$
+    \Else
+    \State \textbf{return} $(v,\,\,u)$
+    \EndIf
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per uvtrick con \texttt{MAP-INT}.}
+  \label{algo:uvnaive}
+\end{algorithm}
+
+Da un punto di vista implementativo, gli array di interi $p_k$ e $uv_k$ vengono
+memorizzati in \textit{vettori di interi bit-compressed}. Dato un array $v$,
+tale che $x$ è il massimo indice, si calcola:
+\begin{equation}
+  \label{eq:bc1}
+  b=\lceil\log(x-1)\rceil+1
+\end{equation}
+e si memorizzano le componenti di $v$ in un vettore di interi con componenti
+memorizzate in di $b$ bit.\\
+Ricapitolando, per la componente \texttt{MAP-INT}, si hanno in memoria, per
+ogni colonna $k$:
+\begin{itemize}
+  \item $start_k$, con il booleano atto a capire il simbolo della prima run
+  \item $p_k$, con gli indici delle teste di run
+  \item $uv_k$, coi valori compatti di $u_k$ e $v_k$ per le teste di run
+  \item $c[k]$, per sapere il numero totale di simboli $\sigma=0$ nella colonna
+  $k$ della \textit{matrice PBWT}
+\end{itemize}
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{build\_map\_int}{$col,\,\, pref$}
+    \Comment $pref=a_k$
+    \State $c\gets 0,\,\,u\gets 0,\,\,v\gets 0,\,\,u'\gets 0,\,\, v'\gets
+    0,\,\,run\gets 0$
+    \State $start \gets \top,\,\,beg_{run}\gets \top,\,\,push_{zero}\gets
+    \bot,\,\,push_{one}\gets \bot$
+    \State $p\gets [],\,\,uv\gets []$
+    \For {\textit{every} $k\in\left[0,\,\, M\right)$}
+    \If{$k=0\land col[pref[k]]=1$}
+    \State $start \gets \bot$
+    \EndIf
+    \If{$col[k]=0$}
+    \State $c\gets c+1$
+    \EndIf
+    \EndFor
+    \If{$start$}
+    \State $push_{one}\gets \top$
+    \Else
+    \State $push_{zero}\gets \top$
+    \EndIf
+    \For{\textit{every} $k\in[0,M)$}
+    \If{$beg_{run}$}
+    \State $u\gets u',\,\,v\gets v'$
+    \State $beg_{run}\gets \bot$
+    \EndIf
+    \If{$col[pref[k]]=1$}
+    \State $v'\gets v'+1$
+    \Else
+    \State $u'\gets u'+1$
+    \EndIf
+    \If{$k=0\lor col[pref[k]]\neq col[pref[k-1]]$}
+    \State $run\gets k$
+    \EndIf
+    \If{$k=M-1\lor col[pref[k]]\neq col[pref[k+1]]$}
+    \If {$push_{one}$}
+    \State $push(p, run),\,\,push(uv, v)$
+    \State $swap(push_{one}, push_{zero})$
+    \Else
+    \State $push(p, run),\,\,push(uv, u)$
+    \State $swap(push_{one}, push_{zero})$
+    \EndIf
+    \State $beg_{run}\gets \top$
+    \EndIf
+    \EndFor
+    \State \textbf{return} $(start,\,\, c,\,\, p,\,\, uv)$
+    \EndFunction
+  \end{algorithmic}
+  \caption{\footnotesize{Algoritmo per la costruzione della componente
+  \textit{MAP-INT} per la colonna $k$.}}
+  \label{algo:buildnaive}
+\end{algorithm}
+\begin{esempio}
+  Sia data la seguente colonna:
+  \[y^5=00101111000000000000\]
+  Per la componente \texttt{MAP-INT} della colonna 5, si hanno in memoria:
+  \[p_5=[0,2,3,4,8]\]
+  \[uv_5=[0,2,1,3,5]\]
+  \[c[5]=15\]
+\end{esempio}
+La costruzione della componente \texttt{MAP-INT} per una certa colonna,
+analizzabile nell'algoritmo 
+\ref{algo:buildnaive}, ha costo $\mathcal{O}(M)$, avendo che la costruzione
+avviene scorrendo la colonna $k$ permutata dal 
+\textit{prefix array} $a_k$.\\
+Si hanno quindi le informazioni relative alle teste di run. Per
+l'implementazione dei vari algoritmi si ha però necessità di usare anche indici
+con valori $\{0, M-1\}$. Una delle operazioni fondamentali è quindi
+quella, dato un indice $i\in\{0,\ldots,M-1\}$, di computare a quale run esso
+appartenga, in una certa colonna $k$. Tale operazione può essere svolta usando
+una semplice variante della \textit{ricerca binaria}. Tale variante, anziché
+ritornare l'indice di un elemento qualora esista nell'array, restituisce
+l'ultimo indice iniziale del sottointevallo usato dalla ricerca binaria
+calcolato prima dell'interruzione dell'esecuzione dell'algoritmo (che avviene
+secondo l'algoritmo standard). Tale soluzione, come visualizzabile
+all'algoritmo \ref{algo:itr}, ha complessità in tempo, con $r=|p_k|$ numero di
+run in colonna $k$: 
+\begin{equation}
+  \label{eq:itrcomp}
+  \mathcal{O}(\log (r))
+\end{equation}
+\begin{algorithm}
+  \footnotesize
+  \begin{algorithmic}[1]
+    \Function{index\_to\_run}{$k,\,\, i$}
+    \Comment $k$ indice di colonna, $i$ indice di riga della colonna $k$
+    \If{$i\geq p_k[|p_k|-1]$}
+    \State \textbf{return} $|p_k|-1$
+    \EndIf
+    \State $b\gets 0,\,\, e \gets |p_k|$
+    \State $run\gets \frac{e-b}{2}$
+    \While {$run\neq e \land p_k[run] \neq i$ }
+    \If {$i< p_k[run]$ }
+    \State $e\gets run$
+    \Else
+    \If {$run+1=e \lor  p_k[run+1] > i$}
+    \State \textbf{break}
+    \EndIf
+    \State $b\gets run+1$
+    \EndIf
+    \State $run\gets b+\frac{e-b}{2}$
+    \EndWhile
+    \State \textbf{return} $run$
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per convertire un indice di colonna in indice di run, con
+    \texttt{MAP-INT}.} 
+  \label{algo:itr}
+\end{algorithm}
+
+Ipotizzando, inoltre, di avere
+un indice $i\in\{0,\ldots,M-1\}$ è possibile risalire ai valori
+$u_k[i]$ e $v_k[i]$, sfruttando l'\textit{offset} dell'indice rispetto alla
+testa della run a cui appartiene. Banalmente, ipotizzando di essere in una run
+di simboli $\sigma$ con testa di run all'indice $p$, si avranno, avendo
+ottenuto $u_k[p]$ e $v_k[p]$ da $uv_k[p]$:
+\begin{equation}
+  \small
+  \label{eq:naive2}
+  \begin{cases}
+    v_k[i]=v_k[p]\\
+    u_k[i]=u_k[p]+(i-p)
+  \end{cases},\mbox{sse } y^k_p[k]=0
+  \quad
+  \begin{cases}
+    u_k[i]=u_k[p]\\
+    v_k[i]=v_k[p]+(i-p)
+  \end{cases},\mbox{sse } y^k_p[k]=1
+\end{equation}
+Tenendo eventualmente conto dell'offset $off$, qualora si abbia un simbolo
+$\sigma$ uguale a quello della run in analisi, è quindi possibile
+riadattare l'algoritmo per il 
+mapping visto per la \textit{PBWT} di Durbin, da intendersi alla stregua del
+\textit{backward step} visto nel caso 
+della \textit{BWT}, dalla colonna $k$ alla colonna $k+1$ guidato da
+$z[k+1]$. Tale soluzione è riportata all'algoritmo \ref{algo:lfoff}.
+Ricordando che si può risalire ai valori $u[p]$ e $v[p]$ in tempo costante,
+anche il mapping da una colonna alla successiva avviene in tempo costante.
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{w}{$k,\,\, i, \,\,\sigma,\,\,o$}
+    \Comment $k$ indice di colonna, $i$ indice di riga, $\sigma$ simbolo
+    \State $run\gets index\_to\_run(k,i)$
+    \If{$\sigma=0\land get\_symbol(start_k, run)=1$}
+    \State $off\gets 0$
+    \ElsIf {$\sigma=1\land get\_symbol(start_k, run)=0$} 
+    \State $off\gets 0$
+    \Else
+    \State $off\gets i-p_k[run]$
+    \EndIf
+    \State $(u,v)\gets uvtrick(k,\,\,i)$
+    \If{$p_k[i]+off=M$}
+    \If{$get\_symbol(start_k, i)=0$}
+    \State $v\gets v-1$
+    \Else
+    \State $u\gets u-1$
+    \EndIf
+    \EndIf
+    \If{$\sigma = 0$}
+    \State \textbf{return} $u+off$
+    \Else
+    \State \textbf{return} $c[k]+v+off$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per il mapping con \texttt{MAP-INT}.}
+  \label{algo:lfoff}
+\end{algorithm}
+\subsection{Mapping con bitvector}
+La seconda variante della componente di mapping sfrutta, al posto degli
+\textit{intvector}, i \textit{bitvector sparsi}, da cui la nomenclatura
+\texttt{MAP-BV}.\\
+L'idea è quindi quella di sostituire, data una colonna $k$, quanto necessario a
+rappresentare le run (ovvero il vettore $p_k$ della \texttt{MAP-INT}) e quanto
+necessario a permettere il mapping (ovvero il vettore $uv_k$ della
+\texttt{MAP-INT}).\\ 
+In primis, per poter localizzare le run nella $k$-esima colonna, si è scelto di
+usare un \textit{bitvector sparso}, che denominiamo per praticità $h_k$, tale
+che $|h_k|=M$. Formalmente si ha che:
+\begin{equation}
+  \label{eq:bv1}
+  h_k[i]=
+  \begin{cases}
+    1&\mbox{se } y^k_{i}[k]\neq y^k_{i+1}[k]\lor i=M-1\\
+    0&\mbox{altrimenti}
+  \end{cases},\forall i\in \{0,\ldots,M-1\}
+\end{equation}
+Informalmente, quindi, si ha che si ha $h_k[j]=1$ sse è l'indice di fine di una
+run.\\
+mpiricamente ci si aspettano ``poche'' run all'interno di una colonna della
+\textit{matrice PBWT}, per quanto già discusso nella sezione
+\ref{secpbwt}. Avendo poche run ci si aspetta anche ``pochi'' 1 all'interno di
+$h_k$, di conseguenza si è optato per usare i \textit{bitvector sparsi} per la
+memorizzazione in memoria di ogni $h_k$, ricordando che, secondo quanto
+riportato per la libreria \textit{SDSL} \cite{sdsl}, tale variante richiede in
+memoria, indicando con $r$ il numero di run:
+\begin{equation}
+  \label{eq:bv2}
+  \approx r\left(2+\log\frac{M}{r}\right)\mbox{ bit}
+\end{equation}
+Pensando ad una correlazione tra \texttt{MAP-INT} e \texttt{MAP-BV}, si ha che
+$rank_{h_k}$ fa le veci della funzione \texttt{index\_to\_run} mentre
+$select_{h_k}$ equivale a $p_k$.\\
+Più elaborata è la rappresentazione dei vettori $u_k$ e $v_k$. In questo caso si
+è deciso, a differenza della rappresentazione unica vista con la
+\texttt{MAP-INT}, di optare per due \textit{bitvector sparsi}. In particolare,
+per il vettore $u_k$, tale che $|u_k|=c[k]$, si ha che, $\forall
+i\in\{0,\ldots,|u_k|-1\}$: 
+\begin{equation}
+  \label{eq:bv3}
+  u_k[i]=
+  \begin{cases}
+    1&\mbox{se }i \mbox{ è il numero di simboli che contiene la
+    }rank_{u_k}(i)\mbox{-esima run di 0}\\
+    0&\mbox{altrimenti}
+  \end{cases}
+\end{equation}
+Analogamente si definisce $v_k$, avendo $|v_k|=M-c[k]$ e $\forall
+i\in\{0,\ldots,|v_k|-1\}$, come: 
+\begin{equation}
+  \label{eq:bv4}
+  v_k[i]=
+  \begin{cases}
+    1&\mbox{se }i \mbox{ è il numero di simboli che contiene la
+    }rank_{v_k}(i)\mbox{-esima run di 1}\\
+    0&\mbox{altrimenti}
+  \end{cases}
+\end{equation}
+Si noti che:
+\begin{equation}
+  \label{eq:bv5}
+  rank_{h_k}(|h_k|-1)+1=(rank_{u_k}(|u_k|-1)+1)+(rank_{v_k}(|v_k|-1)+1)
+\end{equation}
+Ovvero il numero di 1 presenti in $h_k$ è pari alla somma di quelli presenti in
+$u_k$ e $v_k$. Si noti che i vari $+1$ sono
+dovuti al fatto che la funzione 
+$rank(i)$ esclude dal computo la posizione $i$ stessa e tutti e tre i bitvector,
+per costruzione, presentano $\sigma=1$ in ultima posizione. Ne segue che, anche
+per questi ultimi due bitvector, la scelta di 
+usare \textit{bitvector sparsi} per la loro memorizzazione sia giustificata,
+empiricamente, dalla poca quantità attesa di simboli $\sigma=1$.
+\begin{esempio}
+  \label{es:bv1}
+  Sia data la seguente colonna:
+  \[y^5=00101111000000000000\]
+  Si ha quindi che:
+  \[h_5=01110001000000000001\]
+  Avendo appunto un numero di run pari a:
+  \[rank_{h_5}(|h_5|-1)+1=4+1=5\]
+  In merito alle run composte da simboli $\sigma=0$ si ha che:
+  \[u_5=011000000000001\]
+  Avendo infatti che si segnalano:
+  \begin{itemize}
+    \item la prima run composta da due simboli $\sigma=0$
+    \item la seconda run composta da un solo simbolo $\sigma=0$
+    \item la terza run composta da dodici simboli $\sigma=0$
+  \end{itemize}
+  Parlando invece di $v_5$ si ha:
+  \[v_5=10001\]
+  Avendo che:
+  \begin{itemize}
+    \item la prima run è composta da un solo simbolo $\sigma=1$
+    \item la seconda run è composta da quattro $\sigma=1$
+  \end{itemize}
+  Si conferma, inoltre, quanto detto nell'equazione \ref{eq:bv5}, avendo:
+  \[rank_{h_5}(|h_5|-1)+1=5 = (rank_{u_5}(13)+1)+(rank_{v_5}(4)+1)=(2+1)+(1+1)=5\]
+\end{esempio}
+Lo pseudocodice relativo alla costruzione della componente \texttt{MAP-BV} per
+la colonna $k$-esima è disponile all'algoritmo \ref{algo:cosbv}. Anche in questo
+caso la costruzione avviene scorrendo la colonna $k$ permutata dal
+\textit{prefix array} $a_k$. \\ 
+Assumendo che la complessità in tempo delle costruzioni delle
+strutture a supporto per le funzioni \textit{rank} e \textit{select} dei tre
+bitvector sparsi sia limitata superiormente dalla loro lunghezza massima, ovvero
+$M$, si ha che la costruzione della componente \texttt{MAP-BV} per una singola
+colonna avviene in tempo:
+\begin{equation}
+  \label{eq:bvcos}
+  \mathcal{O}(M)
+\end{equation}
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{build\_map\_bv}{$col,\,\, pref$}
+    \Comment $pref=a_k$
+    \State $c\gets 0,\,\,u\gets 0,\,\,v\gets 0,\,\,u'\gets 0,\,\, v'\gets
+    0,\,\,curr_{lcs}\gets 0$
+    \State $start \gets \top,\,\,beg_{run}\gets \top,\,\,push_{zero}\gets
+    \bot,\,\,push_{one}\gets \bot$
+    \For {\textit{every} $k\in\left[0,\,\, M\right)$}
+    \If{$k=0\land col[pref[k]]=1$}
+    \State $start \gets \bot$
+    \EndIf
+    \If{$col[k]=0$}
+    \State $c\gets c+1$
+    \EndIf
+    \EndFor
+    \State $runs\gets[0..0]$
+    \Comment bitvector sparso per le run, di lunghezza $M+1$
+    \State $zeros\gets[0..0]$
+    \Comment bitvector sparso per $u_k$, di lunghezza $c[k]$
+    \State $ones\gets[0..0]$
+    \Comment bitvector sparso per $v_k$, di lunghezza $M-c$
+    \If{$start$}
+    \State $push_{one}\gets \top$
+    \Else
+    \State $push_{zero}\gets \top$
+    \EndIf
+    \For {\textit{every} $k\in\left[0,\,\, M\right)$}
+    \If{$beg_{run}$}
+    \State $u\gets u',\,\,v\gets v',\,\,beg_{run}\gets \bot$
+    \EndIf
+    \If{$col[pref[k]]=1$}
+    \State $v'\gets v'+1$
+    \Else
+    \State $u'\gets u'+1$
+    \EndIf
+    \If{$k=M-1\lor col[pref[k]]\neq col[pref[k+1]]$}
+    \State $runs[k]\gets 1$
+    \If{$push_{one}$}
+    \If{$v\neq 0$}
+    \State $ones[k-1]=1$
+    \EndIf
+    \State $swap(push_{zero},\,\,push_{one})$
+    \Else
+    \If{$u\neq 0$}
+    \State $zeros[k-1]=1$
+    \EndIf
+    \State $swap(push_{zero},\,\,push_{one})$
+    \EndIf
+    \State $beg_{run}\gets \top$
+    \EndIf
+    \EndFor
+    \If{$|zeros|\neq 0$}
+    \State $zeros[|zeros|-1]\gets 1$
+    \EndIf
+    \If{$|ones|\neq 0$}
+    \State $ones[|ones|-1]\gets 1$
+    \EndIf
+    \State \textit{costruzione delle strutture per rank/select dei tre
+    bitvector} 
+    \State \textbf{return}
+    $(start,\,\,c,\,\,runs,\,\,zeros,\,\,ones)$  
+    \EndFunction
+  \end{algorithmic}
+  \caption{\footnotesize{Algoritmo per la costruzione della componente
+  \texttt{MAP-BV} per la colonna $k$.}}
+  \label{algo:cosbv}
+\end{algorithm}
+Bisogna spiegare come, dato un indice di aplotipo $i\in\{0,\ldots,M-1\}$ e una
+colonna $k$, estrarre $u'_k[i]$ e $v'_k[i]$, ovvero come se si stesse usando la
+\textit{PBWT} classica, a partire dagli attuali $u_k[i]$ e $v_k[i]$. Ovviamente,
+se $i=0$, si ha che $u'_k[0]=v'_k[0]=0$. In caso contrario bisogna, in primis,
+calcolare la run 
+in cui si trova l'indice $i$. Questo si ottiene direttamente sfruttando $h_k$:
+\begin{equation}
+  \label{eq:bv7}
+  run = rank_{h_k}(i)
+\end{equation}
+Una volta calcolato l'indice di run si hanno tre possibilità:
+\begin{enumerate}
+  \item si ha che $run=0$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$
+  allora:
+  \begin{equation}
+    \label{eq:bv8}
+    (u,v)=
+    \begin{cases}
+      (i,0)&\mbox{se } b=0\\
+      (0,i)&\mbox{altrimenti}
+    \end{cases}
+  \end{equation}
+  \item si ha che $run=1$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$. In
+  tal caso bisogna per prima cosa individuare l'indice di inizio della seconda
+  run, sfruttando $h_k$:
+  \begin{equation}
+    \label{eq:bv9}
+    beg = select_{h_k}(1)+1
+  \end{equation}
+  A questo punto si ha il numero di simboli della prima run, indicizzata a 0, e,
+  calcolando la distanza tra l'indice di riga e quello di inizio della prima
+  run, avendo che:
+  \begin{equation}
+    \label{eq:bv10}
+    (u,v)=
+    \begin{cases}
+      (beg,i-beg)&\mbox{se } b=0\\
+      (i-beg,beg)&\mbox{altrimenti}
+    \end{cases}
+  \end{equation}
+  \item si ha che $run=j$, con $j\in\{2,r-1\}$. Anche in questo caso  si procede
+  calcolando l'indice di inizio della run:
+  \begin{equation}
+    \label{eq:bv11}
+    beg = select_{h_k}(run)+1
+  \end{equation}
+  e l'offset rispetto all'indice $i$ dato:
+  \begin{equation}
+    \label{eq:bv12}
+    offset = i-beg
+  \end{equation}
+  Poi, sfruttando la solita dicotomia fornita dal caso binario in studio, si
+  hanno due casi: 
+  \begin{enumerate}
+    \item si è in una run di indice pari.
+    Si sfruttano poi $u_k$ e $v_k$ per sapere l'indice della precedente run con
+    simboli $\sigma=0$:
+    \begin{equation}
+      \label{eq:bv13}
+      pre_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
+    e quello della run con simboli simboli $\sigma=1$:
+    \begin{equation}
+      \label{eq:bv14}
+      pre_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
+    Si noti che si usa $\frac{run}{2}$ in quanto, essendo in una run di indice
+    pari si hanno precedentemente lo stesso numero di run per $\sigma=0$ e per
+    $\sigma=1$ e quindi si considera lo stesso numero di ``run'' nei due
+    \textit{bitvector sparsi} $u_k$ e $v_k$.\\
+    A questo punto, sempre per il ragionamento per cui solo uno tra $u$ e $v$
+    non è costante all'interno di una run si ha che o $pre_u$ o $pre_v$ è tale
+    costante mentre l'altro valore deve essere calcolato considerando l'offset:
+    \begin{equation}
+      \label{eq:bv15}
+      (u,v)=
+      \begin{cases}
+        (pre_u+offset,pre_v)&\mbox{se } b=0\\
+        (pre_u,pre_v+offset)&\mbox{altrimenti}
+      \end{cases}
+    \end{equation}
+    \item ci si trova in una run di indice dispari, quindi non si hanno
+    precedentemente lo stesso numero di run per i due simboli. Bisogna quindi
+    calcolare quante siano tali run. Se la prima run è di zeri:
+    \begin{equation}
+      \label{eq:bv16}
+      run_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
+    \begin{equation}
+      \label{eq:bv17}
+      run_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)
+    \end{equation}
+    mentre se la prima run non è di zeri si devono invertire i due valori. Si sa
+    quindi quali ``run'' considerare sui due \textit{bitvector sparsi} $u_k$ e
+    $v_k$.\\ 
+    Posso quindi procedere come nel caso precedente, avendo:
+    \begin{equation}
+      \label{eq:bv18}
+      pre_u=select_{u_k}(run_u)+1
+    \end{equation}
+    \begin{equation}
+      \label{eq:bv19}
+      pre_v=select_{v_k}(run_v)+1
+    \end{equation}
+    E potendo quindi restituire:
+    \begin{equation}
+      \label{eq:bv20}
+      (u,v)=
+      \begin{cases}
+        (pre_u,pre_v+offset)&\mbox{se } b=0\\
+        (pre_u+offset,pre_v)&\mbox{altrimenti}
+      \end{cases}
+    \end{equation}
+  \end{enumerate}
+\end{enumerate}
+\dc{Sistemare}
+\begin{esempio}
+  Si prendano i dati e i risultati ottenuti all'esempio \ref{es:bv1}. Si
+  vogliono calcolare $u$ e $v$ per $i=6$.\\
+  In primis si ha quindi:
+  \[run=rank_{h_5}(6)=3\]:
+  \[beg = select_{h_5}(3)+1=3+1=4\]
+  \[offset = i-beg=6-4=2\]
+  Quindi ci si trova nel terzo caso e, nel dettaglio, avendo una run di
+  indice dispari. Si calcolano quindi:
+  \[run_u=select_{u_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)+1=
+    select_{u_5}(1)+1 =1+1=2\] 
+  \[run_v=select_{v_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)=
+    select_{v_5}(1)=0\] 
+  che non andranno invertiti avendo $start^5=\top$.\\
+  Si calcolano quindi:
+  \[pre_u=select_{u_5}(2)+1=2+1=3\]
+  \[pre_v=select_{v_5}(0)+1=0+1=1\]
+  Avendo infatti, in totale, tre simboli $\sigma=0$ e un simbolo $\sigma=1$
+  prima dell'indice 6.\\ 
+  Concludendo, avendo $start^5=\top$:
+  \[(u,v)=(pre_u, pre_v + offset)=(3,1+2)=(3,3)\]
+\end{esempio}
+Lo pseudocodice per il calcolo di $u_k[i]$ e $v_k[i]$ è disponibile
+all'algoritmo \ref{algo:uvbv}. In merito alla 
+complessità in tempo del calcolo di $u_k[i]$ e $v_k[i]$, si ha che essa è
+limitata superiormente dal costo della \textit{funzione rank} su
+\textit{bitvector sparsi}, essendo la \textit{funzione select} disponibile in
+tempo costante. Ne segue che, avendo $r$ run nella colonna $k$, si ha un tempo
+proporzionale a:
+\begin{equation}
+  \label{eq:bvuvtime}
+  \mathcal{O}\left(\log\frac{M}{r}\right)
+\end{equation}
+Non dovendo in tal
+caso considerare esplicitamente l'offset, come nel caso della \texttt{MAP-INT},
+il mapping dalla colonna $k$ alla 
+colonna $k+1$, guidato da $z[k+1]$, viene fatto come nel caso della
+\textit{PBWT}, come visualizzabile all'algoritmo \ref{algo:lfr}, che presenta
+quindi la medesima complessità del calcolo di $u[i]$ e $v[i]$, ovvero quello
+visto all'equazione \ref{eq:bvuvtime2}.
+\begin{algorithm}
+  %\small
+  \begin{algorithmic}[1]
+    \Function{uvtrick}{$k,\,\, i$}
+    \Comment $k$ indice di colonna, $i$ indice di riga
+    \If{$i = 0$}
+    \State \textbf{return} $(0,\,\,0)$
+    \EndIf
+    \State $run \gets rank_h^{k}(i)$
+    \If{$run=0$}
+    \If{$start_k$}
+    \State \textbf{return} $(i,\,\, 0)$
+    \Else
+    \State \textbf{return} $(0, \,\,i)$
+    \EndIf
+    \ElsIf{$run=1$}
+    \If{$start_k$}
+    \State \textbf{return} $(select_h^{k}(run)+1,\,\, i-(select_h^{k}(run)+1))$
+    \Else
+    \State \textbf{return} $(i-(select_h^{k}(run)+1),\,\, select_h^{k}(run)+1)$
+    \EndIf
+    \Else
+    \If{$run\bmod 2 = 0$}
+    \State $pre_u\gets
+    select_u^{k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$ 
+    \State $pre_v\gets
+    select_v^{k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$ 
+    \State $offset \gets i -(select_h^{k}(run)+1)$
+    \If{$start_k$}
+    \State \textbf{return} $(pre_u+offset,\,\, pre_v)$
+    \Else
+    \State \textbf{return} $(pre_u, \,\,pre_v+offset)$
+    \EndIf
+    \Else
+    \State $run_u\gets \left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$
+    \State $run_v\gets \left\lfloor\frac{run}{2}\right\rfloor$
+    \If{$\neg start_k$}
+    \State $swap(run_u, run_v)$
+    \EndIf
+    \State $pre_u\gets select_u^{k}(run_u)+1$
+    \State $pre_v\gets select_v^{k}(run_v)+1$
+    \State $offset \gets i -(select_h^{k}(run)+1)$
+    \If{$start_k$}
+    \State \textbf{return} $(pre_u, \,\,pre_v+offset)$
+    \Else
+    \State \textbf{return} $(pre_u+offset, \,\,pre_v)$
+    \EndIf
+    \EndIf
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per uvtrick con \texttt{MAP-BV}.}
+  \label{algo:uvbv}
+\end{algorithm}
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{w}{$k,\,\, i, \,\,\sigma$}
+    \Comment $k$ indice di colonna, $i$ indice di riga, $\sigma$ simbolo
+    \State $c\gets c[k]$
+    \State $(u, v) \gets uvtrick(k,\,\,i)$
+    \If{$\sigma = 0$}
+    \State \textbf{return} $u$
+    \Else
+    \State \textbf{return} $c+v$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per il mapping con \texttt{MAP-BV}.}
+  \label{algo:lfr}
+\end{algorithm}
+\dc{Serve altro?}

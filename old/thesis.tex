@@ -1,0 +1,451 @@
+\documentclass[a4paper,12pt, oneside]{book}
+%\documentclass[a4paper,12pt, oneside, draft]{book}
+% \usepackage{fullpage}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphics}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{colortbl}
+\usepackage{engrec}
+\usepackage{appendix}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{subcaption}
+\usepackage{verbatim}
+\usepackage{stackengine}
+\usepackage[safe,extra]{tipa}
+% \usepackage{showkeys}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{microtype}
+% \usepackage{fontspec}
+\usepackage{enumerate}
+\usepackage{braket}
+\usepackage{relsize}
+\usepackage{marginnote}
+\usepackage{pgfplots}
+\usepackage{cancel}
+\usepackage{polynom}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{pdfpages}
+\usepackage{pgfplots}
+\usepackage[chapter]{algorithm}
+%\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+%\usepackage[ruled,vlined]{algorithm2e}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\renewcommand{\listalgorithmname}{Lista degli algoritmi}
+\makeatother
+%\usepackage[backend=biber, backref=true, sorting=none]{biblatex}
+\usepackage{fvextra}
+\usepackage{csquotes}
+% \usepackage{natbib}
+% \usepackage{algpseudocode}
+\usepackage[cache=false]{minted}
+\usepackage{mathtools}
+\usepackage[noend]{algpseudocode}
+\usepackage{svg}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{blindtext}
+\usepackage{titleps}
+% \makeatletter
+% \long\def\@makecaption#1#2{%
+%   \vskip\abovecaptionskip
+%     \bfseries #1: #2\par
+%   \vskip\belowcaptionskip}%
+% \makeatother
+% \lstset{ % General setup for the package
+%     language=Perl,
+%     basicstyle=\small\sffamily,
+%     frame=lines,
+%     tabsize=4,
+%     columns=fixed,
+%     showstringspaces=false,
+%     showtabs=false,
+%     keepspaces,
+%     commentstyle=\color{red},
+%     keywordstyle=\color{blue}
+% }
+\usepackage{tikz}\usetikzlibrary{er}\tikzset{multi  attribute /.style={attribute
+    ,double  distance =1.5pt}}\tikzset{derived  attribute /.style={attribute
+    ,dashed}}\tikzset{total /.style={double  distance =1.5pt}}\tikzset{every
+  entity /.style={draw=orange , fill=orange!20}}\tikzset{every  attribute
+  /.style={draw=MediumPurple1, fill=MediumPurple1!20}}\tikzset{every
+  relationship /.style={draw=Chartreuse2,
+    fill=Chartreuse2!20}}\newcommand{\key}[1]{\underline{#1}}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{arrows,shapes,backgrounds,petri} 
+\usetikzlibrary{automata,positioning}
+\usetikzlibrary{matrix}
+
+\usepackage[textsize=scriptsize, textwidth = 25mm]{todonotes}
+\newcommand{\dc}[1]{\todo[backgroundcolor=yellow]{\textbf{DC} #1}}
+\newcommand{\gdv}[1]{\todo[backgroundcolor=blue]{\textbf{GDV} #1}}
+\newcommand{\pb}[1]{\todo[backgroundcolor=red]{\textbf{PB} #1}}
+\newcommand{\yp}[1]{\todo[backgroundcolor=green]{\textbf{YP} #1}}
+\newcommand{\rr}[1]{\todo[backgroundcolor=pink]{\textbf{RR} #1}}
+
+% \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhead[LO,RE]{\slshape \leftmark}
+% \fancyhead[CO,CE]{\slshape\rightmark}
+\fancyhead[LE,RO]{\slshape\rightmark}
+\fancyfoot[C]{\thepage}
+% \fancyhf{}
+% \fancyhead[LO,RE]{\slshape \leftmark}
+% % \fancyhead[CO,CE]{\slshape\rightmark}
+% \fancyhead[LE,RO]{\slshape\thepage}
+% \renewcommand{\footrulewidth}{0pt}
+% \fancyfoot[C]{\thepage}
+% \title{Relazione}
+% \fancypagestyle{plain}{% \fancyhf{} % clear all header and footer fields
+% \fancyhead[RO,RE]{\thepage}%RO=right odd, RE=right even
+% \renewcommand{\headrulewidth}{0pt}
+% \renewcommand{\footrulewidth}{0.3pt}}
+
+% \AtBeginDocument{%
+%   \renewcommand{\thelisting}{\Alph{chapter}.\arabic{listing}}
+%   % \renewcommand\thetable{\Alph{section}.\arabic{table}}
+%   % \renewcommand\thefigure{\Alph{section}.\arabic{figure}}
+% }
+% %Automatically change the driver counter for reset:
+% \makeatletter
+% \g@addto@macro\appendix{%
+%   \counterwithin*{listing}{section}%
+% }
+% \makeatother
+% c C plus plus
+\def\Cplusplus{C\raisebox{0.5ex}{\tiny\textbf{++}}}
+\definecolor{nordred}{RGB}{191, 97, 106}
+\definecolor{nordgreen}{RGB}{135, 157, 116}
+
+\pgfplotsset{compat=1.13}
+\setlist[itemize]{leftmargin=.5in}
+\setlist[enumerate]{leftmargin=.5in}
+\begin{document}
+
+% \maketitle
+\newgeometry{margin=1in} 
+\begin{titlepage}
+  
+
+  \noindent
+  \begin{minipage}[t]{0.19\textwidth}
+    \vspace{-4mm}{\includegraphics[scale=1.15]{img/logo_unimib.pdf}}
+  \end{minipage}
+  \begin{minipage}[t]{0.81\textwidth}
+    {
+      \setstretch{1.42}
+      {\textsc{Università degli Studi di Milano - Bicocca}} \\
+      \textbf{Scuola di Scienze} \\
+      \textbf{Dipartimento di Informatica, Sistemistica e Comunicazione} \\
+      \textbf{Corso di Laurea Magistrale in Informatica} \\
+      \par
+    }
+  \end{minipage}
+  
+  \vspace{40mm}
+  
+  \begin{center}
+    {\LARGE{
+        \setstretch{1.2}
+        \textbf{Algoritmi per la trasformata di}}}
+    \vspace{1mm}
+    {\LARGE{
+        \setstretch{1.2}
+        \textbf{Burrows-Wheeler Posizionale con}}}
+    \vspace{1mm}
+    {\LARGE{
+        \setstretch{1.2}
+        \textbf{compressione run-length}}}
+    
+  \end{center}
+  
+  \vspace{48mm}
+
+  \noindent
+  {\large \textbf{Relatore:} \textit{Prof. Raffaella Rizzi}} \\
+
+  \noindent
+  {\large \textbf{Correlatore:} \textit{Dott. Yuri Pirola}}
+  
+  \vspace{15mm}
+
+  \begin{flushright}
+    \textbf{\large Tesi di Laurea Magistrale di:} \\
+    \large{\textit{Davide Cozzi}}\\
+    \large{\textit{Matricola 829827}}
+  \end{flushright}
+  
+  \vspace{40mm}
+  \begin{center}
+    {\large{\bf Anno Accademico 2021-2022}}
+  \end{center}
+
+  \restoregeometry
+  
+\end{titlepage}
+\restoregeometry
+\definecolor{shadecolor}{gray}{0.80}
+\setlist{leftmargin = 2cm}
+\newtheorem{teorema}{Teorema}
+\newtheorem{definizione}{Definizione}
+\newtheorem{esempio}{Esempio}
+\newtheorem{corollario}{Corollario}
+\newtheorem{lemma}{Lemma}
+\newtheorem{osservazione}{Osservazione}
+\newtheorem{nota}{Nota}
+\newtheorem{esercizio}{Esercizio}
+
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
+\renewcommand{\bibname}{Riferimenti}
+\renewcommand{\chaptermark}[1]{%
+  \markboth{\chaptername
+    \ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+
+\newcommand{\MYhref}[3][blue]{\href{#2}{\color{#1}{#3}}}%
+\newcommand{\hiddenchapter}[1]{
+  \stepcounter{chapter*}
+  \chapter*{\arabic{chapter}\hspace{1em}{#1}}
+}
+\newcommand\xrowht[2][0]{\addstackgap[.5\dimexpr#2\relax]{\vphantom{#1}}}
+% \pagenumbering{roman}
+\begin{titlepage}
+  \begin{flushright}
+    \textit{E pensare che\\
+      mi iscrissi ad informatica\\
+      per fare il sistemista!}
+  \end{flushright}
+\end{titlepage}
+\newpage
+\newpage
+% \thispagestyle{plain}
+% \begin{flushleft}
+%   \huge{\textbf{Abstract}}
+% \end{flushleft}
+% \vspace{10mm}
+% \input{include/abstract}
+{
+  \pagestyle{plain}
+  \tableofcontents
+  \cleardoublepage
+}
+\chapter{Introduzione}
+Negli ultimi anni si è assistito ad un cambio di paradigma nel campo della
+bioinformatica, ovvero il passaggio dallo studio della sequenza lineare di un
+singolo genoma a quello di un insieme di genomi, provenienti da un gran numero
+di individui, al fine di poter considerare anche le varianti
+geniche. Questo nuovo concetto è stato nominato per la prima volta, nel 2005,
+da Tettelin \cite{tettelin} con il termine di \textit{pangenoma}. Grazie ai
+risultati ottenuti in pangenomica, ci sono stati miglioramenti sia nel 
+campo della biologia che in quello della medicina personalizzata, grazie al
+fatto che, con il pangenoma, si migliora la precisione della rappresentazione di
+multipli genomi e delle loro differenze. \\
+Il genoma umano di riferimento (GRCh38.p14), è composto da circa
+3.1 miliardi di basi, con più di 88 milioni 
+varianti tra i genomi sequenziati, secondo i risultati ottenuti nel 1000 Genome
+Project \cite{tutorial}. Considerando come la quantità dei dati di
+sequenziamento sia destinata 
+ad aumentare esponenzialmente nei prossimi anni, grazie al
+miglioramento delle tecnologie di sequenziamento (Next Generation Sequencing e
+Third-Generation Sequencing), risulta necessaria la costruzione di algoritmi e
+strutture dati efficienti per gestire una tale informazione. 
+In merito, uno degli approcci più usati per rappresentare il pangenoma è un
+pannello di aplotipi \cite{pancon}, ovvero, computazionalmente, una matrice di
+$M$ righe, corrispondenti agli individui, e $N$ colonne, corrispondenti ai siti
+con le varianti. Si specifica che, con il termine
+aplotipo, si intende l'insieme di alleli, ovvero di varianti, che un organismo
+eredita da ogni genitore.\\
+In questo contesto trova spazio uno dei problemi fondamentali della
+bioinformatica, ovvero quello del pattern matching. Inizialmente tale concetto
+era relativo allo studio di un piccolo pattern all'interno di un testo di
+grandi dimensioni, ovvero il genoma di riferimento. Ora, con l'introduzione 
+del pangenoma, tale problema si è adattato alle nuove strutture
+dati.\\
+Lo scopo di questa tesi è ottimizzare il problema del pattern 
+matching, inteso come ricerca dei set-maximal exact match (SMEM) tra un aplotipo
+esterno e un pannello di aplotipi, in una delle 
+strutture dati più utilizzata: la \textit{trasformata di Burrows-Wheeler
+  Posizionale (PBWT)} \cite{pbwt}. Il progetto di tesi, svolto in collaborazione
+con il 
+prof. Gagie (Dalhousie University) e la prof.ssa Boucher 
+(University of Florida), tra gli autori dei principali risultati ottenuti per la
+\textbf{trasformata di Burrows-Wheeler run-length encoded} \cite{rlbwt}
+\cite{gagie2020} \cite{moni} \cite{phoni}, ha quindi permesso lo sviluppo di una
+variante 
+\textbf{run-length encoded} della \textbf{PBWT}, detta \textbf{RLPBWT}, che
+permettesse di risolvere tale problema.
+\subsection*{Struttura della tesi}
+Nel capitolo \ref{prechap} si introdurranno i concetti di base, di ambito
+computazionale e bioinformatico, necessari a
+comprendere questa tesi. Nel capitolo \ref{metchap} verranno discussi i
+contributi di questa tesi, descrivendo le soluzioni algoritmiche e le
+metodologie utilizzate per raggiungere gli obiettivi prefissati. Nel capitolo
+\ref{reschap} si discuteranno i risultati ottenuti durante la
+sperimentazione. Infine, nel capitolo \ref{conchap}, si trarranno le conclusioni
+di questo progetto di tesi discutendone anche i prospetti futuri.
+\dc{L'intera introduzione va estesa}
+\chapter{Preliminari}
+\label{prechap}
+In questo capitolo verranno specificati tutti i concetti fondamentali, allo
+stato dell'arte, atti a comprendere i metodi usati in questa tesi.
+Si introdurranno i concetti di:
+\begin{itemize}
+  \item bitvector
+  \item straight-line program e longest common extension query
+  \item suffix array e longest common prefix
+  \item trasformata di Burrows-Wheeler e la sua variante run-length encoded
+  \item trasformata di Burrows-Wheeler posizionale
+\end{itemize}
+L'unione di tutte queste strutture e di queste tecniche ha permesso la creazione
+della \textit{RLPBWT}.
+\noindent
+\textit{A livello di notazione, si specifica inoltre che, con la notazione
+  $T[i,j]$ si intende la sottostringa del testo/sequenza/riga/colonna $T$,
+  iniziante all'indice $i$ e terminante all'indice $j$ incluso. Qualora si
+  avesse $j>i$ allora si parla di sottostringa nulla $\varepsilon$.}
+
+% sezione introduzione biologia
+%\input{include/bio}
+
+% sezione bitvector
+\input{include/bitvector}
+
+% sezione slp
+\input{include/slp}
+
+% sezione suffix array
+\input{include/sa}
+
+% sezione BWT
+\input{include/bwt}
+
+% sezione PBWT
+\input{include/pbwt}
+
+
+\chapter{Metodo}
+\label{metchap}
+In questo capitolo verranno illustrate le metodologie usate in questa tesi,
+trattando, sia dal punto di vista teorico che sperimentale, tutte le soluzioni
+che hanno portato alla costruzione della \textbf{RLPBWT}.\\
+Nel dettaglio, si approfondiranno tutte le varianti della \textbf{RLPBWT}
+ottenute durante lo studio, evidenziandone pro e contro.
+
+% sezione varianti RLPBWT
+\input{include/var_rlpbwt}
+
+% sezione RLPBWT naive
+\input{include/naive_rlpbwt}
+
+% sezione RLPBWT bitvectors
+\input{include/bv_rlpbwt}
+
+% sezione mapping RLPBWT
+%\input{include/map_rlpbwt}
+
+% sezione match massimali di RLPBWT naive/bitvectors
+\input{include/naive_bv_matches}
+
+% sezione RLPBWT ms
+\input{include/ms_rlpbwt}
+
+% sezione per struttura phi
+\input{include/phi}
+
+
+\chapter{Risultati}
+\label{reschap}
+Verranno ora riportati alcuni risultati sperimentali, ottenuti su pannelli
+simulati, relativi all'implementazione della \textbf{RLPBWT}. In primis,
+verranno discusse le modalità di sperimentazione per poi trattare sia i
+risultati ottenuti su pannelli simulati che su alcuni pannelli del \textbf{1000
+  Genome Project} \cite{1kgp}. 
+% sezione strumenti
+\input{include/strumenti}
+% sezione benchmark
+%\input{include/bench}
+
+% sezione complessità
+\input{include/compl}
+
+
+\chapter{Conclusioni}
+\label{conchap}
+Fissato l'iniziale obbiettivo di risolvere le problematiche relative alla
+memoria richiesta dall'\textit{algoritmo 5} di Durbin, l'implementazione della
+\textbf{RLPBWT}, nel dettaglio basata sull'uso dei \textit{SLP} e \textit{LCE
+  query}, ha riportato risultati molto incoraggianti. Come descritto nel
+capitolo \ref{reschap}, la quantità di memoria richiesta risulta essere
+incredibilmente inferiore. D'altro canto l'algoritmo \textit{matchDynamic} di
+Durbin, per quanto non approfondito nell'articolo del 2014 \cite{pbwt}, risulta
+essere ancor meno esoso di risorse, nonché incredibilmente più veloce dal punto
+di vista dei tempi di calcolo. Lo svantaggio di questo algoritmo è che i
+risultati sono prodotti in ``ordine sparso'' e, giudicando la letteratura degli
+ultimi anni le cui trattazioni si basano sempre sull'algoritmo 5, che non sembra
+essere facilmente riadattabile per la risoluzione di altri task.\\
+Si possono comunque rilevare alcune possibili migliorie in merito
+all'implementazione attuale della \textit{RLPBWT}:
+\begin{itemize}
+  \item si potrebbe pensare ad un metodo per gestire in modo efficiente lo
+  studio di più query contemporaneamente, migliorando i tempi di calcolo
+  complessivi
+  \item studiare eventuali ottimizzazioni per l'algoritmo di mapping e per le
+  strutture dati richieste, studiando, ad esempio, se sia possibile tenere in
+  memoria un solo bitvector $uv_k$ che funzioni in modo similare a quanto si era
+  inizialmente pensato per la \textit{RLPBWT naive}
+  \item migliorare il sistema di serializzazione. Allo stato attuale l'intera
+  struttura viene serializzata e caricata in modo completo. Studiare una
+  strategia efficiente per caricare, di volta in volta, in memoria solo la
+  colonna necessaria ad un dato passo di computazione o comunque un sottoinsieme
+  di colonne
+\end{itemize}
+Nonostante queste possibili migliorie la qualità dei risultati è sufficiente per
+stabilire che una variante \textit{run-length encoded} della \textit{PBWT}, alla
+stregua di quanto analizzato negli ultimi anni sulla \textit{RLBWT} con
+\textit{MONI} \cite{moni} e \textit{PHONI} \cite{phoni}, sia possibile e possa
+permettere, nel prossimo futuro, la memorizzazione compatta delle informazioni
+necessarie allo studio di grandi pannelli di aplotipi. In un futuro in cui le
+tecnologie di sequencing produrranno sempre più dati da sempre più individui,
+avere a disposizione strutture dati efficienti dal punto di vista della
+memorizzazione permetterà uno studio sempre più approfondito dei dati stessi,
+nei campi dei \textit{genome-wide association studies}, della \textit{medicina
+  personalizzata} etc\ldots 
+% sezione sviluppi
+\input{include/sviluppi}
+%% BIBLIOGRAFIA
+% \addcontentsline{toc}{chapter}{Bibliografia e sitografia}
+% \printbibliography[title={Bibliografia e sitografia}]
+%\addcontentsline{toc}{chapter}{Bibliografia}
+\addcontentsline{toc}{chapter}{Riferimenti}
+\bibliographystyle{unsrt}
+\bibliography{thesis}
+\dc{Sistemare tutte le citazione coi DOI}
+\appendix
+% \chapter{Tabelle}
+% \input{include/tabelle}
+\chapter{Algoritmi}
+\input{include/pseudo}
+% \chapter{Esempi di File}
+% \input{include/file}
+
+% ringraziamenti
+\input{include/ringraziamenti}
+\end{document}
+
+% LocalWords:  divergence prefix primis

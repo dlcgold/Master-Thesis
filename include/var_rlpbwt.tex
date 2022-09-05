@@ -30,40 +30,250 @@ compressa, risolvendo il problema del calcolo degli \textit{SMEM} senza
 decomprimere la struttura dati.
 \section{Introduzione alle varianti della RLPBWT}
 Lo sviluppo di questo progetto di tesi è stato tale per cui si sono sviluppate
-varie implementazioni della \textbf{RLPBWT}. Tali varianti non sono da
-intendersi ugualmente valide ma corrispondono al percorso evolutivo avuto
-nell'ultimo anno di studio e ricerca in merito. Riassumendo il tutto si
-vedranno:
+varie implementazioni della \textbf{RLPBWT}.\\
+Al fine di una miglior trattazione di tali implementazioni, si è deciso di
+suddividere le stesse in \textit{sotto-componenti}, le quali, adeguatamente
+``assemblate'' permetteranno, in varie accezioni, il calcolo degli
+\textit{SMEM}. Tali componenti, che verranno dettagliate in seguito, sono:
 \begin{itemize}
-  \item una prima implementazione \textit{na\"{i}ve}, detta appunto
-  \textbf{RLPBWT na\"{i}ve}, che corrisponde al primo tentativo di studio. Tale
-  versione è stata 
-  fortemente ispirata dai risultati introduttivi di Gagie et
-  al. \cite{tricks}. Questa soluzione non 
-  permette di sapere quali righe del pannello presentano uno \textit{SMEM},
-  terminante in una certa colonna, ma solo quante
-  \item si è quindi iniziato ad introdurre l'uso dei \textit{bitvector sparsi},
-  con la 
-  \textbf{RLPBWT con bitvectors}, il cui funzionamento è pressoché analogo alla
-  versione \textit{na\"{i}ve}, al più dell'uso di tali strutture succinte per il
-  funzionamento del mapping. Questa soluzione non
-  permette di sapere quali righe del pannello presentano uno \textit{SMEM},
-  terminante in una certa colonna, ma solo quante
-  \item il primo sostanziale ``cambio di paradigma'', si ha avuto con la
-  \textbf{RLPBWT con pannello denso}, variante in cui, oltre all'uso dei
-  \textit{bitvectors} si è proceduto al calcolo degli \textit{SMEM} tramite
-  \textit{matching statistics} e \textit{LCE query}. Questa soluzione permette
-  di sapere l'indice di una sola riga per la quale si sta avendo uno
-  \textit{SMEM}, terminante in una certa colonna, con il pattern 
-  \item migliorando la soluzione precedente con l'uso dell'\textit{SLP} per la
-  memorizzazione del pannello si è ottenuta la \textbf{RLPBWT con SLP}. Questa
-  soluzione permette di sapere l'indice di una sola riga per la quale si sta
-  avendo uno \textit{SMEM}, terminante in una certa colonna, con il pattern 
-  \item infine, con l'implementazione delle \textbf{funzioni}
-  $\boldsymbol\varphi$ e $\boldsymbol\varphi^\mathbf{-1}$ per la 
-  \textbf{RLPBWT}, si è permesso di estendere i risultati delle ultime due
-  varianti in modo da ottenere tutti gli \textit{SMEM} con tutti gli indici
-  delle righe per cui si ha il medesimo \textit{SMEM} con il pattern
+  \item le componenti per il mapping tra la colonna $k$-esima e la colonna
+  $k+1$, ovvero, riprendendo la notazione di Durbin, le strutture run-length
+  encoded per gli array $c$, $u_k$ e $v_k$. Nel dettaglio, tale componente è
+  implementata in due varianti:
+  \begin{enumerate}
+    \item \textit{mapping tramite intvector} (\texttt{MAP-INT})
+    \item \textit{mapping tramite bitvector sparsi} (\texttt{MAP-BV})
+  \end{enumerate}
+  \item la componente per la memorizzazione, anch'essa proporzionale al numero
+  di run, delle threshold. Anche in questo caso si hanno due varianti,
+  corrispondenti di fatto alle due varianti della componente del mapping:
+  \begin{enumerate}
+    \item \textit{threshold con intvector} (\texttt{THR-INT})
+    \item \textit{threshold con bitvector sparsi} (\texttt{THR-BV})
+  \end{enumerate}
+  \item la componente per la memorizzazione della permutazione ad ogni colonna
+  della \textit{matrice PBWT}, ovvero dei \textit{samples di prefix array}
+  (\texttt{PERM}) 
+  \item la componente in grado di garantire \textit{random access} al
+  pannello. Si hanno due possibilità:
+  \begin{enumerate}
+    \item \textit{random access con bitvector} (\texttt{RA-BV})
+    \item \textit{random access con SLP} (\texttt{RA-SLP})
+  \end{enumerate}
+  \item la componente per le \textit{longest common extension query}
+  (\texttt{LCE}) 
+  \item la componente per l'intero \textit{longest common prefix array}
+  (\texttt{LCP}), già descritto nella sezione \ref{secpbwt}
+  \item la componente per permettere il calcolo delle \textit{funzioni}
+  $\varphi$ e $\varphi^{-1}$ (\texttt{PHI})
 \end{itemize}
-Si può quindi iniziare ad apprezzare il percorso evolutivo e incrementale
-vissuto con questo progetto.
+Assemblando tali componenti si ottengono otto strutture dati:
+\begin{itemize}
+  \item due strutture dati composte unicamente dalle componenti dedicate al
+  mapping e dall'intero \textit{array LCP}. Tali strutture sono nominate:
+  \begin{enumerate}
+    \item[1] \texttt{MAP-INT + LCP}
+    \item[2] \texttt{MAP-BV + LCP}
+  \end{enumerate}
+  Queste soluzioni, che non permettono di sapere quali righe del pannello
+  presentano uno \textit{SMEM}, terminante in una certa colonna, ma solo quante
+  esse siano, sono basate su una re-implementazione dell'\textit{algoritmo 5 di
+    Durbin}
+  \item quattro strutture per il calcolo degli \textit{SMEM} tramite la
+  computazione 
+  in due passaggi dell'array delle \textit{matching statistics}, in modo analogo
+  a quanto introdotto in \textit{MONI} per la \textit{BWT}, tramite
+  \textit{threshold} e \textit{random access} al pannello. Il pannello, come
+  anticipato, è memorizzato come \textit{vettore di bitvector} o come
+  \textit{SLP}. L'algoritmo  
+  necessita, inoltre, sia della componente atta al mapping che di quella
+  relativa ai \textit{sample di prefix array}. Infine, al fine di estendere il
+  riconoscimento a tutte le righe che presentano uno SMEM fino ad una certa
+  colonna, si necessita della struttura che permette di ``emulare'' le
+  \textit{funzioni} $\varphi$ e $\varphi^{-1}$. Tali strutture sono nominate:
+  \begin{enumerate}
+    \item[3] \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}
+    \item[4] \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI}
+    \item[5] \texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI}
+    \item[6] \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
+  \end{enumerate}
+  \item due strutture per il calcolo degli \textit{SMEM} tramite la
+  computazione 
+  in un singolo passaggio dell'array delle \textit{matching statistics}, in modo
+  analogo a quanto introdotto in \textit{PHONII} per la \textit{BWT}, tramite
+  l'uso delle \textit{LCE query}, con le quali, rispetto alle quattro
+  precedenti, si sostituisce l'uso delle \textit{threshold} e del \textit{random
+    access} al pannello. Tali strutture sono nominate:
+  \begin{enumerate}
+    \item[7] \texttt{MAP-INT + LCE + PERM + PHI}
+    \item[8] \texttt{MAP-BV + LCE + PERM + PHI}
+  \end{enumerate}
+\end{itemize}
+Una visualizzazione grafica di quanto descritto è rappresentata alla figura
+\ref{fig:compon}.
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{img/ds.pdf}
+  \caption{Schema grafico dell'ottenimento delle otto strutture dati.}
+  \label{fig:compon}
+\end{figure}
+\section{Matching Statistics per la RLPBWT}
+Prima di discutere nel dettaglio delle varie componenti, è bene introdurre il
+concetto di \textbf{matching statistics} nel caso della \textbf{RLPBWT}, al fine
+di comprendere al meglio il senso della maggior parte delle componenti citate.
+\begin{definizione}
+  Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$ siti,
+  e un aplotipo esterno/pattern $z$, tale che $|z|=N$, si definisce matching
+  statistics di $z$ su $X$ un array $MS$ di coppie $(row,len)$, di lunghezza
+  $N$, tale che (avendo che $x_i$ indica l'$i$-esima riga del pannello $X$): 
+  \begin{itemize}
+    \item $x_{MS[i].row}[i-MS[i].len+1,i]=z[i-MS[i].len+1,i]$, ovvero si ha che
+    l'aplotipo query ha un match, terminante in colonna $i$, con la riga
+    $MS[i].row$  
+    \item $z[i-MS[i].len,i]$ non è un suffisso terminante in colonna $i$ di un
+    qualsiasi sottoinsieme di righe di $X$. In altri termini il match non deve
+    essere ulteriormente estendibile a sinistra
+  \end{itemize}
+\end{definizione}
+Inoltre, analogamente al caso della variante classica, si ha il seguente lemma.
+\begin{lemma}
+  Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$
+  siti, un aplotipo esterno/pattern $z$, tale che $|z|=N$, e il corrispondente
+  array di matching statistics $MS$ si ha che:
+  \[z[i-l+1,i]\]
+  è uno \textbf{SMEM} di lunghezza $l$ in con la riga $MS[i].row$ del pannello
+  $X$ sse: 
+  \[MS[i].len=l\land(i=N-1\lor MS[i].len\geq MS[i+1].len)\]
+\end{lemma}
+\textit{Si vedrà in sezione \ref{secphi} come calcolare, a partire da tali
+  \emph{SMEM}, tutte le righe del panello per le quali si ha lo stesso
+  \emph{SMEM}}.\\
+Il calcolo dell'array $MS$ di $z$ rispetto al pannello $X$ si basa su due fasi:
+\begin{enumerate}
+  \item la fase di \textbf{start}
+  \item la fase di \textbf{extend}
+\end{enumerate}
+Si assuma di avere due indici $i$ e $j$, $0\leq i\leq j< N$, tali per cui
+$z[i,j]$ è un suffisso di uno tra $x_0[0,j]$, \ldots, $x_{M-1}[0,j]$. \\
+La \textit{fase di extend}  estende il match di $z[i,j]$ a $z[i,j+1]$ sse:
+\begin{itemize}
+  \item $j<M$
+  \item $z[i,j+1]$ è un suffisso di uno tra $x_0[0,j+1]$, $\ldots$,
+  $x_{M-1}[0,j+1]$ 
+\end{itemize}
+D'altro canto la \textit{fase di start} cerca il più piccolo indice $i'$,
+avendo $i\leq i'\leq j$, tale per cui $z[i',j]$ è un suffisso di uno tra
+$x_0[0,j]$, $\ldots$, $x_{M-1}[0,j]$.\\
+Si ha quindi il computo di ogni valore $MS[i]$, $\forall i\in[0,N)$, dell'array
+delle \textit{matching statistics}:
+\begin{itemize}
+  \item si assume inizialmente che $MS[0].len=0$, quando $i=0$
+  \item si applica la \textit{fase di start} per cercare il minimo indice
+  $i'$, avendo $i\leq i'$, tale che $z[i',i'+MS[i].len]$ è un suffisso di uno
+  tra $x_0[0,i'+MS[i].len], \ldots, x_{M-1}[0,i'+MS[i].len]$. Inoltre, per
+  minimalità di $i'$, si ha che, $\forall i<j<i'$, $MS[j].len=MS[j-1].len+1$
+  \item a questo punto si itera la \textit{fase di extend} per trovare il
+  più lungo prefisso $z[i',k]$ che è anche un suffisso di uno tra $x_0[0,k]$,
+  $\ldots$, $x_{M-1}[0,k]$, avendo che $MS[i'].len=k-i'+1$
+  \item avendo che $i'>i$ si può procedere induttivamente al calcolo dell'array
+  $MS$ 
+\end{itemize}
+\dc{PARTE PRESA DAL PAPER: RIVEDERE PROFONDAMENTE, FORSE MANCA ANALISI COMPLETO
+  MISMATCH}.\\ 
+In altri termini, più ``pratici'', il calcolo dell'array $MS$ avviene nel
+seguente modo:
+\begin{itemize}
+  \item si parte da una riga arbitraria $i$ della prima colonna
+  \item se $x_i[0]=z[0]$ si procede salvando $MS[0].row=i$
+  \item qualora si abbia $x_i[0]\neq z[0]$ si seleziona o l'ultima riga della
+  run precedente o la prima riga della run successiva a quella a cui appartiene
+  la riga $i$. Tale riga, $j$, verrà salvata in $MS$, avendo $MS[0].row=j$
+  \item a questo punto si effettua il mapping verso la colonna successiva, $k$,
+  e, a seconda di avere o meno un match con $z[k]$, si procede come nei casi
+  visti sopra 
+\end{itemize}
+Si noti che non si è parlato di come calcolare i vari $MS[i].len$, questo in
+quanto si hanno due soluzioni (che verranno poi approfondite tramite le
+rispettive componenti):
+\begin{enumerate}
+  \item si possono usare le \textit{threshold} per capire che nuova riga
+  selezionare in 
+  caso di mismatch. In tal caso i vari $MS[i].len$ devono essere calcolati dopo
+  il calcolo di $MS[i].row$ tramite \textit{random access} al panel
+  \item si possono usare le \textit{LCE query} per capire che nuova riga
+  selezionare in caso di mismatch e in tal caso il calcolo delle $MS[i].len$
+  avviene in contemporanea 
+\end{enumerate}
+\begin{esempio}
+  \label{es:ms}
+  Si riprenda, al fine di vedere un esempio di calcolo dell'array $MS$,
+  l'esempio \ref{es:algo5}, con un pannello e i match con 
+  la query $z$:
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.365]{img/pbwtmatch.pdf}
+  \end{figure}
+  In tal caso l'array $MS$ sarebbe, avendo scelto come riga iniziale la 19:
+  \begin{table}[H]
+    \footnotesize{}
+    \centering
+    \begin{tabular}{c|ccccccccccccccc}
+      $k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordgreen}05} & 06 & 07 & 08
+      &  {\color{nordgreen}09} & 10 &  {\color{nordgreen}11} & 12 & 13
+      &  {\color{nordgreen}14} \\
+      \hline
+      \hline
+      $z$ & 0 & 1 & 0 & 0 & 1 &  {\color{nordgreen}0} & 1 & 0 & 0
+      &  {\color{nordgreen}0} & 1 &  {\color{nordgreen}1} & 1 & 0
+      &  {\color{nordgreen}1} \\
+      \hline
+      $row$ & 19 & 19 & 16 & 15 & 13 &  {\color{nordgreen}13} & 19 & 19 & 19
+      &  {\color{nordgreen}19} & 11 &  {\color{nordgreen}11} & 17 & 17
+      &  {\color{nordgreen}17} \\
+      $len$ & 1 & 2 & 3 & 4 & 5 & {\color{nordgreen}6} & 4 & 5 & 6
+      & {\color{nordgreen}7} & 4 & {\color{nordgreen}5} & 2 & 3
+      & {\color{nordgreen}4}\\
+    \end{tabular}
+  \end{table}
+  Dove si possono riconoscere i vari \textit{SMEM}, la cui colonna di fine è
+  segnalata in verde, secondo la definizione data
+  sopra (anche in questo caso i dettagli del calcolo
+  verranno esplicitati successivamente). 
+\end{esempio}
+% Tali varianti non sono da
+% intendersi ugualmente valide ma corrispondono al percorso evolutivo avuto
+% nell'ultimo anno di studio e ricerca in merito. Riassumendo il tutto si
+% vedranno:
+% \begin{itemize}
+%   \item una prima implementazione \textit{na\"{i}ve}, detta appunto
+%   \textbf{RLPBWT na\"{i}ve}, che corrisponde al primo tentativo di studio. Tale
+%   versione è stata 
+%   fortemente ispirata dai risultati introduttivi di Gagie et
+%   al. \cite{tricks}. Questa soluzione non 
+%   permette di sapere quali righe del pannello presentano uno \textit{SMEM},
+%   terminante in una certa colonna, ma solo quante
+%   \item si è quindi iniziato ad introdurre l'uso dei \textit{bitvector sparsi},
+%   con la 
+%   \textbf{RLPBWT con bitvectors}, il cui funzionamento è pressoché analogo alla
+%   versione \textit{na\"{i}ve}, al più dell'uso di tali strutture succinte per il
+%   funzionamento del mapping. Questa soluzione non
+%   permette di sapere quali righe del pannello presentano uno \textit{SMEM},
+%   terminante in una certa colonna, ma solo quante
+%   \item il primo sostanziale ``cambio di paradigma'', si ha avuto con la
+%   \textbf{RLPBWT con pannello denso}, variante in cui, oltre all'uso dei
+%   \textit{bitvectors} si è proceduto al calcolo degli \textit{SMEM} tramite
+%   \textit{matching statistics} e \textit{LCE query}. Questa soluzione permette
+%   di sapere l'indice di una sola riga per la quale si sta avendo uno
+%   \textit{SMEM}, terminante in una certa colonna, con il pattern 
+%   \item migliorando la soluzione precedente con l'uso dell'\textit{SLP} per la
+%   memorizzazione del pannello si è ottenuta la \textbf{RLPBWT con SLP}. Questa
+%   soluzione permette di sapere l'indice di una sola riga per la quale si sta
+%   avendo uno \textit{SMEM}, terminante in una certa colonna, con il pattern 
+%   \item infine, con l'implementazione delle \textbf{funzioni}
+%   $\boldsymbol\varphi$ e $\boldsymbol\varphi^\mathbf{-1}$ per la 
+%   \textbf{RLPBWT}, si è permesso di estendere i risultati delle ultime due
+%   varianti in modo da ottenere tutti gli \textit{SMEM} con tutti gli indici
+%   delle righe per cui si ha il medesimo \textit{SMEM} con il pattern
+% \end{itemize}
+% Si può quindi iniziare ad apprezzare il percorso evolutivo e incrementale
+% vissuto con questo progetto.

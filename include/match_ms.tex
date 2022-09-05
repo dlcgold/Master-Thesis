@@ -1,0 +1,562 @@
+\section{Calcolo degli SMEM con matching statistics}
+L'obbiettivo di questa tesi era quello di applicare i metodi e gli algoritmi già
+studiati per la \textit{BWT}, riferendosi al calcolo dei \textit{MEM} a partire
+dall'array delle \textit{matching statistics}, alla \textit{PBWT}.\\
+Nelle sei strutture dati dedicate al calcolo degli SMEM tramite \textit{matching
+  statistics} si riconoscono le due modalità già descritte con \textit{MONI} e
+\textit{PHONI}:
+\begin{enumerate}
+  \item calcolare l'array MS in due passaggi sfruttando il \textit{random
+    access} al pannello per calcolare i vari $MS[i].len$
+  \item calcolare l'array MS in un passaggio sfruttando le \textit{LCE query}
+  sia per scegliere i vari $MS[i].row$ che per calcolare, in contemporanea, i
+  vari $MS[i].len$ 
+\end{enumerate}
+\subsection{Calcolo dell'array MS con threshold}
+Questa prima soluzione, necessitando sia della componente
+\texttt{THR-INT}/\texttt{THR-BV} che della componente
+\texttt{RA-BV}/\texttt{RA-SLP}, è relativa alle seguenti strutture dati:
+\begin{itemize}
+  \item \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}
+  \item \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI}
+  \item \texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI}
+  \item \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
+\end{itemize}
+Tra le quali le uniche differenze si riscontrano nei tempi d'esecuzione e nella
+memoria richiesta.\\
+% Si noti che unendo la componente \texttt{PERM} alla componente
+% \texttt{THR-INT}/\texttt{THR-BV} si ottiene una variante dell'\textbf{R-index}
+% visto per la \textit{RLBWT}.\\
+Vediamo il funzionamento dell'algoritmo.
+Sia data $t$ la posizione della \textit{threshold} nella run corrente,
+in colonna $k$, e
+si supponga che tale run, con testa all'indice $h$, non sia associata al simbolo
+desiderato, ovvero $z[k]$. Si supponga che, con il mapping, si sia arrivati
+all'indice $i$ della colonna $k$. Si supponga inoltre che la run successiva
+abbia testa in indice $e$. Si hanno due casi possibili, denotando con
+$LCS(x,y)$ il \textit{longest common suffix} tra le stringhe $X$ e $Y$ e con
+$a_k$ il \textit{prefix array} in colonna $k$:
+\begin{enumerate}
+  \item $i<t$ allora, per definizione di \textit{threshold}:
+  \[LCS(z[0,k], x_{a_{k}[h-1]}[0,k])\geq LCS(z[0,k], x_{a_{k}[e]}[0,k])\]
+  Quindi si ha che $MS[k].row=a_{k}[h-1]$ e il mapping potrà proseguire
+  dall'indice $h-1$
+  \item  $i\geq t$ allora, per definizione di \textit{threshold}:
+  \[LCS(z[0,k], x_{a_{k}[s-1]}[0,k])\leq LCS(z[0,k], x_{a_{k}[e]}[0,k])\]
+  Quindi si ha che $MS[k].row=a_{k}[e]$ e il mapping potrà proseguire
+  dall'indice $e$
+\end{enumerate}
+Qualora una colonna presenti solo simboli $\sigma\neq z[k]$, per convenzione, si
+imposta che $MS[k].row = M$ e si ricomincia, in colonna $k+1$, dall'ultima
+posizione, indicizzata nel pannello originale dal valore finale del
+\textit{prefix array sample} dell'ultima run.
+\begin{esempio}
+  \label{es:thr}
+  Si vede quindi un esempio di funzionamento delle threshold.\\
+  Si prenda pannello visto all'esempio \ref{es:pbwt1} e si effettui la
+  permutazione secondo $a_2$:
+  \begin{table}[H]
+    \centering
+    \footnotesize
+    \begin{tabular}{c|cc|c|cccccccccccc}
+      X & 00 & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 & 13
+      & 14 \\
+      \hline
+      00 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+      01 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+      02 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      03 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      04 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      05 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      06 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      07 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 \\
+      08 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 1 \\
+      09 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 \\
+      10 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 1 \\
+      11 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+      12 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 1 \\
+      13 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 1 \\
+      14 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 \\
+      15 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 1 \\
+      16 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+      17 & 0 & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+      18 & 0 & 1 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 \\
+      19 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+    \end{tabular}
+  \end{table}
+  Si prenda la seconda run, di simboli $\sigma=1$, indicizzata tra 17 e 18. \\
+  Si supponga che, tramite il mapping, si sia arrivati alla riga 17 ma che si
+  abbia $z[2]=0$. la scelta è quindi tra la coda della run precedente, avendo
+  che $a_2[16]=16$ o la testa della run successiva, avendo che $a_2[19]=17$. Si
+  può notare come il minimo \textit{LCP} si trovi, per la 
+  run, all'indice 18 (a causa del fatto che il minimo \textit{LCP} è all'indice
+  19, quello della testa della run successiva). Si può quindi proseguire o con
+  la riga. Questo significa che il suffisso comune più lungo con la query si ha
+  con la riga 16 del pannello, per definizione di threshold, avendo che questa
+  sarà memorizzata nell'array $MS$:
+  \[MS[2].row=16\]
+  Successivamente, tramite \textit{random access} al testo, confrontando la riga
+  $x_{16}$ e la query $z$, fino alla colonna $k=2$, si potrà calcolare che
+  $MS[2].len=3$. 
+\end{esempio}
+\textbf{SISTEMARE ESEMPIO}\\
+Una volta computato tutti i valori $MS[i].row$ per calcolare i vari $MS[i].len$
+si scorre da sinistra a destra calcolando la lunghezza dello SMEM facendo random
+access al pannello e confrontando la query $z$ con la riga $MS[i].row$. Si
+assuma infatti di aver calcolato $MS[i-1].len$ e di voler calcolare $MS[i].len$.
+Si hanno tre casi possibili:
+\begin{enumerate}
+  \item $MS[i].row=M$ e in tal caso, avendo segnalata l'inesistenza di alcuno
+  SMEM, si ha che $MS[i].len=0$
+  \item $MS[i].row=MS[i-1].row$, avendo $i\neq 0$ e $MS[i-1].len\neq 0$, allora
+  si sta seguendo la stessa riga che si seguiva in colonna $i-1$ e quindi,
+  banalmente, $MS[i].len=MS[i-1].len+1$
+  \item in qualsiasi altro caso bisogna confrontare, a partire dalla colonna
+  $i$, la query 
+  $z$ con la riga $MS[i].row$ del pannello da destra a sinistra, fino a che non
+  si trova un mismatch, calcolando la lunghezza $l$ del suffisso comune tra esse
+  e memorizzando tale valore, tramite $MS[i].len=l$
+\end{enumerate}
+In fase di costruzione delle lunghezze è possibile anche riportare gli
+\textit{SMEM}, terminanti in colonna $i$, qualora:
+\begin{itemize}
+  \item $MS[i].len\geq MS[i+1].len \land MS[i].len\neq 0$
+  \item si è arrivati a fine array, avendo $i=N-1\land MS[i].len\neq 0$
+\end{itemize}
+Come si può verificare nell'esempio \ref{es:ms}.\\
+L'algoritmo per il match tramite \textit{threshold} è visualizzabile
+all'algoritmo \ref{algo:matchthr}. Anche in questo caso la stima delle
+complessità non è di facile ottenimento. Dividendo nelle varie parti l'algoritmo
+si ha che:
+\begin{itemize}
+  \item il calcolo dei valori $row$ dell'array $MS$ varia a seconda dell'uso
+  della componente \texttt{MAP-INT} o \texttt{MAP-BV}. Il costo della funzione
+  \textit{down}, variabile a seconda della componente \texttt{RA} e
+  dell'eventuale componente \texttt{LCE}, risulta trascurabile vista la bassa
+  frequenza d'uso, in termini probabilistici. Si ha quindi che, con $\rho$
+  numero medio di run per colonna, usando \texttt{MAP-INT} si ha tempo
+  proporzionale a:
+  \begin{equation}
+    \label{eq:msthr1int}
+    \mathcal{O}(N\log\rho)
+  \end{equation}
+  Mentre con \texttt{MAP-BV} è proporzionale a:
+  \begin{equation}
+    \label{eq:msthr1bv}
+    \mathcal{O}\left(N\log\frac{M}{\rho}\right)
+  \end{equation}
+  
+  \item il calcolo dei valori $len$ dell'array $MS$ è il più complesso da
+  stimare in termini di complessità asintotica. Questa difficoltà è dovuta dal
+  fatto che gli accessi al pannello vengono fatti solo quando $MS.row[i]\neq
+  MS.row[i-1]$. Per semplicità denotiamo con $\gamma$ il numero di accessi al
+  pannello e, nel caso della componente \texttt{RA-BV}, si ha che il calcolo
+  complessivo delle lunghezza è proporzionale a:
+  \begin{equation}
+    \label{eq:msthr2bv}
+    \mathcal{O}(N\gamma)
+  \end{equation}
+  Mentre con \texttt{RA-SLP} è proporzionale, con $s$ lunghezza della stringa
+  unica prodotta dall'\textit{SLP}, a:
+  \begin{equation}
+    \label{eq:msthr2slp}
+    \mathcal{O}\left(N\gamma\log s\right)
+  \end{equation}
+  \item si ha infine il calcolo effettivo degli \textit{SMEM} e di tutte le
+  righe del pannello per le quali si hanno tali match. Denotando con $\delta$ il
+  numero complessivo di accessi alla componente \texttt{RA-BV} o di usi della
+  componente \texttt{LCE}, qualora disponibile, e con $\mu$ il numero di
+  \textit{SMEM}, si ha che, nel primo caso, la complessità di tale operazione è
+  proporzionale a:
+  \begin{equation}
+    \label{eq:msthr3bv}
+    \mathcal{O}(\mu\delta)
+  \end{equation}
+  mentre nel caso di uso dell'\textit{SLP} e della componente \texttt{LCE},
+  avendo sempre $s$ lunghezza della stringa unica prodotta dall'\textit{SLP}:
+  \begin{equation}
+    \label{eq:msthr3slp}
+    \mathcal{O}(\mu\delta\log s)
+  \end{equation}
+\end{itemize}
+Facendo una stima complessiva si può ipotizzare come la struttura \texttt{MAP-BV
++ THR-BV + RA-SLP + PERM + PHI}, a causa della maggior lentezza in fase di
+mapping e di accesso al pannello per il calcolo delle lunghezze, sia quella con
+prestazioni peggiori mentre, per il ragionamento inverso, la struttura
+\texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI} sia quella con le migliori
+performance dal punto di vista del tempo macchina.\\
+In termini di memoria, invece,  la struttura
+\texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI} risulta essere la più
+vantaggiosa mentre la struttura
+\texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI} la peggiore, per le stime viste
+nelle sezioni precedenti dedicate alle singole componenti. 
+\begin{algorithm}
+  \scriptsize
+  \begin{algorithmic}[1]
+    \Function{external\_matches}{$z$}
+    \State $ms_{row}\gets [0..0],\,\,ms_{len}\gets [0..0]$
+    \Comment vettore $MS$ di lunghezza $|z|$
+    \State $curr_{row}\gets
+    rlpbwt[0].samples_{end}[|rlpbwt[0].samples_{end}|-1]$
+    \State $curr_{index}\gets curr_{row}$
+    \State  $curr_{run}\gets index\_to\_run(curr_{index},0)$ \textbf{oppure}
+    $curr_{run}\gets rank_h^0(curr_{index})$    
+    \State $symb\gets get\_symbol(start_0, curr_{run})$
+    \Comment \textbf{Costruzione righe dell'array $MS$}
+    \For {\textit{every} $k\in[0, |z|)$}
+
+    \If{$z[i]=symb$}
+    \State $ms_{row}[k]\gets curr_{row}$
+    \State \hspace{-2.7}\textbf{if} $k\neq |z|-1$ \textbf{then}
+    $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},z)$ 
+    % \If{$k\neq |z|-1$}
+    % \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},
+    % z)$ 
+    % \EndIf
+    \Else
+    \State  $curr_{thr}\gets t_k[curr_{run}]$ \textbf{oppure}
+    $curr_{thr}\gets rank_t^k(curr_{index})$ 
+    \State $force_{down} \gets \top$\textit{ sse l'indice è sovrapposto ad una
+    threshold non in coda di run}
+     \State $force_{down} \gets \top$\textit{ sse l'indice è sovrapposto ad una
+    threshold in coda di run e $DOWN(\ldots)=\top$}
+    \If{$|samples_{beg}^k|=1$}
+    \State $ms_{row}[k]\gets M$
+    \If{$k\neq |z|-1$}
+    \State $curr_{row}\gets
+    rlpbwt[k+1].samples_{end}[|rlpbwt[k+1].samples_{end}|-1]$
+    \State $curr_{index}\gets M-1$
+    \State $curr_{run}\gets index\_to\_run(curr_{index},k+1)$ \textbf{oppure}
+    $curr_{run}\gets rank_h^{k+1}(curr_{index})$
+    \State $symb\gets get\_symbol(start_{k+1}, curr_{run})$
+    \EndIf
+    \ElsIf{$(curr_{run}\neq 0 \land curr_{run}=curr_{thr}\land \neg down)\lor
+    curr_{run}=|samples_{beg}^k|-1$} 
+    \State $curr_{index}\gets p_k[curr_{run}]-1$ \textbf{oppure}
+    $curr_{index}\gets select_h^{k}(curr_{run})$
+    \State $curr_{row}\gets samples_{end}^k[curr_{run}-1]$
+    \State $ms_{row}[k]\gets curr_{row}$
+    \State \textbf{if} $k\neq |z|-1$ \textbf{then}
+    $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},z)$ 
+    % \If{$k\neq |z|-1$}
+    % \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},
+    % z)$ 
+    % \EndIf
+    \Else
+    \State $curr_{index}\gets  p_k[curr_{run}+1]$ \textbf{oppure}
+    $curr_{index}\gets select_h^{k}(curr_{run}+1)+1$
+    \State $curr_{row}\gets samples_{beg}^k[curr_{run}+1]$
+    \State $ms_{row}[k]\gets curr_{row}$
+    \State \textbf{if} $k\neq |z|-1$ \textbf{then} $(curr_{index},\,\,curr_{run},
+    \,\,symb)\gets UPDATE(k, curr_{index}, z)$ 
+    % \If{$k\neq |z|-1$}
+    %  \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},
+    % z)$ 
+    % \EndIf
+    \EndIf
+    \EndIf
+    \EndFor
+    \For {\textit{every} $k\in[0,|z|)$}
+    \Comment \textbf{Costruzione lunghezze dell'array $MS$}
+    \If{$ms_{row}[k] = M$}
+    \State $ms_{len}[k]\gets 0$
+    \ElsIf{$k\neq 0\land ms_{row}[i]=ms_{row}[i-1]\land
+    ms_{len}[i-1]\neq 0$}
+    \State $ms_{len}[i]\gets ms_{len}[i-1]+1$
+    \Else
+    \Comment $ra$ effettua il random access con la componente \texttt{RA-BV} o
+    \texttt{RA-SLP} 
+    \State $tmp_{index}\gets i,\,\,tmp_{len}\gets 0$
+    \While {$tmp_{index}\geq 0 \land z[tmp_{index}]=ra(ms_{row}[k],
+    tmp_{index})$}
+    \State $tmp_{index}\gets tmp_{index}-1,\,\,tmp_{len}\gets tmp_{len}+1$
+    \EndWhile
+    \State $ms_{len}[k]\gets tmp_{len}$
+    \EndIf
+    \EndFor
+    \For {\textit{every} $k\in[0,|z|)$}
+    \Comment \textbf{Calcolo dei match da $MS$}
+    \If{$(ms_{len}[k]>1 \land ms_{len}[k]\geq ms_{len}[k+1])\lor(k = |z|-1 \land
+    ms_{len}[k]\neq 0$}
+    \State \textit{report dello SMEM terminante in colonna $k$}
+    \State \textit{SMEM di lunghezza $ms_{len}[k]$ con la riga $ms_{row}[k]$ e
+    quelle estese da essa tramite} \texttt{PHI}
+    \EndIf
+    \EndFor
+    \EndFunction
+
+    
+    \Function {down}{$pos, prev, next$}
+    \State \textit{si usano le LCE queries o il random access per calcolare il
+    suffisso comune più lungo tra quelli delle righe}
+    \State \textit{$pos$/$prev$ e
+    $pos$/$next$ fino alla colonna precedente a quella corrente} 
+    \State \textit{se il secondo è maggiore o uguale al primo ritorna $\top$,
+    altrimenti $\bot$} 
+    \EndFunction
+  \end{algorithmic}
+  \caption{\footnotesize{Calcolo degli SMEM con aplotipo esterno con componenti
+  \texttt{MAP-INT/BV},
+  \texttt{THR-INT/BV} (i cui usi diversificati di entrambe le componenti sono
+  segnalati con ``oppure''), \texttt{RA-BV/SLP}, \texttt{PERM} e \texttt{PHI}.}}    
+  \label{algo:matchthr}
+\end{algorithm}
+\begin{algorithm}
+  \footnotesize
+  \begin{algorithmic}[1]
+    \Function{update}{$k, curr_{index}, z$}
+    \State $curr_{index}\gets lf(k, curr_{index}, z[k])$
+    \State $curr_{run}\gets index\_to\_run(curr_{index},k+1)$ \textbf{oppure}
+    $curr_{run}\gets rank_h^{k+1}(curr_{index})$
+    \State $symb\gets get\_symbol(start_{k+1}, curr_{run})$
+    \State \textbf{return} $(curr_{index},\,\,curr_{run},\,\,symb)$
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per l'update con componenti \texttt{MAP-INT} e
+  \texttt{MAP-BV}.} 
+  \label{algo:updatems}
+\end{algorithm}
+
+\dc{MANCANO COMPLESSITÀ}
+\subsection{Calcolo dell'array MS con LCE query}
+Come anticipato, grazie all'uso delle \textit{LCE query} è possibile calcolare
+l'array 
+delle \textit{matching statistics} in un solo scorrimento da sinistra a
+destra. Infatti è possibile usare tali query per calcolare non solo quale nuova
+sequenza scegliere in caso di mismatch con l'aplotipo query in colonna $i$, come
+si faceva con l'uso delle \textit{threshold}, ma anche di computare la lunghezza
+del suffisso comune tra essa e l'aplotipo query, calcolando nello stesso momento
+sia $MS[i].row$ che $MS[i].len$.\\
+Tale soluzione è quindi relativa alle seguenti strutture dati:
+\begin{itemize}
+  \item \texttt{MAP-INT + LCE + PERM + PHI}
+  \item \texttt{MAP-BV + LCE + PERM + PHI}
+\end{itemize}
+Con la notazione:
+\begin{equation}
+  \label{eq:lcecol}
+  LCE(k, x, y)
+\end{equation}
+Si indica il calcolo della \textit{LCE query} tra le righe di indice $x$ e
+indice $y$ terminante in colonna $k-1$ (quindi escludendo la colonna
+$k$-esima).\\ 
+Si illustra ora come computare l'array delle \textit{matching statistics}. Anche
+in questo caso, per convenzione, si inizia la computazione dell'ultima 
+riga della prima colonna.
+Si assuma di avere calcolato l'array $MS$ di una query $z$ rispetto al pannello
+$X$. le cui righe si identificano tramite $x_i, \forall i\in\{0,M\}$, fino alla
+colonna $k-1$. Sia $i$ 
+l'indice di riga sulla \textit{matrice PBWT} al quale si è arrivati mediante il
+mapping, avendo che tale riga è quella che ha il più lungo suffisso comune con
+$z[1,k-1]$. Si assuma che l'indice $i$ appartenga alla run $r$, di simboli
+$\sigma$, testa di indice $h$ e coda di indice $e-1$. Si hanno diversi casi:
+\begin{enumerate}
+  \item $z[k]=\sigma$, quindi la riga $i$ può essere usata per estendere il
+  match, avendo che $MS[k].row=MS[k-1].row$ e $MS[k].len=MS[k-1].len+1$, e per
+  proseguire col mapping in colonna $k+1$
+  \item $z[k]\neq\sigma$ e si ha una sola run in colonna $k$, avendo quindi che
+  non si possono avere match. Per convenzione, si
+  imposta che $MS[k].row = M$ e $MS[k].len=0$. Infine si ricomincia, in colonna
+  $k+1$, dall'ultima posizione, indicizzata nel pannello originale dal valore
+  finale del \textit{prefix array sample} dell'ultima run
+  \item $z[k]\neq\sigma$ ma si hanno anche altre run, dovendo quindi scegliere
+  la nuova riga da seguire. Si ha che il più lungo suffisso di $z[1,k]$ che è
+  anche suffisso di $x_1[1,k],\ldots, x_m[1,k]$ è uno tra:
+  \begin{itemize}
+    \item $x_{a_k[h-1]}$, se $h\neq 0$, ovvero la riga del pannello
+    corrispondente alla fine della run precedente a $r$ nella \textit{matrice
+      PBWT}, se esistente
+    \item $x_{a_k[e+1]}$, se $e\neq M-1$, ovvero la riga del pannello
+    corrispondente all'inizio della run successiva a $r$ nella \textit{matrice
+      PBWT}, se esistente
+  \end{itemize}
+  Avendo quindi i \textit{prefix array sample} che ci dicono a quale riga nel
+  pannello corrispondano tali valori e conoscendo $MS[k-1].row$ è possibile
+  calcolare $LCE(k,MS[k-1].row, a_k[h-1])$ e $LCE(k,MS[k-1].row, a_k[e+1])$. A
+  questo punto si sceglie il suffisso comune più lungo tra le due, ovvero il
+  maggiore tra i valori ritornati dalla \textit{LCE query} e si sceglie la riga
+  corrispondente per proseguire. Si ha quindi o $MS[k].row=a_k[h-1]$ o
+  $MS[k].row=a_k[e+1]$. In merito alla lunghezza, assumendo che la lunghezza
+  maggiore delle due \textit{LCE query} sia $l$, si ha che:
+  \[MS[k].len=\min(MS[k-1].len, l)+1\]
+  In quanto la LCE query potrebbe restituire un valore più lungo dell'effettivo
+  match con al query $z$ quindi si sceglie il minimo tra le due lunghezze,
+  ottenendo l'effettiva lunghezza del suffisso comune tra $z$ e la nuova riga
+  scelta fino a $k-1$, e lo si 
+  incrementa di uno, contando il match ottenuto in colonna $k$
+\end{enumerate}
+\dc{Sistemare esempio.}
+\begin{esempio}
+  Riprendiamo l'esempio \ref{es:thr}, visto per il calcolo
+  tramite \textit{threshold}. \\
+  Senza usare le \textit{threshold}, nella medesima situazione si dovrebbe
+  calcolare, avendo che $MS[1].row=19$ e $MS[1].len =2$:
+  \[LCE(2, x_{19}, x_{16}) = \mbox{"01"} \implies|LCE(2, x_{19}, x_{16})|=2\]
+  \[LCE(2, x_{19}, x_{17}) = \mbox{"1"} \implies|LCE(2, x_{19}, x_{17})|=1\]
+  Come verificabile dal pannello presente all'esempio \ref{es:pbwt1}.\\
+  Si ha quindi che $MS[2].row=16$. Inoltre, sempre per quanto detto sopra:
+  \[MS[2].len=\min(MS[1].len, 2)+1=2+1=3\]
+\end{esempio}
+Con questa soluzione, il cui pseudocodice è consultabile all'algoritmo
+\ref{algo:matchlce}, quindi: 
+\begin{itemize}
+  \item non si necessita di tenere in memoria le informazioni per le
+  \textit{threshold}
+  \item si permette il calcolo dell'array $MS$ in una singola scansione del
+  pattern 
+  \item non si necessita di memorizzare l'intero array $MS$ ma solamente quattro
+  variabili relative alla coppia
+  $(row,len)$ corrente e quella precedente 
+\end{itemize}
+Dal punto di vista della complessità temporale, per il calcolo dell'array $MS$,
+si hanno solo due casistiche 
+possibili, al variare della componente di mapping. 
+Nel caso della componente \texttt{MAP-INT}, avendo $s$ lunghezza della singola
+parola prodotta dall'\textit{SLP} e $\rho$ numero medio di run per colonna, si
+ha un tempo proporzionale, dovendo iterare la query, fare il mapping e usare la
+componente \texttt{LCE}, a: 
+\begin{equation}
+  \label{eq:mslce1}
+  \mathcal{O}(N(\log \rho+\log s))
+\end{equation}
+Mentre nel caso dell'uso della componente \texttt{MAP-BV} si ha tempo
+proporzionale a:
+\begin{equation}
+  \label{eq:mslce2}
+  \mathcal{O}\left(N\left(\log \frac{M}{\rho}+\log s\right)\right)
+\end{equation}
+Infine, per il calcolo di tutte le righe del pannello per cui si ha uno
+\textit{SMEM} si può fare riferimento all'equazione \ref{eq:msthr3slp}, avendo
+la medesima situazione.\\
+Si deduce quindi come la struttura \texttt{MAP-INT + LCE + PERM + PHI} sia, a
+livello di tempo macchina, la soluzione più vantaggiosa usando la componente
+\texttt{LCE}. Tale soluzione risulta, sempre nel contesto delle strutture basate
+sulla componente \texttt{LCE}, essere anche la soluzione più vantaggiosa in
+termini di memoria.\\
+Si vedrà, sperimentalmente, nel capitolo \ref{reschap}, il
+confronto con le altre strutture dati.
+\begin{algorithm}
+  \scriptsize
+  \begin{algorithmic}[1]
+    \Function{matches\_ms\_lce}{$z$}
+    \State $ms_{row}\gets [0..0],\,\,ms_{len}\gets [0..0]$
+    \Comment array $MS$ di lunghezza $|z|$
+    \State $curr_{row}\gets
+    rlpbwt[0].samples_{end}[|rlpbwt[0].samples_{end}|-1],\,\,curr_{index}\gets
+    curr_{row}$ 
+    \State $curr_{run}\gets index\_to\_run(curr_{index},0)$ \textbf{oppure}
+    $curr_{run}\gets rank_h^0(curr_{index})$  
+    \State $symb\gets get\_symbol(start_0, curr_{run})$
+    \Comment \textbf{Costruzione dell'array $MS$}
+    \For {\textit{every} $k\in[0, |z|)$}
+    \If{$z[i]=symb$}
+    \State $ms_{row}[k]\gets curr_{row}$
+    \State \textbf{if} $k=0$ \textbf{then} $ms_{len}[k] \gets 1$ \textbf{else}
+    $ms_{len}[k] \gets ms_{len}[k-1]+1$
+    \State \hspace{-3}\textbf{if} $k\neq |z|-1$ \textbf{then}
+    $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},z)$ 
+    % \If{$k\neq |z|-1$}
+    % \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},
+    % z)$ 
+    % \EndIf
+    \Else
+    \If{$|samples_{beg}^k|=1$}
+    \State $ms_{row}[k]\gets M$
+    \State $ms_{len}[k]\gets 0$
+    \If{$k\neq |z|-1$}
+    \State $curr_{row}\gets
+    rlpbwt[k+1].samples_{end}[|rlpbwt[k+1].samples_{end}|-1]$
+    \State $curr_{index}\gets M-1$
+    \State $curr_{run}\gets index\_to\_run(curr_{index},k+1)$ \textbf{oppure}
+    $curr_{run}\gets rank_h^{k+1}(curr_{index})$
+    \State $symb\gets get\_symbol(start_{k+1}, curr_{run})$
+    \EndIf
+    \Else
+    \If{$curr_{run}=|samples_{beg}^k|-1$}
+    \State $curr_{index}\gets p_k[curr_{run}-1]$ \textbf{oppure}
+    $curr_{index}\gets select_h^k(curr_{run})$
+    \State $prev_{row}\gets
+    samples_{end}^k[curr_{run}-1]$ 
+    \State $lce\gets LCE(k, curr_{row}, prev_{row})$
+    \State $ms_{row}[k]\gets prev_{row},\,\,curr_{row}\gets prev_{row}$
+    \State \textbf{if} $k=0$ \textbf{then} $ms_{len}[k] \gets 1$ \textbf{else}
+    $ms_{len}[k] \gets min(ms_{len}[k-1], |lce|)+1$ 
+    % \If{$k=0$}
+    % \State $ms_{len}[k] \gets 1$
+    % \Else
+    % \State $ms_{len}[k] \gets min(ms_{len}[k-1], |lce|)+1$
+    % \EndIf
+    \State \textbf{if} $k\neq |z|-1$ \textbf{then}
+    $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},z)$  
+    % \If{$k\neq |z|-1$}
+    % \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},
+    % z)$  
+    % \EndIf    
+    \ElsIf{$curr_{run}=0$}
+    \State $curr_{index}\gets p_k[curr_{run}+1]$ \textbf{oppure}
+    $curr_{index}\gets select_h^k(curr_{run}+1)+1$
+    \State $next_{row}\gets samples_{beg}^k[curr_{run}+1]$ 
+    \State $lce\gets LCE(k, curr_{row}, next_{row})$
+    \State $ms_{row}[k]\gets next_{row},\,\,curr_{row}\gets next_{row}$
+    \State \textbf{if} $k=0$ \textbf{then} $ms_{len}[k] \gets 1$ \textbf{else}
+    $ms_{len}[k] \gets min(ms_{len}[k-1], |lce|)+1$
+    % \If{$k=0$}
+    % \State $ms_{len}[k] \gets 1$
+    % \Else
+    % \State $ms_{len}[k] \gets min(ms_{len}[k-1], |lce|)+1$
+    % \EndIf
+    \State \textbf{if} $k\neq |z|-1$ \textbf{then} $(curr_{index},\,\,
+    curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},z)$  
+    % \If{$k\neq |z|-1$}
+    % \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},
+    % z)$ 
+    % \EndIf
+    \Else
+    \State $prev_{row}\gets samples_{end}^k[curr_{run}-1],\,\,next_{row}\gets
+    samples_{beg}^k[curr_{run}+1]$ 
+    \State $lce\gets \max (|LCE(k, curr_{row}, prev_{row})|, |LCE(k,
+    curr_{row}, next_{row})|)$
+    \State $curr_{row}\gets lce_{row}$
+    \Comment $lce_{row}$ segnala l'indice della riga con \textit{LCE query} più
+    lunga 
+    \State $ms_{row}[k]\gets curr_{row}$
+    \State \textbf{if} $k=0$ \textbf{then} $ms_{len}[k] \gets 1$ \textbf{else}
+    $ms_{len}[k] \gets min(ms_{len}[k-1], |lce|)+1$
+    % \If{$k=0$}
+    % \State $ms_{len}[k] \gets 1$
+    % \Else
+    % \State $ms_{len}[k] \gets min(ms_{len}[k-1], |lce|)+1$
+    % \EndIf
+    \State \textbf{if} $k\neq |z|-1$ \textbf{then}
+    $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},z)$ 
+    % \If{$k\neq |z|-1$}
+    % \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k,curr_{index},
+    % z)$ 
+    % \EndIf
+    \EndIf
+    \EndIf
+    \EndIf
+    \EndFor
+    
+    \For {\textit{every} $k\in[0,|z|)$}
+    \Comment \textbf{Calcolo dei match da $MS$}
+    \If{$(ms_{len}[k]>1 \land ms_{len}[k]\geq ms_{len}[k+1])\lor(k = |z|-1 \land
+    ms_{len}[k]\neq 0$}
+    \State \textit{report degli SMEM di lunghezza $ms_{len}[k]$, terminanti in
+    colonna $k$}
+    \State \textit{con la riga $ms_{row}[k]$ e quelle estese da essa tramite
+    la componente \texttt{PHI}} 
+    \EndIf
+    \EndFor
+    \EndFunction
+    
+  \end{algorithmic}
+  \caption{\footnotesize{Calcolo degli SMEM con aplotipo esterno con componenti
+  \texttt{MAP-INT/BV} (i cui usi diversificati sono segnalati con ``oppure''),
+  \texttt{LCE}, \texttt{PERM} e \texttt{PHI}.}}
+  \label{algo:matchlce}
+\end{algorithm}
+\dc{Sistemare pseudocodice per non avere salvato intero $MS$}
+\dc{Manca strima complessità}
+
+% LocalWords:  pseudocodice

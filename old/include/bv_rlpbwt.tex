@@ -1,0 +1,426 @@
+\section{RLPBWT con bitvector}
+\label{secrlpbwtbv}
+Al fine di compiere un ulteriore passo verso la formulazione di una struttura
+dati efficiente dal punto di vista dello spazio in memoria per la
+\textbf{RLPBWT}, si è provveduto a modificare la versione \textit{na\"{i}ve} al
+fine 
+di introdurre l'uso dei \textbf{bitvector sparsi}. Questo è stato fatto al fine
+di 
+ottenere una rappresentazione in memoria della stessa che fosse ancora più
+efficiente. Come si vedrà questa versione intermedia non comporterà un
+miglioramento effettivo del consumo di memoria ma permetterà di avere la base su
+cui costruire le versioni successive.\\
+L'idea è quindi quella di sostituire, data una colonna $k$, quanto necessario a
+rappresentare le run (ovvero il vettore $p_k$ della variante na\"{i}ve) e quanto
+necessario a permettere il mapping (ovvero il vettore $uv_k$).\\
+In primis, per poter localizzare le run nella $k$-esima colonna, si è scelto di
+usare un \textit{bitvector sparso}, che denominiamo per praticità $h_k$, tale
+che $|h_k|=M$. Formalmente si ha che:
+\begin{equation}
+  \label{eq:bv1}
+  h_k[i]=
+  \begin{cases}
+    1&\mbox{se } y^k_{i}[k]\neq y^k_{i+1}[k]\lor i=M-1\\
+    0&\mbox{altrimenti}
+  \end{cases},\forall i\in \{0,\ldots,M-1\}
+\end{equation}
+Informalmente, quindi, si ha che si ha 1 in $h_k$ in tutti gli indici
+corrispondenti alla fine di una run.\\
+Empiricamente ci si aspettano ``poche'' run all'interno di una colonna della
+\textit{matrice PBWT}, per quanto già discusso nella sezione
+\ref{secpbwt}. Avendo poche run ci si aspetta anche ``pochi'' 1 all'interno di
+$h_k$, di conseguenza si è optato per usare i \textit{bitvector sparsi} per la
+memorizzazione in memoria di ogni $h_k$, ricordando che, secondo quanto
+riportato per la libreria \textit{SDSL} \cite{sdsl}, tale variante richiede in
+memoria, indicando con $r$ il numero di run:
+\begin{equation}
+  \label{eq:bv2}
+  \approx r\left(2+\log\frac{|h_k|}{r}\right)\mbox{ bit}
+\end{equation}
+\dc{Verificare che siano bit}
+Più elaborata è la rappresentazione dei vettori $u_k$ e $v_k$. In questo caso si
+è deciso, a differenza della rappresentazione unica vista nella \textit{RLPBWT
+  na\"{i}ve}, di optare per due \textit{bitvector sparsi}. In particolare, per il
+vettore $u_k$, tale che $|u_k|=c[k]$, si ha che, $\forall
+i\in\{0,\ldots,|u_k|-1\}$: 
+\begin{equation}
+  \label{eq:bv3}
+  u_k[i]=
+  \begin{cases}
+    1&\mbox{se }i \mbox{ è il numero di simboli che contiene la
+    }rank_{u_k}(i)\mbox{-esima run di 0}\\
+    0&\mbox{altrimenti}
+  \end{cases}
+\end{equation}
+Analogamente si definisce $v_k$, avendo $|v_k|=M-c[k]$ e $\forall
+i\in\{0,\ldots,|v_k|-1\}$, come: 
+\begin{equation}
+  \label{eq:bv4}
+  v_k[i]=
+  \begin{cases}
+    1&\mbox{se }i \mbox{ è il numero di simboli che contiene la
+    }rank_{v_k}(i)\mbox{-esima run di 1}\\
+    0&\mbox{altrimenti}
+  \end{cases}
+\end{equation}
+Si noti che:
+\begin{equation}
+  \label{eq:bv5}
+  rank_{h_k}(|h_k|-1)+1=(rank_{u_k}(|u_k|-1)+1)+(rank_{v_k}(|v_k|-1)+1)
+\end{equation}
+Ovvero il numero di 1 presenti in $h_k$ è pari alla somma di quelli presenti in
+$u_k$ e $v_k$. Si noti che i vari $+1$ sono dovuti al fatto che la funzione
+$rank(i)$ esclude dal computo la posizione $i$ stessa e tutti e tre i bitvector,
+per costruzione, presentano $\sigma=1$ in ultima posizione. Ne segue che, anche
+per questi ultimi due bitvector, la scelta di 
+usare \textit{bitvector sparsi} per la loro memorizzazione sia giustificata,
+empiricamente, dalla poca quantità attesa di simboli $\sigma=1$.
+\begin{esempio}
+  \label{es:bv1}
+  Sia data la seguente colonna:
+  \[y^5=00101111000000000000\]
+  Si ha quindi che:
+  \[h_5=01110001000000000001\]
+  Avendo appunto un numero di run pari a:
+  \[rank_{h_5}(|h_5|-1)+1=4+1=5\]
+  In merito alle run composte da simboli $\sigma=0$ si ha che:
+  \[u_5=011000000000001\]
+  Avendo infatti che si segnalano:
+  \begin{itemize}
+    \item la prima run composta da due simboli $\sigma=0$
+    \item la seconda run composta da un solo simbolo $\sigma=0$
+    \item la terza run composta da dodici simboli $\sigma=0$
+  \end{itemize}
+  Parlando invece di $v_5$ si ha:
+  \[v_5=10001\]
+  Avendo che:
+  \begin{itemize}
+    \item la prima run è composta da un solo simbolo $\sigma=1$
+    \item la seconda run è composta da quattro $\sigma=1$
+  \end{itemize}
+  Si conferma, inoltre, quanto detto nell'equazione \ref{eq:bv5}, avendo:
+  \[rank_{h_5}(|h_5|-1)+1=5 = (rank_{u_5}(13)+1)+(rank_{v_5}(4)+1)=(2+1)+(1+1)=5\]
+\end{esempio}
+Le restanti informazioni, ovvero, per la colonna $k$, il valore $c[k]$, il
+booleano $start_k$ e l'LCP array $l_k$ sono le medesime della variante
+\textit{na\"{i}ve} della \textit{RLPBWT} (motivo per il quale solo a breve si
+tratterà l'algoritmo di match).\\
+Lo pseudocodice relativo alla costruzione della colonna $k$-esima della
+\textit{RLPBWT con bitvector} è disponile all'algoritmo \ref{algo:cosbv} (dove
+sono presenti anche le istruzioni per le varianti che verranno trattate in
+seguito). Assumendo che la complessità in tempo delle costruzioni delle
+strutture a supporto per le funzioni \textit{rank} e \textit{select} dei tre
+bitvector sparsi sia limitata superiormente dalla loro lunghezza massima, ovvero
+$M$, si ha che la costruzione di una colonna per la \textit{RLPBWT con
+  bitvector} avviene in tempo:
+\begin{equation}
+  \label{eq:bvcos}
+  \mathcal{O}(M)
+\end{equation}
+\begin{algorithm}
+  \small
+  \begin{algorithmic}[1]
+    \Function{build\_bv}{$col,\,\, pref,\,\, div$}
+    \State $c\gets 0,\,\,u\gets 0,\,\,v\gets 0,\,\,u'\gets 0,\,\, v'\gets
+    0,\,\,curr_{lcs}\gets 0$
+    \State $start \gets \top,\,\,beg_{run}\gets \top,\,\,push_{zero}\gets
+    \bot,\,\,push_{one}\gets \bot$
+    \For {\textit{every} $k\in\left[0,\,\, M\right)$}
+    \If{$k=0\land col[pref[k]]=1$}
+    \State $start \gets \bot$
+    \EndIf
+    \If{$col[k]=0$}
+    \State $c\gets c+1$
+    \EndIf
+    \EndFor
+    \State $runs\gets[0..0]$
+    \Comment bitvector sparso per le run, di lunghezza $M+1$
+    \State $zeros\gets[0..0]$
+    \Comment bitvector sparso per $u_k$, di lunghezza $c[k]$
+    \State $ones\gets[0..0]$
+    \Comment bitvector sparso per $v_k$, di lunghezza $M-c$
+    \If{$start$}
+    \State $push_{one}\gets \top$
+    \Else
+    \State $push_{zero}\gets \top$
+    \EndIf
+    \For {\textit{every} $k\in\left[0,\,\, M\right)$}
+    \If{$beg_{run}$}
+    \State $u\gets u',\,\,v\gets v',\,\,beg_{run}\gets \bot$
+    \EndIf
+    \If{$col[pref[k]]=1$}
+    \State $v'\gets v'+1$
+    \Else
+    \State $u'\gets u'+1$
+    \EndIf
+    \If{$k=M-1\lor col[pref[k]]\neq col[pref[k+1]]$}
+    \State $runs[k]\gets 1$
+    \If{$push_{one}$}
+    \If{$v\neq 0$}
+    \State $ones[k-1]=1$
+    \EndIf
+    \State $swap(push_{zero},\,\,push_{one})$
+    \Else
+    \If{$u\neq 0$}
+    \State $zeros[k-1]=1$
+    \EndIf
+    \State $swap(push_{zero},\,\,push_{one})$
+    \EndIf
+    \State $beg_{run}\gets \top$
+    \EndIf
+    \EndFor
+    \If{$|zeros|\neq 0$}
+    \State $zeros[|zeros|-1]\gets 1$
+    \EndIf
+    \If{$|ones|\neq 0$}
+    \State $ones[|ones|-1]\gets 1$
+    \EndIf
+    \State \textit{costruzione delle strutture per rank/select dei tre
+    bitvector} 
+    \State \textbf{return}
+    $(start,\,\,c,\,\,runs,\,\,zeros,\,\,ones,\,\,div)$  
+    \EndFunction
+  \end{algorithmic}
+  \caption{{\footnotesize{Algoritmo per la costruzione di una colonna della
+  \textit{RLPBWT} con bitvectors}}}
+  \label{algo:cosbv}
+\end{algorithm}
+
+Bisogna spiegare come, dato un indice di aplotipo $i\in\{0,\ldots,M-1\}$ e una
+colonna $k$, estrarre $u'_k[i]$ e $v'_k[i]$, ovvero come se si stesse usando la
+\textit{PBWT} classica, a partire dagli attuali $u_k[i]$ e $v_k[i]$. Ovviamente,
+se $i=0$, si ha che $u'_k[0]=v'_k[0]=0$. In caso contrario bisogna, in primis,
+calcolare la run 
+in cui si trova l'indice $i$. Questo si ottiene direttamente sfruttando $h_k$:
+\begin{equation}
+  \label{eq:bv7}
+  run = rank_{h_k}(i)
+\end{equation}
+Una volta calcolato l'indice di run si hanno tre possibilità:
+\begin{enumerate}
+  \item si ha che $run=0$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$
+  allora:
+  \begin{equation}
+    \label{eq:bv8}
+    (u,v)=
+    \begin{cases}
+      (i,0)&\mbox{se } b=0\\
+      (0,i)&\mbox{altrimenti}
+    \end{cases}
+  \end{equation}
+  \item si ha che $run=1$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$. In
+  tal caso bisogna per prima cosa individuare l'indice di inizio della seconda
+  run, sfruttando $h_k$:
+  \begin{equation}
+    \label{eq:bv9}
+    beg = select_{h_k}(1)+1
+  \end{equation}
+  A questo punto si ha il numero di simboli della prima run, indicizzata a 0, e,
+  calcolando la distanza tra l'indice di riga e quello di inizio della prima
+  run, avendo che:
+  \begin{equation}
+    \label{eq:bv10}
+    (u,v)=
+    \begin{cases}
+      (beg,i-beg)&\mbox{se } b=0\\
+      (i-beg,beg)&\mbox{altrimenti}
+    \end{cases}
+  \end{equation}
+  \item si ha che $run=j$, con $j\in\{2,r-1\}$. Anche in questo caso  si procede
+  calcolando l'indice di inizio della run:
+  \begin{equation}
+    \label{eq:bv11}
+    beg = select_{h_k}(run)+1
+  \end{equation}
+  e l'offset rispetto all'indice $i$ dato:
+  \begin{equation}
+    \label{eq:bv12}
+    offset = i-beg
+  \end{equation}
+  Poi, sfruttando la solita dicotomia fornita dal caso binario in studio, si
+  hanno due casi: 
+  \begin{enumerate}
+    \item si è in una run di indice pari.
+    Si sfruttano poi $u_k$ e $v_k$ per sapere l'indice della precedente run con
+    simboli $\sigma=0$:
+    \begin{equation}
+      \label{eq:bv13}
+      pre_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
+    e quello della run con simboli simboli $\sigma=1$:
+    \begin{equation}
+      \label{eq:bv14}
+      pre_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
+    Si noti che si usa $\frac{run}{2}$ in quanto, essendo in una run di indice
+    pari si hanno precedentemente lo stesso numero di run per $\sigma=0$ e per
+    $\sigma=1$ e quindi si considera lo stesso numero di ``run'' nei due
+    \textit{bitvector sparsi} $u_k$ e $v_k$.\\
+    A questo punto, sempre per il ragionamento per cui solo uno tra $u$ e $v$
+    non è costante all'interno di una run si ha che o $pre_u$ o $pre_v$ è tale
+    costante mentre l'altro valore deve essere calcolato considerando l'offset:
+    \begin{equation}
+      \label{eq:bv15}
+      (u,v)=
+      \begin{cases}
+        (pre_u+offset,pre_v)&\mbox{se } b=0\\
+        (pre_u,pre_v+offset)&\mbox{altrimenti}
+      \end{cases}
+    \end{equation}
+    \item ci si trova in una run di indice dispari, quindi non si hanno
+    precedentemente lo stesso numero di run per i due simboli. Bisogna quindi
+    calcolare quante siano tali run. Se la prima run è di zeri:
+    \begin{equation}
+      \label{eq:bv16}
+      run_u=select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
+    \end{equation}
+    \begin{equation}
+      \label{eq:bv17}
+      run_v=select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)
+    \end{equation}
+    mentre se la prima run non è di zeri si devono invertire i due valori. Si sa
+    quindi quali ``run'' considerare sui due \textit{bitvector sparsi} $u_k$ e
+    $v_k$.\\ 
+    Posso quindi procedere come nel caso precedente, avendo:
+    \begin{equation}
+      \label{eq:bv18}
+      pre_u=select_{u_k}(run_u)+1
+    \end{equation}
+    \begin{equation}
+      \label{eq:bv19}
+      pre_v=select_{v_k}(run_v)+1
+    \end{equation}
+    E potendo quindi restituire:
+    \begin{equation}
+      \label{eq:bv20}
+      (u,v)=
+      \begin{cases}
+        (pre_u,pre_v+offset)&\mbox{se } b=0\\
+        (pre_u+offset,pre_v)&\mbox{altrimenti}
+      \end{cases}
+    \end{equation}
+  \end{enumerate}
+\end{enumerate}
+\dc{Sistemare}
+\begin{esempio}
+  Si prendano i dati e i risultati ottenuti all'esempio \ref{es:bv1}. Si
+  vogliono calcolare $u$ e $v$ per $i=6$.\\
+  In primis si ha quindi:
+  \[run=rank_{h_5}(6)=3\]:
+  \[beg = select_{h_5}(3)+1=3+1=4\]
+  \[offset = i-beg=6-4=2\]
+  Quindi ci si trova nel terzo caso e, nel dettaglio, avendo una run di
+  indice dispari. Si calcolano quindi:
+  \[run_u=select_{u_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)+1=
+    select_{u_5}(1)+1 =1+1=2\] 
+  \[run_v=select_{v_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)=
+    select_{v_5}(1)=0\] 
+  che non andranno invertiti avendo $start^5=\top$.\\
+  Si calcolano quindi:
+  \[pre_u=select_{u_5}(2)+1=2+1=3\]
+  \[pre_v=select_{v_5}(0)+1=0+1=1\]
+  Avendo infatti, in totale, tre simboli $\sigma=0$ e un simbolo $\sigma=1$
+  prima dell'indice 6.\\ 
+  Concludendo, avendo $start^5=\top$:
+  \[(u,v)=(pre_u, pre_v + offset)=(3,1+2)=(3,3)\]
+\end{esempio}
+L'algoritmo per il calcolo di $u_k[i]$ e $v_k[i]$, tenendo in considerazione che
+tale 
+metodo verrà usato anche nelle varianti che verranno presentate in seguito della
+\textit{RLPBWT}, è disponibile all'algoritmo \ref{algo:uvbv}. In merito alla
+complessità in tempo del calcolo di $u_k[i]$ e $v_k[i]$, si ha che essa è
+limitata superiormente dal costo della \textit{funzione rank} su
+\textit{bitvector sparsi}, essendo la \textit{funzione select} disponibile in
+tempo costante. Ne segue che, avendo $r$ run nella colonna $k$, si ha un tempo
+proporzionale a:
+\begin{equation}
+  \label{eq:bvuvtime}
+  \mathcal{O}\left(\log\frac{M}{r}\right)
+\end{equation}
+Non dovendo in tal
+caso considerare esplicitamente l'offset il mapping dalla colonna $k$ alla
+colonna $k+1$, guidato da $z[k+1]$, viene fatto come nel caso della
+\textit{PBWT}, come visualizzabile all'algoritmo \ref{algo:lfr}, che presenta
+quindi la medesima complessità del calcolo di $u[i]$ e $v[i]$.
+
+\begin{algorithm}
+  %\small
+  \begin{algorithmic}[1]
+    \Function{uvtrick}{$k,\,\, i$}
+    \Comment  $k$ indice di colonna, $i$ indice di riga
+    \If{$i = 0$}
+    \State \textbf{return} $(0,\,\,0)$
+    \EndIf
+    \State $run \gets rank_h^{k}(i)$
+    \If{$run=0$}
+    \If{$start_k$}
+    \State \textbf{return} $(i,\,\, 0)$
+    \Else
+    \State \textbf{return} $(0, \,\,i)$
+    \EndIf
+    \ElsIf{$run=1$}
+    \If{$start_k$}
+    \State \textbf{return} $(select_h^{k}(run)+1,\,\, i-(select_h^{k}(run)+1))$
+    \Else
+    \State \textbf{return} $(i-(select_h^{k}(run)+1),\,\, select_h^{k}(run)+1)$
+    \EndIf
+    \Else
+    \If{$run\bmod 2 = 0$}
+    \State $pre_u\gets
+    select_u^{k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$ 
+    \State $pre_v\gets
+    select_v^{k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$ 
+    \State $offset \gets i -(select_h^{k}(run)+1)$
+    \If{$start_k$}
+    \State \textbf{return} $(pre_u+offset,\,\, pre_v)$
+    \Else
+    \State \textbf{return} $(pre_u, \,\,pre_v+offset)$
+    \EndIf
+    \Else
+    \State $run_u\gets \left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1$
+    \State $run_v\gets \left\lfloor\frac{run}{2}\right\rfloor$
+    \If{$\neg start_k$}
+    \State $swap(run_u, run_v)$
+    \EndIf
+    \State $pre_u\gets select_u^{k}(run_u)+1$
+    \State $pre_v\gets select_v^{k}(run_v)+1$
+    \State $offset \gets i -(select_h^{k}(run)+1)$
+    \If{$start_k$}
+    \State \textbf{return} $(pre_u, \,\,pre_v+offset)$
+    \Else
+    \State \textbf{return} $(pre_u+offset, \,\,pre_v)$
+    \EndIf
+    \EndIf
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per uvtrick con bitvector}
+  \label{algo:uvbv}
+\end{algorithm}
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Function{lf}{$k,\,\, i, \,\,s$}
+    \Comment $k$ indice di colonna, $i$ indice di riga, $s$ simbolo
+    \State $c\gets c[k]$
+    \State $(u, v) \gets uvtrick(k,\,\,i)$
+    \If{$s = 0$}
+    \State \textbf{return} $u$
+    \Else
+    \State \textbf{return} $c+v$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  \caption{Algoritmo per il mapping senza offset.}
+  \label{algo:lfr}
+\end{algorithm}
+\dc{Serve altro?}
+Con questa prima implementazione, di fatto, non si ha un miglioramento in
+memoria rispetto alla variante na\"{i}ve bensì un lieve peggioramento.
+Riprendendo quindi l'esempio già visto per la \textit{RLPBWT na\"{i}ve}, dato un
+panello di 
+medie dimensioni, con $N=30000$ e $M=100000$, si ha che l'uso della
+\textit{RLPBWT con bitvector} richiede $\sim 8.26$GB di memoria (rispetto ai
+$\sim 8.17$GB della \textit{RLPBWT na\"{i}ve}). Nonostante ciò questa versione
+risulta essere di cruciale importanza, in vista del cambio di paradigma che si
+vedrà con le successive due versioni.\\
+\dc{Dopo sperimentazione mettere misure delle serializzazioni}
