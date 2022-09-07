@@ -24,19 +24,19 @@ seguente modo:
   struttura dati  
   \item \textbf{opzionale:} serializzazione della struttura dati, tramite
   \textbf{SDSL} 
-  \item \textit{\textbf{output:}} file contenente i risultati dei match
+  \item \textit{\textbf{output:}} file contenente gli \textit{SMEM}
 \end{enumerate}
 Si specifica che per il file di output si è mantenuto lo stesso formato
 utilizzato da Durbin nella sua implementazione della \textbf{PBWT}
 \cite{durbin_gh}. Tale formato prevede, per facilitarne il parsing, un
 \texttt{tsv} (\textit{tab-separated values}) con le seguenti colonne:
 \begin{enumerate}
-  \item colonna semplicemente indicante che si ha un \textit{MATCH}
-  \item l'indice della query di cui si annota il match
-  \item l'indice dell'aplotipo per cui si ha il match
-  \item l'indice della colonna da cui parte il match
-  \item l'indice della colonna in cui termina il match
-  \item la lunghezza del match
+  \item colonna semplicemente indicante che si ha uno \textit{SMEM}
+  \item l'indice della query di cui si annota lo \textit{SMEM}
+  \item l'indice dell'aplotipo per cui si ha lo \textit{SMEM}
+  \item l'indice della colonna da cui parte lo \textit{SMEM}
+  \item l'indice della colonna in cui termina lo \textit{SMEM}
+  \item la lunghezza dello \textit{SMEM}
 \end{enumerate}
 %Un esempio è visualizzabile alla listing \ref{lst:pbwtres}.
 \paragraph{MaCS}
@@ -79,27 +79,31 @@ Quindi, trascurando le varie informazioni aggiuntive, il pannello è
 \textit{RLPBWT}. Questa però risulta essere una comodità in quanto, leggendo
 iterativamente il file, si legge di volta in volta la $i$-esima colonna, ovvero
 quanto serve per la costruzione della struttura dati.\\
-Per capire meglio come venga prodotto un pannello tramite questo strumento,
-analizziamo un semplice esempio:
-\begin{shaded}
-  \begin{minted}{bash}
-    ./macs 5 3000 -t 0.001 -r 0.001
-  \end{minted}
-\end{shaded}
-\noindent
-Dove:
-\begin{itemize}
-  \item $5$ è il numero di sample richiesto, ovvero il numero di sequenze che
-  il software simulerà
-  \item $3000$ è la lunghezza in paia-basi della regione genomica su cui
-  verranno simulate le $5$ sequenze
-  \item \texttt{-t} $0.001$ segnala il \textit{mutation rate} per ogni sito,
-  ovvero la frequenza di \textit{nuove mutazioni} per un sito nel tempo 
-  \item \texttt{-r} $0.001$ segnala il \textit{recombination rate} per ogni
-  sito, ovvero la frequenza di \textit{ricombinazioni geniche}, che sono i
-  processi per i quali si ottengono nuove combinazioni di alleli a partire da un
-  \textit{genotipo}, per un sito nel tempo 
-\end{itemize}
+% Per capire meglio come venga prodotto un pannello tramite questo strumento,
+% analizziamo un semplice esempio:
+% \begin{shaded}
+%   \begin{minted}{bash}
+%     ./macs 5 3000 -t 0.001 -r 0.001
+%   \end{minted}
+% \end{shaded}
+% \noindent
+% Dove:
+% \begin{itemize}
+%   \item $5$ è il numero di sample richiesto, ovvero il numero di sequenze che
+%   il software simulerà
+%   \item $3000$ è la lunghezza in paia-basi della regione genomica su cui
+%   verranno simulate le $5$ sequenze
+%   \item \texttt{-t} $0.001$ segnala il \textit{mutation rate} per ogni sito,
+%   ovvero la frequenza di \textit{nuove mutazioni} per un sito nel tempo 
+%   \item \texttt{-r} $0.001$ segnala il \textit{recombination rate} per ogni
+%   sito, ovvero la frequenza di \textit{ricombinazioni geniche}, che sono i
+%   processi per i quali si ottengono nuove combinazioni di alleli a partire da un
+%   \textit{genotipo}, per un sito nel tempo 
+% \end{itemize}
+Tale formato era stato scelto, inizialmente, in quanto scelto da Durbin
+stesso. Avendo, però, deciso di effettuare la sperimentazione su pannelli reali
+si è continuato ad usarne il formato per gli input alle varie strutture per la
+\textit{RLPBWT}, senza effettivamente generare dei pannelli. 
 % Il risultato, dove si noti vengono selezionati 4 siti dopo la simulazione, del
 % comando appena descritto è visualizzabile alla listing \ref{lst:macs}.\\
 % \begin{listing}[H]
@@ -165,10 +169,10 @@ quantità di aplotipi di query:
   ogni quantità di query richiesta
   \item produzione delle strutture dati
   \item esecuzione degli algoritmi per il pattern matching
-  \item produzione di vari grafici relativi sia ai tempi di esecuzione che alla
-  memoria richiesta
+  % \item produzione di vari grafici relativi sia ai tempi di esecuzione che alla
+  % memoria richiesta
 \end{itemize}
-Al fine di ottenere risultati non banali infatti l'idea è quella di partire da
+Al fine di ottenere risultati non banali, si è deciso di partire da
 un pannello iniziale fisso ed estrarre un numero di righe pari al numero di
 query richieste, righe che, a loro volta, andranno a formare il pannello di
 query.\\ 
