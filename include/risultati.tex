@@ -188,22 +188,19 @@ strutture dati. Bisogna ricordare che:
   tutte le altre strutture necessarie al calcolo degli stessi
 \end{itemize}
 Fatte queste doverose premesse passiamo ad analizzare i risultati.
-In figura \ref{fig:maketimememchr} (a) vengono visualizzati, invece, i picchi di
+In figura \ref{fig:maketimememchr} (a) vengono visualizzati i picchi di
 memoria 
 richiesti. Anche in questo caso si hanno varie osservazioni possibili:
 \begin{itemize}
   \item come anticipato la PBWT non calcola e memorizza tutti gli indici
   necessari al calcolo degli SMEM in fase di costruzione, avendo quindi una
   bassissima richiesta di memoria in questa fase
-  \item la \textit{RLPBWT na\"{i}ve} e la \textit{RLPBWT con bitvector}, dovendo
+  \item le strutture \texttt{MAP-INT + LCP} e \texttt{MAP-BV + LCP}, dovendo
   memorizzare l'intero insieme degli \textit{array LCP}, hanno un elevato
   consumo di memoria
-  \item nonostante la non memorizzazione delle threshold, la \textit{RLPBWT} con
-  \textit{SLP} e \textit{LCE} ha un guadagno minimo rispetto a quella con
-  \textit{SLP} e \textit{threshold}. Questo è giustificato dalla sparsità dei
-  dati (nonché dal conseguente basso numero di run) e dall'uso dei
-  \textit{bitvector sparsi}, che scalano in memoria proprio sul numero di
-  simboli $\sigma=1$, quindi sul numero di run
+  \item confrontando le strutture dati in grado di computare l'array $MS$ si
+  nota come le differenze siano relative all'uso o meno dell'\textit{SLP} e
+  all'uso o meno delle \textit{threshold}
 \end{itemize}
 In figura
 \ref{fig:maketimememchr} (b), si hanno i tempi di calcolo della costruzione
@@ -212,10 +209,14 @@ delle strutture dati. Si possono fare varie osservazioni:
   \item tutti gli algoritmi di costruzione sono in tempo proporzionale a
   $\mathcal{O}(NM)$ ma, come detto, le varianti della \textit{RLPBWT} includono
   in questa fase anche il calcolo delle strutture utili al calcolo degli SMEM
-  \item la \textit{RLPBWT} con \textit{pannello completo} e \textit{threshold}
-  richiede più tempo in quanto deve memorizzare effettivamente il pannello
-  \item la \textit{RLPBWT na\"{i}ve}, non dovendo costruire i \textit{bitvector
-    sparsi} e nemmeno le strutture a supporto per \textit{rank/select}, risulta
+  \item 
+  la struttura \texttt{MAP-BV + THR-BV + RA-BV, + PERM + PHI}
+  richiede più tempo in quanto deve memorizzare effettivamente il pannello e
+  costruire le strutture per \textit{rank/select} dei vari bitvector
+  \item la struttura \texttt{MAP-INT + LCE + PERM + PHI}, non dovendo costruire i
+  \textit{bitvector sparsi}, le strutture a supporto per \textit{rank/select} e
+  il pannello con la componente \texttt{RA-BV}, risulta, in termini di tempi di
+  costruzione, 
   essere la più performante parlando delle soluzioni run-length encoded
 \end{itemize}
 \begin{figure}
@@ -310,45 +311,51 @@ diverse osservazioni:
   massimali interni al pannello
   \item l'\textit{algoritmo 5} di Durbin conferma le previsioni fatte
   dall'autore, avendo che la memoria utilizzata è circa $13NM$ bytes
-  \item la differenza tra le varianti della RLPBWT basate sul calcolo dell'array
-  delle Matching Statistics è minima. All'aumentare delle dimensioni del
-  pannello, d'altro canto, si prevede che l'uso dell'SLP garantisca un minor uso
-  di memoria
+  \item la differenza tra le varie strutture dati che supportano il calcolo
+  dell'array $MS$ è dovuta, a parità di componente per il mapping (e
+  conseguentemente della componente per le threshold), dall'uso della componente
+  \texttt{RA-BV} o della componente \texttt{RA-SLP}, avendo che la prima
+  richiede maggior memoria. All'aumentare delle dimensioni del
+  pannello, d'altro canto, si prevede che l'uso dell'\textit{SLP} garantisca
+  sempre più un minor uso di memoria
 \end{itemize}
-Interessante è notare il rapporto tra la memoria richiesta dalla \textit{RLPBWT}
-con \textit{SLP} e \textit{LCE} e la \textit{PBWT Indexed}:
-\begin{table}[H]
-  \centering
-  \footnotesize
-  \begin{tabular}{c|c|c|c|c}
-    \textbf{\#Samples} & \textbf{\#Siti}
-    & \textbf{RLPBWT SLP-LCE (\textit{kb})}
-    & \textbf{PBWT Indexed (\textit{kb})} & \textbf{\%}\\
-    \hline
-    4908 & 1055454 & 3058088 & 65975520 & 4.64\\
-    4908 & 1739315 & 4961664 & 108713424 & 4.56\\
-    4908 & 2171378 & 6190684 & 135726084 & 4.56\\
-    4908 & 2596072 & 7430300 & 162257008 & 4.58\\
-    4908 & 6196151 & 17635700 & 387252160 & 4.55
-  \end{tabular}
-\end{table}
-Anche in questo caso le percentuali risultano leggermente peggiori rispetto ai
-pannelli simulati, pur restando risultati molto interessanti.
-In figura \ref{fig:smemtimememchr}(b) si riportano i risultati i termini di tempo di
+% Interessante è notare il rapporto tra la memoria richiesta dalla \textit{RLPBWT}
+% con \textit{SLP} e \textit{LCE} e la \textit{PBWT Indexed}:
+% \begin{table}[H]
+%   \centering
+%   \footnotesize
+%   \begin{tabular}{c|c|c|c|c}
+%     \textbf{\#Samples} & \textbf{\#Siti}
+%     & \textbf{RLPBWT SLP-LCE (\textit{kb})}
+%     & \textbf{PBWT Indexed (\textit{kb})} & \textbf{\%}\\
+%     \hline
+%     4908 & 1055454 & 3058088 & 65975520 & 4.64\\
+%     4908 & 1739315 & 4961664 & 108713424 & 4.56\\
+%     4908 & 2171378 & 6190684 & 135726084 & 4.56\\
+%     4908 & 2596072 & 7430300 & 162257008 & 4.58\\
+%     4908 & 6196151 & 17635700 & 387252160 & 4.55
+%   \end{tabular}
+% \end{table}
+% Anche in questo caso le percentuali risultano leggermente peggiori rispetto ai
+% pannelli simulati, pur restando risultati molto interessanti.
+In figura \ref{fig:smemtimememchr} (b) si riportano i risultati i termini di tempo di
 calcolo, notando che:
 \begin{itemize}
   \item come atteso, l'algoritmo \textit{PBWT Dynamic} risulta essere il più
   performante
-  \item la \textit{RLPBWT} con \textit{SLP} e \textit{threshold}, a causa dei
+  \item la struttura \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI} e la
+  struttura 
+  \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}, a causa dei
   frequenti accessi all'\textit{SLP}, sia per il calcolo delle lunghezze delle
   matching statistics che per la fase di ``disambiguazione'', richiede più tempo
   di tutte le altre varianti, soprattutto se si pensa alla corrispondente
   variante senza \textit{SLP}
-  \item  la \textit{RLPBWT} con \textit{SLP} e \textit{LCE} risulta essere circa
+  \item la struttura \texttt{MAP-INT + LCE + PERM + PHI} e la struttura
+  \texttt{MAP-BV + LCE + PERM + PHI} risultano essere, al massimo,
   il doppio più lenta della soluzione proposta da Durbin con l'\textit{algoritmo
     5}. Questo è un risultato 
   molto interessante se si tiene in considerazione la memoria necessaria per il
-  calcolo degli SMEM
+  calcolo degli \textit{SMEM}
 \end{itemize}
 \begin{figure}
   \centering
@@ -361,8 +368,8 @@ calcolo, notando che:
 Infine, per completare lo studio delle prestazioni temporali, si è deciso di
 isolare il calcolo degli SMEM con ogni singola query, valutando media e
 deviazione standard delle 100 query. Tale risultato è visualizzabile in figura
-\ref{fig:smemsinglechr}, dove si è deciso di escludere la \textit{RLPBWT
-  na\"{i}ve} e la \textit{RLPBWT con bitvector} in quanto non in grado di
+\ref{fig:smemsinglechr}, dove si è deciso di escludere le strutture
+\texttt{MAP-INT + LCP} e \texttt{MAP-BV + LCP} in quanto non in grado di
 computare quali righe presentino un certo SMEM, e conferma quanto ipotizzato e
 discusso precedentemente: 
 \begin{itemize}
@@ -375,15 +382,15 @@ discusso precedentemente:
   lo tempo di calcolo
   \item la \textit{PBWT Indexed} richiede molto meno operazioni ed è quindi la
   soluzione più performante
-  \item per quanto riguarda la \textit{RLPBWT} con \textit{SLP} e
-  \textit{threshold}, ovvero quella più lenta, si ha che essa soffre
-  degli stessi problemi relativi all'random access, precedentemente
-  descritti. Questi problemi sono risolti dalla \textit{RLPBWT} con
-  \textit{pannello completo} e \textit{threshold}
-  \item  utilizzando le \textit{LCE query} si ha una soluzione leggermente più
-  lenta rispetto alla \textit{RLPBWT} con
-  \textit{pannello completo} e \textit{threshold}, dovuto, di fatto, ai costi
-  di calcolo delle \textit{LCE query} stesse
+  \item per quanto riguarda la \textit{RLPBWT}, con l'uso della componente
+  \texttt{RA-SLP}, si rilevano gli stessi problemi relativi all'random access,
+  precedentemente 
+  descritti. Questi problemi sono risolti con l'uso della componente
+  \texttt{RA-BV} 
+  \item a parità di componenti per il mapping (e conseguenti componenti per le
+  threshold), l'uso della componente \texttt{LCE} risulta più lenta dell'uso
+  della componente \texttt{RA-BV}, a causa dei costi di calcolo delle
+  \textit{LCE query} stesse 
 \end{itemize}
 Tali risultati sono ottenuti isolando unicamente le singole funzioni atte al
 calcolo dei match, escludendo i tempi di caricamento delle strutture o di
