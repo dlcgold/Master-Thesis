@@ -162,16 +162,9 @@ Nonostante tale peggioramento la potenza di compressione degli \textup{SLP}
 risulta comunque non trascurabile.
 \begin{figure}
   \centering
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/slp_vs_macs.png}
-  \end{subfigure}%
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/slp_vs_macs_log.png}
-  \end{subfigure}
+  \includegraphics[width=0.6\linewidth]{img/slp_vs_macs_log.png}
   \caption{Confronto tra la memoria richiesta dai file MACs e dagli SLP per i
-    pannelli del 1000 Genome Project. Il grafico di destra è in scala
+    pannelli del 1000 Genome Project, in scala
     logaritmica.} 
   \label{fig:slpmacschr}
 \end{figure}
@@ -254,27 +247,19 @@ presenti particolari criticità dal punto di vista della memoria richiesta.
 \end{figure}
 \begin{table}
   \centering
-  \caption{Dimensioni, in megabytes, delle varie componenti della
-    \textit{RLPBWT}.} 
+  \caption{Dimensioni, in megabytes, delle varie componenti usate nelle
+    strutture dati per la \textit{RLPBWT}.} 
   \label{tab:comp}
   \scriptsize
-  \begin{tabular}{c||c|c|c|c|c|c|c|c|c}
-    \textbf{Chr}  & \textbf{\textit{t}} & \textit{\textbf{Samples}} & $\boldsymbol\phi$ &
-                                                                                 \textbf{SLP}
-    & \textbf{Pannello} & \textbf{\textit{h}} &  \textbf{\textit{u}}  &
-                                                                        \textbf{\textit{v}}
-    &  \textbf{\textit{c}} +  \textbf{\textit{start}}\\ \hline    \hline
-    \textbf{22}  & 198.9 & 71.3 & 89.0 & 44.7 & 628.1 & 194.5 & 180.2 & 162.7 & 5.1
-    \\ \hline
-    \textbf{20}  & 322.5 & 103.8 & 117.9 & 61.9 & 1035.1 & 315.1 &  293.5 & 264.7 & 8.3
-    \\ \hline
-    \textbf{18}  & 401.9 & 127.8 & 147.4 & 80.2 & 1292.2 & 392.9 & 366.1 & 330.4 & 10.3
-    \\ \hline
-    \textbf{16}  & 483.4 & 159.3 & 186.1 & 98.7 & 1544.9 & 472.4 & 439.5 & 396.1 & 12.4
-    \\ \hline
-    \textbf{1}  & 1145.6 & 365.6 & 410.9& 226.9 & 3687.3 & 1119.6 & 1043.4 & 940.4 & 29.5
-    \\ 
-  \end{tabular}
+  \begin{tabular}{c||c|c|c|c|c|c|c|c}
+    \hline
+     Chr & MAP-INT & MAP-BV & THR-INT & THR-BV & RA-BV & RA-SLP/LCE & PERM & PHI \\ \hline
+        22 & 74,275 & 542,531 & 36,077 & 198,964 & 628,093 & 44,7915 & 71,3182 & 89,0774 \\ \hline
+        20 & 109,08 & 881,529 & 52,624 & 322,491 & 1035,05 & 61,8933 & 103,882 & 117,856 \\ \hline
+        18 & 137,49 & 1099,598 & 61,352 & 401,965 & 1292,17 & 80,1648 & 127,769 & 147,416 \\ \hline
+        16 & 167,046 & 1320,331 & 80,7 & 483,269 & 1544,9 & 98,7267 & 159,307 & 186,033 \\ \hline
+        1 & 384,12 & 3133,008 & 185,228 & 1145,67 & 3687,28 & 226,92 & 365,615 & 410,983 \\ \hline
+    \end{tabular}
 \end{table}
 % \begin{table}
 %   \centering
