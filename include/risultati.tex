@@ -1,32 +1,32 @@
 \section{Sperimentazione sui pannelli reali}
-Come anticipato, al fine di valorizzare maggiormente i risultati ottenuti in
+Come anticipato, al fine di valorizzare i risultati teorici ottenuti in
 questo progetto, si 
 è deciso di procedere con lo studio di dati reali, relativi alla \textit{phase
-  3} del \textbf{1000
-  Genome
-  Project}\footnote{\url{https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/}}
+  3} del \textbf{1000 Genome Project}
+\footnote{\url{https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/}}
 \cite{1kgp}.\\ 
 Tali pannelli, disponibili in formato \textit{VCF}, presentano un numero
-costante di sample, ovvero 5008, mentre a variare è il numero di siti. Essendo
-dati reali, non si ha la sola presenza di siti biallelici. Si è quindi proceduto
+costante di sample, ovvero 5.008, mentre a variare è il numero di siti. Essendo
+dati reali, si ha anche la presenza di siti multiallelici. Si è quindi proceduto
 alla selezione dei soli siti biallelici, ottenendo quindi pannelli costruiti su
 un alfabeto binario $\Sigma=\{0,1\}$, tramite l'uso di \textbf{bcftools}
 \cite{bcftools}, tramite il comando \texttt{bcftools view -m2 -M2
   -v snps}.\\
 La prima selezione dei pannelli è stata dettata dalla volontà di studiare, per
-praticità, matrici non troppo estese. Si sono, quindi, scelti i pannelli
-relativi:
+praticità, matrici non troppo estese. In aggiunta, si è studiato uno dei
+pannelli più grossi disponibili, ovvero quello relativo al cromosoma 1. Si sono,
+quindi, scelti i pannelli relativi al:
 \begin{itemize}
-  \item al cromosoma 22, con 1055454 siti
-  \item al cromosoma 20, con 1739315 siti
-  \item al cromosoma 18, con 2171378 siti
-  \item al cromosoma 16, con 2596072 siti
+  \item cromosoma 22, con 1.055.454 siti
+  \item cromosoma 20, con 1.739.315 siti
+  \item cromosoma 18, con 2.171.378 siti
+  \item cromosoma 16, con 2.596.072 siti
+  \item cromosoma 1, con 6.196.151 siti
 \end{itemize}
-In aggiunta, si è studiato uno dei pannelli più grossi disponibili, ovvero
-quello relativo al cromosoma 1, con 6196151 siti.\\
 Al fine del computo degli SMEM, avendo un numero ridotto di sample a
 disposizione, si è scelto di estrarre da ognuno 100 sample da usare come
-query.\\
+query.
+\subsection{Studio dei pannelli}
 Prima di procedere con l'effettivo studio delle performance di calcolo degli
 SMEM, trattandosi di pannelli reali, è risultata interessante una preliminare
 indagine esplorativa sulla natura di tali pannelli in termini di
@@ -44,20 +44,20 @@ numero medio di run per colonna e il numero
 massimo di run in una colonna si è confermato tale risultato, infatti:
 \begin{itemize}
   \item per il cromosoma 22 si ha un numero medio di 14 run, con un massimo di
-  2450
+  2450. Il numero totale di run è 14.772.105
   \item per il cromosoma 20 si ha un numero medio di 11 run, con un massimo di
-  2176
+  2176. Il numero totale di run è 19.966.504
   \item per il cromosoma 18 si ha un numero medio di 11 run, con un massimo di
-  2365
+  2365. Il numero totale di run è 24.288.263
   \item per il cromosoma 16 si ha un numero medio di 12 run, con un massimo di
-  2330
+  2330. Il numero totale di run è 31.187.856
   \item per il cromosoma 1 si ha un numero medio di 11 run, con un massimo di
-  2721 
+  2721. Il numero totale di run è 69.671.952
 \end{itemize}
 Si conferma quindi il risultato atteso, risultato che è a favore, in termini di
 complessità in spazio, della \textit{RLPBWT} in quanto tutte le componenti sono
-proporzionali al numero di run. In figura \ref{fig:chrrun} si riportano
-graficamente tali risultati.
+proporzionali al numero, sperimentalmente basso, di run. In figura
+\ref{fig:chrrun} si riportano graficamente tali risultati.
 \begin{figure}
   \centering
   \begin{subfigure}{.45\textwidth}
@@ -86,7 +86,7 @@ graficamente tali risultati.
     percentuale della quantità di questi ultimi sul totale dei simboli.}
   \label{fig:chrrun}
 \end{figure}
-
+\subsection{Costruzione delle strutture e calcolo degli SMEM}
 Viste le dimensioni di tali pannelli si ritiene necessario studiare, dal punto
 di vista del tempo macchina e dei picchi di memoria necessaria, i vari step
 della sperimentazione:
@@ -103,16 +103,17 @@ della sperimentazione:
   \end{itemize}
   \item la costruzione delle varianti della \textit{RLPBWT} e dei file ad hoc
   per la \textit{PBWT}
-  \item il calcolo degli SMEMs
+  \item il calcolo degli \textit{SMEM}
 \end{itemize}
-In generale i risultati ottenuti risultano essere coerenti con quanto visto nei
-pannelli simulati.
 \paragraph{Preprocessing}
 In figura \ref{fig:prechr} si possono analizzare le prestazioni delle tre
-fasi. La separazione del pannello con le query risulta essere assolutamente
-ininfluente e, di fatto, anche la conversione tra i due formati (conversione che
-diventerebbe non necessaria implementando l'input direttamente da file VCF) non
-necessita particolari considerazioni. Bisogna, però, analizzare la costruzione
+fasi di preprocessing. La separazione del pannello con le query risulta essere
+assolutamente 
+ininfluente e, di fatto, anche la conversione tra i due formati non
+necessita particolari considerazioni. Tale conversione 
+diventerebbe non necessaria implementando l'input direttamente da file VCF per
+le varie strutture dati relative alla \textit{RLPBWT}. Bisogna, però, analizzare
+la costruzione 
 dell'\textit{SLP}. Per quanto quest'operazione sia da svolgersi \textit{una
   tantum}, le richieste in termini di memoria sono nell'ordine delle centinaia
 di gigabytes di RAM mentre i tempi di calcolo sono nell'ordine delle
@@ -232,17 +233,9 @@ presenti particolari criticità dal punto di vista della memoria richiesta.
 \dc{Serve altro?}
 \begin{figure}
   \centering
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/comp_sites.png}
-  \end{subfigure}%
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/comp_runs.png}
-  \end{subfigure}
-  \caption{Memoria occupata dalle singole componenti, avendo sulle ascisse sia
-    il numero di siti, a sinistra, che il numero di run, a destra. Si noti che
-    con \texttt{MAP} si intende $h+u+v+c+start$ mentre con \texttt{THR} $t$. }
+    \includegraphics[width=\linewidth]{img/comp_mem.png}
+  \caption{Memoria occupata dalle singole componenti, avendo sulle ascisse in
+    (a) il numero di siti e in (b) il numero di run. }
   \label{fig:comp}
 \end{figure}
 \begin{table}

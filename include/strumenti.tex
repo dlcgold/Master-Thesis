@@ -152,7 +152,48 @@ In termini di pipeline si procede quindi:
   accetta anche input prodotti tramite altri tool che non verranno qui
   approfonditi) 
 \end{enumerate}
-
+\paragraph{PBWT}
+Al fine di validare più correttamente i confronti tra le varie strutture dati
+per la \textit{RLPBWT} e la \textit{PBWT} di Durbin, si è scelto di utilizzare
+l'implementazione originale di quest'ultima \cite{durbin_gh}. L'implementazione
+fornisce tre algoritmi per il calcolo degli SMEM, avendo $N$ siti, $M$ sample e
+$Q$ query:
+\begin{enumerate}
+  \item \texttt{matchNaive}, ovvero un'implementazione na\"{i}ve del calcolo
+  degli SMEM che non sfrutta la \textit{PBWT}. Questo algoritmo non è
+  utilizzabile in casi reali. La complessità in tempo di tale 
+  soluzione è stimata essere $\mathcal{O}(NMQ)$ mentre quella in spazio è
+  $\mathcal{O}(NM)$
+  \item \texttt{matchIndexed}, ovvero l'algoritmo 5 del paper originale
+  \cite{pbwt}. La complessità in tempo di tale 
+  soluzione è stimata essere $\mathcal{O}(NQ)$ dopo una fase di preprocessing
+  con complessità $\mathcal{O}(NM)$. La complessità in spazio è stimata essere
+  $\mathcal{O}(NM)$, ricordando come, in pratica, essa corrisponda a $13NM$
+  bytes in memoria
+  \item \texttt{matchDynamic}, ovvero un algoritmo non approfondito nel paper ma
+  solo citato nei risultati sotto il nome di ``batch''. Pur mancando una
+  descrizione approfondita dell'algoritmo si è dedotto che il suo funzionamento
+  si basi sul creare una trasformata \textit{PBWT} anche delle query, viste
+  sotto forma di pannello, e applicare l'algoritmo per il calcolo degli SMEM
+  interni alla \textit{PBWT} stessa. Inoltre il calcolo dei vari indici viene
+  fatto di colonna in colonna. La complessità in tempo di tale 
+  soluzione è stimata essere $\mathcal{O}(N(M+Q))$ mentre quella in spazio è
+  $\mathcal{O}(N+M)$. 
+\end{enumerate}
+Si intuisce fin da subito come l'ultima soluzione, non approfondita nel paper di
+riferimento e della quale si è avuto riconoscimento solo in fase di
+sperimentazione, risulti essere la migliore a disposizione. Si hanno solo due
+piccole limitazioni. La prima è dovuta al fatto che, dovendo di fatto computare
+la trasformata anche per il pannello di query ed essendo l'algoritmo studiato
+per lavorare sulla trasformata stessa, i tempi di calcolo per poche query sono
+alti rispetto all'algoritmo \texttt{matchIndexed} e rispetto alle varie
+soluzioni per la \textit{RLPBWT}. Il secondo limite e che i risultati non sono
+ordinati. Tutti gli altri algoritmi presentano i risultati query per query, in
+ordine, mentre l'algoritmo \texttt{mathcDynamic}, studiando la trasformata,
+presenta tutti i risultati permutati secondo la stessa. Si rileva, in ogni caso,
+come tali limiti possano essere per lo più trascurati, nonostante il problema su
+cui si concentrano gli studi di questa tesi fosse la ricerca degli SMEM tra una
+singola query e un pannello di aplotipi.
 \subsection{Riproducibilà degli esperimenti}
 Al fine di rendere riproducibili gli esperimenti si è costruita una pipeline
 per l'esecuzione dei vari algoritmi e l'estrazione dei dati quantitativi
@@ -168,7 +209,7 @@ quantità di aplotipi di query:
   \item produzione dell'input per la \textit{PBWT} e della \textit{RLPBWT} per
   ogni quantità di query richiesta
   \item produzione delle strutture dati
-  \item esecuzione degli algoritmi per il pattern matching
+  \item esecuzione degli algoritmi per il calcolo degli \textit{SMEM}
   % \item produzione di vari grafici relativi sia ai tempi di esecuzione che alla
   % memoria richiesta
 \end{itemize}
