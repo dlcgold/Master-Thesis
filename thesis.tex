@@ -1,5 +1,5 @@
-%\documentclass[a4paper,12pt, oneside]{book}
-\documentclass[a4paper,12pt, oneside, draft]{book}
+\documentclass[a4paper,12pt, oneside]{book}
+%\documentclass[a4paper,12pt, oneside, draft]{book}
 % \usepackage{fullpage}
 \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
@@ -400,43 +400,51 @@ Ubuntu 20.04.4 LTS. Tale macchina è stata gentilmente messa a disposizione dall
 \label{conchap}
 Fissato l'iniziale obbiettivo di risolvere le problematiche relative alla
 memoria richiesta dall'\textit{algoritmo 5} di Durbin, l'implementazione della
-\textbf{RLPBWT}, nel dettaglio basata sull'uso dei \textit{SLP} e \textit{LCE
-  query}, ha riportato risultati molto incoraggianti. Come descritto nel
-capitolo \ref{reschap}, la quantità di memoria richiesta risulta essere
-incredibilmente inferiore. D'altro canto l'algoritmo \textit{matchDynamic} di
+\textbf{RLPBWT}, principalmente nelle strutture dati composte segnalate nel
+capitolo \ref{reschap}, ha riportato risultati molto incoraggianti. Come
+descritto nel medesimo capitolo, la quantità di memoria richiesta risulta essere 
+incredibilmente inferiore rispetto a quella richiesta dall'algoritmo
+\texttt{matchIndexed}. D'altro canto, l'algoritmo \texttt{matchDynamic} di 
 Durbin, per quanto non approfondito nell'articolo del 2014 \cite{pbwt}, risulta
 essere ancor meno esoso di risorse, nonché incredibilmente più veloce dal punto
-di vista dei tempi di calcolo. Lo svantaggio di questo algoritmo è che i
-risultati sono prodotti in ``ordine sparso'' e, giudicando la letteratura degli
-ultimi anni le cui trattazioni si basano sempre sull'algoritmo 5, che non sembra
-essere facilmente riadattabile per la risoluzione di altri task.\\
+di vista dei tempi di calcolo, ad eccezion del caso limite di avere un numero
+esiguo di query. Lo svantaggio si ritrova anche nell'ordinamento dei risultati
+e nella creazione di un'ulteriore \textit{PBWT}
+che, giudicando la letteratura degli ultimi anni le cui trattazioni si basano
+sempre sull'algoritmo 5, sembrano implicare un non facile 
+riadattamento per la risoluzione di altri task.\\
 Si possono comunque rilevare alcune possibili migliorie in merito
-all'implementazione attuale della \textit{RLPBWT}:
+alle varie implementazioni della \textit{RLPBWT}, riferendosi essenzialmente
+alle solzuioni che prevedono il calcolo dell'\textit{array delle matching
+  statistics}: 
 \begin{itemize}
   \item si potrebbe pensare ad un metodo per gestire in modo efficiente lo
   studio di più query contemporaneamente, migliorando i tempi di calcolo
   complessivi
-  \item studiare eventuali ottimizzazioni per l'algoritmo di mapping e per le
-  strutture dati richieste, studiando, ad esempio, se sia possibile tenere in
-  memoria un solo bitvector $uv_k$ che funzioni in modo similare a quanto si era
-  inizialmente pensato per la \textit{RLPBWT naive}
+  \item studiare eventuali ottimizzazioni per la componente \texttt{MAP-BV} al
+  fine di comprendere se sia possibile tenere in
+  memoria un solo bitvector $uv_k$ che funzioni in modo similare a quanto si ha
+  con la componente \texttt{MAP-INT}
   \item migliorare il sistema di serializzazione. Allo stato attuale l'intera
-  struttura viene serializzata e caricata in modo completo. Studiare una
+  struttura, in tutte le sue varianti, viene serializzata e caricata in modo
+  completo. Studiare una 
   strategia efficiente per caricare, di volta in volta, in memoria solo la
   colonna necessaria ad un dato passo di computazione o comunque un sottoinsieme
-  di colonne
+  di colonne, ridurrebbe l'uso di memoria al costo comunque di un aumento, si
+  spera trascurabile, dei tempi di calcolo
 \end{itemize}
-Nonostante queste possibili migliorie la qualità dei risultati è sufficiente per
-stabilire che una variante \textit{run-length encoded} della \textit{PBWT}, alla
+Nonostante queste possibili migliorie, la qualità dei risultati è sufficiente
+per stabilire che una variante \textit{run-length encoded} della \textit{PBWT},
+alla 
 stregua di quanto analizzato negli ultimi anni sulla \textit{RLBWT} con
 \textit{MONI} \cite{moni} e \textit{PHONI} \cite{phoni}, sia possibile e possa
 permettere, nel prossimo futuro, la memorizzazione compatta delle informazioni
 necessarie allo studio di grandi pannelli di aplotipi. In un futuro in cui le
-tecnologie di sequencing produrranno sempre più dati da sempre più individui,
-avere a disposizione strutture dati efficienti dal punto di vista della
-memorizzazione permetterà uno studio sempre più approfondito dei dati stessi,
-nei campi dei \textit{genome-wide association studies}, della \textit{medicina
-  personalizzata} etc\ldots 
+tecnologie di sequencing produrranno sempre più dati, provenienti da sempre più
+individui, avere a disposizione strutture dati efficienti dal punto di vista
+della memorizzazione permetterà uno studio sempre più approfondito dei dati
+stessi, nei campi dei \textit{Genome-Wide Association Studies (GWAS)}, della
+\textit{medicina personalizzata} etc\ldots 
 % sezione sviluppi
 \input{include/sviluppi}
 %% BIBLIOGRAFIA

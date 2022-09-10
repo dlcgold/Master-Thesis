@@ -207,12 +207,8 @@ nelle sezioni precedenti dedicate alle singole componenti.
 
     \If{$z[i]=symb$}
     \State $ms_{row}[k]\gets curr_{row}$
-    \State \hspace{-2.7}\textbf{if} $k\neq |z|-1$ \textbf{then}
+    \State \hspace{-1.1mm}\textbf{if} $k\neq |z|-1$ \textbf{then}
     $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},z)$ 
-    % \If{$k\neq |z|-1$}
-    % \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},
-    % z)$ 
-    % \EndIf
     \Else
     \State  $curr_{thr}\gets t_k[curr_{run}]$ \textbf{oppure}
     $curr_{thr}\gets rank_t^k(curr_{index})$ 
@@ -453,7 +449,7 @@ confronto con le altre strutture dati.
     \State $ms_{row}[k]\gets curr_{row}$
     \State \textbf{if} $k=0$ \textbf{then} $ms_{len}[k] \gets 1$ \textbf{else}
     $ms_{len}[k] \gets ms_{len}[k-1]+1$
-    \State \hspace{-3}\textbf{if} $k\neq |z|-1$ \textbf{then}
+    \State \hspace{-1.1mm}\textbf{if} $k\neq |z|-1$ \textbf{then}
     $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},z)$ 
     % \If{$k\neq |z|-1$}
     % \State $(curr_{index},\,\,curr_{run},\,\,symb)\gets UPDATE(k, curr_{index},

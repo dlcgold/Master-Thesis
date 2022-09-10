@@ -1,5 +1,6 @@
 \section{Sviluppi futuri}
-Ovviamente questa prima implementazione completa della \textit{RLPBWT} non è da
+Ovviamente questa prima implementazione completa della \textit{RLPBWT},
+declinata nelle possibili strutture composte, non è da
 considerarsi come un punto di arrivo. Come accaduto per la \textit{PBWT},
 infatti, si potranno sviluppare nuove strutture dati basate su di essa per la
 gestione di pannelli di varia natura. Principalmente si può pensare a due casi,
@@ -38,7 +39,11 @@ potrebbero memorizzare:
   \item una stringa che memorizzi quale simbolo corrisponda ad una certa run,
   non potendo sfruttare l'alternanza di simboli vista nel caso binario
   \item una rivisitazione delle strutture necessarie al mapping, tenendo in
-  memoria vettori di \textit{bitvector sparsi}
+  memoria vettori di \textit{bitvector sparsi} o valori interi alla stregua
+  della componente \texttt{MAP-INT}. Si segnala che si attende un inversione di
+  tendenza in termini di memoria, avendo che, in tal caso, l'uso di \textit{int
+    vector compressi} potrebbe rivelarsi meno efficiente dei \textit{bitvector
+    sparsi} 
   \item riadattamento del calcolo dell'array delle \textit{matching statistics}
 \end{itemize}
 In merito allo spazio richiesto e ai tempi di calcolo bisognerà considerare la
@@ -83,5 +88,14 @@ Ovviamente nulla è stato sviluppato al momento ma si ritiene questo
 un'interessante sviluppo futuro in quanto permetterebbe studi statistici, molto
 comuni nei \textit{GWAS}, in merito alla presenza si sotto-sequenze di un
 aplotipo esterno all'interno di un pannello di aplotipi.\\
-\textbf{SISTEMARE}
+\\
+\\
+\textit{La tematica della \emph{pangenomica} è praticamente nuova e il numero di
+problemi aperti è incredibilmente grande. I dati aumentano sempre di più e gli
+studi informatici devono evolversi per ``stare al passo'' con questa mole
+d'informazioni. Gli \emph{sviluppi futuri} sono, da diversi punti di vista,
+anche imprevedibili. Risulta quindi difficile elencare in modo completo le
+possibilità future dietro questa branca della bioinformatica e dell'algoritmica
+sperimentale.}
+\dc{Frase conclusiva da modificare fortemente}
 % LocalWords:  preprocessing
