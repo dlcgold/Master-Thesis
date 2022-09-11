@@ -102,7 +102,7 @@ posizione, indicizzata nel pannello originale dal valore finale del
   $x_{16}$ e la query $z$, fino alla colonna $k=2$, si potrà calcolare che
   $MS[2].len=3$. 
 \end{esempio}
-\dc{SISTEMARE ESEMPIO}\\
+\dc{SISTEMARE ESEMPIO}
 Una volta computato tutti i valori $MS[i].row$ per calcolare i vari $MS[i].len$
 si scorre da sinistra a destra calcolando la lunghezza dello SMEM facendo random
 access al pannello e confrontando la query $z$ con la riga $MS[i].row$. Si
@@ -128,7 +128,17 @@ In fase di costruzione delle lunghezze è possibile anche riportare gli
 \end{itemize}
 Come si può verificare nell'esempio \ref{es:ms}.\\
 L'algoritmo per il match tramite \textit{threshold} è visualizzabile
-all'algoritmo \ref{algo:matchthr}. Anche in questo caso la stima delle
+all'algoritmo \ref{algo:matchthr}. All'algoritmo \ref{algo:updatems}
+si riporta il metodo di ``update'' delle informazioni nel passaggio dalla
+colonna 
+$k$ alla colonna $k+1$, di complessità pari a quelle per effettuare il
+mapping. Si noti che è 
+possibile usare la funzione \textit{lf}, 
+spiegata in precedenza, in quanto, avendo per costruzione
+$y^k_{curr\_index}[k]=z[k]$ nel momento dell'applicazione della funzione, si ha
+che la funzione ``segue'' esattamente una certa riga da una colonna alla
+successiva nella permutazione data dai \textit{prefix array}. 
+Anche in questo caso la stima delle
 complessità non è di facile ottenimento. Dividendo nelle varie parti l'algoritmo
 si ha che:
 \begin{itemize}

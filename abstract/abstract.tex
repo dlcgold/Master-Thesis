@@ -245,14 +245,17 @@ Infatti, un adattamento dell'algoritmo per il calcolo degli SMEM proposto da
 Durbin all'uso con una struttura 
 run-length encoded non sembra essere possibile mantenendo lo spazio impiegato
 per memorizzare i dati del divergence array proporzionale al numero di 
-run. Inoltre non sembra possibile trovare una soluzione efficiente per
-utilizzare i sample del prefix array ad inizio e fine di ogni run.
+run. Inoltre non sembra possibile utilizzare i sample del prefix array ad inizio
+e fine di ogni run. 
 
 Nel lavoro di tesi si è quindi deciso di cambiare approccio al problema,
-ispirandosi ai risultati già ottenuti per la RLBWT. Tale approccio si basa anche
-sull'uso dei bitvector 
+ispirandosi ai risultati già ottenuti per la RLBWT. Essendoci diversi approcci
+possibili,  si è deciso di suddividere il lavoro in varie strutture
+dati/componenti che,
+una volta composte, fornissero strutture dati atte al calcolo degli SMEM. Tale
+approccio si basa anche sull'uso dei bitvector 
 sparsi, una struttura dati succinta che permette di memorizzare e interrogare
-vettori binari efficientemente. Infatti tali strutture permettono due
+vettori binari efficientemente. Infatti, tali strutture permettono due
 operazioni, dette rank e select, in tempo costante. La prima permette di
 conteggiare il 
 numero di simboli $\sigma=1$ fino ad una certa posizione mentre la seconda di
@@ -260,8 +263,11 @@ ottenere l'indice sul bitvector dell'$i$-esimo simbolo $\sigma=1$.
 Quindi, le strutture necessarie all'indicizzazione delle run e al cosiddetto
 mapping, ovvero il ``seguire'' una riga dalla sua posizione permutata in una
 certa colonna alla posizione permutata in quella successiva nella matrice PBWT,
-sono state implementate tramite bitvector sparsi, con un numero di simboli
-$\sigma=1$ proporzionale al numero run.
+sono state implementate tramite bitvector sparsi (componente \texttt{MAP-BV}),
+con un numero di simboli 
+$\sigma=1$ proporzionale al numero run. È stata, d'altro canto, proposta anche
+una struttura per il mapping basata sull'uso di vettori di interi compressi,
+memorizzando gli indici delle teste delle run (componente \texttt{MAP-INT}).
 Al fine di avvicinarsi alle idee proposte in \textit{MONI} e \textit{PHONI} è
 quindi servito uno studio teorico preliminare per ridefinire: matching
 statistics (e conseguente calcolo degli SMEM), threshold e LCE query. In
@@ -281,8 +287,13 @@ come l'indice del massimo valore del divergence array all'interno di una run
 (comprendendo anche la testa, qualora esistente, della run successiva, essendo
 il suo valore del divergence array calcolato sfruttando anche la coda della run
 corrente). L'insieme delle threshold per una certa colonna è stato memorizzato
-come bitvector sparso. Inoltre, si è provveduto a tenere in memoria i
-sample di prefix array a inizio e fine di ogni run.
+come bitvector sparso (componente \texttt{THR-BV}) oppure, come per il mapping,
+tramite vettore di interi compresso (componente \texttt{THR-INT}). Inoltre, si è
+provveduto a tenere in memoria i  
+sample di prefix array a inizio e fine di ogni run (componente \texttt{PERM}) e
+una struttura (componente \texttt{PHI}) in grado di estendere uno SMEM per una
+riga nel pannello a tutte le righe che presentano il medesimo SMEM.
+
 Grazie all'uso delle threshold si è potuto sviluppare un algoritmo
 efficiente, dal punto di vista della memoria richiesta, per il calcolo delle
 matching statistics in due ``sweep'' sul pattern, calcolandone prima le
@@ -292,14 +303,20 @@ si è scelto di usare uno Straight-Line Program (SLP), ovvero una grammatica
 context-free che genera una e una sola parola, molto compatta in memoria, sulla
 quale è possibile effettuare random access (in tempo $\mathcal{O}(\log s)$ dove
 $s$ è la lunghezza della parola prodotta tramite l'SLP).
-Ad esempio, un pannello $70.000 \times 46.538$ richiede per essere rappresentato
-in forma non compressa circa 3,3GB di memoria, mentre tramite SLP richiede
-solamente in 7MB. Per riferimento, comprimere il pannello con una tecnica
-standard (GZip) richiede 451MB. 
+Ad esempio, un pannello $4.908 \times 1.055.454$ richiede per essere
+rappresentato in forma non compressa circa 4,8GB di memoria, mentre tramite SLP
+richiede 
+solamente in 44,8MB (garantendo random access). Per riferimento, comprimere il
+pannello con una tecnica 
+standard (GZip) richiede 96.1MB. Oltre all'uso dell'SLP (componente
+\texttt{RA-SLP}), si è anche proposto l'uso di bitvector per la memorizzazione
+del pannello (componente \texttt{RA-BV}). Tale soluzione richiede maggior spazio
+in memoria ma presenta minor tempo d'interrogazione.
 
 Inoltre, si è mostrato che è possibile risparmiare ulteriore spazio eliminando
 l'uso delle \textit{threshold}. Per ottenere il calcolo dell'array delle
-matching statistics si sono quindi usate le LCE query, ridefinite in questo caso
+matching statistics si sono quindi usate le LCE query (componente \texttt{LCE}),
+ridefinite in questo caso 
 come il suffisso comune più lungo tra due righe del pannello, eventualmente
 fissando il termine a una colonna precisata. Il loro calcolo è permesso
 in modo efficiente dall'uso dell'SLP. Calcolando la
@@ -324,37 +341,43 @@ Per quanto riguarda (2), un aumento dei tempi è atteso in quanto la RLPBWT,
 a differenza dell'algoritmo di Durbin, utilizza strutture dati succinte che
 comportano tempi di calcolo superiori per le operazioni di accesso e/o
 interrogazione. 
-I test sono stati effettuati su pannelli simulati realisticamente
-tramite uno dei software più usati in bioinformatica per generare pannelli di
-aplotipi (MaCS).
-Per questa sintesi, si è scelto di riportare alcuni risultati relativi ad un
-pannello $70.000 \times 46.538$, che è stato interrogato con $30.000$ query, al
+I test sono stati effettuati su 5 pannelli della phase 3 del 1000 Genome
+Project, limitandosi 
+ai siti bi-allelici. Tali pannelli sono relativi ai cromosomi 22, 20, 18, 16 e 1
+(scelto in quanto è il più grande). Tutti i pannelli presentano 5008 sample.
+Per questa sintesi, si è scelto di riportare alcuni risultati relativi al
+pannello del cromosoma 22, di dimensioni $4.908 \times 1.055.454$, che è stato
+interrogato con $100$ query (estratte dal pannello originale), al 
 fine di ridurre la fluttuazione statistica dei risultati.
 I risultati qui riportati, relativi alla PBWT, sono stati ottenuti usando
-l'implementazione ufficiale della stessa. Per la RLPBWT, invece, si è utilizzata
-l'implementazione con le LCE query. 
+l'implementazione ufficiale della stessa. Per la RLPBWT si riportano, per onor
+di sintesi, solo i
+risultati dell'implementazione con le LCE query e mapping tramite vettori di
+interi compressi, essendo la soluzione con minor richiesta di memoria. 
 
 In merito al tempo di calcolo si è ottenuto il risultato atteso: con
-la PBWT si ottiene il calcolo degli SMEM in 411s
-mentre con la RLPBWT in 1824s, ovvero poco più del quadruplo del tempo.
+la PBWT si ottiene il calcolo degli SMEM in 143,94s
+mentre con la RLPBWT in 250,25s.
 Si è passato, quindi, ad analizzare i risultati in termini di memoria. Secondo
 le stime di Durbin, gli array necessari al funzionamento del suo algoritmo
 richiederebbero $\sim13NM$ bytes, implicando, per il pannello in analisi, circa
-40GB di memoria. 
+62,7GB di memoria. 
 Anche sperimentalmente si sono registrati
-picchi di memoria prossimi ai 40GB di memoria, confermando le stime. Invece,
-per la RLPBWT, il picco registrato è stato di appena $\sim$ 3GB,
-cioè si è ottenuta una riduzione del 92,5\% di memoria rispetto alla soluzione
+picchi di memoria prossimi ai 62,9GB di memoria, confermando le stime. Invece,
+per la RLPBWT, con la struttura dati composta presa in esame, il picco
+registrato è stato di appena 0,78GB, 
+cioè si è ottenuta una riduzione del 98,75\% di memoria rispetto alla soluzione
 allo stato dell'arte. 
 \subsection*{Conclusioni e sviluppi futuri}
-In conclusione, la RLPBWT proposta è stata in grado di ridurre sensibilmente la
+In conclusione, le strutture dati composte per la RLPBWT, basate sul calcolo
+dell'array delle matching statistics, sono state tutte in
+grado, al variare della soluzione, di ridurre sensibilmente la 
 quantità di memoria necessaria per la risoluzione del 
 problema del calcolo degli SMEM tra un pannello di aplotipi e un aplotipo
 esterno.  
 
 Seppure questa tesi abbia raggiunto l'obiettivo prefissato, il lavoro può essere
-ulteriormente esteso in diverse direzioni. 
-Tra di esse si ha
+ulteriormente esteso in diverse direzioni. Tra di esse si ha
 un'ulteriore ottimizzazione della struttura, sia in termini 
 di gestione del mapping che, eventualmente, di gestione di più query
 contemporaneamente. In merito a quest'ultimo sviluppo si segnala che Durbin
@@ -365,8 +388,10 @@ costruire la PBWT, e sul calcolo dei match interni al pannello stesso. Tale
 implementazione, nel setup di test 
 descritto nella sezione precedente (che si noti comportare il perfetto input per
 tale soluzione), risulta essere molto performante sia in
-termini di tempo ($22$s) che di memoria utilizzata ($10.084$KB) durante
-l'esecuzione.  
+termini di tempo (17,27s) che di memoria utilizzata (23.14MB) durante
+l'esecuzione. Si segnala che tale algoritmo diventa inefficiente, rispetto alle
+altre soluzioni, in termini di tempi di calcolo, al diminuire del numero di
+query. 
 
 Inoltre, sono possibili diverse generalizzazioni rispetto alle caratteristiche
 del pannello, come ad esempio pannelli multi-allelici o con dati mancanti. Tali
