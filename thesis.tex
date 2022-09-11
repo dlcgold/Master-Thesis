@@ -1,5 +1,5 @@
-\documentclass[a4paper,12pt, oneside]{book}
-%\documentclass[a4paper,12pt, oneside, draft]{book}
+%\documentclass[a4paper,12pt, oneside]{book}
+\documentclass[a4paper,12pt, oneside, draft]{book}
 % \usepackage{fullpage}
 \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
@@ -278,7 +278,8 @@ grandi dimensioni, ovvero il genoma di riferimento. Ora, con l'introduzione
 del pangenoma, tale problema si è adattato alle nuove strutture
 dati.\\
 Lo scopo di questa tesi è ottimizzare il problema del pattern 
-matching, inteso come ricerca dei set-maximal exact match (SMEM) tra un aplotipo
+matching, inteso come ricerca dei \textit{\textbf{set-maximal exact match}
+  (SMEM)} tra un aplotipo 
 esterno e un pannello di aplotipi, in una delle 
 strutture dati più utilizzata: la \textit{trasformata di Burrows-Wheeler
   Posizionale (PBWT)} \cite{pbwt}. Il progetto di tesi, svolto in collaborazione
@@ -286,18 +287,20 @@ con il
 prof. Gagie (Dalhousie University) e la prof.ssa Boucher 
 (University of Florida), tra gli autori dei principali risultati ottenuti per la
 \textbf{trasformata di Burrows-Wheeler run-length encoded} \cite{rlbwt}
-\cite{gagie2020} \cite{moni} \cite{phoni}, ha quindi permesso lo sviluppo di una
-variante 
-\textbf{run-length encoded} della \textbf{PBWT}, detta \textbf{RLPBWT}, che
-permettesse di risolvere tale problema.
+\cite{gagie2020} \cite{moni} \cite{phoni}, ha quindi permesso lo sviluppo di
+diverse strutture dati composte per la variante 
+\textbf{run-length encoded} della \textbf{PBWT}, detta \textbf{RLPBWT}.
 \subsection*{Struttura della tesi}
 Nel capitolo \ref{prechap} si introdurranno i concetti di base, di ambito
 computazionale e bioinformatico, necessari a
 comprendere questa tesi. Nel capitolo \ref{metchap} verranno discussi i
 contributi di questa tesi, descrivendo le soluzioni algoritmiche e le
-metodologie utilizzate per raggiungere gli obiettivi prefissati. Nel capitolo
+metodologie utilizzate per raggiungere gli obiettivi prefissati. Nel dettaglio
+verranno presentate varie strutture dati che saranno le componenti necessarie
+alla produzione delle strutture dati per la \textit{RLPBWT}. Nel capitolo
 \ref{reschap} si discuteranno i risultati ottenuti durante la
-sperimentazione. Infine, nel capitolo \ref{conchap}, si trarranno le conclusioni
+sperimentazione sui dati reali della \textit{phase 3} del \textbf{1000 Genome
+  Project}. Infine, nel capitolo \ref{conchap}, si trarranno le conclusioni 
 di questo progetto di tesi discutendone anche i prospetti futuri.
 \dc{L'intera introduzione va estesa}
 \chapter{Preliminari}

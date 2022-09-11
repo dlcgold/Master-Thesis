@@ -246,13 +246,16 @@ l'implementazione dei vari algoritmi si ha però necessità di usare anche indic
 con valori $\{0, M-1\}$. Una delle operazioni fondamentali è quindi
 quella, dato un indice $i\in\{0,\ldots,M-1\}$, di computare a quale run esso
 appartenga, in una certa colonna $k$. Tale operazione può essere svolta usando
-una semplice variante della \textit{ricerca binaria}. Tale variante, anziché
+una semplice variante della \textit{ricerca binaria}. Questa variante
+dell'algoritmo tradizionale, anziché
 ritornare l'indice di un elemento qualora esista nell'array, restituisce
 l'ultimo indice iniziale del sottointevallo usato dalla ricerca binaria
 calcolato prima dell'interruzione dell'esecuzione dell'algoritmo (che avviene
-secondo l'algoritmo standard). Tale soluzione, come visualizzabile
-all'algoritmo \ref{algo:itr}, ha complessità in tempo, con $r=|p_k|$ numero di
-run in colonna $k$: 
+secondo l'algoritmo standard). Pur essendo, di fatto, una funzione \textit{rank}
+si è deciso, per comodità di lettura, di chiamare tale funzione
+\textit{index\_to\_run}, la quale, come visualizzabile 
+all'algoritmo \ref{algo:itr}, ha complessità in tempo, con $r=|p_k|$ (ovvero è
+il numero di run in colonna $k$): 
 \begin{equation}
   \label{eq:itrcomp}
   \mathcal{O}(\log (r))

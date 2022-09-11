@@ -79,7 +79,7 @@ Assemblando tali componenti si ottengono otto strutture dati:
   presentano uno \textit{SMEM}, terminante in una certa colonna, ma solo quante
   esse siano, sono basate su una re-implementazione dell'\textit{algoritmo 5 di
     Durbin}
-  \item quattro strutture per il calcolo degli \textit{SMEM} tramite la
+  \item quattro strutture composte per il calcolo degli \textit{SMEM} tramite la
   computazione 
   in due passaggi dell'array delle \textit{matching statistics}, in modo analogo
   a quanto introdotto in \textit{MONI} per la \textit{BWT}, tramite
@@ -97,7 +97,7 @@ Assemblando tali componenti si ottengono otto strutture dati:
     \item[5] \texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI}
     \item[6] \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
   \end{enumerate}
-  \item due strutture per il calcolo degli \textit{SMEM} tramite la
+  \item due strutture composte per il calcolo degli \textit{SMEM} tramite la
   computazione 
   in un singolo passaggio dell'array delle \textit{matching statistics}, in modo
   analogo a quanto introdotto in \textit{PHONII} per la \textit{BWT}, tramite
@@ -170,7 +170,7 @@ delle \textit{matching statistics}:
   \item si assume inizialmente che $MS[0].len=0$, quando $i=0$
   \item si applica la \textit{fase di start} per cercare il minimo indice
   $i'$, avendo $i\leq i'$, tale che $z[i',i'+MS[i].len]$ è un suffisso di uno
-  tra $x_0[0,i'+MS[i].len], \ldots, x_{M-1}[0,i'+MS[i].len]$. Inoltre, per
+  tra $x_0[0,i'+MS[i].len], \ldots$ $x_{M-1}[0,i'+MS[i].len]$. Inoltre, per
   minimalità di $i'$, si ha che, $\forall i<j<i'$, $MS[j].len=MS[j-1].len+1$
   \item a questo punto si itera la \textit{fase di extend} per trovare il
   più lungo prefisso $z[i',k]$ che è anche un suffisso di uno tra $x_0[0,k]$,

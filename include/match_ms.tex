@@ -15,7 +15,8 @@ Nelle sei strutture dati dedicate al calcolo degli SMEM tramite \textit{matching
 \subsection{Calcolo dell'array MS con threshold}
 Questa prima soluzione, necessitando sia della componente
 \texttt{THR-INT}/\texttt{THR-BV} che della componente
-\texttt{RA-BV}/\texttt{RA-SLP}, è relativa alle seguenti strutture dati:
+\texttt{RA-BV}/\texttt{RA-SLP}, è relativa alle seguenti strutture dati
+composte: 
 \begin{itemize}
   \item \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}
   \item \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI}
@@ -24,6 +25,7 @@ Questa prima soluzione, necessitando sia della componente
 \end{itemize}
 Tra le quali le uniche differenze si riscontrano nei tempi d'esecuzione e nella
 memoria richiesta.\\
+\dc{Cercare di capire come legare a R-index}
 % Si noti che unendo la componente \texttt{PERM} alla componente
 % \texttt{THR-INT}/\texttt{THR-BV} si ottiene una variante dell'\textbf{R-index}
 % visto per la \textit{RLBWT}.\\
@@ -52,7 +54,8 @@ posizione, indicizzata nel pannello originale dal valore finale del
 \textit{prefix array sample} dell'ultima run.
 \begin{esempio}
   \label{es:thr}
-  Si vede quindi un esempio di funzionamento delle threshold.\\
+  Si vede, quindi, un esempio di funzionamento delle threshold per la scelta
+  della riga da memorizzare in $MS[i].row$ dopo un mismatch.\\
   Si prenda pannello visto all'esempio \ref{es:pbwt1} e si effettui la
   permutazione secondo $a_2$:
   \begin{table}[H]
@@ -99,7 +102,7 @@ posizione, indicizzata nel pannello originale dal valore finale del
   $x_{16}$ e la query $z$, fino alla colonna $k=2$, si potrà calcolare che
   $MS[2].len=3$. 
 \end{esempio}
-\textbf{SISTEMARE ESEMPIO}\\
+\dc{SISTEMARE ESEMPIO}\\
 Una volta computato tutti i valori $MS[i].row$ per calcolare i vari $MS[i].len$
 si scorre da sinistra a destra calcolando la lunghezza dello SMEM facendo random
 access al pannello e confrontando la query $z$ con la riga $MS[i].row$. Si
@@ -312,8 +315,6 @@ nelle sezioni precedenti dedicate alle singole componenti.
   \texttt{MAP-BV}.} 
   \label{algo:updatems}
 \end{algorithm}
-
-\dc{MANCANO COMPLESSITÀ}
 \subsection{Calcolo dell'array MS con LCE query}
 Come anticipato, grazie all'uso delle \textit{LCE query} è possibile calcolare
 l'array 
@@ -323,7 +324,7 @@ sequenza scegliere in caso di mismatch con l'aplotipo query in colonna $i$, come
 si faceva con l'uso delle \textit{threshold}, ma anche di computare la lunghezza
 del suffisso comune tra essa e l'aplotipo query, calcolando nello stesso momento
 sia $MS[i].row$ che $MS[i].len$.\\
-Tale soluzione è quindi relativa alle seguenti strutture dati:
+Tale soluzione è quindi relativa alle seguenti strutture dati composte:
 \begin{itemize}
   \item \texttt{MAP-INT + LCE + PERM + PHI}
   \item \texttt{MAP-BV + LCE + PERM + PHI}
@@ -383,7 +384,8 @@ $\sigma$, testa di indice $h$ e coda di indice $e-1$. Si hanno diversi casi:
 \end{enumerate}
 \dc{Sistemare esempio.}
 \begin{esempio}
-  Riprendiamo l'esempio \ref{es:thr}, visto per il calcolo
+  Riprendiamo l'esempio \ref{es:thr}, visto per il calcolo di $MS[i].row$, dopo
+  un mismatch,
   tramite \textit{threshold}. \\
   Senza usare le \textit{threshold}, nella medesima situazione si dovrebbe
   calcolare, avendo che $MS[1].row=19$ e $MS[1].len =2$:
@@ -402,7 +404,8 @@ Con questa soluzione, il cui pseudocodice è consultabile all'algoritmo
   pattern 
   \item non si necessita di memorizzare l'intero array $MS$ ma solamente quattro
   variabili relative alla coppia
-  $(row,len)$ corrente e quella precedente 
+  $(row,len)$ corrente e quella precedente. \textit{Per facilità di lettura si è
+  lasciato, nello pseudocodice, l'uso dell'intero array $MS$}
 \end{itemize}
 Dal punto di vista della complessità temporale, per il calcolo dell'array $MS$,
 si hanno solo due casistiche 
@@ -424,7 +427,8 @@ proporzionale a:
 Infine, per il calcolo di tutte le righe del pannello per cui si ha uno
 \textit{SMEM} si può fare riferimento all'equazione \ref{eq:msthr3slp}, avendo
 la medesima situazione.\\
-Si deduce quindi come la struttura \texttt{MAP-INT + LCE + PERM + PHI} sia, a
+Si deduce quindi come la struttura composta \texttt{MAP-INT + LCE + PERM + PHI}
+sia, a 
 livello di tempo macchina, la soluzione più vantaggiosa usando la componente
 \texttt{LCE}. Tale soluzione risulta, sempre nel contesto delle strutture basate
 sulla componente \texttt{LCE}, essere anche la soluzione più vantaggiosa in
@@ -553,6 +557,5 @@ confronto con le altre strutture dati.
   \label{algo:matchlce}
 \end{algorithm}
 \dc{Sistemare pseudocodice per non avere salvato intero $MS$}
-\dc{Manca strima complessità}
 
 % LocalWords:  pseudocodice
