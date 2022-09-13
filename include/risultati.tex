@@ -1,100 +1,10 @@
-\section{Sperimentazione sui pannelli reali}
-Come anticipato, al fine di valorizzare i risultati teorici ottenuti in
-questo progetto, si 
-è deciso di procedere con lo studio di dati reali, relativi alla \textit{phase
-  3} del \textbf{1000 Genome Project}
-\footnote{\url{https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/}}
-\cite{1kgp}.\\ 
-Tali pannelli, disponibili in formato \textit{VCF}, presentano un numero
-costante di sample, ovvero 5.008, mentre a variare è il numero di siti. Essendo
-dati reali, si ha anche la presenza di siti multiallelici. Si è quindi proceduto
-alla selezione dei soli siti biallelici, ottenendo quindi pannelli costruiti su
-un alfabeto binario $\Sigma=\{0,1\}$, tramite l'uso di \textbf{bcftools}
-\cite{bcftools}, tramite il comando \texttt{bcftools view -m2 -M2
-  -v snps}.\\
-La prima selezione dei pannelli è stata dettata dalla volontà di studiare, per
-praticità, matrici non troppo estese. In aggiunta, si è studiato uno dei
-pannelli più grossi disponibili, ovvero quello relativo al cromosoma 1. Si sono,
-quindi, scelti i pannelli relativi al:
-\begin{itemize}
-  \item cromosoma 22, con 1.055.454 siti
-  \item cromosoma 20, con 1.739.315 siti
-  \item cromosoma 18, con 2.171.378 siti
-  \item cromosoma 16, con 2.596.072 siti
-  \item cromosoma 1, con 6.196.151 siti
-\end{itemize}
-Al fine del computo degli SMEM, avendo un numero ridotto di sample a
-disposizione, si è scelto di estrarre da ognuno 100 sample da usare come
-query.\\
-Si segnala che, per quanto l'implementazione delle strutture per la
-\textit{RLPBWT} supportino lo studio parallelo di più query tramite
-\textbf{openMP}\cite{openmp}, al fine di un più 
-corretto confronto con l'implementazione della \textit{PBWT}, specialmente
-parlando dell'algoritmo \texttt{matchIndexed}, l'intera sperimentazione è stata
-svolta sfruttando un solo \textit{thread} per volta, tramite la variabile
-d'ambiente \texttt{OMP\_NUM\_THREADS=1}.
-\subsection{Studio dei pannelli}
-Prima di procedere con l'effettivo studio delle performance di calcolo degli
-SMEM, trattandosi di pannelli reali, è risultata interessante una preliminare
-indagine esplorativa sulla natura di tali pannelli in termini di
-\textit{sparsità} degli alleli e di conseguente numerosità delle run. Si è
-quindi calcolato, per i cinque pannelli, il numero di simboli $\sigma=0$ e
-$\sigma=1$, notando come il numero di simboli $\sigma=1$ fosse molto ridotto
-rispetto al totale, essendo il $\sim 0.03\%$ del totale dei simboli. Una tale
-sparsità del dato ha diretta conseguenza sul numero di run di ogni colonna, avendo
-pochi simboli $\sigma=1$ in ogni colonna, simboli che possono anche
-essere nella medesima run dopo la permutazione data dalla
-\textit{PBWT}. Si ricordi, inoltre, che tale permutazione, come la
-\textit{BWT}, è studiata per essere 
-maggiormente efficiente nel caso del dato biologico, comportando un'alta
-probabilità di produrre run del medesimo carattere. Studiando, quindi, il
-numero medio di run per colonna e il numero 
-massimo di run in una colonna si è confermato tale risultato, infatti:
-\begin{itemize}
-  \item per il cromosoma 22 si ha un numero medio di 14 run, con un massimo di
-  2.450 run. Il numero totale di run è 14.772.105
-  \item per il cromosoma 20 si ha un numero medio di 11 run, con un massimo di
-  2.176 run. Il numero totale di run è 19.966.504
-  \item per il cromosoma 18 si ha un numero medio di 11 run, con un massimo di
-  2.365 run. Il numero totale di run è 24.288.263
-  \item per il cromosoma 16 si ha un numero medio di 12 run, con un massimo di
-  2.330 run. Il numero totale di run è 31.187.856
-  \item per il cromosoma 1 si ha un numero medio di 11 run, con un massimo di
-  2.721 run. Il numero totale di run è 69.671.952
-\end{itemize}
-Si conferma quindi il risultato atteso, risultato che è a favore, in termini di
-complessità in spazio, della \textit{RLPBWT} in quanto tutte le componenti sono
-proporzionali al numero, sperimentalmente basso, di run. In figura
-\ref{fig:chrrun} si riportano graficamente tali risultati.
-\begin{figure}
-  \centering
-  \begin{subfigure}{.45\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/22_runs.png}
-  \end{subfigure}%
-  \begin{subfigure}{.45\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/20_runs.png}
-  \end{subfigure}
-  \begin{subfigure}{.45\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/18_runs.png}
-  \end{subfigure}%
-  \begin{subfigure}{.45\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/16_runs.png}
-  \end{subfigure}
-  \begin{subfigure}{.45\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/1_runs.png}
-  \end{subfigure}
-  \caption{Distribuzione delle run per colonna con il numero
-    minimo/medio/massimo delle stesse. Nel titolo si hanno anche il numero
-    complessivo di run, il numero di simboli $\sigma=0$ e $\sigma=1$, nonché la
-    percentuale della quantità di questi ultimi sul totale dei simboli.}
-  \label{fig:chrrun}
-\end{figure}
-\dc{Sistema numero grossi nei plot}
+\section{Risultati della sperimentazione}
+Si presentano ora i risultati quantitativi della sperimentazione effettuata sui
+cinque pannelli scelti tra quelli ottenuti nella \textit{phase 3} del
+\textit{1000 Genome Project}. Come anticipato, al fine del computo degli SMEM,
+avendo un numero 
+ridotto di sample a disposizione, si è scelto di estrarre da ognuno 100 sample
+da usare come query, riducendo quindi il numero di sample a 4.908.
 \subsection{Costruzione delle strutture e calcolo degli SMEM}
 Viste le dimensioni di tali pannelli si ritiene necessario studiare, dal punto
 di vista del tempo macchina e dei picchi di memoria necessaria, le varie fasi
@@ -268,11 +178,11 @@ componente \texttt{RA-BV}. Numericamente tale vantaggio è riportato in tabella
                                           (\textit{MB})}
     & \textbf{\texttt{RA-BV} (\textit{MB})} & \textbf{\%}\\
     \hline
-    1.055.454 & 4.908 & 44,7915 & 628,093 & 7,13\\
-    1.739.315 & 4.908 & 61,8933 & 1.035,05 & 5,98\\
-    2.171.378 & 4.908 & 80,1648 & 1.292,17 & 6,2\\
-    2.596.072 & 4.908 & 98,7267 & 1.544,9 & 6,39\\
-    6.196.151 & 4.908 & 226,92 & 3.687,28 & 6,15\\
+    1.055.454 & 4.908 & 44 & 628 & 7\\
+    1.739.315 & 4.908 & 61 & 1.035 & 6\\
+    2.171.378 & 4.908 & 80 & 1.292 & 6\\
+    2.596.072 & 4.908 & 98 & 1.544 & 6\\
+    6.196.151 & 4.908 & 226 & 3.687 & 6\\
   \end{tabular}
   \label{tab:slppanel}
 \end{table}
@@ -302,11 +212,11 @@ richiesta eccessiva in memoria della componente \texttt{LCP}.
   \begin{tabular}{c||c|c|c|c}
     Chr & \texttt{MAP-INT} & \texttt{MAP-BV} & \texttt{THR-INT}
     & \texttt{THR-BV}  \\ \hline
-    22 & 74,275 & 542,531 & 36,077 & 198,964\\ \hline
-    20 & 109,08 & 881,529 & 52,624 & 322,491\\ \hline
-    18 & 137,49 & 1.099,598 & 61,352 & 401,965\\ \hline
-    16 & 167,046 & 1.320,331 & 80,7 & 483,269\\ \hline
-    1 & 384,12 & 3.133,008 & 185,228 & 1.145,67
+    22 & 74 & 543 & 36 & 199\\ \hline
+    20 & 109 & 882 & 53 & 322\\ \hline
+    18 & 137 & 1.100 & 61 & 402\\ \hline
+    16 & 167 & 1.320 & 81 & 483\\ \hline
+    1 & 384 & 3.133 & 185 & 1.146
   \end{tabular}
 \end{table}
 \begin{table}
@@ -318,11 +228,11 @@ richiesta eccessiva in memoria della componente \texttt{LCP}.
     Chr & \texttt{RA-BV} & \texttt{RA-SLP/LCE} & \texttt{PERM} & \texttt{PHI}
     & LCP\\
     \hline
-    22 & 628,093 & 44,7915 & 71,3182 & 89,0774 & 9.094,841\\ \hline
-    20 & 1.035,05 & 61,8933 & 103,882 & 117,856 & 15.467,57 \\ \hline
-    18 & 1.292,17 & 80,1648 & 127,769 & 147,416 & 19.222,808\\ \hline
-    16 & 1.544,9 & 98,7267 & 159,307 & 186,033 & 22.887,82\\ \hline
-    1 & 3.687,28 & 226,92 & 365,615 & 410,983 & 54.588,092
+    22 & 628 & 44 & 71 & 89 & 9.095\\ \hline
+    20 & 1.035 & 62 & 104 & 118 & 15.468 \\ \hline
+    18 & 1.292 & 80 & 128 & 147 & 19.223 \\ \hline
+    16 & 1.545 & 99 & 159 & 186 & 22.888\\ \hline
+    1 & 3.687 & 227 & 366 & 411 & 54.588
   \end{tabular}
 \end{table}
 \paragraph{Calcolo degli SMEM}

@@ -124,3 +124,22 @@ I due concetti di \textit{SLP} e \textit{LCE query} verranno generalizzati, in
 questa tesi, all'uso su matrici permettendo una rappresentazione compatta in
 memoria, con \textit{random access}, per un pannello di aplotipi.
 \dc{capire se sono necessari altri approfondimenti}
+\subsection{Librerie}
+Da un punto di vista implementativo, l'oggetto contenente l'\textit{SLP} del
+pannello viene costruito ed interrogato mediante l'uso della libreria
+\textbf{ShapedSlp} \cite{shapedslp}, implementazione dei risultati ottenuti da
+Gagie et al. \cite{slpgagie}. Inoltre, tale libreria basa il suo funzionamento
+sull'uso di un'altra libreria, detta \textbf{BigRePair} \cite{bigrepair}, che
+implementa i quanto studiato da Gagie et al. \cite{rpair} in merito alla
+compressione, via uso di grammatiche, di file con frequenti ripetizioni (come
+possono essere, nel nostro caso, pannelli binari di aplotipi).\\
+In termini di pipeline si procede quindi:
+\begin{enumerate}
+  \item generando la \textit{grammatica} tramite \textit{BigRePair}, che accetta
+  come file di input un file \texttt{txt} ``raw'' ma anche un file in formati
+  più standard come i \textit{FASTA}
+  \item generando l'\textit{SLP} tramite \textit{ShapedSlp} specificatamente a
+  partire dai risultati di \textit{BigRePair} (si segnala che la libreria
+  accetta anche input prodotti tramite altri tool che non verranno qui
+  approfonditi) 
+\end{enumerate}
