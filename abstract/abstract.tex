@@ -303,12 +303,12 @@ si è scelto di usare uno Straight-Line Program (SLP), ovvero una grammatica
 context-free che genera una e una sola parola, molto compatta in memoria, sulla
 quale è possibile effettuare random access (in tempo $\mathcal{O}(\log s)$ dove
 $s$ è la lunghezza della parola prodotta tramite l'SLP).
-Ad esempio, un pannello $4.908 \times 1.055.454$ richiede per essere
-rappresentato in forma non compressa circa 4,8GB di memoria, mentre tramite SLP
+Ad esempio, un pannello  $4.908 \times 6.196.151$ richiede per essere
+rappresentato in forma non compressa circa 28GB di memoria, mentre tramite SLP
 richiede 
-solamente in 44,8MB (garantendo random access). Per riferimento, comprimere il
+solamente in 0,2GB (garantendo random access). Per riferimento, comprimere il
 pannello con una tecnica 
-standard (GZip) richiede 96.1MB. Oltre all'uso dell'SLP (componente
+standard (GZip) richiede 0,5GB. Oltre all'uso dell'SLP (componente
 \texttt{RA-SLP}), si è anche proposto l'uso di bitvector per la memorizzazione
 del pannello (componente \texttt{RA-BV}). Tale soluzione richiede maggior spazio
 in memoria ma presenta minor tempo d'interrogazione.
@@ -346,7 +346,7 @@ Project, limitandosi
 ai siti bi-allelici. Tali pannelli sono relativi ai cromosomi 22, 20, 18, 16 e 1
 (scelto in quanto è il più grande). Tutti i pannelli presentano 5008 sample.
 Per questa sintesi, si è scelto di riportare alcuni risultati relativi al
-pannello del cromosoma 22, di dimensioni $4.908 \times 1.055.454$, che è stato
+pannello del cromosoma 1, di dimensioni $4.908 \times 6.196.151$, che è stato
 interrogato con $100$ query (estratte dal pannello originale), al 
 fine di ridurre la fluttuazione statistica dei risultati.
 I risultati qui riportati, relativi alla PBWT, sono stati ottenuti usando
@@ -356,18 +356,20 @@ risultati dell'implementazione con le LCE query e mapping tramite vettori di
 interi compressi, essendo la soluzione con minor richiesta di memoria. 
 
 In merito al tempo di calcolo si è ottenuto il risultato atteso: con
-la PBWT si ottiene il calcolo degli SMEM in 143,94s
-mentre con la RLPBWT in 250,25s.
+la PBWT si ottiene il calcolo degli SMEM in 1026s
+mentre con la RLPBWT in 1142s. La differenza, per quanto attesa, è comunque
+molto piccola.
 Si è passato, quindi, ad analizzare i risultati in termini di memoria. Secondo
 le stime di Durbin, gli array necessari al funzionamento del suo algoritmo
 richiederebbero $\sim13NM$ bytes, implicando, per il pannello in analisi, circa
-62,7GB di memoria. 
+368GB di memoria. 
 Anche sperimentalmente si sono registrati
-picchi di memoria prossimi ai 62,9GB di memoria, confermando le stime. Invece,
+picchi di memoria prossimi ai 369GB di memoria, confermando le stime. Invece,
 per la RLPBWT, con la struttura dati composta presa in esame, il picco
-registrato è stato di appena 0,78GB, 
-cioè si è ottenuta una riduzione del 98,75\% di memoria rispetto alla soluzione
-allo stato dell'arte. 
+registrato è stato di appena 4GB, 
+cioè si è ottenuta una riduzione di quasi il 99\% di memoria rispetto alla
+soluzione allo stato dell'arte, rendendo possibile l'esecuzione anche su un
+comune portatile. 
 \subsection*{Conclusioni e sviluppi futuri}
 In conclusione, le strutture dati composte per la RLPBWT, basate sul calcolo
 dell'array delle matching statistics, sono state tutte in
@@ -388,7 +390,7 @@ costruire la PBWT, e sul calcolo dei match interni al pannello stesso. Tale
 implementazione, nel setup di test 
 descritto nella sezione precedente (che si noti comportare il perfetto input per
 tale soluzione), risulta essere molto performante sia in
-termini di tempo (17,27s) che di memoria utilizzata (23.14MB) durante
+termini di tempo (93s) che di memoria utilizzata (0,1GB) durante
 l'esecuzione. Si segnala che tale algoritmo diventa inefficiente, rispetto alle
 altre soluzioni, in termini di tempi di calcolo, al diminuire del numero di
 query. 
