@@ -94,13 +94,15 @@ alla soluzione attualmente allo stato dell'arte.
 \subsection*{Stato dell'arte}
 Gli algoritmi più efficienti per risolvere il problema del pattern matching tra
 un pattern e un testo 
-sono attualmente basati sulla \emph{Trasformata di Burrows-Wheeler (BWT)}.
-Infatti, è stato dimostrato che la BWT è fortemente legata a due strutture dati
-fondamentali per il pattern matching: 
-il Suffix Array (SA), cioè la lista delle posizioni di partenza di
-tutti i suffissi di un testo presi in ordine lessicografico, e il Longest Common
-Prefix (LCP), cioè la lista delle lunghezze del più lungo prefisso comune tra
-ogni coppia di suffissi consecutivi indicizzati nel SA. 
+sono attualmente basati sulla \emph{Trasformata di Burrows-Wheeler (BWT)}, a sua
+volta strettamente legata ad altre due strutture dati: il Suffix Array (SA) e
+il Longest Common Prefix (LCP). 
+% Infatti, è stato dimostrato che la BWT è fortemente legata a due strutture dati
+% fondamentali per il pattern matching: 
+% il Suffix Array (SA), cioè la lista delle posizioni di partenza di
+% tutti i suffissi di un testo presi in ordine lessicografico, e il Longest Common
+% Prefix (LCP), cioè la lista delle lunghezze del più lungo prefisso comune tra
+% ogni coppia di suffissi consecutivi indicizzati nel SA. 
 
 Invece, allo scopo di risolvere il problema del calcolo degli SMEM tra un
 pannello di aplotipi e un aplotipo esterno,
@@ -128,10 +130,12 @@ questo progetto di tesi.
 Il funzionamento della PBWT prevede la costruzione di due insiemi di
 array, tramite 
 l'\textit{ordinamento dei prefissi inversi} a ogni colonna del pannello, detti
-\textit{insieme dei prefix array} e \textit{insieme dei divergence array}. Per
-ogni colonna, secondo l'ordinamento dettato dalla stessa, i due array presentano
-un comportamento analogo a quanto visto per il suffix array e l'array LCP nella
-BWT. Il pannello permutato tramite i valori dell'insieme dei prefix array è
+\textit{insieme dei prefix array} e \textit{insieme dei divergence array}.
+% Per
+% ogni colonna, secondo l'ordinamento dettato dalla stessa, i due array presentano
+% un comportamento analogo a quanto visto per il suffix array e l'array LCP nella
+% BWT.
+Il pannello permutato tramite i valori dell'insieme dei prefix array è
 detto matrice PBWT.
 
 %  Il primo, denotato $a$, contiene, per ogni colonna e ogni
@@ -147,11 +151,13 @@ detto matrice PBWT.
 Un altro obiettivo raggiunto negli ultimi anni è stato quello di studiare la
 costruzione di un'unica BWT partendo da multipli genomi.
 A tal fine si è sfruttata una caratteristica della BWT, ovvero la
-tendenza a produrre una sequenza con caratteri uguali in posizioni
-consecutive, a causa delle ripetizioni di determinate
-sottostringhe nel testo. Partendo da molte sequenze genomiche concatenate si
-hanno, ovviamente, molte regioni ripetute che comportano tali sequenze massimali
-di caratteri uguali nella BWT, dette run.
+tendenza a produrre una sequenza formata da run, ovvero caratteri uguali in
+posizioni consecutive. La causa di tale fenomeno si ritrova nelle ripetizioni di
+determinate sottostringhe nel testo, ripetizioni che sono frequenti se si
+studiano diverse sequenze genomiche concatenate.
+% Partendo da molte sequenze genomiche concatenate si
+% hanno, ovviamente, molte regioni ripetute che comportano tali sequenze massimali
+% di caratteri uguali nella BWT, dette run.
 % Questo fenomeno è dovuto alle ripetizioni di determinate
 % sottostringhe nel testow, avendo che tali ripetizioni, per motivazioni
 % biologiche, sono frequenti in ambito genomico.
@@ -190,12 +196,12 @@ l'uso delle \textit{LCE query} per il calcolo dell'array MS. Infatti, tale
 struttura, dati due indici del testo $i$ e $j$, restituisce il più lungo
 prefisso comune tra il suffisso $i$-esimo e il suffisso $j$-esimo del testo.
 
-Si noti, infine, un collegamento naturale che si ha tra la PBWT
-e la BWT, avendo, ad esempio, che il prefix array, in una certa colonna, della
-prima corrisponde al suffix array della seconda mentre il divergence array è una
-diversa rappresentazione dell'array LCP. Anche grazie a queste premesse, si è
-basato il progetto di tesi sulla costruzione RLPBWT a partire dalle tecniche
-teorizzate per la RLBWT.
+% Si noti, infine, un collegamento naturale che si ha tra la PBWT
+% e la BWT, avendo, ad esempio, che il prefix array, in una certa colonna, della
+% prima corrisponde al suffix array della seconda mentre il divergence array è una
+% diversa rappresentazione dell'array LCP. Anche grazie a queste premesse, si è
+% basato il progetto di tesi sulla costruzione RLPBWT a partire dalle tecniche
+% teorizzate per la RLBWT.
 
 % Al fine di raggiungere tale obiettivo sono state usate altre nozioni. In primis,
 % si sono sfruttate le cosiddette \textbf{strutture dati succinte}, ovvero
@@ -216,11 +222,18 @@ teorizzate per la RLBWT.
 % query} in modo efficiente.
 
 \subsection*{Contributo}
-L'idea con la quale si è sviluppata questa tesi vede, come punto di partenza,
-alcuni primi risultati teorici, presenti in letteratura, che caratterizzavano
-una variante run-length encoded della PBWT. Tuttavia, tale proposta era
-inefficiente in termini di memoria e su di essa non era possibile il calcolo
-degli SMEM. 
+% L'idea con la quale si è sviluppata questa tesi vede, come punto di partenza,
+% alcuni primi risultati teorici, presenti in letteratura, che caratterizzavano
+% una variante run-length encoded della PBWT. Tuttavia, tale proposta era
+% inefficiente in termini di memoria e su di essa non era possibile il calcolo
+% degli SMEM.
+% Infatti, un adattamento dell'algoritmo per il calcolo degli SMEM proposto da
+% Durbin all'uso con una struttura 
+% run-length encoded non sembra essere possibile mantenendo lo spazio impiegato
+% per memorizzare i dati del divergence array proporzionale al numero di 
+% run. Inoltre non sembra possibile utilizzare i sample del prefix array ad inizio
+% e fine di ogni run.
+
 % Il primo approccio aveva come obiettivo l'ottenere un riadattamento ``diretto''
 % dell'\textit{algoritmo 5 di Durbin}, pur tenendo in memoria informazioni legate
 % principalmente alle run della \textit{matrice PBWT}. Per quanto si siano trovate
@@ -241,19 +254,17 @@ degli SMEM.
 % stimato non fossero ottimali, non solo per il \textit{divergence array}, ma anche
 % perché non veniva utilizzato alcun approccio tramite \textit{strutture dati
 %   succinte}.
-Infatti, un adattamento dell'algoritmo per il calcolo degli SMEM proposto da
-Durbin all'uso con una struttura 
-run-length encoded non sembra essere possibile mantenendo lo spazio impiegato
-per memorizzare i dati del divergence array proporzionale al numero di 
-run. Inoltre non sembra possibile utilizzare i sample del prefix array ad inizio
-e fine di ogni run. 
 
-Nel lavoro di tesi si è quindi deciso di cambiare approccio al problema,
-ispirandosi ai risultati già ottenuti per la RLBWT. Essendoci diversi approcci
+%Nel lavoro di tesi si è quindi deciso di cambiare approccio al problema,
+%ispirandosi ai risultati già ottenuti per la RLBWT.
+Questo lavoro di tesi è stato incentrato sullo sviluppo di approcci run-length
+encoded per la PBWT, ispirandosi ai risultati già ottenuti per la RLBWT.
+Essendoci diversi approcci
 possibili,  si è deciso di suddividere il lavoro in varie strutture
 dati/componenti che,
-una volta composte, fornissero strutture dati atte al calcolo degli SMEM. Tale
-approccio si basa anche sull'uso dei bitvector 
+una volta composte, fornissero strutture dati atte al calcolo degli SMEM.
+
+Tale approccio si basa, anche, sull'uso dei bitvector 
 sparsi, una struttura dati succinta che permette di memorizzare e interrogare
 vettori binari efficientemente. Infatti, tali strutture permettono due
 operazioni, dette rank e select, in tempo costante. La prima permette di
@@ -262,12 +273,13 @@ numero di simboli $\sigma=1$ fino ad una certa posizione mentre la seconda di
 ottenere l'indice sul bitvector dell'$i$-esimo simbolo $\sigma=1$.
 Quindi, le strutture necessarie all'indicizzazione delle run e al cosiddetto
 mapping, ovvero il ``seguire'' una riga dalla sua posizione permutata in una
-certa colonna alla posizione permutata in quella successiva nella matrice PBWT,
+certa colonna alla posizione permutata nella colonna successiva,
 sono state implementate tramite bitvector sparsi (componente \texttt{MAP-BV}),
 con un numero di simboli 
-$\sigma=1$ proporzionale al numero run. È stata, d'altro canto, proposta anche
+$\sigma=1$ proporzionale al numero run. È stata  proposta, d'altro canto, anche
 una struttura per il mapping basata sull'uso di vettori di interi compressi,
 memorizzando gli indici delle teste delle run (componente \texttt{MAP-INT}).
+
 Al fine di avvicinarsi alle idee proposte in \textit{MONI} e \textit{PHONI} è
 quindi servito uno studio teorico preliminare per ridefinire: matching
 statistics (e conseguente calcolo degli SMEM), threshold e LCE query. In
@@ -310,8 +322,8 @@ solamente in 0,2GB (garantendo random access). Per riferimento, comprimere il
 pannello con una tecnica 
 standard (GZip) richiede 0,5GB. Oltre all'uso dell'SLP (componente
 \texttt{RA-SLP}), si è anche proposto l'uso di bitvector per la memorizzazione
-del pannello (componente \texttt{RA-BV}). Tale soluzione richiede maggior spazio
-in memoria ma presenta minor tempo d'interrogazione.
+del pannello (componente \texttt{RA-BV}), avendo maggior spazio in memoria ma
+minor tempo d'interrogazione. 
 
 Inoltre, si è mostrato che è possibile risparmiare ulteriore spazio eliminando
 l'uso delle \textit{threshold}. Per ottenere il calcolo dell'array delle
