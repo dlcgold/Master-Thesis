@@ -181,7 +181,7 @@ sottostringhe del pattern che
 sono anche sottostringhe del testo, avendo che tale match non può essere esteso,
 in entrambe le direzioni, senza introdurre un mismatch. 
 
-Si noti che il calcolo dei MEM è direttamente
+Il calcolo dei MEM è direttamente
 correlato alla costruzione dell'array delle \textit{Matching Statistics (MS)}.
 Tale array, lungo quanto il pattern e formato da coppie (posizione $pos$,
 lunghezza $len$), annota, per ogni posizione del pattern, la lunghezza $len$ di
@@ -194,7 +194,7 @@ il minimo valore dell'array LCP tra due run consecutive dello stesso
 carattere. Un ulteriore miglioramento si è registrato in \textit{PHONI} con
 l'uso delle \textit{LCE query} per il calcolo dell'array MS. Infatti, tale
 struttura, dati due indici del testo $i$ e $j$, restituisce il più lungo
-prefisso comune tra il suffisso $i$-esimo e il suffisso $j$-esimo del testo.
+prefisso comune tra i suffissi $i$-esimo e $j$-esimo del testo.
 
 % Si noti, infine, un collegamento naturale che si ha tra la PBWT
 % e la BWT, avendo, ad esempio, che il prefix array, in una certa colonna, della
@@ -259,12 +259,12 @@ prefisso comune tra il suffisso $i$-esimo e il suffisso $j$-esimo del testo.
 %ispirandosi ai risultati già ottenuti per la RLBWT.
 Questo lavoro di tesi è stato incentrato sullo sviluppo di approcci run-length
 encoded per la PBWT, ispirandosi ai risultati già ottenuti per la RLBWT.
-Essendoci diversi approcci
+Essendoci diverse soluzioni
 possibili,  si è deciso di suddividere il lavoro in varie strutture
-dati/componenti che,
-una volta composte, fornissero strutture dati atte al calcolo degli SMEM.
+dati (componenti) che  fornissero strutture dati composte atte al calcolo degli
+SMEM. 
 
-Tale approccio si basa, anche, sull'uso dei bitvector 
+Alcuni di questi approcci si basano sull'uso dei bitvector 
 sparsi, una struttura dati succinta che permette di memorizzare e interrogare
 vettori binari efficientemente. Infatti, tali strutture permettono due
 operazioni, dette rank e select, in tempo costante. La prima permette di
@@ -274,11 +274,13 @@ ottenere l'indice sul bitvector dell'$i$-esimo simbolo $\sigma=1$.
 Quindi, le strutture necessarie all'indicizzazione delle run e al cosiddetto
 mapping, ovvero il ``seguire'' una riga dalla sua posizione permutata in una
 certa colonna alla posizione permutata nella colonna successiva,
-sono state implementate tramite bitvector sparsi (componente \texttt{MAP-BV}),
+sono state implementate, anche, tramite bitvector sparsi (componente
+\texttt{MAP-BV}), 
 con un numero di simboli 
-$\sigma=1$ proporzionale al numero run. È stata  proposta, d'altro canto, anche
+$\sigma=1$ proporzionale al numero run. È stata anche proposta, d'altro canto,
 una struttura per il mapping basata sull'uso di vettori di interi compressi,
-memorizzando gli indici delle teste delle run (componente \texttt{MAP-INT}).
+con un numero di valori proporzionale a quello delle run (componente
+\texttt{MAP-INT}). 
 
 Al fine di avvicinarsi alle idee proposte in \textit{MONI} e \textit{PHONI} è
 quindi servito uno studio teorico preliminare per ridefinire: matching
@@ -303,8 +305,8 @@ come bitvector sparso (componente \texttt{THR-BV}) oppure, come per il mapping,
 tramite vettore di interi compresso (componente \texttt{THR-INT}). Inoltre, si è
 provveduto a tenere in memoria i  
 sample di prefix array a inizio e fine di ogni run (componente \texttt{PERM}) e
-una struttura (componente \texttt{PHI}) in grado di estendere uno SMEM per una
-riga nel pannello a tutte le righe che presentano il medesimo SMEM.
+una struttura (componente \texttt{PHI}) in grado di estendere uno SMEM a tutte
+le righe del pannello che presentano il medesimo SMEM con il pattern. 
 
 Grazie all'uso delle threshold si è potuto sviluppare un algoritmo
 efficiente, dal punto di vista della memoria richiesta, per il calcolo delle
@@ -313,38 +315,41 @@ posizioni e poi, tramite random access al pannello, anche le
 lunghezze. Tale soluzione richiedeva in memoria l'intero pannello, per il quale
 si è scelto di usare uno Straight-Line Program (SLP), ovvero una grammatica
 context-free che genera una e una sola parola, molto compatta in memoria, sulla
-quale è possibile effettuare random access (in tempo $\mathcal{O}(\log s)$ dove
+quale è possibile effettuare random access (in tempo, da un punto di vista
+prettamente teorico, $\mathcal{O}(\log s)$ dove
 $s$ è la lunghezza della parola prodotta tramite l'SLP).
-Ad esempio, un pannello  $4.908 \times 6.196.151$ richiede per essere
-rappresentato in forma non compressa circa 28GB di memoria, mentre tramite SLP
+Ad esempio, un pannello  $4.908 \times 6.196.151$ richiede, in forma non
+compressa, circa 28GB di memoria, mentre l'SLP 
 richiede 
 solamente in 0,2GB (garantendo random access). Per riferimento, comprimere il
 pannello con una tecnica 
 standard (GZip) richiede 0,5GB. Oltre all'uso dell'SLP (componente
-\texttt{RA-SLP}), si è anche proposto l'uso di bitvector per la memorizzazione
-del pannello (componente \texttt{RA-BV}), avendo maggior spazio in memoria ma
-minor tempo d'interrogazione. 
+\texttt{RA-SLP}), si è anche proposto l'uso di un pannello di bitvector per la
+memorizzazione 
+del pannello (componente \texttt{RA-BV}), avendo maggior spazio in memoria (3,6GB) ma
+minor tempo d'interrogazione, garantendo random access in tempo costante. 
 
-Inoltre, si è mostrato che è possibile risparmiare ulteriore spazio eliminando
-l'uso delle \textit{threshold}. Per ottenere il calcolo dell'array delle
-matching statistics si sono quindi usate le LCE query (componente \texttt{LCE}),
-ridefinite in questo caso 
+Inoltre, è possibile risparmiare ulteriore spazio eliminando
+l'uso delle \textit{threshold} e usando, per il calcolo delle matching
+statistics, le LCE query (componente \texttt{LCE}), 
+ridefinite, in questo caso,
 come il suffisso comune più lungo tra due righe del pannello, eventualmente
 fissando il termine a una colonna precisata. Il loro calcolo è permesso
 in modo efficiente dall'uso dell'SLP. Calcolando la
-lunghezza di tale suffisso comune, è possibile computare anche le
+lunghezza di tale suffisso comune, è possibile computare le
 lunghezze delle matching statistics contemporaneamente al calcolo delle
 righe. Quindi, si è ottenuto il calcolo completo di tale array in
-un singolo ``sweep'' sul pattern, dimezzando il numero di passaggi sulla
-struttura dati. Si noti che il calcolo degli SMEM viene fatto
-contemporaneamente al calcolo delle lunghezze delle matching statistics quindi,
-con l'uso delle LCE query, si è ridotto sia lo spazio necessario in memoria per
-la RLPBWT che il tempo di calcolo degli SMEM.
+un singolo ``sweep'' sul pattern e, avendo che il calcolo degli SMEM viene fatto
+contemporaneamente al calcolo delle lunghezze, si è ridotto lo spazio
+necessario in quanto sono sufficienti la 
+coppia (riga $row$, lunghezza $len$) corrente e quella precedente dell'array
+delle matching statistics per calcolare gli SMEM.
 
 \subsection*{Risultati sperimentali}
 L'obiettivo della fase sperimentale è stato quello di confrontarsi con
 l'algoritmo di Durbin per il calcolo degli SMEM sulla PBWT al fine 
-(1) di verificare se la RLPBWT riducesse la memoria necessaria al calcolo degli
+(1) di verificare se le soluzioni per la RLPBWT riducessero la memoria
+necessaria al calcolo degli 
 SMEM e (2) di quantificare l'aumento dei tempi di calcolo.
 Infatti, per quanto riguarda (1), la caratterizzazione asintotica teorica non è
 sufficientemente stringente da garantire una riduzione in pratica, in quanto
@@ -354,7 +359,7 @@ a differenza dell'algoritmo di Durbin, utilizza strutture dati succinte che
 comportano tempi di calcolo superiori per le operazioni di accesso e/o
 interrogazione. 
 I test sono stati effettuati su 5 pannelli della phase 3 del 1000 Genome
-Project, limitandosi 
+Project, ristretti
 ai siti bi-allelici. Tali pannelli sono relativi ai cromosomi 22, 20, 18, 16 e 1
 (scelto in quanto è il più grande). Tutti i pannelli presentano 5008 sample.
 Per questa sintesi, si è scelto di riportare alcuni risultati relativi al
@@ -374,27 +379,26 @@ molto piccola.
 Si è passato, quindi, ad analizzare i risultati in termini di memoria. Secondo
 le stime di Durbin, gli array necessari al funzionamento del suo algoritmo
 richiederebbero $\sim13NM$ bytes, implicando, per il pannello in analisi, circa
-368GB di memoria. 
-Anche sperimentalmente si sono registrati
+368GB di memoria richiesti. 
+Sperimentalmente si sono registrati
 picchi di memoria prossimi ai 369GB di memoria, confermando le stime. Invece,
-per la RLPBWT, con la struttura dati composta presa in esame, il picco
+per la variante della RLPBWT presa in esame, il picco
 registrato è stato di appena 4GB, 
-cioè si è ottenuta una riduzione di quasi il 99\% di memoria rispetto alla
-soluzione allo stato dell'arte, rendendo possibile l'esecuzione anche su un
-comune portatile. 
+ottenendo una riduzione di quasi il 99\% di memoria. Tale riduzione renderebbe
+possibile l'esecuzione del calcolo anche su un comune portatile, assumendo di
+aver a disposizione l'SLP. 
 \subsection*{Conclusioni e sviluppi futuri}
 In conclusione, le strutture dati composte per la RLPBWT, basate sul calcolo
 dell'array delle matching statistics, sono state tutte in
 grado, al variare della soluzione, di ridurre sensibilmente la 
-quantità di memoria necessaria per la risoluzione del 
-problema del calcolo degli SMEM tra un pannello di aplotipi e un aplotipo
-esterno.  
+quantità di memoria necessaria al problema del calcolo degli SMEM tra un
+pannello di aplotipi e un aplotipo esterno.  
 
 Seppure questa tesi abbia raggiunto l'obiettivo prefissato, il lavoro può essere
-ulteriormente esteso in diverse direzioni. Tra di esse si ha
+ulteriormente esteso in diverse direzioni. Tra di esse, si ha
 un'ulteriore ottimizzazione della struttura, sia in termini 
 di gestione del mapping che, eventualmente, di gestione di più query
-contemporaneamente. In merito a quest'ultimo sviluppo si segnala che Durbin
+contemporaneamente. In merito a quest'ultimo sviluppo, si segnala che Durbin
 ha proposto anche un algoritmo per il calcolo degli SMEM tra un pannello di
 aplotipi e un pannello di query. Questo algoritmo è basato sulla creazione di un
 unico pannello, su cui 
@@ -403,9 +407,9 @@ implementazione, nel setup di test
 descritto nella sezione precedente (che si noti comportare il perfetto input per
 tale soluzione), risulta essere molto performante sia in
 termini di tempo (93s) che di memoria utilizzata (0,1GB) durante
-l'esecuzione. Si segnala che tale algoritmo diventa inefficiente, rispetto alle
-altre soluzioni, in termini di tempi di calcolo, al diminuire del numero di
-query. 
+l'esecuzione. Si segnala che, rispetto ai tempi di calcolo, tale algoritmo
+diventa inefficiente, rispetto alle altre soluzioni proposte, al diminuire del
+numero di query. 
 
 Inoltre, sono possibili diverse generalizzazioni rispetto alle caratteristiche
 del pannello, come ad esempio pannelli multi-allelici o con dati mancanti. Tali
