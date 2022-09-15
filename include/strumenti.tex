@@ -164,7 +164,8 @@ d'ambiente \texttt{OMP\_NUM\_THREADS=1}.
 \paragraph{PBWT.}
 Al fine di validare più correttamente i confronti tra le varie strutture dati
 per la \textit{RLPBWT} e la \textit{PBWT} di Durbin, si è scelto di utilizzare
-l'implementazione originale di quest'ultima \cite{durbin_gh}, scritta in
+l'implementazione originale di
+quest'ultima\footnote{\url{https://github.com/richarddurbin/pbwt}}, scritta in 
 linguaggio C. L'implementazione
 fornisce tre algoritmi per il calcolo degli SMEM, avendo $N$ siti, $M$ sample e
 $Q$ query:
@@ -253,7 +254,8 @@ fasi della sperimentazione.
   \caption{Informazioni quantitative relative ai cinque pannelli in analisi.}
   \label{tab:panel}
   \begin{tabular}{c||c|c|c|c}
-    Cromosoma & #Siti & #Run totale & Max run & Media run \\ 
+    \textbf{Cromosoma} & \textbf{\#Siti} & \textbf{\#Run totale}
+    & \textbf{Max run} & \textbf{Media run} \\ 
     \hline
     Chr22 & 1.055.454 & 14.772.105 & 2.450 & 14\\
     Chr20 & 1.739.315 & 19.966.504 & 2.176 & 11\\

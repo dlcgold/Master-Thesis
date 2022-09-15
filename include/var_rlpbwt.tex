@@ -27,100 +27,16 @@ che,
 come in quel caso, non si tratta solo di memorizzare la struttura con
 compressione run-length ma di lavorare direttamente con la struttura dati
 compressa, risolvendo il problema del calcolo degli \textit{SMEM} senza
-decomprimere la struttura dati.
-\section{Introduzione alle varianti della RLPBWT}
-Lo sviluppo di questo progetto di tesi è stato tale per cui si sono sviluppate
-varie implementazioni della \textbf{RLPBWT}.\\
-Al fine di una miglior trattazione di tali implementazioni, si è deciso di
-suddividere le stesse in \textit{sotto-componenti}, le quali, adeguatamente
-``assemblate'' permetteranno, in varie accezioni, il calcolo degli
-\textit{SMEM}. Tali componenti, che verranno dettagliate in seguito, sono:
-\begin{itemize}
-  \item le componenti per il mapping tra la colonna $k$-esima e la colonna
-  $k+1$, ovvero, riprendendo la notazione di Durbin, le strutture run-length
-  encoded per gli array $c$, $u_k$ e $v_k$. Nel dettaglio, tale componente è
-  implementata in due varianti:
-  \begin{enumerate}
-    \item \textit{mapping tramite intvector} (\texttt{MAP-INT})
-    \item \textit{mapping tramite bitvector sparsi} (\texttt{MAP-BV})
-  \end{enumerate}
-  \item la componente per la memorizzazione, anch'essa proporzionale al numero
-  di run, delle threshold. Anche in questo caso si hanno due varianti,
-  corrispondenti di fatto alle due varianti della componente del mapping:
-  \begin{enumerate}
-    \item \textit{threshold con intvector} (\texttt{THR-INT})
-    \item \textit{threshold con bitvector sparsi} (\texttt{THR-BV})
-  \end{enumerate}
-  \item la componente per la memorizzazione della permutazione ad ogni colonna
-  della \textit{matrice PBWT}, ovvero dei \textit{samples di prefix array}
-  (\texttt{PERM}) 
-  \item la componente in grado di garantire \textit{random access} al
-  pannello. Si hanno due possibilità:
-  \begin{enumerate}
-    \item \textit{random access con bitvector} (\texttt{RA-BV})
-    \item \textit{random access con SLP} (\texttt{RA-SLP})
-  \end{enumerate}
-  \item la componente per le \textit{longest common extension query}
-  (\texttt{LCE}) 
-  \item la componente per l'intero \textit{longest common prefix array}
-  (\texttt{LCP}), già descritto nella sezione \ref{secpbwt}
-  \item la componente per permettere il calcolo delle \textit{funzioni}
-  $\varphi$ e $\varphi^{-1}$ (\texttt{PHI})
-\end{itemize}
-Assemblando tali componenti si ottengono otto strutture dati:
-\begin{itemize}
-  \item due strutture dati composte unicamente dalle componenti dedicate al
-  mapping e dall'intero \textit{array LCP}. Tali strutture sono nominate:
-  \begin{enumerate}
-    \item[1] \texttt{MAP-INT + LCP}
-    \item[2] \texttt{MAP-BV + LCP}
-  \end{enumerate}
-  Queste soluzioni, che non permettono di sapere quali righe del pannello
-  presentano uno \textit{SMEM}, terminante in una certa colonna, ma solo quante
-  esse siano, sono basate su una re-implementazione dell'\textit{algoritmo 5 di
-    Durbin}
-  \item quattro strutture composte per il calcolo degli \textit{SMEM} tramite la
-  computazione 
-  in due passaggi dell'array delle \textit{matching statistics}, in modo analogo
-  a quanto introdotto in \textit{MONI} per la \textit{BWT}, tramite
-  \textit{threshold} e \textit{random access} al pannello. Il pannello, come
-  anticipato, è memorizzato come \textit{vettore di bitvector} o come
-  \textit{SLP}. L'algoritmo  
-  necessita, inoltre, sia della componente atta al mapping che di quella
-  relativa ai \textit{sample di prefix array}. Infine, al fine di estendere il
-  riconoscimento a tutte le righe che presentano uno SMEM fino ad una certa
-  colonna, si necessita della struttura che permette di ``emulare'' le
-  \textit{funzioni} $\varphi$ e $\varphi^{-1}$. Tali strutture sono nominate:
-  \begin{enumerate}
-    \item[3] \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}
-    \item[4] \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI}
-    \item[5] \texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI}
-    \item[6] \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
-  \end{enumerate}
-  \item due strutture composte per il calcolo degli \textit{SMEM} tramite la
-  computazione 
-  in un singolo passaggio dell'array delle \textit{matching statistics}, in modo
-  analogo a quanto introdotto in \textit{PHONII} per la \textit{BWT}, tramite
-  l'uso delle \textit{LCE query}, con le quali, rispetto alle quattro
-  precedenti, si sostituisce l'uso delle \textit{threshold} e del \textit{random
-    access} al pannello. Tali strutture sono nominate:
-  \begin{enumerate}
-    \item[7] \texttt{MAP-INT + LCE + PERM + PHI}
-    \item[8] \texttt{MAP-BV + LCE + PERM + PHI}
-  \end{enumerate}
-\end{itemize}
-Una visualizzazione grafica di quanto descritto è rappresentata alla figura
-\ref{fig:compon}.
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{img/ds.pdf}
-  \caption{Schema grafico dell'ottenimento delle otto strutture dati.}
-  \label{fig:compon}
-\end{figure}
+decomprimere la struttura dati. Ipotizzando come, per una certa colonna della
+\textit{matrice PBWT}, il numero di run sia molto minore della lunghezza della
+colonna stessa, si deduce facilmente che l'uso della compressione run-length
+possa comportare una riduzione significativa della memoria necessaria al calcolo
+degli \textit{SMEM}.
 \section{Matching Statistics per la RLPBWT}
-Prima di discutere nel dettaglio delle varie componenti, è bene introdurre il
-concetto di \textbf{matching statistics} nel caso della \textbf{RLPBWT}, al fine
-di comprendere al meglio il senso della maggior parte delle componenti citate.
+Prima di discutere nel dettaglio delle strutture dati per la \textit{RLPBWT}, è
+bene introdurre il 
+concetto di \textbf{matching statistics} nel caso della \textit{PBWT} (e quindi
+anche della sua variante \textit{run-length encoded}).
 \begin{definizione}
   Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$ siti,
   e un aplotipo esterno/pattern $z$, tale che $|z|=N$, si definisce matching
@@ -193,8 +109,8 @@ seguente modo:
   visti sopra 
 \end{itemize}
 Si noti che non si è parlato di come calcolare i vari $MS[i].len$, questo in
-quanto si hanno due soluzioni (che verranno poi approfondite tramite le
-rispettive componenti):
+quanto si hanno due soluzioni, che rispecchiano quanto visto con
+\textit{MONI}\cite{moni} e \textit{PHONI} \cite{phoni} per la \textit{RLBWT}: 
 \begin{enumerate}
   \item si possono usare le \textit{threshold} per capire che nuova riga
   selezionare in 
@@ -204,6 +120,8 @@ rispettive componenti):
   selezionare in caso di mismatch e in tal caso il calcolo delle $MS[i].len$
   avviene in contemporanea 
 \end{enumerate}
+Entrambi i concetti verranno definiti e caratterizzati nel corso del capitolo.
+\dc{magari ref alle section}
 \begin{esempio}
   \label{es:ms}
   Si riprenda, al fine di vedere un esempio di calcolo dell'array $MS$,
@@ -240,6 +158,54 @@ rispettive componenti):
   sopra (anche in questo caso i dettagli del calcolo
   verranno esplicitati successivamente). 
 \end{esempio}
+\section{Introduzione alle varianti della RLPBWT}
+Lo sviluppo di questo progetto di tesi è stato tale per cui si sono sviluppate
+varie implementazioni della \textbf{RLPBWT}. Infatti, avendo a che fare con
+strutture dati fortemente dipendenti dal tipo di dato (in termini, ad esempio,
+di ``sparsità'' intrinseca del pannello) e dall'implementazione (soprattutto in
+termini di strutture dati succinte), sarebbe stato difficile limitarsi a stime
+teoriche che potevano non essere confermate in fase sperimentale. Una sola
+caratterizzazione asintotica avrebbe potuto comportare sottostime e
+sovrastime e si è quindi deciso di sviluppare diverse varianti della
+\textit{RLPBWT}.\\ 
+Al fine di una miglior trattazione di tali implementazioni, si è deciso di
+suddividere le stesse in \textit{sotto-componenti}, le quali, adeguatamente
+``assemblate'' permetteranno, in varie accezioni, il calcolo degli
+\textit{SMEM}. Tali componenti, che verranno dettagliate in seguito, sono:
+\begin{itemize}
+  \item le componenti per il mapping tra la colonna $k$-esima e la colonna
+  $k+1$, ovvero, riprendendo la notazione di Durbin, le strutture run-length
+  encoded per gli array $c$, $u_k$ e $v_k$. Nel dettaglio, tale componente è
+  implementata in due varianti:
+  \begin{enumerate}
+    \item \textit{mapping tramite intvector} (\texttt{MAP-INT})
+    \item \textit{mapping tramite bitvector sparsi} (\texttt{MAP-BV})
+  \end{enumerate}
+  \item la componente per la memorizzazione, anch'essa proporzionale al numero
+  di run, delle threshold. Anche in questo caso si hanno due varianti,
+  corrispondenti di fatto alle due varianti della componente del mapping:
+  \begin{enumerate}
+    \item \textit{threshold con intvector} (\texttt{THR-INT})
+    \item \textit{threshold con bitvector sparsi} (\texttt{THR-BV})
+  \end{enumerate}
+  \item la componente per la memorizzazione della permutazione ad ogni colonna
+  della \textit{matrice PBWT}, ovvero dei \textit{samples di prefix array}
+  (\texttt{PERM}) 
+  \item la componente in grado di garantire \textit{random access} al
+  pannello. Si hanno due possibilità:
+  \begin{enumerate}
+    \item \textit{random access con bitvector} (\texttt{RA-BV})
+    \item \textit{random access con SLP} (\texttt{RA-SLP})
+  \end{enumerate}
+  \item la componente per le \textit{longest common extension query}
+  (\texttt{LCE}) 
+  \item la componente per l'intero \textit{longest common prefix array}
+  (\texttt{LCP}), già descritto nella sezione \ref{secpbwt}
+  \item la componente per permettere il calcolo delle \textit{funzioni}
+  $\varphi$ e $\varphi^{-1}$ (\texttt{PHI})
+\end{itemize}
+
+
 % Tali varianti non sono da
 % intendersi ugualmente valide ma corrispondono al percorso evolutivo avuto
 % nell'ultimo anno di studio e ricerca in merito. Riassumendo il tutto si

@@ -1,15 +1,15 @@
-\section{Componente per il mapping}
+\subsection{Componente per il mapping}
 La prima componente, nelle sue due varianti, che si descrive è quella relativa
 al mapping tra una colonna e la sua successiva. Bisogna quindi memorizzare per
 ogni colonna $k$, in modo proporzionale al numero di run della stessa, le
 informazioni atte a ottenere i medesimi risultati ottenibili con la funzione
 $w(i,\sigma)$, secondo la notazione di Durbin \cite{pbwt}. 
-\subsection{Mapping con intvector}
+\subsubsection{Mapping con intvector}
 La prima variante che si descrive è quella denominata \texttt{MAP-INT}.\\
 L'ispirazione iniziale per tale componente è stata data dall'articolo di Gagie
 et al \cite{tricks}, nonostante si abbiano, di fatto, diverse modifiche
-strutturali. Riprendendo quanto descritto alla sotto-sezione \ref{subsectravis},
-si è quindi deciso di
+strutturali. Riprendendo quanto descritto al termine della sezione
+\ref{secpbwt}, si è quindi deciso di
 memorizzare gli indici delle \textit{teste di run}, ovvero gli indici iniziali
 di ogni run. Ovviamente questa informazione non è sufficiente per poter sapere
 se una run sia composta da simboli $\sigma=0$ o simboli
@@ -347,7 +347,7 @@ anche il mapping da una colonna alla successiva avviene in tempo costante.
   \caption{Algoritmo per il mapping con \texttt{MAP-INT}.}
   \label{algo:lfoff}
 \end{algorithm}
-\subsection{Mapping con bitvector}
+\subsubsection{Mapping con bitvector}
 La seconda variante della componente di mapping sfrutta, al posto degli
 \textit{intvector}, i \textit{bitvector sparsi}, da cui la nomenclatura
 \texttt{MAP-BV}.\\

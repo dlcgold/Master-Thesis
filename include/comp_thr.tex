@@ -1,4 +1,4 @@
-\section{Componente per le threshold}
+\subsection{Componente per le threshold}
 Come discusso per \textit{MONI}, l'uso delle \textbf{threshold} è parte
 fondamentale di uno dei due modi per ottenere le \textit{matching
   statistics}. \\
@@ -42,7 +42,7 @@ Da un punto di vista implementativo, come anticipato, si hanno due soluzioni,
 una basata su \textit{intvector} e una basata su \textit{bitvector sparsi}. In
 entrambi i casi il calcolo si può effettuare in parallelo a quello di
 \texttt{MAP-INT} e \texttt{MAP-BV}.
-\subsection{Threshold con intvector}
+\subsubsection{Threshold con intvector}
 In questo caso la memorizzazione delle threshold avviene in modo molto semplice,
 usando un \textit{vettore di interi bit-compressed}. Data una colonna $k$ della
 \textit{PBWT matrix}, con $r$ numero di run, si calcola $t_k$ tale che
@@ -88,7 +88,7 @@ successiva come \textit{threshold}.
   \caption{Algoritmo per la costruzione della componente \texttt{THR-INT}.}
   \label{algo:thrint}
 \end{algorithm}
-\subsection{Threshold con bitvector}
+\subsubsection{Threshold con bitvector}
 In questo caso le posizioni delle \textit{threshold} vengono
 memorizzate tramite un \textit{bitvector sparso} per ogni colonna $k$, denotato
 $thr_k$, avendo che $thr_k[i]=1$ sse $i$ è l'indice di una \textit{threshold}.

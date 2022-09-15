@@ -1,4 +1,4 @@
-\section{Calcolo degli SMEM con matching statistics}
+\subsection{Calcolo degli SMEM con matching statistics}
 L'obbiettivo di questa tesi era quello di applicare i metodi e gli algoritmi già
 studiati per la \textit{BWT}, riferendosi al calcolo dei \textit{MEM} a partire
 dall'array delle \textit{matching statistics}, alla \textit{PBWT}.\\
@@ -12,7 +12,7 @@ Nelle sei strutture dati dedicate al calcolo degli SMEM tramite \textit{matching
   sia per scegliere i vari $MS[i].row$ che per calcolare, in contemporanea, i
   vari $MS[i].len$ 
 \end{enumerate}
-\subsection{Calcolo dell'array MS con threshold}
+\subsubsection{Calcolo dell'array MS con threshold}
 Questa prima soluzione, necessitando sia della componente
 \texttt{THR-INT}/\texttt{THR-BV} che della componente
 \texttt{RA-BV}/\texttt{RA-SLP}, è relativa alle seguenti strutture dati
@@ -325,7 +325,7 @@ nelle sezioni precedenti dedicate alle singole componenti.
   \texttt{MAP-BV}.} 
   \label{algo:updatems}
 \end{algorithm}
-\subsection{Calcolo dell'array MS con LCE query}
+\subsubsection{Calcolo dell'array MS con LCE query}
 Come anticipato, grazie all'uso delle \textit{LCE query} è possibile calcolare
 l'array 
 delle \textit{matching statistics} in un solo scorrimento da sinistra a

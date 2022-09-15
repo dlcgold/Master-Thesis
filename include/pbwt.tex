@@ -683,8 +683,9 @@ prendiamo, ad esempio, un pannello di
 medie dimensioni, con $N=30000$ e $M=100000$. Ne segue che, secondo la stima di
 Durbin, si necessitano $\sim 36.32$GB di memoria. Inoltre, una stima
 sperimentale di tale richiesta di memoria può essere confermata con l'esecuzione
-dell'implementazione della \textit{PBWT} di Durbin stesso
-\cite{durbin_gh}. Infatti, monitorando 
+dell'implementazione ufficiale della
+\textit{PBWT}\footnote{\url{https://github.com/richarddurbin/pbwt}}. Infatti,
+monitorando  
 con \texttt{time} il picco di memoria durante l'esecuzione, si ha che esso
 corrisponde a $\sim 40.76$GB, comprensivi anche di tutto ciò che è ``a
 contorno'' all'algoritmo stesso. I dati quindi sembrano confermare le stime di

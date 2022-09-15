@@ -1,4 +1,57 @@
-\section{Calcolo degli SMEM con LCP}
+\section{Strutture dati per la RLPBWT}
+Assemblando le componenti descritte nella sezione precedente si ottengono otto
+varianti della \textit{RLPBWT}:
+\dc{ref sezione}
+\begin{itemize}
+  \item due strutture dati composte unicamente dalle componenti dedicate al
+  mapping e dall'intero \textit{array LCP}. Tali strutture sono nominate:
+  \begin{enumerate}
+    \item[1] \texttt{MAP-INT + LCP}
+    \item[2] \texttt{MAP-BV + LCP}
+  \end{enumerate}
+  Queste soluzioni, che non permettono di sapere quali righe del pannello
+  presentano uno \textit{SMEM}, terminante in una certa colonna, ma solo quante
+  esse siano, sono basate su una re-implementazione dell'\textit{algoritmo 5 di
+    Durbin}
+  \item quattro strutture composte per il calcolo degli \textit{SMEM} tramite la
+  computazione 
+  in due passaggi dell'array delle \textit{matching statistics}, in modo analogo
+  a quanto introdotto in \textit{MONI} per la \textit{BWT}, tramite
+  \textit{threshold} e \textit{random access} al pannello. Il pannello, come
+  anticipato, è memorizzato come \textit{vettore di bitvector} o come
+  \textit{SLP}. L'algoritmo  
+  necessita, inoltre, sia della componente atta al mapping che di quella
+  relativa ai \textit{sample di prefix array}. Infine, al fine di estendere il
+  riconoscimento a tutte le righe che presentano uno SMEM fino ad una certa
+  colonna, si necessita della struttura che permette di ``emulare'' le
+  \textit{funzioni} $\varphi$ e $\varphi^{-1}$. Tali strutture sono nominate:
+  \begin{enumerate}
+    \item[3] \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}
+    \item[4] \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI}
+    \item[5] \texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI}
+    \item[6] \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
+  \end{enumerate}
+  \item due strutture composte per il calcolo degli \textit{SMEM} tramite la
+  computazione 
+  in un singolo passaggio dell'array delle \textit{matching statistics}, in modo
+  analogo a quanto introdotto in \textit{PHONII} per la \textit{BWT}, tramite
+  l'uso delle \textit{LCE query}, con le quali, rispetto alle quattro
+  precedenti, si sostituisce l'uso delle \textit{threshold} e del \textit{random
+    access} al pannello. Tali strutture sono nominate:
+  \begin{enumerate}
+    \item[7] \texttt{MAP-INT + LCE + PERM + PHI}
+    \item[8] \texttt{MAP-BV + LCE + PERM + PHI}
+  \end{enumerate}
+\end{itemize}
+Una visualizzazione grafica di quanto descritto è rappresentata alla figura
+\ref{fig:compon}.
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{img/ds.pdf}
+  \caption{Schema grafico dell'ottenimento delle otto strutture dati.}
+  \label{fig:compon}
+\end{figure}
+\subsection{Calcolo degli SMEM con LCP}
 Questa prima soluzione per il calcolo degli SMEM con un aplotipo esterno è
 quella che può essere effettuata tramite le strutture dati composte:
 \begin{itemize}
