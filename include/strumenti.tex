@@ -137,11 +137,14 @@ varianti discusse nel capitolo \ref{metchap}:
   composta \texttt{MAP-BV + LCP}. Si ricorda che tali soluzioni non supportano
   il riconoscimento delle righe del pannello per cui si ha uno \textit{SMEM} ma
   solo la cardinalità dell'insieme di tali righe
-  \item le strutture dati composte basate sull'uso delle \textit{threshold},
+  \item le strutture dati composte basate sull'uso delle \textit{threshold} per
+  il calcolo dell'array delle \textit{matching statistics}, 
   ovvero: \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI},  \texttt{MAP-INT +
     THR-INT + RA-SLP + PERM + PHI}, \texttt{MAP-BV + THR-BV + RA-BV + PERM +
     PHI} e \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI} 
-  \item le strutture dati composte basate sull'uso delle \textit{LCE query},
+  \item le strutture dati composte basate sull'uso delle \textit{LCE query}
+  per
+  il calcolo dell'array delle \textit{matching statistics},
   ovvero: \texttt{MAP-INT + LCE + PERM + PHI} e \texttt{MAP-BV + THR-BV +
     LCE + PERM + PHI} 
 \end{enumerate}
@@ -220,9 +223,10 @@ un alfabeto binario $\Sigma=\{0,1\}$, tramite l'uso di \textbf{bcftools}
 \cite{bcftools}, tramite il comando \texttt{bcftools view -m2 -M2
   -v snps}.\\
 La prima selezione dei pannelli è stata dettata dalla volontà di studiare, per
-praticità, matrici non troppo estese. In aggiunta, si è studiato uno dei
-pannelli più grossi disponibili, ovvero quello relativo al cromosoma 1. Si sono,
-quindi, scelti i pannelli relativi ai cromosomi 22, 20, 18, 16 e 1. Si noti che
+praticità, pannelli non troppo estesi. Si sono,
+quindi, scelti i pannelli relativi ai cromosomi 22 (\textit{chr22}), 20
+(\textit{chr20}), 18 (\textit{chr18}), 16 (\textit{chr16}) e 1 (\textit{chr1}).
+Si noti che  
 l'ordine è dato dal numero crescente di siti. La scelta di includere il
 cromosoma 1 è dettata dal fatto che risulta essere il più grande cromosoma
 umano, implicando quindi che anche il relativo pannello delle variazioni geniche
@@ -254,7 +258,7 @@ fasi della sperimentazione.
   \caption{Informazioni quantitative relative ai cinque pannelli in analisi.}
   \label{tab:panel}
   \begin{tabular}{c||c|c|c|c}
-    \textbf{Cromosoma} & \textbf{\#Siti} & \textbf{\#Run totale}
+    \textbf{Chr} & \textbf{\#Siti} & \textbf{\#Run totale}
     & \textbf{Max run} & \textbf{Media run} \\ 
     \hline
     Chr22 & 1.055.454 & 14.772.105 & 2.450 & 14\\

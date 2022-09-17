@@ -26,8 +26,9 @@ della sperimentazione, ovvero:
 \end{itemize}
 \paragraph{Preprocessing}
 In figura \ref{fig:prechr} si possono analizzare le prestazioni delle tre
-fasi di preprocessing. La separazione del pannello con le query risulta essere
-assolutamente 
+fasi di preprocessing. I risultati quantitativi sono consultabili alla tabella
+\ref{¬tab:prepmem} e alla tabella \ref{tab:preptime}. La separazione del
+pannello con le query risulta essere assolutamente 
 ininfluente e, di fatto, anche la conversione tra i due formati non
 necessita particolari considerazioni. Tale conversione 
 diventerebbe non necessaria implementando l'input direttamente da file VCF per
@@ -54,6 +55,43 @@ bytes ad ogni esecuzione di calcolo degli SMEM.
     preprocessing dell'input per la \textit{RLPBWT}, in scala logaritmica.}
   \label{fig:prechr}
 \end{figure}
+\begin{table}
+  \centering
+  \small
+  \caption{Risultati quantitivi dei picchi di memoria (gigabytes) relativi alle
+    fasi di 
+    preprocessing per l'input delle varianti della \textit{RLPBWT}}
+  \label{tab:prepmem}
+  \begin{tabular}{c||c|c|c}
+    \textbf{Chr} & \textbf{Costruzione SLP} & \textbf{Conversione VCF a MACs}
+    & \textbf{Estrazione query}\\
+    \hline
+    \hline
+    chr22 & 111 & 5 & 0.01 \\
+    chr20 & 183 & 9 & 0.01 \\
+    chr18 & 215 & 11 & 0.01 \\
+    chr16 & 272 & 13 & 0.01 \\
+    chr1 & 644 & 31 & 0.01 
+  \end{tabular}
+\end{table}
+\begin{table}
+  \centering
+  \small
+  \caption{Risultati quantitivi dei tempi (secondi) relativi alle fasi di
+    preprocessing per l'input delle varianti della \textit{RLPBWT}}
+  \label{tab:preptime}
+  \begin{tabular}{c||c|c|c}
+    \textbf{Chr} & \textbf{Costruzione SLP} & \textbf{Conversione VCF a MACs}
+    & \textbf{Estrazione query}\\
+    \hline
+    \hline
+    chr22 & 2542 & 207 & 28 \\
+    chr20 & 3950 & 320 & 47 \\
+    chr18 & 4890 & 405 & 64 \\
+    chr16 & 6104 & 500 & 71 \\
+    chr1 & 14430 & 1098 & 157
+  \end{tabular}
+\end{table}
 In figura \ref{fig:slpmacschr} si può osservare il vantaggio in termini di
 memoria che si ha con l'uso degli \textit{SLP}, confrontando il peso dei file
 MACs con il peso delle grammatiche compresse. Si segnala, in ogni caso, che il
@@ -64,15 +102,16 @@ confrontare quantitativamente tali risultati.
   \centering
   \caption{Dimensioni, in gigabytes, degli \textit{SLP} e dei file \textit{MACs}
   per i vari pannelli del 1000 Genome Project.}
-  \begin{tabular}{c|c|c|c|c}
-    \textbf{\#Siti} & \textbf{\#Sample} & \textbf{SLP (\textit{GB})}
+  \begin{tabular}{c||c|c|c}
+    \textbf{Chr} & \textbf{SLP (\textit{GB})}
     & \textbf{MACs (\textit{GB})} & \textbf{\%}\\
     \hline
-    1.055.454 & 4.908 & 0,04 & 4,84 & 0,9\\
-    1.739.315 & 4.908 & 0,06 & 7,98 & 0,76\\
-    2.171.378 & 4.908 & 0,08 & 9,97 & 0,79\\
-    2.596.072 & 4.908 & 0,1 & 11,91 & 0,81\\
-    6.196.151 & 4.908 & 0,22 & 28,44 & 0,78\\
+    \hline
+    chr22 & 0,04 & 4,84 & 0,9\\
+    chr20 & 0,06 & 7,98 & 0,76\\
+    chr18 & 0,08 & 9,97 & 0,79\\
+    chr16 & 0,1 & 11,91 & 0,81\\
+    chr1 & 0,22 & 28,44 & 0,78\\
   \end{tabular}
   \label{tab:slpmacs}
 \end{table}
@@ -301,16 +340,17 @@ componente \texttt{RA-BV}. Numericamente tale vantaggio è riportato in tabella
   \centering
   \caption{Vantaggio percentuale dell'uso delle componenti \texttt{RA-SLP/LCE}
     rispetto alla componente \texttt{RA-BV}.}
-  \begin{tabular}{c|c|c|c|c}
-    \textbf{\#Siti} & \textbf{\#Sample} & \textbf{\texttt{RA-SLP/LCE}
+  \begin{tabular}{c||c|c|c}
+    \textbf{Chr} & \textbf{\texttt{RA-SLP/LCE}
                                           (\textit{MB})}
     & \textbf{\texttt{RA-BV} (\textit{MB})} & \textbf{\%}\\
     \hline
-    1.055.454 & 4.908 & 44 & 628 & 7\\
-    1.739.315 & 4.908 & 61 & 1.035 & 6\\
-    2.171.378 & 4.908 & 80 & 1.292 & 6\\
-    2.596.072 & 4.908 & 98 & 1.544 & 6\\
-    6.196.151 & 4.908 & 226 & 3.687 & 6\\
+    \hline
+    chr22 & 44 & 628 & 7\\
+    chr20 & 61 & 1.035 & 6\\
+    chr18 & 80 & 1.292 & 6\\
+    chr16 & 98 & 1.544 & 6\\
+    chr1 & 226 & 3.687 & 6\\
   \end{tabular}
   \label{tab:slppanel}
 \end{table}
@@ -340,8 +380,10 @@ richiesta eccessiva in memoria della componente \texttt{LCP}.
     \textit{mapping} e \textit{threshold} usate nelle
     strutture dati per la \textit{RLPBWT}.}}   
   \begin{tabular}{c||c|c|c|c}
-    Chr & \texttt{MAP-INT} & \texttt{MAP-BV} & \texttt{THR-INT}
-    & \texttt{THR-BV}  \\ \hline
+    \textbf{Chr} & \textbf{\texttt{MAP-INT}} & \textbf{\texttt{MAP-BV}}
+    & \textbf{\texttt{THR-INT}} & \textbf{\texttt{THR-BV}} \\
+    \hline
+    \hline
     22 & 74 & 543 & 36 & 199\\ \hline
     20 & 109 & 882 & 53 & 322\\ \hline
     18 & 137 & 1.100 & 61 & 402\\ \hline
@@ -354,8 +396,9 @@ richiesta eccessiva in memoria della componente \texttt{LCP}.
       $\phi$}.} }
  \vspace{+1mm}
   \begin{tabular}{c||c|c|c|c|c}
-    Chr & \texttt{RA-BV} & \texttt{RA-SLP/LCE} & \texttt{PERM} & \texttt{PHI}
-    & LCP\\
+    \textbf{Chr} & \textbf{\texttt{RA-BV}} & \textbf{\texttt{RA-SLP/LCE}}
+    & \textbf{\texttt{PERM}} & \textbf{\texttt{PHI}} & \textbf{\texttt{LCP}}\\
+    \hline
     \hline
     22 & 628 & 44 & 71 & 89 & 9.095\\ \hline
     20 & 1.035 & 62 & 104 & 118 & 15.468 \\ \hline
