@@ -24,13 +24,14 @@ della sperimentazione, ovvero:
   la \textit{RLPBWT} e dei file ad hoc per la \textit{PBWT}
   \item il calcolo degli \textit{SMEM}
 \end{itemize}
-\paragraph{Preprocessing}
+\paragraph{Preprocessing.}
 In figura \ref{fig:prechr} si possono analizzare le prestazioni delle tre
 fasi di preprocessing. I risultati quantitativi sono consultabili alla tabella
-\ref{¬tab:prepmem} e alla tabella \ref{tab:preptime}. La separazione del
+\ref{tab:prepmem} e alla tabella \ref{tab:preptime}. La separazione del
 pannello con le query risulta essere assolutamente 
 ininfluente e, di fatto, anche la conversione tra i due formati non
-necessita particolari considerazioni. Tale conversione 
+necessita particolari considerazioni, come inferibile dai risultati numerici
+delle performance. Tale conversione 
 diventerebbe non necessaria implementando l'input direttamente da file VCF per
 le varie strutture dati relative alla \textit{RLPBWT}. Inoltre, in un contesto
 reale, la costruzione del pannello di query non sarebbe un'operazione
@@ -39,15 +40,22 @@ Bisogna, però, analizzare la costruzione
 dell'\textit{SLP}. Per quanto quest'operazione sia da svolgersi \textit{una
   tantum}, le richieste in termini di memoria sono nell'ordine delle centinaia
 di gigabytes di RAM mentre i tempi di calcolo sono nell'ordine delle
-ore. D'altro canto, bisogna considerare che tutti gli algoritmi per la produzione
+ore. Prendendo in analisi il cromosoma 1 si ha infatti che è richiesto un picco
+di 644GB di RAM, avendo che l'intera esecuzione richiede circa 4 ore.
+D'altro canto, bisogna considerare che tutti gli strumenti computazionali per la
+produzione 
 dell'\textit{SLP} sono studiati per partire da una singola stringa e non da una
 matrice. Nuovi sviluppi in questa direzione potrebbero lasciar spazio a diverse
-ottimizzazioni. Inoltre,
-questa fase è necessaria solo per due delle tre soluzioni studiate per la
-\textit{RLPBWT} e, come già detto, il fatto che sia necessaria solo una volta
-deve essere preso in considerazione nell'ottica di un confronto con, ad esempio,
+ottimizzazioni. Bisogna, infine, considerare che
+questa fase è necessaria solo per quattro delle sei soluzioni studiate per la
+\textit{RLPBWT} basate sul calcolo delle \textit{matching statistics} e, come
+già detto, il fatto che sia necessaria solo una volta 
+è cruciale nell'ottica di un confronto con, ad esempio,
 lo spazio richiesto dall'\textit{algoritmo 5} di Durbin, che richiede $13NM$
-bytes ad ogni esecuzione di calcolo degli SMEM.
+bytes per il calcolo degli \textit{SMEM} ad ogni esecuzione.\\
+In generale, la crescita di memoria richiesta e di tempi per le tre fasi di
+preprocessing sembrano essere proporzionali al numero di siti dei pannelli, come
+ci si potrebbe attendere.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{img/prep_mem_time.png}
@@ -67,11 +75,11 @@ bytes ad ogni esecuzione di calcolo degli SMEM.
     & \textbf{Estrazione query}\\
     \hline
     \hline
-    chr22 & 111 & 5 & 0.01 \\
-    chr20 & 183 & 9 & 0.01 \\
-    chr18 & 215 & 11 & 0.01 \\
-    chr16 & 272 & 13 & 0.01 \\
-    chr1 & 644 & 31 & 0.01 
+    chr22 & 111 & 5 & 0,0089  \\
+    chr20 & 183 & 9 & 0,0090 \\
+    chr18 & 215 & 11 & 0,0090 \\
+    chr16 & 272 & 13 & 0,0090 \\
+    chr1 & 644 & 31 & 0,0094 
   \end{tabular}
 \end{table}
 \begin{table}
@@ -103,8 +111,8 @@ confrontare quantitativamente tali risultati.
   \caption{Dimensioni, in gigabytes, degli \textit{SLP} e dei file \textit{MACs}
   per i vari pannelli del 1000 Genome Project.}
   \begin{tabular}{c||c|c|c}
-    \textbf{Chr} & \textbf{SLP (\textit{GB})}
-    & \textbf{MACs (\textit{GB})} & \textbf{\%}\\
+    \textbf{Chr} & \textbf{SLP}
+    & \textbf{MACs} & \textbf{\%}\\
     \hline
     \hline
     chr22 & 0,04 & 4,84 & 0,9\\
@@ -117,11 +125,10 @@ confrontare quantitativamente tali risultati.
 \end{table}
 È possibile, grazie a tali risultati, apprezzare la compressione di tali
 grammatiche.  
-Si noti inoltre che, essendo la capacità di compressione di un \textit{SLP}
+Si noti che, essendo la capacità di compressione di un \textit{SLP}
 direttamente correlata alle ripetizioni presenti nella stringa da comprimere, la
-percentuale decrescente risulti essere un risultato atteso, avendo maggior
-probabilità di avere ripetizioni all'aumentare delle dimensioni del pannello,
-parlando di dati reali.
+dimensione dell'\textit{SLP} non è perfettamente proporzionale al numero di siti
+dei pannelli in analisi.
 \begin{figure}
   \centering
   \includegraphics[width=0.7\linewidth]{img/slp_vs_macs_log.png}
@@ -130,7 +137,7 @@ parlando di dati reali.
     logaritmica.} 
   \label{fig:slpmacschr}
 \end{figure}
-\paragraph{Costruzione della struttura}
+\paragraph{Costruzione della struttura.}
 Passiamo ora ad analizzare tempi e picchi di memoria per la costruzione delle
 strutture dati. Bisogna ricordare che:
 \begin{itemize}
@@ -157,17 +164,20 @@ memorizzare l'intero insieme degli \textit{array LCP}, hanno un elevato
 consumo di memoria. Pur utilizzando degli \textit{int vector compressi}, in modo
 analogo a quanto visto, ad esempio, per la componente \texttt{PERM}, si ha
 necessità di salvare $NM$ valori interi, valori che, nel caso peggiore, sono
-pari al numero di siti del pannello. Interessante notare, inoltre, come in
+pari al numero di siti del pannello. Risulta ovvio notare come, in
 termini di costruzione, siano le due strutture che non scalano sul numero di run
-ad aver maggiori richieste di memoria. L'utilizzo della componente
-\texttt{MAP-BV}, come atteso, richiede maggior memoria della componente
+ad aver maggiori richieste di memoria. Proseguendo nell'analisi si ha che
+l'utilizzo della componente 
+\texttt{MAP-BV}, come atteso, richiede maggior memoria (approssimativamente tra
+il 15\% e il 20\% in più) della componente
 \texttt{MP-INT}. In merito invece ai tempi di costruzione delle due strutture si
 segnala come i tempi di calcolo della componente \texttt{MAP-BV} siano superiori
-rispetto a quelli della \texttt{MAP-INT}, dovendo, ad esempio, calcolare
-anche le strutture per le funzioni \textit{rank/select} e lavorare su strutture
-dati succinte quali i \textit{bitvector sparsi}. Nel caso della componente
+rispetto a quelli della \texttt{MAP-INT} (anche in questo caso
+approssimativamente tra il 15\% e il 20\% in più), dovendo, ad esempio, calcolare
+anche le strutture per le funzioni \textit{rank/select} per i \textit{bitvector
+  sparsi}. Nel caso della componente 
 \texttt{MAP-INT}, invece, l'unica operazione aggiuntiva rispetto a quelle attese
-per una classica popolazione di array di interi e la fase di compressione degli
+per una classica popolazione di array di interi è la fase di compressione degli
 stessi. Le analisi effettuate sulle componenti di \textit{mapping} sono da
 ritenersi analoghe per le componenti dedicate alle \textit{threshold}, in
 termini di uso di \textit{bitvector sparsi} e \textit{int vector
@@ -177,18 +187,19 @@ di computare l'array $MS$, si aggiungono le considerazioni sulle possibili
 strutture per il \textit{random access} e, nel caso dell'\textit{SLP}, per l'uso
 delle \textit{LCE query}. Si nota come l'uso della componente \texttt{RA-BV}
 comporta, come atteso, una maggior richiesta di memoria, pur limitata dall'uso
-dei \textit{bitvector}. In termini di tempi di calcolo, inoltre, si ha che la
+dei \textit{bitvector}. Sempre in termini di tempi di esecuzione, si ha che la
 componente \texttt{RA-BV} deve essere computata in fase di costruzione delle
-strutture, comportando un aumento dei tempi di calcolo. Confrontando i tempi di
+strutture, comportando un aumento dei tempi di calcolo (meno del 5\% in
+più). Confrontando i tempi di 
 tutte le varianti si ha che tutti gli algoritmi di costruzione sono in tempo
 proporzionale a $\mathcal{O}(NM)$ ma, come detto, le varianti della
-\textit{RLPBWT} includono  in questa fase anche il calcolo delle strutture utili
-al calcolo degli SMEM. Si noti come, parlando di \textit{RLPBWT}, la struttura
-composta \texttt{MAP-INT + LCE + PERM + PHI} risulti essere la meno costosa in
-termini di memoria, usando la struttura di mapping tramite \textit{int vector
-  compressi} e l'\textit{SLP} (per le \textit{LCE query}). Anche in termini di
-tempo, per i discorsi fatti sui tempi di calcolo delle singole componenti,
-risulta essere la soluzione più vantaggiosa.\\
+\textit{RLPBWT} includono, in questa fase, anche il calcolo delle strutture
+utili al calcolo degli SMEM. Si noti come, parlando di \textit{RLPBWT}, la
+struttura composta \texttt{MAP-INT + LCE + PERM + PHI} risulti essere la meno
+costosa in termini di memoria, usando la struttura di mapping tramite
+\textit{int vector compressi} e l'\textit{SLP} (per le \textit{LCE
+  query}). Anche in termini di tempo, per i discorsi fatti sui tempi di calcolo
+delle singole componenti, risulta essere la soluzione più vantaggiosa.\\
 In generale, si può 
 concludere che questa frase conferma quanto discusso nel capitolo
 \ref{metchap}.\\ 
@@ -259,8 +270,7 @@ concludere che questa frase conferma quanto discusso nel capitolo
     chr20 & 4 & 3 & 3 \\
     chr18 & 5 & 4 & 4 \\
     chr16 & 6 & 5 & 5 \\
-    chr1 & 14 & 11 & 11 \\
-
+    chr1 & 14 & 12 & 11 
   \end{tabular}
 \end{table}
 \begin{table}
@@ -294,7 +304,7 @@ concludere che questa frase conferma quanto discusso nel capitolo
   \begin{tabular}{c||c|c|c} 
     \textbf{Chr}
     & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
-    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP $\cdots$}}
     & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
     \hline
     \hline
@@ -334,7 +344,8 @@ si riportano, in megabytes,
 le dimensioni di tali componenti. Si può,
 innanzitutto, apprezzare il vantaggio dell'uso della componente
 \texttt{RA-SLP/LCE} rispetto alla 
-componente \texttt{RA-BV}. Numericamente tale vantaggio è riportato in tabella
+componente \texttt{RA-BV}, avendo che si ha un risparmio di memoria superiore al
+90\%. Numericamente tale vantaggio è riportato in tabella
 \ref{tab:slppanel}.
 \begin{table}
   \centering
@@ -390,9 +401,9 @@ richiesta eccessiva in memoria della componente \texttt{LCP}.
     16 & 167 & 1.320 & 81 & 483\\ \hline
     1 & 384 & 3.133 & 185 & 1.146
   \end{tabular}
-   \vspace{+3mm}
+  \vspace{+3mm}
   \subcaption*{\footnotesize{Tabella B: dimensioni delle componenti di
-    \textit{random access}, \textit{prefix array samples} e \textit{struttura
+      \textit{random access}, \textit{prefix array samples} e \textit{struttura
       $\phi$}.} }
  \vspace{+1mm}
   \begin{tabular}{c||c|c|c|c|c}
@@ -407,8 +418,8 @@ richiesta eccessiva in memoria della componente \texttt{LCP}.
     1 & 3.687 & 227 & 366 & 411 & 54.588
   \end{tabular}
 \end{table}
-\paragraph{Calcolo degli SMEM}
-Passando ora a discutere dei risultati ottenuti per il calcolo degli
+\paragraph{Calcolo degli SMEM.}
+In seguito si ha la discussione dei risultati ottenuti per il calcolo degli
 \textit{SMEM}.\\ 
 In figura \ref{fig:smemtimememchr} (a) si riportano i risultati i termini di
 picchi di 
@@ -417,8 +428,9 @@ consultabili numericamente in tabella \ref{tab:exemem}. Come previsto,
 l'algoritmo 
 \texttt{matchDynamic} della \textit{PBWT} ha le migliori prestazioni
 in spazio, calcolando dinamicamente i vari indici necessari al calcolo degli
-\textit{SMEM interni}. D'altro canto per quanto riguarda l'\textit{algoritmo 5}
-di Durbin, ovvero l'algoritmo \texttt{matchIndexed}, si confermano le previsioni
+\textit{SMEM ``interni''}. D'altro canto per quanto riguarda l'\textit{algoritmo
+  5} di Durbin, ovvero l'algoritmo \texttt{matchIndexed}, si confermano le
+previsioni 
 fatte dall'autore stesso, avendo che la memoria utilizzata è circa $13NM$
 bytes. Escludendo le strutture \texttt{MAP-INT + LCP} e \texttt{MAP-BV + LCP},
 si parla di circa un'intero ordine di grandezza in più di memoria rispetto alle
@@ -427,9 +439,8 @@ differenza tra le varie strutture dati che supportano il calcolo
 dell'array $MS$ è dovuta, a parità di componente per il mapping (e
 conseguentemente della componente per le threshold), dall'uso della componente
 \texttt{RA-BV} o della componente \texttt{RA-SLP} (o della componente
-\texttt{LCE}). All'aumentare delle dimensioni del pannello di aplotipi ci si
-aspetta che tale vantaggio sia sempre maggiore, a causa della probabilità di
-avere ripetizioni all'interno della stringa rappresentante la matrice.\\
+\texttt{LCE}), in modo analogo a quanto visto discutendo il peso in memoria
+delle singole componenti.\\
 % Interessante è notare il rapporto tra la memoria richiesta dalla \textit{RLPBWT}
 % con \textit{SLP} e \textit{LCE} e la \textit{PBWT Indexed}:
 % \begin{table}[H]
@@ -450,7 +461,7 @@ avere ripetizioni all'interno della stringa rappresentante la matrice.\\
 % Anche in questo caso le percentuali risultano leggermente peggiori rispetto ai
 % pannelli simulati, pur restando risultati molto interessanti.
 In figura \ref{fig:smemtimememchr} (b) si riportano, invece, i risultati i
-termini di tempo di calcolo.  Tali risultati sono
+termini di tempo di calcolo. Tali risultati sono
 consultabili numericamente in tabella \ref{tab:exetime}. Anche in questo caso
 l'algoritmo 
 \texttt{matchDynamic} risulta essere il più performante, in quanto studia
@@ -462,13 +473,27 @@ frequenti operazioni di \textit{random access} con la componente
 \texttt{RA-SLP}, sia per il calcolo delle lunghezze delle 
 matching statistics che per la fase di ``disambiguazione'', richiede più tempo
 di tutte le altre varianti, soprattutto se si pensa alla corrispondente
-variante con componente \texttt{RA-BV}. La struttura \texttt{MAP-INT + LCE +
+variante con componente \texttt{RA-BV}. L'uso della componente \texttt{RA-SLP}
+comporta, infatti, circa venti volte i tempi di calcolo usando i
+\textit{bitvector sparsi} e addirittura di circa 45 volte usando gli
+\textit{int vector compressi}. La struttura \texttt{MAP-INT + LCE +
   PERM + PHI} e la struttura 
 \texttt{MAP-BV + LCE + PERM + PHI} risultano essere, al massimo,
-il doppio più lenta rispetto all'algoritmo \texttt{matchIndexed}. Questo è un
+il doppio più lenta rispetto all'algoritmo \texttt{matchIndexed}, con una
+differenze che diventa quasi trascurabile all'aumentare delle dimensioni del
+pannello. Questo è un 
 risultato molto interessante se si tiene in considerazione la memoria necessaria
 per il calcolo degli \textit{SMEM}.\\
-Concludendo, si può  notare come la struttura composta
+Confrontando l'uso delle \textit{LCE query} con l'uso della componente
+\texttt{RA-BV} si hanno, invece, tempi triplicati nel caso di \textit{mapping} e
+\textit{threshold} con \textit{bitvector sparsi}. Nel caso degli \textit{int
+  vector compressi} si hanno, d'altro canto, circa sette volte i tempi di
+computazione. A priori delle componenti per \textit{mapping} e
+\textit{threshold}, l'uso della componente \texttt{RA-SLP} comporta circa sei
+volte il tempo d'uso delle \textit{LCE query}. Queste ultime analisi comportano
+che l'uso del \textit{random access} su \textit{SLP} è la peggior soluzione in
+ottica calcolo delle \textit{matching statistics}.\\
+Concludendo, si può notare come la struttura composta
 \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}, tra quelle per la
 \textit{RLPBWT}, risulti essere la migliore in termini di tempi di calcolo
 mentre la struttura composta \texttt{MAP-INT + LCE + PERM + PHI} sia la
@@ -518,7 +543,7 @@ in fase di analisi dati.
   \begin{tabular}{c||c|c|c} 
     \textbf{Chr}
     & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
-    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP $\cdots$}}
     & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
     \hline
     \hline
@@ -541,11 +566,14 @@ in fase di analisi dati.
     & \textbf{\texttt{MAP-INT + LCE $\cdots$}}\\
     \hline
     \hline
-    chr22 & 1 & 1 & 1 \\
-    chr20 & 2 & 1 & 1 \\
-    chr18 & 3 & 2 & 2 \\
-    chr16 & 3 & 2 & 2 \\
-    chr1 & 8 & 4 & 4 
+
+    chr22 & 1,4 & 0,8 & 0,8 \\
+    chr20 & 2,2 & 1,2 & 1,2 \\
+    chr18 & 2,8 & 1,6 & 1,5 \\
+    chr16 & 3,4 & 1,9 & 1,8 \\
+    chr1 & 8,0 & 4,4 & 4,3 
+
+                                                                        
   \end{tabular}
 \end{table}
 
@@ -584,7 +612,7 @@ in fase di analisi dati.
   \begin{tabular}{c||c|c|c} 
     \textbf{Chr}
     & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
-    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP $\cdots$}}
     & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
     \hline
     \hline
@@ -641,13 +669,17 @@ quantitativi sono consultabili in tabella \ref{tab:exetimesingle}. Anche in
 questo caso, 
 si conferma molto di quanto ipotizzato e discusso precedentemente. Caso a parte
 è dato dall'algoritmo \texttt{matchDynamic}, che risulta avere le performance
-peggiori. Per natura stessa dell'algoritmo, 
+peggiori, impiegando fino a cento volte il tempo dell\textit{'algoritmo 5} di
+Durbin, ovvero \texttt{matchIndexed}. Per natura stessa dell'algoritmo, 
 le operazioni sono studiate al fine di essere ottimizzate per pannelli di query
 e non per una query singola. Nel caso in analisi, infatti, si hanno molte
 operazioni che potrebbero essere ottimizzate per il caso della singola
 query, caso invece dell'algoritmo \texttt{matchIndexed}. Sperimentalmente si è
 quindi notato che una query o un centinaio di query hanno quindi all'incirca lo
-tempo di calcolo. Per quanto riguarda la \textit{RLPBWT}, con l'uso della
+tempo di calcolo. Infatti, prendendo ad esempio il cromosoma 1 si ha che tale
+algoritmo impiega 93s per il calcolo con 100 query e una media di circa 88s (con
+una deviazione standard di ben 7s) per
+una singola query. Per quanto riguarda la \textit{RLPBWT}, con l'uso della
 componente \texttt{RA-SLP}, si rilevano gli stessi problemi relativi all'random
 access, precedentemente descritti. Questi problemi sono risolti con l'uso della
 componente \texttt{RA-BV}. Inoltre, a parità di componenti per il mapping (e
@@ -655,7 +687,11 @@ conseguenti componenti per le threshold), l'uso della componente \texttt{LCE}
 risulta più lenta dell'uso della componente \texttt{RA-BV}, a causa dei costi di
 calcolo delle \textit{LCE query} stesse. Tutti questi sono risultati coerenti
 con quanto visto nel caso di 100 query, anche in termini di migliori strutture
-composte parlando di \textit{RLPBWT}.
+composte parlando di \textit{RLPBWT}. Si segnala che, oltre al fatto che non
+sono qui misurate le tempistiche di caricamento delle strutture, le acquisizioni
+dei dati 
+per la singola query sono state ottenute in un momento diverso da quelle per 100
+query, avendo, di conseguenza, una non perfetta proporzione tra i risultati.
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{img/exe_time_single_paper.png}
@@ -664,7 +700,6 @@ composte parlando di \textit{RLPBWT}.
     barre d'errore rappresentano la deviazione standard.}
   \label{fig:smemsinglechr}
 \end{figure}
-
 
 \begin{table}
   \centering
@@ -680,11 +715,11 @@ composte parlando di \textit{RLPBWT}.
     & \textbf{\texttt{matchDynamic}}\\
     \hline
     \hline
-    chr22 & 0.15 $\pm$ 0.01 & 18.94 $\pm$ 0.58 \\
-    chr20 & 0.25 $\pm$ 0.01 & 28.9 $\pm$ 1.99 \\
-    chr18 & 0.33 $\pm$ 0.02 & 37.24 $\pm$ 1.08  \\
-    chr16 & 0.38 $\pm$ 0.01 & 45.37 $\pm$ 3.49 \\
-    chr1 & 1.01 $\pm$ 0.10 & 88.73 $\pm$ 7.08
+    chr22 & 0,15 $\pm$ 0,01 & 18,94 $\pm$ 0,58 \\
+    chr20 & 0,25 $\pm$ 0,01 & 28,9 $\pm$ 1,99 \\
+    chr18 & 0,33 $\pm$ 0,02 & 37,24 $\pm$ 1,08  \\
+    chr16 & 0,38 $\pm$ 0,01 & 45,37 $\pm$ 3,49 \\
+    chr1 & 1,01 $\pm$ 0,10 & 88,73 $\pm$ 7,08
   \end{tabular}
   \vspace{+3mm}
   \subcaption*{\footnotesize{Tabella B: risultati relativi alle varianti basate
@@ -695,15 +730,15 @@ composte parlando di \textit{RLPBWT}.
   \begin{tabular}{c||c|c|c} 
     \textbf{Chr}
     & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
-    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP $\cdots$}}
     & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
     \hline
     \hline
-    chr22 & 0.75 $\pm$ 0.28 & 16.51 $\pm$ 1.34 & 2.92 $\pm$ 0.55\\
-    chr20 & 1.08 $\pm$ 0.05 & 22.85 $\pm$ 2.21 & 4.57 $\pm$ 0.82\\
-    chr18 & 1.36 $\pm$ 0.05 & 27.23 $\pm$ 2.50 & 4.96 $\pm$ 0.74 \\
-    chr16 & 1.54 $\pm$ 0.05 & 38.93 $\pm$ 2.70 & 7.65 $\pm$ 1.14 \\
-    chr1 & 3.41 $\pm$ 0.07 & 74.54 $\pm$ 3.40 & 12.75 $\pm$ 1.82 
+    chr22 & 0,75 $\pm$ 0,28 & 16,51 $\pm$ 1,34 & 2,92 $\pm$ 0,55\\
+    chr20 & 1,08 $\pm$ 0,05 & 22,85 $\pm$ 2,21 & 4,57 $\pm$ 0,82\\
+    chr18 & 1,36 $\pm$ 0,05 & 27,23 $\pm$ 2,50 & 4,96 $\pm$ 0,74 \\
+    chr16 & 1,54 $\pm$ 0,05 & 38,93 $\pm$ 2,70 & 7,65 $\pm$ 1,14 \\
+    chr1 & 3,41 $\pm$ 0,07 & 74,54 $\pm$ 3,40 & 12,75 $\pm$ 1,82 
   \end{tabular}
   \vspace{+3mm}
   \subcaption*{\footnotesize{Tabella C: risultati relativi alle varianti basate
@@ -718,11 +753,11 @@ composte parlando di \textit{RLPBWT}.
     & \textbf{\texttt{MAP-INT + LCE $\cdots$}}\\
     \hline
     \hline
-    chr22 & 0.24 $\pm$ 0.02 & 13.52 $\pm$ 1.26 & 2.44 $\pm$ 0.54 \\
-    chr20 & 0.37 $\pm$ 0.03 & 20.55 $\pm$ 2.16 & 3.68 $\pm$ 0.74 \\
-    chr18 & 0.45 $\pm$ 0.03 & 24.43 $\pm$ 2.38 & 3.62 $\pm$ 0.70 \\
-    chr16 & 0.54 $\pm$ 0.03 & 30.86 $\pm$ 2.35 & 5.93 $\pm$ 1.01 \\
-    chr1 & 1.21 $\pm$ 0.06 & 74.54 $\pm$ 3.4 & 11.12 $\pm$ 1.52
+    chr22 & 0,24 $\pm$ 0,02 & 13,52 $\pm$ 1,26 & 2,44 $\pm$ 0,54 \\
+    chr20 & 0,37 $\pm$ 0,03 & 20,55 $\pm$ 2,16 & 3,68 $\pm$ 0,74 \\
+    chr18 & 0,45 $\pm$ 0,03 & 24,43 $\pm$ 2,38 & 3,62 $\pm$ 0,70 \\
+    chr16 & 0,54 $\pm$ 0,03 & 30,86 $\pm$ 2,35 & 5,93 $\pm$ 1,01 \\
+    chr1 & 1,21 $\pm$ 0,06 & 68,22 $\pm$ 3,02 & 11,12 $\pm$ 1,52
 
   \end{tabular}
 \end{table}
