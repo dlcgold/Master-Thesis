@@ -106,7 +106,8 @@ strutture dati. Bisogna ricordare che:
 Fatte queste doverose premesse, passiamo ad analizzare i risultati.
 In figura \ref{fig:maketimememchr} (a) vengono visualizzati i picchi di
 memoria richiesti mentre in figura \ref{fig:maketimememchr} (b) i tempi di
-calcolo delle strutture.\\ 
+calcolo delle strutture. Alla tabelle \ref{tab:makemem} e \ref{tab:maketime} si
+riportano i risultati quantitativi in termini di gigabytes e secondi.\\ 
 Come anticipato, l'implementazione della \textit{PBWT} non calcola e memorizza
 tutti gli indici 
 necessari al calcolo degli \textit{SMEM} in fase di costruzione, avendo quindi
@@ -150,7 +151,8 @@ termini di memoria, usando la struttura di mapping tramite \textit{int vector
 tempo, per i discorsi fatti sui tempi di calcolo delle singole componenti,
 risulta essere la soluzione più vantaggiosa.\\
 In generale, si può 
-concludere che questa frase conferma quanto discusso nel capitolo \ref{metchap}.
+concludere che questa frase conferma quanto discusso nel capitolo
+\ref{metchap}.\\ 
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{img/make_time_mem_paper.png}
@@ -159,10 +161,136 @@ concludere che questa frase conferma quanto discusso nel capitolo \ref{metchap}.
     la PBWT.}
   \label{fig:maketimememchr}
 \end{figure}
+\begin{table}
+  \centering
+  \caption{Risultati quantitativi dei picchi di memoria (gigabytes) di
+    costruzione delle 
+    strutture dati.} 
+  \label{tab:makemem}
+  \footnotesize
+  \subcaption*{\footnotesize{Tabella A: risultati relativi alla \textit{PBWT} e
+      alle varianti 
+    basate su \texttt{LCP} per la \textit{RLPBWT}.}} 
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{PBWT}
+    & \textbf{\texttt{MAP-INT \newline+ LCP}}
+    & \textbf{\texttt{MAP-BV \newline+ LCP}}\\
+    \hline
+    \hline
+    chr22 & 0.1 & 9 & 11  \\
+    chr20 & 0.2 & 15 & 18 \\
+    chr18 & 0.2 & 19 & 23 \\
+    chr16 & 0.3 & 23 & 27 \\
+    chr1 & 0.6 & 55 & 65  \\
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella B: risultati relativi alle varianti basate
+      su 
+      \textit{matching statistics} e \textit{bitvector sparsi} per la
+      \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 5 & 4 & 4 \\
+    chr20 & 8 & 7 & 7 \\
+    chr18 & 10 & 9 & 8  \\
+    chr16 & 12 & 10 & 10 \\
+    chr1 & 28 & 24 & 23 \\
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella C: risultati relativi alle varianti basate
+      su 
+    \textit{matching statistics} e \textit{int vector compressi} per la
+    \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-INT + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-INT + RA-SLP $\cdots$}}
+    & \textbf{\texttt{MAP-INT + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 3 & 2 & 2 \\
+    chr20 & 4 & 3 & 3 \\
+    chr18 & 5 & 4 & 4 \\
+    chr16 & 6 & 5 & 5 \\
+    chr1 & 14 & 11 & 11 \\
+
+  \end{tabular}
+\end{table}
+\begin{table}
+  \centering
+  \caption{Risultati quantitativi dei tempi (secondi) di costruzione delle
+    strutture dati.} 
+  \label{tab:maketime}
+  \footnotesize
+  \subcaption*{\footnotesize{Tabella A: risultati relativi alla \textit{PBWT} e
+      alle varianti 
+    basate su \texttt{LCP} per la \textit{RLPBWT}.}} 
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{PBWT}
+    & \textbf{\texttt{MAP-INT \newline+ LCP}}
+    & \textbf{\texttt{MAP-BV \newline+ LCP}}\\
+    \hline
+    \hline
+    chr22 & 136 & 210 & 250 \\
+    chr20 & 233 & 349 & 407 \\
+    chr18 & 290 & 417 & 488 \\
+    chr16 & 412 & 511 & 613 \\
+    chr1 & 792 & 1145 & 1393
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella B: risultati relativi alle varianti basate
+      su 
+      \textit{matching statistics} e \textit{bitvector sparsi} per la
+      \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 262 & 255 & 240 \\
+    chr20 & 439 & 424 & 363 \\
+    chr18 & 521 & 503 & 431 \\
+    chr16 & 660 & 628 & 533 \\
+    chr1 & 1472 & 1400 & 1248 
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella C: risultati relativi alle varianti basate
+      su 
+    \textit{matching statistics} e \textit{int vector compressi} per la
+    \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-INT + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-INT + RA-SLP $\cdots$}}
+    & \textbf{\texttt{MAP-INT + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 143 & 137 & 115 \\
+    chr20 & 232 & 219 & 192 \\
+    chr18 & 288 & 275 & 238 \\
+    chr16 & 347 & 330 & 285 \\
+    chr1 & 778 & 739 & 652
+
+  \end{tabular}
+\end{table}
+\dc{Controllare tutti questi dati}
 Sfruttando i metodi offerti da \textit{SDSL-LITE}, è possibile studiare
 l'occupazione di memoria delle singole componenti trattate nel capitolo
 \ref{metchap}. 
-In tabella \ref{tab:comp}, in tabella \ref{tab:comp2} e in figura \ref{fig:comp}
+In tabella \ref{tab:comp} e in figura \ref{fig:comp}
 si riportano, in megabytes, 
 le dimensioni di tali componenti. Si può,
 innanzitutto, apprezzare il vantaggio dell'uso della componente
@@ -205,10 +333,12 @@ richiesta eccessiva in memoria della componente \texttt{LCP}.
 \end{figure}
 \begin{table}
   \centering
-  \caption{Dimensioni, in megabytes, delle componenti di
-    \textit{mapping} e \textit{threshold} usate nelle
-    strutture dati per la \textit{RLPBWT}.} 
+  \caption{Dimensioni, in megabytes, delle singole componenti per la
+    \textit{RLPBWT}.} 
   \label{tab:comp}
+  \subcaption*{\footnotesize{Tabella A: dimensioni delle componenti di
+    \textit{mapping} e \textit{threshold} usate nelle
+    strutture dati per la \textit{RLPBWT}.}}   
   \begin{tabular}{c||c|c|c|c}
     Chr & \texttt{MAP-INT} & \texttt{MAP-BV} & \texttt{THR-INT}
     & \texttt{THR-BV}  \\ \hline
@@ -218,12 +348,11 @@ richiesta eccessiva in memoria della componente \texttt{LCP}.
     16 & 167 & 1.320 & 81 & 483\\ \hline
     1 & 384 & 3.133 & 185 & 1.146
   \end{tabular}
-\end{table}
-\begin{table}
-  \centering
-  \caption{Dimensioni, in megabytes, delle restanti componenti usate nelle
-    strutture dati per la \textit{RLPBWT}.} 
-  \label{tab:comp2}
+   \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella B: dimensioni delle componenti di
+    \textit{random access}, \textit{prefix array samples} e \textit{struttura
+      $\phi$}.} }
+ \vspace{+1mm}
   \begin{tabular}{c||c|c|c|c|c}
     Chr & \texttt{RA-BV} & \texttt{RA-SLP/LCE} & \texttt{PERM} & \texttt{PHI}
     & LCP\\
@@ -240,7 +369,9 @@ Passando ora a discutere dei risultati ottenuti per il calcolo degli
 \textit{SMEM}.\\ 
 In figura \ref{fig:smemtimememchr} (a) si riportano i risultati i termini di
 picchi di 
-memoria durante la computazione degli \textit{SMEM}. Come previsto, l'algoritmo
+memoria durante la computazione degli \textit{SMEM}. Tali risultati sono
+consultabili numericamente in tabella \ref{tab:exemem}. Come previsto,
+l'algoritmo 
 \texttt{matchDynamic} della \textit{PBWT} ha le migliori prestazioni
 in spazio, calcolando dinamicamente i vari indici necessari al calcolo degli
 \textit{SMEM interni}. D'altro canto per quanto riguarda l'\textit{algoritmo 5}
@@ -276,7 +407,9 @@ avere ripetizioni all'interno della stringa rappresentante la matrice.\\
 % Anche in questo caso le percentuali risultano leggermente peggiori rispetto ai
 % pannelli simulati, pur restando risultati molto interessanti.
 In figura \ref{fig:smemtimememchr} (b) si riportano, invece, i risultati i
-termini di tempo di calcolo. Anche in questo caso l'algoritmo
+termini di tempo di calcolo.  Tali risultati sono
+consultabili numericamente in tabella \ref{tab:exetime}. Anche in questo caso
+l'algoritmo 
 \texttt{matchDynamic} risulta essere il più performante, in quanto studia
 contemporaneamente l'intero pannello di query. Parlando di \textit{RLPBWT},  la
 struttura \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI} e la 
@@ -308,6 +441,139 @@ in fase di analisi dati.
     SMEM.}
   \label{fig:smemtimememchr}
 \end{figure}
+
+
+\begin{table}
+  \centering
+  \caption{Risultati quantitativi dei picchi di memoria (gigabytes) di costruzione delle
+    strutture dati.} 
+  \label{tab:exemem}
+  \footnotesize
+  \subcaption*{\footnotesize{Tabella A: risultati relativi alla \textit{PBWT} e
+      alle varianti 
+    basate su \texttt{LCP} per la \textit{RLPBWT}.}} 
+  \begin{tabular}{c||c|c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{matchIndexed}}
+    & \textbf{\texttt{matchDynamic}}
+    & \textbf{\texttt{MAP-INT \newline+ LCP}}
+    & \textbf{\texttt{MAP-BV \newline+ LCP}}\\
+    \hline
+    \hline
+    chr22 & 63 & 0.02 & 9 & 11 \\
+    chr20 & 104 & 0.03 & 16 & 19 \\
+    chr18 & 129 & 0.04 & 20 & 23 \\
+    chr16 & 155 & 0.05 & 24 & 28 \\
+    chr1 & 369 & 0.1 & 56 & 66 
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella B: risultati relativi alle varianti basate
+      su 
+      \textit{matching statistics} e \textit{bitvector sparsi} per la
+      \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 4 & 3 & 3  \\
+    chr20 & 6 & 5 & 5 \\
+    chr18 & 8 & 6 & 6 \\
+    chr16 & 9 & 8 & 7 \\
+    chr1 & 22 & 18 & 17 
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella C: risultati relativi alle varianti basate
+      su 
+    \textit{matching statistics} e \textit{int vector compressi} per la
+    \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-INT + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-INT + RA-SLP $\cdots$}}
+    & \textbf{\texttt{MAP-INT + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 1 & 1 & 1 \\
+    chr20 & 2 & 1 & 1 \\
+    chr18 & 3 & 2 & 2 \\
+    chr16 & 3 & 2 & 2 \\
+    chr1 & 8 & 4 & 4 
+  \end{tabular}
+\end{table}
+
+
+ 
+
+\begin{table}
+  \centering
+  \caption{Risultati quantitativi dei tempi (secondi) di calcolo degli
+    \textit{SMEM}.}  
+  \label{tab:exetime}
+  \footnotesize
+  \subcaption*{\footnotesize{Tabella A: risultati relativi alla \textit{PBWT} e
+      alle varianti 
+    basate su \texttt{LCP} per la \textit{RLPBWT}.}} 
+  \begin{tabular}{c||c|c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{matchIndexed}}
+    & \textbf{\texttt{matchDynamic}}
+    & \textbf{\texttt{MAP-INT \newline+ LCP}}
+    & \textbf{\texttt{MAP-BV \newline+ LCP}}\\
+    \hline
+    \hline
+    chr22 & 144 & 17 & 61 & 114 \\
+    chr20 & 243 & 28 & 89 & 210 \\
+    chr18 & 305 & 35 & 119 & 255 \\
+    chr16 & 424 & 42 & 140 & 299 \\
+    chr1 & 1026 & 93 & 298 & 616
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella B: risultati relativi alle varianti basate
+      su 
+      \textit{matching statistics} e \textit{bitvector sparsi} per la
+      \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 76 & 1305 & 260 \\
+    chr20 & 121 & 2097 & 385  \\
+    chr18 & 149 & 2509 & 442  \\
+    chr16 & 189 & 3252 & 640 \\
+    chr1 & 419 & 7531 & 1278 
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella C: risultati relativi alle varianti basate
+      su 
+    \textit{matching statistics} e \textit{int vector compressi} per la
+    \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-INT + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-INT + RA-SLP $\cdots$}}
+    & \textbf{\texttt{MAP-INT + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 29 & 1344 & 250 \\
+    chr20 & 49 & 2103 & 375 \\
+    chr18 & 58 & 2483 & 421 \\
+    chr16 & 68 & 3092 & 606 \\
+    chr1 & 150 & 7234 & 1142
+
+  \end{tabular}
+\end{table}
+\dc{Controllare tutti questi dati}
+
 \subsection{Tempo di una singola query}
 Infine, per completare lo studio delle prestazioni temporali, si è deciso di
 isolare il calcolo degli SMEM con ogni singola query, valutando media e
@@ -327,7 +593,9 @@ costruzione della struttura base della \textit{PBWT}.
 Tale risultato è visualizzabile in figura
 \ref{fig:smemsinglechr}, dove si è deciso di escludere le strutture
 \texttt{MAP-INT + LCP} e \texttt{MAP-BV + LCP} in quanto non in grado di
-computare quali righe presentino un certo \textit{SMEM}. Anche in questo caso,
+computare quali righe presentino un certo \textit{SMEM}. I risultati
+quantitativi sono consultabili in tabella \ref{tab:exetimesingle}. Anche in
+questo caso, 
 si conferma molto di quanto ipotizzato e discusso precedentemente. Caso a parte
 è dato dall'algoritmo \texttt{matchDynamic}, che risulta avere le performance
 peggiori. Per natura stessa dell'algoritmo, 
@@ -353,4 +621,67 @@ composte parlando di \textit{RLPBWT}.
     barre d'errore rappresentano la deviazione standard.}
   \label{fig:smemsinglechr}
 \end{figure}
+
+
+\begin{table}
+  \centering
+  \caption{Risultati quantitativi dei tempi (secondi) di calcolo degli
+    \textit{SMEM} su singola query. I risultati sono nella forma ``media $\pm$
+    deviazione standard''.}  
+  \label{tab:exetimesingle}
+  \footnotesize
+  \subcaption*{\footnotesize{Tabella A: risultati relativi alla \textit{PBWT}.}} 
+  \begin{tabular}{c||c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{matchIndexed}}
+    & \textbf{\texttt{matchDynamic}}\\
+    \hline
+    \hline
+    chr22 & 0.15 $\pm$ 0.01 & 18.94 $\pm$ 0.58 \\
+    chr20 & 0.25 $\pm$ 0.01 & 28.9 $\pm$ 1.99 \\
+    chr18 & 0.33 $\pm$ 0.02 & 37.24 $\pm$ 1.08  \\
+    chr16 & 0.38 $\pm$ 0.01 & 45.37 $\pm$ 3.49 \\
+    chr1 & 1.01 $\pm$ 0.10 & 88.73 $\pm$ 7.08
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella B: risultati relativi alle varianti basate
+      su 
+      \textit{matching statistics} e \textit{bitvector sparsi} per la
+      \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-BV + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-BV + RA-SLP$\cdots$}}
+    & \textbf{\texttt{MAP-BV + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 0.75 $\pm$ 0.28 & 16.51 $\pm$ 1.34 & 2.92 $\pm$ 0.55\\
+    chr20 & 1.08 $\pm$ 0.05 & 22.85 $\pm$ 2.21 & 4.57 $\pm$ 0.82\\
+    chr18 & 1.36 $\pm$ 0.05 & 27.23 $\pm$ 2.50 & 4.96 $\pm$ 0.74 \\
+    chr16 & 1.54 $\pm$ 0.05 & 38.93 $\pm$ 2.70 & 7.65 $\pm$ 1.14 \\
+    chr1 & 3.41 $\pm$ 0.07 & 74.54 $\pm$ 3.40 & 12.75 $\pm$ 1.82 
+  \end{tabular}
+  \vspace{+3mm}
+  \subcaption*{\footnotesize{Tabella C: risultati relativi alle varianti basate
+      su 
+    \textit{matching statistics} e \textit{int vector compressi} per la
+    \textit{RLPBWT}.}}
+  \vspace{+1mm}
+  \begin{tabular}{c||c|c|c} 
+    \textbf{Chr}
+    & \textbf{\texttt{MAP/THR-INT + RA-BV $\cdots$}}
+    & \textbf{\texttt{MAP/THR-INT + RA-SLP $\cdots$}}
+    & \textbf{\texttt{MAP-INT + LCE $\cdots$}}\\
+    \hline
+    \hline
+    chr22 & 0.24 $\pm$ 0.02 & 13.52 $\pm$ 1.26 & 2.44 $\pm$ 0.54 \\
+    chr20 & 0.37 $\pm$ 0.03 & 20.55 $\pm$ 2.16 & 3.68 $\pm$ 0.74 \\
+    chr18 & 0.45 $\pm$ 0.03 & 24.43 $\pm$ 2.38 & 3.62 $\pm$ 0.70 \\
+    chr16 & 0.54 $\pm$ 0.03 & 30.86 $\pm$ 2.35 & 5.93 $\pm$ 1.01 \\
+    chr1 & 1.21 $\pm$ 0.06 & 74.54 $\pm$ 3.4 & 11.12 $\pm$ 1.52
+
+  \end{tabular}
+\end{table}
+
 % LocalWords:  sottostrutture
