@@ -651,11 +651,11 @@ isolare il calcolo degli SMEM con ogni singola query, valutando media e
 deviazione standard delle 100 query. A tal fine la misurazione è stata
 effettuata sfruttando la libreria \texttt{time.h} presente nello standard del
 linguaggio C, al fine di avere le medesime misurazioni sia con la \textit{PBWT}
-che con la \textit{RLPBWT}. La misurazione è stata estremamente circoscritta, al
-fine di misurare unicamente le istruzioni atte a cercare gli \textit{SMEM},
+che con la \textit{RLPBWT}. La misurazione è stata fatta misurando unicamente le
+istruzioni atte a cercare gli \textit{SMEM}, 
 escludendo quelle per il computo degli indici o del caricamento delle strutture
 dati.
-Si segnala che nel caso dell'algoritmo \texttt{mathcDynamic} non si è
+Si segnala che nel caso dell'algoritmo \texttt{matchDynamic} non si è
 potuto, per natura stessa dell'algoritmo, isolare il computo degli indici
 all'avanzamento alla colonna successiva. Resta esclusa, in ogni caso, la
 costruzione della struttura base della \textit{PBWT}.
@@ -669,14 +669,15 @@ quantitativi sono consultabili in tabella \ref{tab:exetimesingle}. Anche in
 questo caso, 
 si conferma molto di quanto ipotizzato e discusso precedentemente. Caso a parte
 è dato dall'algoritmo \texttt{matchDynamic}, che risulta avere le performance
-peggiori, impiegando fino a cento volte il tempo dell\textit{'algoritmo 5} di
+peggiori, impiegando fino a cento volte il tempo dell'\textit{algoritmo 5} di
 Durbin, ovvero \texttt{matchIndexed}. Per natura stessa dell'algoritmo, 
 le operazioni sono studiate al fine di essere ottimizzate per pannelli di query
 e non per una query singola. Nel caso in analisi, infatti, si hanno molte
 operazioni che potrebbero essere ottimizzate per il caso della singola
 query, caso invece dell'algoritmo \texttt{matchIndexed}. Sperimentalmente si è
-quindi notato che una query o un centinaio di query hanno quindi all'incirca lo
-tempo di calcolo. Infatti, prendendo ad esempio il cromosoma 1 si ha che tale
+quindi notato che una query o un centinaio di query presentano all'incirca i
+medesimi tempi di calcolo. Infatti, prendendo ad esempio il cromosoma 1 si ha
+che tale 
 algoritmo impiega 93s per il calcolo con 100 query e una media di circa 88s (con
 una deviazione standard di ben 7s) per
 una singola query. Per quanto riguarda la \textit{RLPBWT}, con l'uso della

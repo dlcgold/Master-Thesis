@@ -1,5 +1,5 @@
-\documentclass[a4paper,12pt, oneside]{book}
-%\documentclass[a4paper,12pt, oneside, draft]{book}
+%\documentclass[a4paper,12pt, oneside]{book}
+\documentclass[a4paper,12pt, oneside, draft]{book}
 % \usepackage{fullpage}
 \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
@@ -424,24 +424,21 @@ che, giudicando la letteratura degli ultimi anni le cui trattazioni si basano
 sempre sull'algoritmo 5, sembrano implicare un non facile 
 riadattamento per la risoluzione di altri task.\\
 Si possono comunque rilevare alcune possibili migliorie in merito
-alle varie implementazioni della \textit{RLPBWT}, riferendosi essenzialmente
-alle solzuioni che prevedono il calcolo dell'\textit{array delle matching
-  statistics}: 
+alle varie implementazioni della \textit{RLPBWT} presentate in questa tesi,
+riferendosi essenzialmente alle soluzioni che prevedono il calcolo
+dell'array delle \textit{matching statistics}: 
 \begin{itemize}
   \item si potrebbe pensare ad un metodo per gestire in modo efficiente lo
   studio di più query contemporaneamente, migliorando i tempi di calcolo
-  complessivi
+  complessivi. Studiando contemporaneamente tutte le query si potrebbe, alla
+  stregua di quanto visto con l'algoritmo \texttt{matchDynamic}, caricare in
+  memoria, di volta in volta, solo la 
+  colonna necessaria ad un dato passo di computazione o comunque un sottoinsieme
+  di colonne. In tal modo, si ridurrebbe l'uso massimo di memoria 
   \item studiare eventuali ottimizzazioni per la componente \texttt{MAP-BV} al
   fine di comprendere se sia possibile tenere in
   memoria un solo bitvector $uv_k$ che funzioni in modo similare a quanto si ha
   con la componente \texttt{MAP-INT}
-  \item migliorare il sistema di serializzazione. Allo stato attuale l'intera
-  struttura, in tutte le sue varianti, viene serializzata e caricata in modo
-  completo. Studiare una 
-  strategia efficiente per caricare, di volta in volta, in memoria solo la
-  colonna necessaria ad un dato passo di computazione o comunque un sottoinsieme
-  di colonne, ridurrebbe l'uso di memoria al costo comunque di un aumento, si
-  spera trascurabile, dei tempi di calcolo
 \end{itemize}
 Nonostante queste possibili migliorie, la qualità dei risultati è sufficiente
 per stabilire che una variante \textit{run-length encoded} della \textit{PBWT},

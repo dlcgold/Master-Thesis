@@ -19,7 +19,7 @@ rispondano a task diversi, come il calcolo dei match interni al panel, i
 cosiddetti \textit{blocchi}, o anche il calcolo di tutti i match con un aplotipo
 esterno di lunghezza maggiore ad una fissata o che includano un numero stabilito
 di sequenze di aplotipi nel panello.
-\paragraph{RLPBWT multi-allelica}
+\paragraph{RLPBWT multi-allelica.}
 Per quanto i pannelli di aplotipi prodotti dal sequencing del genoma umano
 raramente presentino siti multi-allelici si ha una presenza stimata, al momento,
 di circa il 2\% di siti tri-allelici \cite{tri}. Inoltre, all'aumentare della
@@ -52,7 +52,7 @@ inferiore a $10$ nella maggioranza dei casi di studio biologico.\\
 Nonostante, allo stato dell'arte, ci siano pochissimi studi in merito si ritiene
 possibile generalizzare, in modo computazionalmente efficiente, la
 \textit{RLPBWT} anche a questa casistica. 
-\paragraph{RLPBWT con dati mancanti}
+\paragraph{RLPBWT con dati mancanti.}
 La maggior parte delle soluzioni attualmente sviluppate sono basate su una forte
 assunzione: i dati in input sono corretti e senza dati mancanti. Ovviamente,
 limitandosi a studiare pannelli simulati o comunque ``riempiti'' in una fase di
@@ -70,7 +70,7 @@ Sempre in via ipotetica, l'uso di \textit{algoritmi parametrici} (ma anche
 di \textit{algoritmi approssimati}) adattati al
 funzionamento della \textit{RLPBWT} potrebbero portare a soluzioni interessanti
 per la gestione di pannelli reali.
-\paragraph{K-SMEM}
+\paragraph{K-SMEM.}
 Come anticipato, oltre che variare le caratteristiche del pannello in analisi,
 si possono studiare anche algoritmi per risolvere nuovi task con la
 \textit{RLPBWT}.\\ 
@@ -80,13 +80,13 @@ calcolo dei \textbf{k-MEM}, ovvero match massimali tra sotto-stringhe di un
 pattern e un testo che occorrono esattamente $k$ volte nel testo stesso.\\
 In merito alla \textit{RLPBWT} si potrebbe adattare l'idea di Gagie al calcolo
 di \textbf{K-SMEM} tra sotto-stringhe dell'aplotipo query e il pannello che
-comportino il match con esattamente $k$ righe del pannello stesso. L'ormai
-empiricamente dimostrata correlazione tra la \textit{RLBWT} e la \textit{RLPBWT}
+comportino il match con esattamente $k$ righe del pannello stesso. La
+correlazione tra la \textit{RLBWT} e la \textit{RLPBWT} 
 porta a pensare che tale problema sia risolvibile anche con la nuova definizione
 di \textit{matching statistics} per la \textit{RLPBWT}.\\
-Ovviamente nulla è stato sviluppato al momento ma si ritiene questo
+Nulla è stato sviluppato al momento ma si ritiene questo
 un'interessante sviluppo futuro in quanto permetterebbe studi statistici, molto
-comuni nei \textit{GWAS}, in merito alla presenza si sotto-sequenze di un
+comuni nei \textit{GWAS}, in merito alla presenza di sotto-sequenze di un
 aplotipo esterno all'interno di un pannello di aplotipi.\\
 \\
 \\
