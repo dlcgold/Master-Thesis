@@ -145,8 +145,8 @@ varianti discusse nel capitolo \ref{metchap}:
   \item le strutture dati composte basate sull'uso delle \textit{LCE query}
   per
   il calcolo dell'array delle \textit{matching statistics},
-  ovvero: \texttt{MAP-INT + LCE + PERM + PHI} e \texttt{MAP-BV + THR-BV +
-    LCE + PERM + PHI} 
+  ovvero: \texttt{MAP-INT + LCE + PERM + PHI} e \texttt{MAP-BV + LCE + PERM +
+    PHI}  
 \end{enumerate}
 L'implementazione è stata fatta in linguaggio \Cplusplus, usando le già citate
 librerie esterne:
@@ -154,7 +154,7 @@ librerie esterne:
   \item \textbf{SDSL-lite} per \textit{int vector compressi},
   \textit{bitvector}, \textit{bitvector sparsi}, serializzazione e varie utility
   per il calcolo della memoria
-  \item \textbf{BigRePair} e \textbf{ShapedSlp} per la costruzione e l'suo degli
+  \item \textbf{BigRePair} e \textbf{ShapedSlp} per la costruzione e l'uso degli
   \textit{SLP} 
 \end{itemize}
 L'implementazione delle strutture composte per la
