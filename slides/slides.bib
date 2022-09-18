@@ -1,0 +1,471 @@
+@inproceedings{sdsl,
+	title        = {From Theory to Practice: Plug and Play with Succinct Data Structures},
+	author       = {Gog, Simon and Beller, Timo and Moffat, Alistair and Petri, Matthias},
+	year         = 2014,
+	booktitle    = {13th International Symposium on Experimental Algorithms, (SEA 2014)},
+	pages        = {326--337},
+	ee           = {http://dx.doi.org/10.1007/978-3-319-07959-2_28}
+}
+@article{slpsurvey,
+	title        = {Algorithmics on {SLP}-compressed strings: A survey},
+	author       = {Lohrey, Markus},
+	year         = 2012,
+	journal      = {Groups-Complexity-Cryptology},
+	publisher    = {Walter de Gruyter GmbH},
+	volume       = 4,
+	number       = 2,
+	pages        = {241--299}
+}
+@inproceedings{slpgagie,
+	title        = {Practical random access to {SLP}-compressed texts},
+	author       = {Gagie, Travis and Manzini, Giovanni and Navarro, Gonzalo and Sakamoto, Hiroshi and Seelbach Benkner, Louisa and Takabatake, Yoshimasa and others},
+	year         = 2020,
+	booktitle    = {International Symposium on String Processing and Information Retrieval},
+	pages        = {221--231},
+	organization = {Springer}
+}
+@article{sa,
+	title        = {Suffix arrays: a new method for on-line string searches},
+	author       = {Manber, Udi and Myers, Gene},
+	year         = 1993,
+	journal      = {siam Journal on Computing},
+	publisher    = {SIAM},
+	volume       = 22,
+	number       = 5,
+	pages        = {935--948}
+}
+@article{bwt,
+	title        = {A block-sorting lossless data compression algorithm},
+	author       = {Burrows, Michael and Wheeler, David},
+	year         = 1994,
+	booktitle    = {Digital SRC Research Report},
+	publisher    = {Citeseer},
+	organization = {Citeseer}
+}
+@inbook{gusfield1997,
+	title        = {Algorithms on Strings, Trees, and Sequences: Computer Science and Computational Biology},
+	author       = {Gusfield, Dan},
+	year         = 1997,
+	booktitle    = {Algorithms on Strings, Trees, and Sequences: Computer Science and Computational Biology},
+	publisher    = {Cambridge University Press},
+	place        = {Cambridge}
+}
+@misc{durbin_gh,
+	title        = {{PBWT}},
+	author       = {Durbin, Richard},
+	year         = 2014,
+	journal      = {GitHub repository},
+	publisher    = {GitHub},
+	howpublished = {\url{https://github.com/richarddurbin/pbwt}},
+	commit       = {0de8d02df1b77146ded81e9e196991fdab520767}
+}
+@misc{macs,
+	title        = {{MaCS}},
+	author       = {Chen, Gary K.},
+	year         = 2019,
+	journal      = {GitHub repository},
+	publisher    = {GitHub},
+	howpublished = {\url{https://github.com/gchen98/macs}},
+	commit       = {85b0475231fb32dab70e7ae0c81b0603151b4da7}
+}
+@article{wiuf,
+	title        = {Recombination as a point process along sequences},
+	author       = {Wiuf, Carsten and Hein, Jotun},
+	year         = 1999,
+	journal      = {Theoretical population biology},
+	publisher    = {Elsevier},
+	volume       = 55,
+	number       = 3,
+	pages        = {248--259}
+}
+@misc{shapedslp,
+	title        = {{ShapedSlp}},
+	author       = {Tomohiro, I.},
+	year         = 2020,
+	journal      = {GitHub repository},
+	publisher    = {GitHub},
+	howpublished = {\url{https://github.com/itomomoti/ShapedSlp}},
+	commit       = {2a2fcaf0ea4fcd4f88a8e7c61d4c63c697b12508}
+}
+
+@inproceedings{bigrepair,
+  title={Rpair: rescaling repair with rsync},
+  author={Gagie, Travis and Manzini, Giovanni and Navarro, Gonzalo and Sakamoto, Hiroshi and Takabatake, Yoshimasa and others},
+  booktitle={International Symposium on String Processing and Information Retrieval},
+  pages={35--44},
+  year={2019},
+  organization={Springer}
+}
+@inproceedings{rpair,
+	title        = {Rpair: rescaling repair with rsync},
+	author       = {Gagie, Travis and Manzini, Giovanni and Navarro, Gonzalo and Sakamoto, Hiroshi and Takabatake, Yoshimasa and others},
+	year         = 2019,
+	booktitle    = {International Symposium on String Processing and Information Retrieval},
+	pages        = {35--44},
+	organization = {Springer}
+}
+@article{pbwt,
+	title        = {Efficient haplotype matching and storage using the positional {Burrows–Wheeler} transform ({PBWT})},
+	author       = {Durbin, Richard},
+	year         = 2014,
+	month        = {01},
+	journal      = {Bioinformatics},
+	volume       = 30,
+	number       = 9,
+	pages        = {1266--1272},
+	doi          = {10.1093/bioinformatics/btu014},
+	issn         = {1367-4803},
+	url          = {https://doi.org/10.1093/bioinformatics/btu014},
+	abstract     = {Motivation: Over the last few years, methods based on suffix arrays using the Burrows–Wheeler Transform have been widely used for DNA sequence read matching and assembly. These provide very fast search algorithms, linear in the search pattern size, on a highly compressible representation of the dataset being searched. Meanwhile, algorithmic development for genotype data has concentrated on statistical methods for phasing and imputation, based on probabilistic matching to hidden Markov model representations of the reference data, which while powerful are much less computationally efficient. Here a theory of haplotype matching using suffix array ideas is developed, which should scale too much larger datasets than those currently handled by genotype algorithms.Results: Given M sequences with N bi-allelic variable sites, an O(NM) algorithm to derive a representation of the data based on positional prefix arrays is given, which is termed the positional Burrows–Wheeler transform (PBWT). On large datasets this compresses with run-length encoding by more than a factor of a hundred smaller than using gzip on the raw data. Using this representation a method is given to find all maximal haplotype matches within the set in O(NM) time rather than O(NM2) as expected from naive pairwise comparison, and also a fast algorithm, empirically independent of M given sufficient memory for indexes, to find maximal matches between a new sequence and the set. The discussion includes some proposals about how these approaches could be used for imputation and phasing.Availability:http://github.com/richarddurbin/pbwtContact:richard.durbin@sanger.ac.uk},
+	eprint       = {https://academic.oup.com/bioinformatics/article-pdf/30/9/1266/647197/btu014.pdf}
+}
+@article{dpbwt,
+	title        = {{{d-PBWT}: dynamic positional {Burrows–Wheeler} transform}},
+	author       = {Sanaullah, Ahsan and Zhi, Degui and Zhang, Shaojie},
+	year         = 2021,
+	month        = {02},
+	journal      = {Bioinformatics},
+	volume       = 37,
+	number       = 16,
+	pages        = {2390--2397},
+	doi          = {10.1093/bioinformatics/btab117},
+	issn         = {1367-4803},
+	url          = {https://doi.org/10.1093/bioinformatics/btab117},
+	abstract     = {{Durbin’s positional Burrows–Wheeler transform (PBWT) is a scalable data structure for haplotype matching. It has been successfully applied to identical by descent (IBD) segment identification and genotype imputation. Once the PBWT of a haplotype panel is constructed, it supports efficient retrieval of all shared long segments among all individuals (long matches) and efficient query between an external haplotype and the panel. However, the standard PBWT is an array-based static data structure and does not support dynamic updates of the panel.Here, we generalize the static PBWT to a dynamic data structure, d-PBWT, where the reverse prefix sorting at each position is stored with linked lists. We also developed efficient algorithms for insertion and deletion of individual haplotypes. In addition, we verified that d-PBWT can support all algorithms of PBWT. In doing so, we systematically investigated variations of set maximal match and long match query algorithms: while they all have average case time complexity independent of database size, they have different worst case complexities and dependencies on additional data structures.The benchmarking code is available at genome.ucf.edu/d-PBWT.Supplementary data are available at Bioinformatics online.}},
+	eprint       = {https://academic.oup.com/bioinformatics/article-pdf/37/16/2390/39947158/btab117.pdf}
+}
+@inproceedings{rlbwt,
+	title        = {Succinct suffix arrays based on run-length encoding},
+	author       = {M{\"a}kinen, Veli and Navarro, Gonzalo},
+	year         = 2005,
+	booktitle    = {Annual Symposium on Combinatorial Pattern Matching},
+	pages        = {45--56},
+	organization = {Springer}
+}
+@article{gagie2020,
+	title        = {Fully functional suffix trees and optimal text searching in BWT-runs bounded space},
+	author       = {Gagie, Travis and Navarro, Gonzalo and Prezza, Nicola},
+	year         = 2020,
+	journal      = {Journal of the ACM (JACM)},
+	publisher    = {ACM New York, NY, USA},
+	volume       = 67,
+	number       = 1,
+	pages        = {1--54}
+}
+@article{policriti,
+	title        = {{LZ77} computation based on the run-length encoded {BWT}},
+	author       = {Policriti, Alberto and Prezza, Nicola},
+	year         = 2018,
+	journal      = {Algorithmica},
+	publisher    = {Springer},
+	volume       = 80,
+	number       = 7,
+	pages        = {1986--2011}
+}
+@article{kuhnle,
+	title        = {Efficient construction of a complete index for pan-genomics read alignment},
+	author       = {Kuhnle, Alan and Mun, Taher and Boucher, Christina and Gagie, Travis and Langmead, Ben and Manzini, Giovanni},
+	year         = 2020,
+	journal      = {Journal of Computational Biology},
+	publisher    = {Mary Ann Liebert, Inc., publishers 140 Huguenot Street, 3rd Floor New~…},
+	volume       = 27,
+	number       = 4,
+	pages        = {500--513}
+}
+@article{mun,
+	title        = {Matching reads to many genomes with the r-index},
+	author       = {Mun, Taher and Kuhnle, Alan and Boucher, Christina and Gagie, Travis and Langmead, Ben and Manzini, Giovanni},
+	year         = 2020,
+	journal      = {Journal of Computational Biology},
+	publisher    = {Mary Ann Liebert, Inc., publishers 140 Huguenot Street, 3rd Floor New~…},
+	volume       = 27,
+	number       = 4,
+	pages        = {514--518}
+}
+@article{boucher,
+	title        = {Prefix-free parsing for building big {BWTs}},
+	author       = {Boucher, Christina and Gagie, Travis and Kuhnle, Alan and Langmead, Ben and Manzini, Giovanni and Mun, Taher},
+	year         = 2019,
+	journal      = {Algorithms for Molecular Biology},
+	publisher    = {BioMed Central},
+	volume       = 14,
+	number       = 1,
+	pages        = {1--15}
+}
+@article{blast,
+	title        = {Basic local alignment search tool},
+	author       = {Altschul, Stephen F and Gish, Warren and Miller, Webb and Myers, Eugene W and Lipman, David J},
+	year         = 1990,
+	journal      = {Journal of molecular biology},
+	publisher    = {Elsevier},
+	volume       = 215,
+	number       = 3,
+	pages        = {403--410}
+}
+@article{bannai,
+	title        = {Refining the r-index},
+	author       = {Bannai, Hideo and Gagie, Travis and Tomohiro, I},
+	year         = 2020,
+	journal      = {Theoretical Computer Science},
+	publisher    = {Elsevier},
+	volume       = 812,
+	pages        = {96--108}
+}
+@article{moni,
+	title        = {{MONI}: A Pangenomic Index for Finding Maximal Exact Matches},
+	author       = {Rossi, Massimiliano and Oliva, Marco and Langmead, Ben and Gagie, Travis and Boucher, Christina},
+	year         = 2022,
+	month        = {02},
+	journal      = {Journal of Computational Biology},
+	publisher    = {Mary Ann Liebert, Inc., publishers 140 Huguenot Street, 3rd Floor New}
+}
+@inproceedings{phoni,
+	title        = {{PHONI}: Streamed matching statistics with multi-genome references},
+	author       = {Boucher, Christina and Gagie, Travis and Tomohiro, I and K{\"o}ppl, Dominik and Langmead, Ben and Manzini, Giovanni and Navarro, Gonzalo and Pacheco, Alejandro and Rossi, Massimiliano},
+	year         = 2021,
+	booktitle    = {2021 Data Compression Conference (DCC)},
+	pages        = {193--202},
+	organization = {IEEE}
+}
+@inproceedings{plcp,
+	title        = {Permuted longest-common-prefix array},
+	author       = {K{\"a}rkk{\"a}inen, Juha and Manzini, Giovanni and Puglisi, Simon J},
+	year         = 2009,
+	booktitle    = {Annual Symposium on Combinatorial Pattern Matching},
+	pages        = {181--192},
+	organization = {Springer}
+}
+@inproceedings{plcp2,
+	title        = {Succinct representations of lcp information and improvements in the compressed suffix arrays},
+	author       = {Sadakane, Kunihiko},
+	year         = 2002,
+	booktitle    = {SODA},
+	volume       = 2,
+	pages        = {225--232}
+}
+@inproceedings{plcp3,
+	title        = {Linear-time longest-common-prefix computation in suffix arrays and its applications},
+	author       = {Kasai, Toru and Lee, Gunho and Arimura, Hiroki and Arikawa, Setsuo and Park, Kunsoo},
+	year         = 2001,
+	booktitle    = {Annual Symposium on Combinatorial Pattern Matching},
+	pages        = {181--192},
+	organization = {Springer}
+}
+@article{mpbwt,
+	title        = {Multi-allelic positional {Burrows-Wheeler} transform},
+	author       = {Naseri, Ardalan and Zhi, Degui and Zhang, Shaojie},
+	year         = 2019,
+	journal      = {BMC bioinformatics},
+	publisher    = {BioMed Central},
+	volume       = 20,
+	number       = 11,
+	pages        = {1--8}
+}
+@article{leap,
+	title        = {Efficient haplotype matching between a query and a panel for genealogical search},
+	author       = {Naseri, Ardalan and Holzhauser, Erwin and Zhi, Degui and Zhang, Shaojie},
+	year         = 2019,
+	journal      = {Bioinformatics},
+	publisher    = {Oxford University Press},
+	volume       = 35,
+	number       = 14,
+	pages        = {i233--i241}
+}
+@article{williams,
+	title        = {Maximal perfect haplotype blocks with wildcards},
+	author       = {Williams, Lucia and Mumey, Brendan},
+	year         = 2020,
+	journal      = {Iscience},
+	publisher    = {Elsevier},
+	volume       = 23,
+	number       = 6,
+	pages        = 101149
+}
+@article{impute5,
+	title        = {Genotype imputation using the positional {Burrows Wheeler} transform},
+	author       = {Rubinacci, Simone and Delaneau, Olivier and Marchini, Jonathan},
+	year         = 2020,
+	journal      = {PLoS genetics},
+	publisher    = {Public Library of Science San Francisco, CA USA},
+	volume       = 16,
+	number       = 11,
+	pages        = {e1009049}
+}
+@article{tricks,
+	title        = {{RLBWT} Tricks},
+	author       = {Brown, Nathaniel K and Gagie, Travis and Rossi, Massimiliano},
+	year         = 2021,
+	journal      = {arXiv preprint arXiv:2112.04271}
+}
+@article{snakemake,
+	title        = {Sustainable data analysis with Snakemake},
+	author       = {M{\"o}lder, Felix and Jablonski, Kim Philipp and Letcher, Brice and Hall, Michael B and Tomkins-Tinch, Christopher H and Sochat, Vanessa and Forster, Jan and Lee, Soohyun and Twardziok, Sven O and Kanitz, Alexander and others},
+	year         = 2021,
+	journal      = {F1000Research},
+	publisher    = {Faculty of 1000 Ltd},
+	volume       = 10
+}
+@article{tri,
+	title        = {Human triallelic sites: evidence for a new mutational mechanism?},
+	author       = {Hodgkinson, Alan and Eyre-Walker, Adam},
+	year         = 2010,
+	journal      = {Genetics},
+	publisher    = {Oxford University Press},
+	volume       = 184,
+	number       = 1,
+	pages        = {233--241}
+}
+@article{tri2,
+	title        = {Multiallelic positions in the human genome: challenges for genetic analyses},
+	author       = {Campbell, Ian M and Gambin, Tomasz and Jhangiani, Shalini N and Grove, Megan L and Veeraraghavan, Narayanan and Muzny, Donna M and Shaw, Chad A and Gibbs, Richard A and Boerwinkle, Eric and Yu, Fuli and others},
+	year         = 2016,
+	journal      = {Human mutation},
+	publisher    = {Wiley Online Library},
+	volume       = 37,
+	number       = 3,
+	pages        = {231--234}
+}
+@article{kmems,
+	title        = {{MONI} can find {k-MEMs}},
+	author       = {Gagie, Travis},
+	year         = 2022,
+	journal      = {arXiv preprint arXiv:2202.05085}
+}
+@article{tettelin,
+	title        = {Genome analysis of multiple pathogenic isolates of Streptococcus agalactiae: implications for the microbial “pan-genome”},
+	author       = {Tettelin, Herv{\'e} and Masignani, Vega and Cieslewicz, Michael J and Donati, Claudio and Medini, Duccio and Ward, Naomi L and Angiuoli, Samuel V and Crabtree, Jonathan and Jones, Amanda L and Durkin, A Scott and others},
+	year         = 2005,
+	journal      = {Proceedings of the National Academy of Sciences},
+	publisher    = {National Acad Sciences},
+	volume       = 102,
+	number       = 39,
+	pages        = {13950--13955}
+}
+@article{tutorial,
+	title        = {Computational graph pangenomics: a tutorial on data structures and their applications},
+	author       = {Baaijens, Jasmijn A and Bonizzoni, Paola and Boucher, Christina and Della Vedova, Gianluca and Pirola, Yuri and Rizzi, Raffaella and Sir{\'e}n, Jouni},
+	year         = 2022,
+	journal      = {Natural Computing},
+	publisher    = {Springer},
+	pages        = {1--28}
+}
+@article{pancon,
+	title        = {Computational pan-genomics: status, promises and challenges},
+	author       = {{The Computational Pan-Genomics Consortium}},
+	year         = 2016,
+	month        = 10,
+	journal      = {Briefings in Bioinformatics},
+	volume       = 19,
+	number       = 1,
+	pages        = {118--135},
+	doi          = {10.1093/bib/bbw089},
+	issn         = {1477-4054},
+	url          = {https://doi.org/10.1093/bib/bbw089},
+	abstract     = {{Many disciplines, from human genetics and oncology to plant breeding, microbiology and virology, commonly face the challenge of analyzing rapidly increasing numbers of genomes. In case of Homo sapiens, the number of sequenced genomes will approach hundreds of thousands in the next few years. Simply scaling up established bioinformatics pipelines will not be sufficient for leveraging the full potential of such rich genomic data sets. Instead, novel, qualitatively different computational methods and paradigms are needed. We will witness the rapid extension of computational pan-genomics, a new sub-area of research in computational biology. In this article, we generalize existing definitions and understand a pan-genome as any collection of genomic sequences to be analyzed jointly or to be used as a reference. We examine already available approaches to construct and use pan-genomes, discuss the potential benefits of future technologies and methodologies and review open challenges from the vantage point of the above-mentioned biological disciplines. As a prominent example for a computational paradigm shift, we particularly highlight the transition from the representation of reference genomes as strings to representations as graphs. We outline how this and other challenges from different application domains translate into common computational problems, point out relevant bioinformatics techniques and identify open problems in computer science. With this review, we aim to increase awareness that a joint approach to computational pan-genomics can help address many of the problems currently faced in various domains.}},
+	eprint       = {https://academic.oup.com/bib/article-pdf/19/1/118/25406834/bbw089.pdf}
+}
+@misc{gwas,
+	title        = {Genome-wide association studies (GWAS)},
+	journal      = {Genome.gov},
+	publisher    = {Genome.gov},
+        howpublished = {\url{https://www.genome.gov/genetics-glossary/Genome-Wide-Association-Studies}}
+}
+
+@book{succinct,
+  title={Succinct static data structures},
+  author={Jacobson, Guy Joseph},
+  year={1988},
+  publisher={Carnegie Mellon University}
+}
+@inproceedings{jacobson,
+  title={Space-efficient static trees and graphs},
+  author={Jacobson, Guy},
+  booktitle={30th annual symposium on foundations of computer science},
+  pages={549--554},
+  year={1989},
+  organization={IEEE Computer Society}
+}
+
+@book{navarro,
+  title={Compact data structures: A practical approach},
+  author={Navarro, Gonzalo},
+  year={2016},
+  publisher={Cambridge University Press}
+}
+
+@incollection{raslp,
+  title={Access, rank, and select in grammar-compressed strings},
+  author={Belazzougui, Djamal and Cording, Patrick Hagge and Puglisi, Simon J and Tabei, Yasuo},
+  booktitle={Algorithms-ESA 2015},
+  pages={142--154},
+  year={2015},
+  publisher={Springer}
+}
+@inproceedings{fm,
+  title={Opportunistic data structures with applications},
+  author={Ferragina, Paolo and Manzini, Giovanni},
+  booktitle={Proceedings 41st annual symposium on foundations of computer science},
+  pages={390--398},
+  year={2000},
+  organization={IEEE}
+}
+
+@article{haplo,
+  title={The international {HapMap} project},
+  author={Gibbs, Richard A and Belmont, John W and Hardenbol, Paul and Willis, Thomas D and Yu, FL and Yang, HM and Ch'ang, Lan-Yang and Huang, Wei and Liu, Bin and Shen, Yan and others},
+  year={2003},
+  journal = {Nature},
+  publisher={Nature Publishing Group},
+  doi={10.1038/nature02168},
+  url={https://doi.org/10.1038/nature02168}
+}
+
+@article{bcftools,
+    author = {Danecek, Petr and Bonfield, James K and Liddle, Jennifer and Marshall, John and Ohan, Valeriu and Pollard, Martin O and Whitwham, Andrew and Keane, Thomas and McCarthy, Shane A and Davies, Robert M and Li, Heng},
+    title = "{Twelve years of {SAMtools and BCFtools}}",
+    journal = {GigaScience},
+    volume = {10},
+    number = {2},
+    year = {2021},
+    month = {02},
+    abstract = "{SAMtools and BCFtools are widely used programs for processing and analysing high-throughput sequencing data. They include tools for file format conversion and manipulation, sorting, querying, statistics, variant calling, and effect analysis amongst other methods.The first version appeared online 12 years ago and has been maintained and further developed ever since, with many new features and improvements added over the years. The SAMtools and BCFtools packages represent a unique collection of tools that have been used in numerous other software projects and countless genomic pipelines.Both SAMtools and BCFtools are freely available on GitHub under the permissive MIT licence, free for both non-commercial and commercial use. Both packages have been installed \\&gt;1 million times via Bioconda. The source code and documentation are available from https://www.htslib.org.}",
+    issn = {2047-217X},
+    doi = {10.1093/gigascience/giab008},
+    url = {https://doi.org/10.1093/gigascience/giab008},
+    note = {giab008},
+    eprint = {https://academic.oup.com/gigascience/article-pdf/10/2/giab008/36332246/giab008.pdf},
+}
+
+@article{1kgp,
+  title={A global reference for human genetic variation},
+  author={1000 Genomes Project Consortium and others},
+  journal={Nature},
+  volume={526},
+  number={7571},
+  pages={68},
+  year={2015},
+  publisher={Nature Publishing Group}
+}
+
+@article{vcf,
+  title={The variant call format and {VCFtools}},
+  author={Danecek, Petr and Auton, Adam and Abecasis, Goncalo and Albers, Cornelis A and Banks, Eric and DePristo, Mark A and Handsaker, Robert E and Lunter, Gerton and Marth, Gabor T and Sherry, Stephen T and others},
+  journal={Bioinformatics},
+  volume={27},
+  number={15},
+  pages={2156--2158},
+  year={2011},
+  publisher={Oxford University Press}
+}
+
+@article{openmp,
+    Author = {Dagum, Leonardo and Menon, Ramesh},
+    Date-Added = {2014-07-24 11:13:01 +0000},
+    Date-Modified = {2014-07-24 11:13:01 +0000},
+    Journal = {Computational Science \& Engineering, IEEE},
+    Number = {1},
+    Pages = {46--55},
+    Publisher = {IEEE},
+    Title = {{OpenMP}: an industry standard {API} for shared-memory programming},
+    Volume = {5},
+    Year = {1998}}
