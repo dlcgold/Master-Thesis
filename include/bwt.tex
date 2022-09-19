@@ -478,7 +478,7 @@ Nel 2020, Bannai et al. \cite{bannai} mostrarono come il calcolo dei
 \textit{MEM} fosse equivalente al calcolo delle \textbf{Matching Statistics
   (\textit{MS})}, un concetto teorico molto usato in
 \textit{bioinformatica}. Informalmente, per ogni posizione $i$ del pattern, le
-\textit{MS} riportano la lunghezza e 
+matching statistics riportano la lunghezza e 
 una posizione di inizio sul testo della più lunga sottostringa comune tra il
 testo e $P[i, |P|-1]$. 
 \begin{definizione}
@@ -515,7 +515,8 @@ Una volta calcolato l'array \textit{MS} si ha il seguente lemma.
   \end{equation}
   \dc{Secondo caso da verificare}
 \end{lemma}
-Per costruire l'array \textit{MS} l'approccio naive è quello di sfruttare
+Per costruire l'array delle matching statistics l'approccio naive è quello di
+sfruttare 
 interamente l'\textit{LCP array} ma, sempre nell'articolo di Bannai et
 al.\cite{bannai}, si è presentato una semplice concetto in grado di
 ottimizzare il processo, quello delle \textbf{threshold}. Questa piccola
@@ -615,7 +616,8 @@ di \textit{MONI} \cite{moni}.
     \State \textbf{return} $MS$
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo di Bannai per il calcolo dell'array \textit{MS} tra un
+  \caption{Algoritmo di Bannai per il calcolo dell'array delle matching
+  statistics tra un 
   pattern $P$ e un testo $T$. Per
   semplicità si ignorano i casi in cui $q$ non è definito. Si
   assume inoltre che $P[m-1]$ occorre in $T$. Con $LF(\cdot)$ si intende il
@@ -629,7 +631,8 @@ quanto fatto in \textit{MONI}, con \textbf{PHONI: \textit{Streamed Matching
     Statistics with Multi-Genome References}}.\\
 In questo progetto non solo si sostituì l'uso delle \textit{thresholds} con
 l'uso delle \textbf{LCE query}, riducendo l'algoritmo ad un solo \textit{sweep}
-sull'array $MS$ (permettendo un uso ``online'' dell'algoritmo), ma si
+sull'array delle matching statistics (permettendo un uso ``online''
+dell'algoritmo), ma si 
 esplicitò anche l'uso delle \textit{funzioni} $\mathbf{\varphi}$ e
 $\mathbf{\varphi^{-1}}$ e dell'$PLCP_T$ per il riconoscimento di tutte le
 occorrenze di ogni \textit{MEM} tra un pattern e un testo, nel modo 
@@ -675,7 +678,8 @@ $\forall\, \sigma \in \Sigma$, con $\Sigma$ alfabeto in uso, si ha un
   \end{cases}
 \end{equation}
 L'algoritmo \ref{algo:phonims} \cite{phoni}
-riporta il calcolo completo dell'array $MS$ presente in \textit{PHONI}, la cui
+riporta il calcolo completo dell'array delle matching statistics presente in
+\textit{PHONI}, la cui 
 complessità temporale è stimata in:
 \begin{equation}
   \label{eq:rlbwt11}
@@ -740,7 +744,8 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
     \State \textbf{return} $MS$
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per il calcolo dell'array $MS$ in \textit{PHONI}. Per
+  \caption{Algoritmo per il calcolo dell'array delle matching statistics in
+  \textit{PHONI}. Per 
   semplicità si ignorano i casi in cui $q$, $q'$ e $q''$ non sono definiti. Si
   assume inoltre che $P[m-1]$ occorre in $T$. Con $LF(\cdot)$ si intende il
   calcolo dell'\textit{LF-mapping}.}
@@ -847,7 +852,8 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
     \end{tabular}
   \end{table}
   Anche in questo caso, essendo $LF(8)=10$ ed essendo $BWT_T[10]=P[m-3]$, si
-  aggiornano senza ulteriori passaggi i valori dell'array $MS$:
+  aggiornano senza ulteriori passaggi i valori dell'array delle matching
+  statistics: 
   \begin{table}[H]
     \centering
     \begin{tabular}{c||c|c|c|c}

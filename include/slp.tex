@@ -91,11 +91,11 @@ proposero un articolo, a cui si rimanda per approfondimenti, in merito a
 miglioramenti prestazionali per il \textit{random access} all'\textit{SLP},
 anche tramite l'uso dei \textit{bitvector sparsi}.\\
 Si stima che il tempo necessario al
-\textit{random access} su un testo $T$ compresso tramite
-\textit{SLP}, sia in tempo:
+\textit{random access} su un testo $T$, compresso tramite
+\textit{SLP} e lungo $n$, sia in tempo:
 \begin{equation}
   \label{eq:slptime}
-  \mathcal{O}\left(\log (eval(\mathcal{A}))\right)
+  \mathcal{O}\left(\log n\right)
 \end{equation}
 L'uso di tale variante degli \textit{SLP} è stato cruciale, come si vedrà più
 avanti in questa tesi, per la costruzione della versione run-length encoded sia
@@ -115,10 +115,16 @@ un'altra operazione in modo efficiente: le \textbf{Longest Common Extension
 Sfruttando l'\textit{SLP} del testo $T$ è quindi possibile effettuare due
 \textit{random access} al testo compresso, in $i$ e $j$, per poi ``risalire''
 l'albero al fine di computare il prefisso comune tra le due sottostringhe.\\
-Si stima che il calcolo di una \textit{LCE query} sia effettuabile in tempo:
+Si stima che il calcolo di una \textit{LCE query} di lunghezza $l$ sia
+effettuabile, per l'\textit{SLP} di un testo $T$ lungo $n$, in tempo: 
 \begin{equation}
   \label{eq:lcetime}
-  \mathcal{O}\left(\log (eval(\mathcal{A}))\right)
+  \mathcal{O}\left(\log n+l\right)
+\end{equation}
+Che di fatto è proporzionale a:
+\begin{equation}
+  \label{eq:lcetime2}
+  \mathcal{O}\left(\log n\right)
 \end{equation}
 I due concetti di \textit{SLP} e \textit{LCE query} verranno generalizzati, in
 questa tesi, all'uso su matrici permettendo una rappresentazione compatta in

@@ -12,7 +12,7 @@ Nelle sei strutture dati dedicate al calcolo degli SMEM tramite \textit{matching
   sia per scegliere i vari $MS[i].row$ che per calcolare, in contemporanea, i
   vari $MS[i].len$ 
 \end{enumerate}
-\subsubsection{Calcolo dell'array MS con threshold}
+\subsubsection{Calcolo dell'array delle matching statistics tramite threshold}
 Questa prima soluzione, necessitando sia della componente
 \texttt{THR-INT}/\texttt{THR-BV} che della componente
 \texttt{RA-BV}/\texttt{RA-SLP}, è relativa alle seguenti strutture dati
@@ -142,7 +142,8 @@ Anche in questo caso la stima delle
 complessità non è di facile ottenimento. Dividendo nelle varie parti l'algoritmo
 si ha che:
 \begin{itemize}
-  \item il calcolo dei valori $row$ dell'array $MS$ varia a seconda dell'uso
+  \item il calcolo dei valori $row$ dell'array delle matching statistics varia a
+  seconda dell'uso 
   della componente \texttt{MAP-INT} o \texttt{MAP-BV}. Il costo della funzione
   \textit{down}, variabile a seconda della componente \texttt{RA} e
   dell'eventuale componente \texttt{LCE}, risulta trascurabile vista la bassa
@@ -159,7 +160,8 @@ si ha che:
     \mathcal{O}\left(N\log\frac{M}{\rho}\right)
   \end{equation}
   
-  \item il calcolo dei valori $len$ dell'array $MS$ è il più complesso da
+  \item il calcolo dei valori $len$ dell'array delle matching statistics è il
+  più complesso da 
   stimare in termini di complessità asintotica. Questa difficoltà è dovuta dal
   fatto che gli accessi al pannello vengono fatti solo quando $MS.row[i]\neq
   MS.row[i-1]$. Per semplicità denotiamo con $\gamma$ il numero di accessi al
@@ -169,11 +171,10 @@ si ha che:
     \label{eq:msthr2bv}
     \mathcal{O}(N\gamma)
   \end{equation}
-  Mentre con \texttt{RA-SLP} è proporzionale, con $s$ lunghezza della stringa
-  unica prodotta dall'\textit{SLP}, a:
+  Mentre con \texttt{RA-SLP} è proporzionale a:
   \begin{equation}
     \label{eq:msthr2slp}
-    \mathcal{O}\left(N\gamma\log s\right)
+    \mathcal{O}\left(N\gamma\log (NM)\right)
   \end{equation}
   \item si ha infine il calcolo effettivo degli \textit{SMEM} e di tutte le
   righe del pannello per le quali si hanno tali match. Denotando con $\delta$ il
@@ -185,11 +186,10 @@ si ha che:
     \label{eq:msthr3bv}
     \mathcal{O}(\mu\delta)
   \end{equation}
-  mentre nel caso di uso dell'\textit{SLP} e della componente \texttt{LCE},
-  avendo sempre $s$ lunghezza della stringa unica prodotta dall'\textit{SLP}:
+  mentre nel caso di uso dell'\textit{SLP} e della componente \texttt{LCE}:
   \begin{equation}
     \label{eq:msthr3slp}
-    \mathcal{O}(\mu\delta\log s)
+    \mathcal{O}(\mu\delta\log (NM))
   \end{equation}
 \end{itemize}
 Facendo una stima complessiva si può ipotizzare come la struttura \texttt{MAP-BV
@@ -325,7 +325,7 @@ nelle sezioni precedenti dedicate alle singole componenti.
   \texttt{MAP-BV}.} 
   \label{algo:updatems}
 \end{algorithm}
-\subsubsection{Calcolo dell'array MS con LCE query}
+\subsubsection{Calcolo dell'array delle matching statistics tramite LCE query}
 Come anticipato, grazie all'uso delle \textit{LCE query} è possibile calcolare
 l'array 
 delle \textit{matching statistics} in un solo scorrimento da sinistra a
@@ -420,19 +420,19 @@ Con questa soluzione, il cui pseudocodice è consultabile all'algoritmo
 Dal punto di vista della complessità temporale, per il calcolo dell'array $MS$,
 si hanno solo due casistiche 
 possibili, al variare della componente di mapping. 
-Nel caso della componente \texttt{MAP-INT}, avendo $s$ lunghezza della singola
-parola prodotta dall'\textit{SLP} e $\rho$ numero medio di run per colonna, si
+Nel caso della componente \texttt{MAP-INT}, avendo $\rho$ numero medio di run
+per colonna, si 
 ha un tempo proporzionale, dovendo iterare la query, fare il mapping e usare la
 componente \texttt{LCE}, a: 
 \begin{equation}
   \label{eq:mslce1}
-  \mathcal{O}(N(\log \rho+\log s))
+  \mathcal{O}(N(\log \rho+\log (NM)))
 \end{equation}
 Mentre nel caso dell'uso della componente \texttt{MAP-BV} si ha tempo
 proporzionale a:
 \begin{equation}
   \label{eq:mslce2}
-  \mathcal{O}\left(N\left(\log \frac{M}{\rho}+\log s\right)\right)
+  \mathcal{O}\left(N\left(\log \frac{M}{\rho}+\log (NM)\right)\right)
 \end{equation}
 Infine, per il calcolo di tutte le righe del pannello per cui si ha uno
 \textit{SMEM} si può fare riferimento all'equazione \ref{eq:msthr3slp}, avendo

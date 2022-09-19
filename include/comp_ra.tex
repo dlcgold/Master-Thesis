@@ -7,12 +7,11 @@ Parlando di strutture per il random access una differenza sostanziale tra
 l'uso di un \textit{vettore di bitvector}, \texttt{RA-BV}, e quello
 dell'\textit{SLP}, \texttt{RA-SLP}, è data dai tempi di accesso ai singoli
 elementi. Infatti, parlando di \texttt{RA-BV}, si ha accesso in tempo costante
-ad un qualsiasi elemento del pannello mentre, nel caso di \texttt{RA-SLP},
-denotando con $s$ la lunghezza della parola generata dall'\textit{SLP}, si ha
+ad un qualsiasi elemento del pannello mentre, nel caso di \texttt{RA-SLP}, si ha
 che l'accesso ad ogni elemento è in tempo:
 \begin{equation}
   \label{eq:timera}
-  \mathcal{O}(\log s)
+  \mathcal{O}(\log (NM))
 \end{equation}
 La seconda differenza, già ampiamente introdotta e di fatto scontata, è data
 dalla dimensione delle due strutture dati, avendo che \texttt{RA-BV} memorizza
@@ -88,5 +87,5 @@ per il calcolo delle \textit{LCE query} con \textit{SLP} si ha un tempo
 proporzionale a: 
 \begin{equation}
   \label{eq:timelce}
-  \mathcal{O}(\log s)
+  \mathcal{O}(\log (NM))
 \end{equation}
