@@ -315,8 +315,8 @@ lunghezze. Tale soluzione richiede in memoria l'intero pannello, per il quale
 si è scelto di usare uno Straight-Line Program (SLP), ovvero una grammatica
 context-free che genera una e una sola parola, molto compatta in memoria, sulla
 quale è possibile effettuare random access (in tempo, da un punto di vista
-prettamente teorico, $\mathcal{O}(\log s)$ dove
-$s$ è la lunghezza della parola prodotta tramite l'SLP).
+prettamente teorico, $\mathcal{O}(\log (NM))$, avendo un pannello con $M$
+aplotipi e $N$ siti).  
 Ad esempio, un pannello  $4.908 \times 6.196.151$ richiede, in forma non
 compressa, circa 28GB di memoria, mentre l'SLP 
 richiede 
@@ -335,7 +335,8 @@ statistics, le LCE query (componente \texttt{LCE}). Esse sono
 ridefinite, per la RLPBWT, come il suffisso comune più lungo tra due righe del
 pannello, eventualmente 
 fissando il termine a una colonna precisata. Il loro calcolo è permesso
-in modo efficiente dall'uso dell'SLP. Calcolando la
+in modo efficiente dall'uso dell'SLP, avendo la complessità in tempo limitata
+superiormente da quella del random access ($\mathcal{O}(\log (NM))$). Calcolando la
 lunghezza di tale suffisso comune, è possibile computare le
 lunghezze delle matching statistics contemporaneamente al calcolo delle
 righe. Quindi, si è ottenuto il calcolo completo di tale array in
