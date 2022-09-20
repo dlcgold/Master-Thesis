@@ -1,3 +1,16 @@
+@article {rlpbwt,
+	author = {Bonizzoni, Paola and Boucher, Christina and Cozzi, Davide and Gagie, Travis and Kashgouli, Sana and K{\"o}ppl, Dominik and Rossi, Massimiliano},
+	title = {Compressed Data Structures for Population-Scale Positional {Burrows{\textendash}Wheeler} Transforms},
+	elocation-id = {2022.09.16.508250},
+	month = {09},
+	year = {2022},
+	doi = {10.1101/2022.09.16.508250},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {The positional Burrows{\textendash}Wheeler Transform (PBWT) was presented in 2014 by Durbin as a means to find all maximal haplotype matches in h sequences containing w variation sites in O(hw)-time. This time complexity of finding maximal haplotype matches using the PBWT is a significant improvement over the na{\"\i}ve pattern-matching algorithm that requires O(h2w)-time. Compared to the more famous Burrows-Wheeler Transform (BWT), however, a relatively little amount of attention has been paid to the PBWT. This has resulted in less space-efficient data structures for building and storing the PBWT. Given the increasing size of available haplotype datasets, and the applicability of the PBWT to pangenomics, the time is ripe for identifying efficient data structures that can be constructed for large datasets. Here, we present a comprehensive study of the memory footprint of data structures supporting maximal haplotype matching in conjunction with the PBWT. In particular, we present several data structure components that act as building blocks for constructing six different data structures that store the PBWT in a manner that supports efficiently finding the maximal haplotype matches. We estimate the memory usage of the data structures by bounding the space usage with respect to the input size. In light of this experimental analysis, we implement the solutions that are deemed to be superior with respect to the memory usage and show the performance on haplotype datasets taken from the 1000 Genomes Project data.Competing Interest StatementThe authors have declared no competing interest.},
+	URL = {https://www.biorxiv.org/content/early/2022/09/19/2022.09.16.508250},
+	eprint = {https://www.biorxiv.org/content/early/2022/09/19/2022.09.16.508250.full.pdf},
+	journal = {bioRxiv}
+}
 @inproceedings{sdsl,
 	title        = {From Theory to Practice: Plug and Play with Succinct Data Structures},
 	author       = {Gog, Simon and Beller, Timo and Moffat, Alistair and Petri, Matthias},
