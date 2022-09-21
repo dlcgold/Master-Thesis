@@ -30,28 +30,54 @@ memoria richiesta.\\
 % \texttt{THR-INT}/\texttt{THR-BV} si ottiene una variante dell'\textbf{R-index}
 % visto per la \textit{RLBWT}.\\
 Vediamo il funzionamento dell'algoritmo.
-Sia data $t$ la posizione della \textit{threshold} nella run corrente,
-in colonna $k$, e
-si supponga che tale run, con testa all'indice $h$, non sia associata al simbolo
-desiderato, ovvero $z[k]$. Si supponga che, con il mapping, si sia arrivati
-all'indice $i$ della colonna $k$. Si supponga inoltre che la run successiva
-abbia testa in indice $e$. Si hanno due casi possibili, denotando con
-$LCS(x,y)$ il \textit{longest common suffix} tra le stringhe $X$ e $Y$ e con
-$a_k$ il \textit{prefix array} in colonna $k$:
+Si supponga di aver computato l'array delle matching statistics fino alla
+colonna $k-1$, avendo che si sta processando la colonna corrente $k$.
+Sia $i$ la riga della \textit{matrice PBWT} che ha un match con il più lungo
+suffisso di $z[0,k-1]$ che è suffisso di almeno uno tra $x_0[0,k-1]$, $\ldots$,
+$x_{M-1}[0,k-1]$. Sia $p$ la corrispondente riga sul pannello in input $X$ di
+$i$, ottenibile tramite il \textit{prefix array}, ovvero $p=a_k[i]$. Si ha,
+denotando con
+$lcs(x,y)$ il \textit{longest common suffix} tra le stringhe $X$ e $Y$, in
+termini formali, che:
+\begin{equation}
+  \label{eq:thr1}
+  lcs(z[0,k-1], x_{p}[0,k-1])\geq lcs(z[0,k-1], x_{a_k[j]}[0,k-1]),\,\,\forall\,
+  j\in[0,M-1] 
+\end{equation}
+Fatta questa premessa, qualora si avesse $y_i^k[k]=z[k]$, ovvero un match tra il
+$k$-esimo carattere della query è il carattere in riga $i$ della \textit{matrice
+  PBTW}, si 
+avrebbe semplicemente che $MS[k].row=a_k[i]=p$ e $MS[k].len = MS[k-1].len+1$, in
+quanto si starebbe seguendo la stessa riga dello step precedente del calcolo
+delle \textit{matching statistics}.\\
+In caso contrario si avrebbe 
+$y_i^k[k]\neq z[k]$, ovvero un mismatch tra il $k$-esimo carattere
+della query è il carattere in riga $i$ della \textit{matrice PBTW}. Bisogna
+quindi scegliere un nuovo indice $i'$ nella \textit{matrice PBTW},
+corrispondente indice $p'$ nella pannello in input, che corrisponda alla riga
+con il più lungo suffisso possibile con la query che sia estendibile anche in
+colonna $k$. Sia $y_{[s,e]}^k[k]$ l'intervallo corrispondente alla run che
+contiene l'indice $i$, nella \textit{matrice PBWT}. Allora il più lungo suffisso
+di $z[1,k]$, che è suffisso di almeno uno tra $x_0[0,k]$, $\ldots$,
+$x_{M-1}[0,k]$, corrisponde o alla fine della run precedente di simboli
+$\sigma=z[k]$ o all'inizio della run successiva di simboli
+$\sigma=z[k]$, nella colonna $k$ della \textit{matrice PBWT}. Formalmente,
+corrisponde ad uno tra $X_{a_k[s-1]}[0,k]$, se $s>0$, o $X_{a_k[e+1]}[0,k]$, se
+$e<M-1$. L'uso delle threshold permette di capire quale tra le righe $a_k[s-1]$
+e $a_k[e+1]$ del pannello input, se esistenti, abbia il più lungo suffisso
+comune con $z[1,k]$. \\
+Sia $t$ l'indice della threshold nella run corrente. Si hanno due casi
+possibili:
 \begin{enumerate}
-  \item $i<t$ allora, per definizione di \textit{threshold}:
-  \[LCS(z[0,k], x_{a_{k}[h-1]}[0,k])\geq LCS(z[0,k], x_{a_{k}[e]}[0,k])\]
-  Quindi si ha che $MS[k].row=a_{k}[h-1]$ e il mapping potrà proseguire
-  dall'indice $h-1$
+  \item $i<t$, allora, per definizione di \textit{threshold}:
+  \[LCS(z[0,k], x_{a_{k}[s-1]}[0,k])\geq LCS(z[0,k], x_{a_{k}[e+1]}[0,k])\]
+  Quindi si ha che $MS[k].row=a_{k}[s-1]=p$ e il mapping potrà proseguire
+  dall'indice $s-1$
   \item  $i\geq t$ allora, per definizione di \textit{threshold}:
-  \[LCS(z[0,k], x_{a_{k}[s-1]}[0,k])\leq LCS(z[0,k], x_{a_{k}[e]}[0,k])\]
-  Quindi si ha che $MS[k].row=a_{k}[e]$ e il mapping potrà proseguire
-  dall'indice $e$
+  \[LCS(z[0,k], x_{a_{k}[s-1]}[0,k])\leq LCS(z[0,k], x_{a_{k}[e+1]}[0,k])\]
+  Quindi si ha che $MS[k].row=a_{k}[e+1]$ e il mapping potrà proseguire
+  dall'indice $e+1$
 \end{enumerate}
-Qualora una colonna presenti solo simboli $\sigma\neq z[k]$, per convenzione, si
-imposta che $MS[k].row = M$ e si ricomincia, in colonna $k+1$, dall'ultima
-posizione, indicizzata nel pannello originale dal valore finale del
-\textit{prefix array sample} dell'ultima run.
 \begin{esempio}
   \label{es:thr}
   Si vede, quindi, un esempio di funzionamento delle threshold per la scelta
@@ -162,7 +188,7 @@ si ha che:
   
   \item il calcolo dei valori $len$ dell'array delle matching statistics è il
   più complesso da 
-  stimare in termini di complessità asintotica. Questa difficoltà è dovuta dal
+  stimare in termini di complessità asintotica. Questa ifficoltà è dovuta dal
   fatto che gli accessi al pannello vengono fatti solo quando $MS.row[i]\neq
   MS.row[i-1]$. Per semplicità denotiamo con $\gamma$ il numero di accessi al
   pannello e, nel caso della componente \texttt{RA-BV}, si ha che il calcolo
@@ -351,26 +377,26 @@ Si illustra ora come computare l'array delle \textit{matching statistics}. Anche
 in questo caso, per convenzione, si inizia la computazione dell'ultima 
 riga della prima colonna.
 Si assuma di avere calcolato l'array $MS$ di una query $z$ rispetto al pannello
-$X$. le cui righe si identificano tramite $x_i, \forall i\in\{0,M\}$, fino alla
+$X$ fino alla
 colonna $k-1$. Sia $i$ 
 l'indice di riga sulla \textit{matrice PBWT} al quale si è arrivati mediante il
 mapping, avendo che tale riga è quella che ha il più lungo suffisso comune con
 $z[1,k-1]$. Si assuma che l'indice $i$ appartenga alla run $r$, di simboli
-$\sigma$, testa di indice $h$ e coda di indice $e-1$. Si hanno diversi casi:
+$\sigma$, testa di indice $s$ e coda di indice $e$. Si hanno diversi casi:
 \begin{enumerate}
-  \item $z[k]=\sigma$, quindi la riga $i$ può essere usata per estendere il
+  \item $z[k]=y_i^k[k]=\sigma$, quindi la riga $i$ può essere usata per estendere il
   match, avendo che $MS[k].row=MS[k-1].row$ e $MS[k].len=MS[k-1].len+1$, e per
   proseguire col mapping in colonna $k+1$
-  \item $z[k]\neq\sigma$ e si ha una sola run in colonna $k$, avendo quindi che
+  \item $z[k]\neq y_i^k[k]=\sigma$ e si ha una sola run in colonna $k$, avendo quindi che
   non si possono avere match. Per convenzione, si
   imposta che $MS[k].row = M$ e $MS[k].len=0$. Infine si ricomincia, in colonna
   $k+1$, dall'ultima posizione, indicizzata nel pannello originale dal valore
   finale del \textit{prefix array sample} dell'ultima run
-  \item $z[k]\neq\sigma$ ma si hanno anche altre run, dovendo quindi scegliere
+  \item $z[k]\neq y_i^k[k]=\sigma$ ma si hanno anche altre run, dovendo quindi scegliere
   la nuova riga da seguire. Si ha che il più lungo suffisso di $z[1,k]$ che è
   anche suffisso di $x_1[1,k],\ldots, x_m[1,k]$ è uno tra:
   \begin{itemize}
-    \item $x_{a_k[h-1]}$, se $h\neq 0$, ovvero la riga del pannello
+    \item $x_{a_k[s-1]}$, se $s\neq 0$, ovvero la riga del pannello
     corrispondente alla fine della run precedente a $r$ nella \textit{matrice
       PBWT}, se esistente
     \item $x_{a_k[e+1]}$, se $e\neq M-1$, ovvero la riga del pannello
@@ -379,7 +405,7 @@ $\sigma$, testa di indice $h$ e coda di indice $e-1$. Si hanno diversi casi:
   \end{itemize}
   Avendo quindi i \textit{prefix array sample} che ci dicono a quale riga nel
   pannello corrispondano tali valori e conoscendo $MS[k-1].row$ è possibile
-  calcolare $LCE(k,MS[k-1].row, a_k[h-1])$ e $LCE(k,MS[k-1].row, a_k[e+1])$. A
+  calcolare $LCE(k,MS[k-1].row, a_k[s-1])$ e $LCE(k,MS[k-1].row, a_k[e+1])$. A
   questo punto si sceglie il suffisso comune più lungo tra le due, ovvero il
   maggiore tra i valori ritornati dalla \textit{LCE query} e si sceglie la riga
   corrispondente per proseguire. Si ha quindi o $MS[k].row=a_k[h-1]$ o

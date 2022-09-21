@@ -96,6 +96,44 @@
 \newcommand{\yp}[1]{\todo[backgroundcolor=green]{\textbf{YP} #1}}
 \newcommand{\rr}[1]{\todo[backgroundcolor=pink]{\textbf{RR} #1}}
 
+\def\SLP{\mbox{\rm {\sf SLP}}}
+\def\rank{\mbox{\rm {\sf rank}}}
+\def\lcs{\mbox{\rm {\sf lcs}}}
+\def\lcp{\mbox{\rm {\sf lcp}}}
+\def\lce{\mbox{\rm {\sf lce}}}
+\def\LCE{\mbox{\rm {\sf LCE}}}
+\def\select{\mbox{\rm {\sf select}}}
+\def\col{\mbox{\rm {\sf col}}}
+\def\NULL{\mbox{\rm {\sf null}}}
+\def\len{\mbox{\rm {\sf len}}}
+\def\pos{\mbox{\rm {\sf pos}}}
+\def\row{\mbox{\rm {\sf row}}}
+\def\LF{\mbox{\rm {\sf LF}}}
+\def\FL{\mbox{\rm {\sf FL}}}
+\def\A{\mbox{\rm {\sf A}}}
+\def\SA{\mbox{\rm {\sf SA}}}
+\def\LCP{\mbox{\rm {\sf LCP}}}
+\def\ISA{\mbox{\rm {\sf ISA}}}
+\def\PLCP{\mbox{\rm {\sf PLCP}}}
+\def\RLBWT{\mbox{\rm {\sf RLBWT}}}
+\def\MEM{\mbox{\rm {\sf MEM}}}
+\def\LCP{\mbox{\rm {\sf LCP}}}
+\def\NSV{\mbox{\rm {\sf NSV}}}
+\def\PSV{\mbox{\rm {\sf PSV}}}
+\def\RMQ{\mbox{\rm {\sf RMQ}}}
+\def\BWT{\mbox{\rm {\sf BWT}}}
+\def\PBWT{\mbox{\rm {\sf PBWT}}}
+\def\RLPBWT{\mbox{\rm {\sf RLPBWT}}}
+\def\SMEM{\mbox{\rm {\sf SMEM}}}
+\def\M{\mbox{\rm {\sf M}}}
+\def\L{\mbox{\rm {\sf L}}}
+\def\F{\mbox{\rm {\sf F}}}
+\def\DA{\mbox{\rm {\sf DA}}}
+\def\DM{\mbox{\rm {\sf DM}}}
+\def\PA{\mbox{\rm {\sf PA}}}
+\def\LCE{\mbox{\rm {\sf LCE}}}
+\newcommand{\Oh}{\mathcal{O}}
+
 % \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -166,7 +204,7 @@
     \vspace{1mm}
     {\LARGE{
         \setstretch{1.2}
-        \textbf{Burrows-Wheeler posizionale con}}}
+        \textbf{Burrows--Wheeler posizionale con}}}
     \vspace{1mm}
     {\LARGE{
         \setstretch{1.2}
@@ -269,8 +307,8 @@ In merito, uno degli approcci più usati per rappresentare il pangenoma è un
 pannello di aplotipi \cite{pancon}, ovvero, computazionalmente, una matrice di
 $M$ righe, corrispondenti agli individui, e $N$ colonne, corrispondenti ai siti
 con le varianti. Si specifica che, con il termine
-aplotipo, si intende l'insieme di alleli, ovvero di varianti, che un organismo
-eredita da ogni genitore.\\
+aplotipo, si intende l'insieme di alleli, ovvero di varianti, che, a meno di
+mutazioni, un organismo eredita da ogni genitore.\\
 In questo contesto trova spazio uno dei problemi fondamentali della
 bioinformatica, ovvero quello del pattern matching. Inizialmente tale concetto
 era relativo allo studio di un piccolo pattern all'interno di un testo di
@@ -278,18 +316,26 @@ grandi dimensioni, ovvero il genoma di riferimento. Ora, con l'introduzione
 del pangenoma, tale problema si è adattato alle nuove strutture
 dati.\\
 Lo scopo di questa tesi è ottimizzare il problema del pattern 
-matching, inteso come ricerca dei \textit{\textbf{set-maximal exact match}
-  (SMEM)} tra un aplotipo 
+matching, inteso come ricerca dei \textbf{set-maximal exact match}
+  ($\SMEM$) tra un aplotipo 
 esterno e un pannello di aplotipi, in una delle 
-strutture dati più utilizzata: la \textit{trasformata di Burrows-Wheeler
-  Posizionale (PBWT)} \cite{pbwt}. Il progetto di tesi, svolto in collaborazione
-con il 
+strutture dati più utilizzata: la \textbf{trasformata di Burrows--Wheeler
+  Posizionale} ($\PBWT$) \cite{pbwt}. Il progetto di tesi, svolto in
+collaborazione con il 
 prof. Gagie (Dalhousie University) e la prof.ssa Boucher 
 (University of Florida), tra gli autori dei principali risultati ottenuti per la
-\textbf{trasformata di Burrows-Wheeler run-length encoded} \cite{rlbwt}
+\textbf{trasformata di Burrows--Wheeler run-length encoded} ($\RLBWT$)
+\cite{rlbwt} 
 \cite{gagie2020} \cite{moni} \cite{phoni}, ha quindi permesso lo sviluppo di
 diverse strutture dati composte per la variante 
-\textbf{run-length encoded} della \textbf{PBWT}, detta \textbf{RLPBWT}.
+\textbf{run-length encoded} della \textbf{PBWT} ($\RLPBWT$),
+efficienti dal punto di vista delle memoria utilizzata.\\
+Parte delle strutture dati e degli algoritmi presentati in questa tesi sono
+inseriti in un articolo, dal titolo \textit{Compressed data structures for
+  population-scale positional Burrows--Wheeler transforms} \cite{rlpbwt}. Al
+momento della 
+stesura di questa tesi in fase di review per il giornale \textit{Briefings in
+Bioinformatics} (\textit{Oxford Academic Press}).
 \subsection*{Struttura della tesi}
 Nel Capitolo \ref{prechap} si introdurranno i concetti di base, di ambito
 computazionale e bioinformatico, necessari a
@@ -297,13 +343,14 @@ comprendere questa tesi. Nel Capitolo \ref{metchap} verranno discussi i
 contributi di questa tesi, descrivendo le soluzioni algoritmiche e le
 metodologie utilizzate per raggiungere gli obiettivi prefissati. Nel dettaglio
 verranno presentate varie strutture dati che saranno le componenti necessarie
-alla produzione delle strutture dati per la \textit{RLPBWT}. Nel Capitolo
+alla produzione delle strutture dati per la $\RLPBWT$ e al calcolo degli
+$\SMEM$. Nel Capitolo 
 \ref{reschap} si discuteranno i risultati ottenuti durante la
 sperimentazione sui dati reali della \textit{phase 3} del \textbf{1000 Genome
   Project}, progetto, che ha avuto inizio nel 2008, il quale ha visto lo sforzo
 della comunità scientifica internazionale per catalogazione delle variazioni
 geniche umane. Infine, nel Capitolo \ref{conchap}, si trarranno le conclusioni 
-di questo progetto di tesi discutendone anche i prospetti futuri.
+di questo progetto di tesi discutendone, infine, i prospetti futuri.
 \dc{L'intera introduzione va estesa}
 \chapter{Preliminari}
 \label{prechap}
@@ -314,16 +361,16 @@ Si introdurranno i concetti di:
   \item bitvector
   \item straight-line program e longest common extension query
   \item suffix array e longest common prefix
-  \item trasformata di Burrows-Wheeler e la sua variante run-length encoded
-  \item trasformata di Burrows-Wheeler posizionale
+  \item trasformata di Burrows--Wheeler e la sua variante run-length encoded
+  \item trasformata di Burrows--Wheeler posizionale
 \end{itemize}
 L'unione di tutte queste strutture e di queste tecniche ha permesso la creazione
-della \textit{RLPBWT}.
+della $\RLPBWT$.\\
 \noindent
 \textit{A livello di notazione, si specifica inoltre che, con la notazione
   $T[i,j]$ si intende la sottostringa del testo/sequenza/riga/colonna $T$,
   iniziante all'indice $i$ e terminante all'indice $j$ incluso. Qualora si
-  avesse $j>i$ allora si parla di sottostringa nulla $\varepsilon$.}
+  avesse $j>i$ si identifica la sottostringa nulla $\varepsilon$.}
 
 % sezione introduzione biologia
 %\input{include/bio}

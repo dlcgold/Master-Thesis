@@ -87,15 +87,21 @@ delle \textit{matching statistics}:
   \item si applica la \textit{fase di start} per cercare il minimo indice
   $i'$, avendo $i\leq i'$, tale che $z[i',i'+MS[i].len]$ è un suffisso di uno
   tra $x_0[0,i'+MS[i].len], \ldots$ $x_{M-1}[0,i'+MS[i].len]$. Inoltre, per
-  minimalità di $i'$, si ha che, $\forall i<j<i'$, $MS[j].len=MS[j-1].len+1$
+  minimalità di $i'$, si ha che, $\forall i<j<i'$, $MS[j].len=MS[j-1].len-1$,
+  $\forall j\in[i+1,i'-1]$
   \item a questo punto si itera la \textit{fase di extend} per trovare il
   più lungo prefisso $z[i',k]$ che è anche un suffisso di uno tra $x_0[0,k]$,
   $\ldots$, $x_{M-1}[0,k]$, avendo che $MS[i'].len=k-i'+1$
   \item avendo che $i'>i$ si può procedere induttivamente al calcolo dell'array
   $MS$ 
 \end{itemize}
-\dc{PARTE PRESA DAL PAPER: RIVEDERE PROFONDAMENTE, FORSE MANCA ANALISI COMPLETO
-  MISMATCH}.\\ 
+Per scelta si ha che la riga da cui parte l'iterazione nella prima colonna
+corrisponde all'ultima ma tale scelta è assolutamente arbitraria. In modo
+analogo si procede qualora si abbia una colonna $k$ di un solo carattere, non
+corrispondente a quello della query. In tal caso si sceglie l'ultima riga della
+colonna successiva, da cui riprende il calcolo 
+dell'array delle matching statistics, dopo aver memorizzato $MS[k].row=M$
+(essendo un valore sentinella non esistendo la riga $M$) e $MS.len[k]=0$.\\
 In altri termini, più ``pratici'', il calcolo dell'array $MS$ avviene nel
 seguente modo:
 \begin{itemize}

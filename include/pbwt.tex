@@ -680,14 +680,15 @@ ovvero\footnote{\scriptsize{\url{https://github.com/richarddurbin/pbwt/blob/0de8
 \end{equation}
 Per poter capire meglio la problematica conseguente a tali richieste di spazio,
 prendiamo, ad esempio, un pannello di 
-medie dimensioni, con $N=30000$ e $M=100000$. Ne segue che, secondo la stima di
-Durbin, si necessitano $\sim 36.32$GB di memoria. Inoltre, una stima
+medie dimensioni, con $N= 6.196.151$ e $M=4.908$. Ne segue che, secondo la stima
+di 
+Durbin, si necessitano 368GB di memoria. Inoltre, una stima
 sperimentale di tale richiesta di memoria può essere confermata con l'esecuzione
 dell'implementazione ufficiale della
 \textit{PBWT}\footnote{\url{https://github.com/richarddurbin/pbwt}}. Infatti,
 monitorando  
 con \texttt{time} il picco di memoria durante l'esecuzione, si ha che esso
-corrisponde a $\sim 40.76$GB, comprensivi anche di tutto ciò che è ``a
+corrisponde a 369GB, comprensivi anche di tutto ciò che è ``a
 contorno'' all'algoritmo stesso. I dati quindi sembrano confermare le stime di
 Durbin, confermando l'alto uso di memoria richiesto dall'\textit{algoritmo
   5}. Questa è 

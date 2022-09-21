@@ -1,24 +1,24 @@
 \section{Straight-Line Program}
 \label{slpsec}
-Nel contesto \textit{bioinformatico} una delle principali problematiche è la
-gestione di testi molto estesi. Pensiamo, ad esempio, al caso umano. Il primo
-cromosoma, il più lungo tra i cromosomi umani, conta circa $247.249.719$
+In ambito bioinformatico una delle principali problematiche è la
+gestione di testi molto estesi. Si pensi, ad esempio, al caso umano, dove il
+primo cromosoma, il più lungo, conta circa $247.249.719$
 \textit{bps} (paia di basi), nonostante, è bene segnalare, l'uomo
 non sia affatto l'essere vivente con il genoma più esteso. Fatta questa breve
 premessa, è facile comprendere l'importanza degli algoritmi e delle strutture
 dati per la compressione di testi.\\
 Per questa tesi si è quindi pensato all'uso dei cosiddetti \textbf{Straight-Line
-  Programs (\textit{SLP})}. In termini 
-generici, un \textit{SLP} è una \textbf{grammatica context-free} che 
-genera una e una sola parola \cite{slpsurvey}, parlando, quindi, di
-\textbf{grammar-based compression}.
+  Programs} ($\SLP$). In termini 
+generici, un $\SLP$ è una \textit{grammatica context-free} che 
+genera una e una sola parola \cite{slpsurvey}. Si parla, quindi, di
+\textit{grammar-based compression}.
 \begin{definizione}
   Sia dato un alfabeto finito $\Sigma$ di simboli terminali. Sia data una
   stringa $s=a_1,a_2,\ldots, a_n\in\Sigma^{*}$, lunga $n$ e costruita
   sull'alfabeto $\Sigma$, avendo $a_i\in\Sigma$, $\forall\, i \mbox{
     t.c. }1\leq i\leq n$. Si denota, con $alph(s)=\{a_1,a_2,\ldots
   a_n\}$, l'insieme dei simboli della stringa $s$.\\
-  Si definisce \textbf{SLP}, costruito sull'alfabeto $\Sigma$, una grammatica
+  Si definisce $\SLP$, costruito sull'alfabeto $\Sigma$, una grammatica
   context-free $\mathcal{A}$ tale che: 
   \begin{equation}
     \label{eq:slpdef}
@@ -36,7 +36,7 @@ genera una e una sola parola \cite{slpsurvey}, parlando, quindi, di
         \Sigma\right)^{*}
     \end{equation}
   \end{itemize}
-  Tale grammatica, per essere un \textit{SLP}, deve soddisfare due proprietà:
+  Tale grammatica, per essere un $\SLP$, deve soddisfare due proprietà:
   \begin{enumerate}
     \item si ha una e una sola produzione $(A,\alpha)\in \mathcal{P}$,
     $\forall\, A\in \mathcal{V}$ e con $\alpha\in
@@ -47,25 +47,25 @@ genera una e una sola parola \cite{slpsurvey}, parlando, quindi, di
     alph(\alpha)\}$ è aciclica
     \dc{verificare questo secondo punto}
   \end{enumerate}
-  Si ha quindi che la grandezza dell'SLP è calcolabile come:
+  Si ha quindi che la grandezza dell'$\,\SLP$ è calcolabile come:
   \begin{equation}
     \label{eq:slplen}
     |\mathcal{A}| = \sum_{(A,\alpha)\in\mathcal{P}}|\alpha|
   \end{equation}
-  Il linguaggio $\mathcal{A}$ generato da un \textit{SLP}
-  consiste in una singola parola, denotata da $eval(\mathcal{A})$.
+  Il linguaggio $\mathcal{A}$ generato da un $\SLP$ consiste in una singola
+  parola, denotata da $eval(\mathcal{A})$. 
 \end{definizione}
-A partire dall'\textit{SLP} $\mathcal{A}$ si genera un \textbf{albero
-  di derivazione}, che, nel dettaglio, è un \textit{albero radicato e ordinato}
-dove la \textit{radice} è etichettata con $\mathcal{S}$, ogni \textit{nodo
-  interno} è etichettato con un simbolo di $\mathcal{V}\cup\Sigma$ e ogni foglia
+A partire dall'$\,\SLP$ $\mathcal{A}$ si genera un \textit{albero
+  di derivazione}, che, nel dettaglio, è un albero radicato e ordinato
+dove la radice è etichettata con $\mathcal{S}$, ogni nodo
+  interno è etichettato con un simbolo di $\mathcal{V}\cup\Sigma$ e ogni foglia
 è etichettata con un simbolo di $\Sigma$.
 \begin{esempio}
   \label{ese:slpgagie}
   Si prenda, ad esempio \cite{slpgagie}, la seguente stringa:
   \[s=\mbox{GATTAGATACAT}\,\$\mbox{GATTACATAGAT}\]
-  Si potrebbe produrre il seguente \emph{SLP}:
-  \begin{multicols}{2}
+  Si potrebbe produrre il seguente $\SLP$:
+  \begin{multicols}{3}
     \begin{itemize}
       \item $\mbox{S}\to \mbox{ZWAY}\,\$\mbox{ZYAW}$
       \item $\mbox{Z}\to \mbox{WX}$
@@ -75,7 +75,7 @@ dove la \textit{radice} è etichettata con $\mathcal{S}$, ogni \textit{nodo
       \item $\mbox{V}\to \mbox{AT}$
     \end{itemize}
   \end{multicols}
-  Al quale corrisponde il seguente \emph{albero di derivazione}:
+  Al quale corrisponde il seguente albero di derivazione:
   \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{img/slpgagie.pdf}
@@ -88,66 +88,61 @@ dove la \textit{radice} è etichettata con $\mathcal{S}$, ogni \textit{nodo
 \end{esempio}
 Nel 2020, Gagie et al. \cite{slpgagie} 
 proposero un articolo, a cui si rimanda per approfondimenti, in merito a
-miglioramenti prestazionali per il \textit{random access} all'\textit{SLP},
-anche tramite l'uso dei \textit{bitvector sparsi}.\\
-Si stima che il tempo necessario al
-\textit{random access} su un testo $T$, compresso tramite
-\textit{SLP} e lungo $n$, sia in tempo:
+miglioramenti prestazionali per il random access all'$\,\SLP$,
+anche tramite l'uso dei bitvector sparsi.\\
+Si stima che il tempo necessario al random access su un testo $T$, compresso
+tramite $\SLP$ e lungo $n$, sia in tempo: 
 \begin{equation}
   \label{eq:slptime}
   \mathcal{O}\left(\log n\right)
 \end{equation}
 L'uso di tale variante degli \textit{SLP} è stato cruciale, come si vedrà più
 avanti in questa tesi, per la costruzione della versione run-length encoded sia
-della \textbf{Burrows-Wheeler Transform (\textit{BWT})} che della
-\textbf{Positional Burrows-Wheeler Transform (\textit{PBWT})}.
+della $\BWT$ che della $\PBWT$.
 \subsection{Longest Common Extension}
 Oltre a permettere \textit{random access} alla testo compresso, 
-l'uso degli \textit{SLP} permette di effettuare 
-un'altra operazione in modo efficiente: le \textbf{Longest Common Extension
-  (\textit{LCE}) queries}.
+l'uso degli $\SLP$ permette di effettuare 
+un'altra operazione in modo efficiente, ovvero il calcolo delle \textbf{Longest
+  Common Extension} ($\LCE$) \textbf{queries}.
 \begin{definizione}
-  Dato un testo $T$, tale che $|T|=n$, il risultato della \textbf{LCE query} tra
+  Dato un testo $T$, tale che $|T|=n$, il risultato della $\LCE$ query tra
   due posizioni $i$ e $j$, tali che $0\leq i,j<n$, corrisponde al più lungo
-  prefisso comune tra le sotto-stringhe che hanno come indice di partenza $i$ e
-  $j$, avendo quindi il più lungo prefisso comune tra $T[i,n-1]$ e $T[j,n-1]$.
+  prefisso comune tra le sottostringhe che hanno come indice di partenza $i$ e
+  $j$, ovvero il più lungo prefisso comune tra $T[i,n-1]$ e $T[j,n-1]$.
 \end{definizione}
-Sfruttando l'\textit{SLP} del testo $T$ è quindi possibile effettuare due
-\textit{random access} al testo compresso, in $i$ e $j$, per poi ``risalire''
-l'albero al fine di computare il prefisso comune tra le due sottostringhe.\\
-Si stima che il calcolo di una \textit{LCE query} di lunghezza $l$ sia
-effettuabile, per l'\textit{SLP} di un testo $T$ lungo $n$, in tempo: 
+Sfruttando l'$\,\SLP$ del testo $T$ è quindi possibile effettuare due
+random access al testo compresso, agli indici $i$ e $j$, per poi ``risalire''
+l'albero di derivazione al fine di computare il prefisso comune tra le due
+sottostringhe.\\ 
+Si stima che il calcolo di una $\LCE$ query di lunghezza $l$ sia
+effettuabile, avendo l'$\,\SLP$ di un testo $T$ lungo $n$, in tempo: 
 \begin{equation}
   \label{eq:lcetime}
-  \mathcal{O}\left(\log n+l\right)
+  \mathcal{O}\left(\log n+l\right)\approx\mathcal{O}\left(\log n\right)
 \end{equation}
-Che di fatto è proporzionale a:
-\begin{equation}
-  \label{eq:lcetime2}
-  \mathcal{O}\left(\log n\right)
-\end{equation}
-I due concetti di \textit{SLP} e \textit{LCE query} verranno generalizzati, in
+Avendo che la lunghezza dell'$\,\LCE$ è trascurabile rispetto alla lunghezza del
+testo.\\ 
+I due concetti di $\SLP$ e $\LCE$ query verranno generalizzati, in
 questa tesi, all'uso su matrici permettendo una rappresentazione compatta in
-memoria, con \textit{random access}, per un pannello di aplotipi.
+memoria per un pannello di aplotipi, garantendo random access.
 \dc{capire se sono necessari altri approfondimenti}
 \subsection{Librerie}
-Da un punto di vista implementativo, l'oggetto contenente l'\textit{SLP} del
+Da un punto di vista implementativo, l'oggetto contenente  l'$\,\SLP$ del
 pannello viene costruito ed interrogato mediante l'uso della libreria
 \textbf{ShapedSlp}\footnote{https://github.com/itomomoti/ShapedSlp},
-implementazione dei risultati ottenuti da 
+implementazione dei risultati teorici ottenuti da 
 Gagie et al. \cite{slpgagie}. Inoltre, tale libreria basa il suo funzionamento
 sull'uso di un'altra libreria, detta
 \textbf{BigRePair}\footnote{\url{https://gitlab.com/manzai/bigrepair}}, che 
-implementa i quanto studiato da Gagie et al. \cite{rpair} in merito alla
-compressione, via uso di grammatiche, di file con frequenti ripetizioni (come
-possono essere, nel nostro caso, pannelli binari di aplotipi).\\
+implementa ulteriori risultati teorici di Gagie et al. \cite{rpair} in merito
+alla compressione, via uso di grammatiche, di file con frequenti ripetizioni
+(come possono essere, nel nostro caso, pannelli binari di aplotipi).\\
 In termini di pipeline si procede quindi:
 \begin{enumerate}
-  \item generando la \textit{grammatica} tramite \textit{BigRePair}, che accetta
-  come file di input un file \texttt{txt} ``raw'' ma anche un file in formati
-  più standard come i \textit{FASTA}
-  \item generando l'\textit{SLP} tramite \textit{ShapedSlp} specificatamente a
-  partire dai risultati di \textit{BigRePair} (si segnala che la libreria
-  accetta anche input prodotti tramite altri tool che non verranno qui
-  approfonditi) 
+  \item generando la grammatica tramite BigRePair, che accetta
+  come file di input un file \texttt{txt} ``raw'' ma anche file in formato
+  standard nel campo della bioinformatica, come i \texttt{FASTA}
+  \item generando l'$\,\SLP$ tramite ShapedSlp specificatamente a
+  partire dai risultati di BigRePair (si segnala che la libreria
+  accetta anche grammatiche prodotte da altri software) 
 \end{enumerate}
