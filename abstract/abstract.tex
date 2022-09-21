@@ -11,7 +11,7 @@
 \usepackage{typearea}
 
 \hypersetup{
-  pdftitle = {Algoritmi per la trasformata di Burrows-Wheeler posizionale con
+  pdftitle = {Algoritmi per la trasformata di Burrows--Wheeler posizionale con
     compressione run-length}, 
   pdfauthor = {Davide Cozzi},
   pdfsubject = {Riassunto della tesi},
@@ -25,7 +25,7 @@
 % \fancyhead[LO,RE]{\slshape \leftmark}
 \fancyfoot[C]{\thepage}
 
-\title{Algoritmi per la trasformata di Burrows-Wheeler
+\title{Algoritmi per la trasformata di Burrows--Wheeler
   Posizionale con compressione run-length} 
 \author{Davide Cozzi\\\smaller matr.~829827}
 \date{}
@@ -83,7 +83,7 @@ risolvere il problema del pattern
 matching, inteso come ricerca dei set-maximal exact match (SMEM) tra un aplotipo
 esterno e un pannello di aplotipi, in una delle 
 strutture dati più utilizzata per la rappresentazione del pangenoma: la
-\textit{trasformata di Burrows-Wheeler 
+\textit{trasformata di Burrows--Wheeler 
   Posizionale (PBWT)}. Il progetto di tesi, svolto in collaborazione con
 Prof.~Gagie (Dalhousie University) e Prof.~Boucher 
 (University of Florida), ha quindi permesso lo sviluppo di una variante
@@ -94,7 +94,7 @@ alla soluzione attualmente allo stato dell'arte.
 \subsection*{Stato dell'arte}
 Gli algoritmi più efficienti per risolvere il problema del pattern matching tra
 un pattern e un testo 
-sono attualmente basati sulla \emph{Trasformata di Burrows-Wheeler (BWT)}, a sua
+sono attualmente basati sulla \emph{Trasformata di Burrows--Wheeler (BWT)}, a sua
 volta strettamente legata ad altre due strutture dati: il Suffix Array (SA) e
 il Longest Common Prefix (LCP). 
 % Infatti, è stato dimostrato che la BWT è fortemente legata a due strutture dati
@@ -107,7 +107,7 @@ il Longest Common Prefix (LCP).
 Invece, allo scopo di risolvere il problema del calcolo degli SMEM tra un
 pannello di aplotipi e un aplotipo esterno,
 Durbin, nel 2014, propose una struttura dati ispirata alla BWT, detta
-\textit{Trasformata di Burrows-Wheeler Posizionale (PBWT)}. Tale trasformata
+\textit{Trasformata di Burrows--Wheeler Posizionale (PBWT)}. Tale trasformata
 viene costruita a partire da un pannello di aplotipi, rappresentato, riferendosi
 al solo caso bi-allelico, tramite una matrice binaria.
 La PBWT permette di calcolare gli SMEM tra
@@ -162,7 +162,8 @@ studiano diverse sequenze genomiche concatenate.
 % sottostringhe nel testow, avendo che tali ripetizioni, per motivazioni
 % biologiche, sono frequenti in ambito genomico.
 %
-In letteratura è stata quindi proposta la \textit{trasformata di Burrows-Wheeler
+In letteratura è stata quindi proposta la \textit{trasformata di
+  Burrows--Wheeler 
   Run-Length encoded (RLBWT)} dove ogni run viene memorizzata in modo efficiente
 come coppia (carattere, lunghezza della run). Ad esempio, la stringa
 \texttt{aaaaaa} sarebbe memorizzata come \texttt{(a,6)}.
