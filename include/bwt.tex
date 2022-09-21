@@ -1,69 +1,69 @@
 \section{Trasformata di Burrows-Wheeler}
 \label{secbwt}
 Introdotta nel 1994 da Burrows e Wheeler con lo scopo di comprimere testi, la
-\textbf{Burrows-Wheeler Transform} \cite{bwt} è divenuta ormai uno standard nel
-campo dell'\textit{algoritmica su stringhe} e della \textit{bioinformatica},
+\textbf{Burrows-Wheeler Transform} ($\BWT$) \cite{bwt} è divenuta ormai uno
+standard nel 
+campo dell'algoritmica su stringhe e della bioinformatica,
 grazie ai suoi molteplici vantaggi sia dal punto di vista della complessità
 temporale che da quello dell'efficienza in memoria.\\
-Nel dettaglio la \textit{BWT} è una \textit{trasformata reversibile} che
-permette una \textit{compressione lossless}, quindi senza perdita
+Nel dettaglio la $\BWT$ è una trasformata reversibile che
+permette una compressione lossless, quindi senza perdita
 d'informazione. Tale trasformazione viene costruita a partire dal riordinamento
 dei caratteri del testo in input, riordinando lessicograficamente le cosiddette
-\textbf{rotazioni} del testo. Interessante è la proprietà per cui caratteri
+\textit{rotazioni} del testo. Interessante è la proprietà per cui caratteri
 uguali tendono ad essere posti consecutivamente all'interno della stringa
 prodotta dalla trasformata. Questa proprietà è causata dalle ripetizioni di
 sottostringhe all'interno del testo stesso.
 \begin{definizione}
   Dato un testo $T$ \$-terminato, tale che $|T|=n$, si definisce la
-  \textbf{Burrows-Wheeler Transform (\textit{BWT})} di $T$, denotata con
-  $BWT_T$, come un array di caratteri lungo $n$ dove l'elemento $i$-esimo è il
+  Burrows-Wheeler Transform di $T$, denotata con
+  $\BWT_T$, come un array di caratteri lungo $n$ dove l'elemento $i$-esimo è il
   carattere che precede l'$i$-esimo suffisso $T$ nel riordinamento
   lessicografico. Più formalmente si ha che:
   \begin{equation}
     \label{eq:bwt1}
-    BWT_T[i]=
+    \BWT_T[i]=
     \begin{cases}
-      T[SA_T[i]-1]&\mbox{ se } SA_T[i]\neq 1\\
+      T[\SA_T[i]-1]&\mbox{ se } \SA_T[i]\neq 1\\
       \$&\mbox{ altrimenti}
     \end{cases},\,\, \forall\, i\in\{0,n-1\}
   \end{equation}
-  
 \end{definizione}
-In termini più pratici, la \textit{BWT} di un testo è calcolabile riordinando
-lessicograficamente tutte le possibili \textbf{rotazioni} del testo $T$.
+In termini operativi, la $\BWT$ di un testo è calcolabile riordinando
+lessicograficamente tutte le possibili rotazioni del testo $T$.
 \begin{definizione}
-  Si definisce \textbf{rotazione $\mathbf{i}$-esima} di
-  un testo $T$ lungo $n$, denotata con $rot_T(i)$, come la stringa ottenuta
+  Si definisce rotazione $i$-esima di
+  un testo $T$ lungo $n$, denotata con $\ROT_T(i)$, come la stringa ottenuta
   dalla concatenazione 
   del suffisso $i$-esimo con la restante porzione del testo. Più formalmente si
   ha che, denotando con $X\cdot Y$ la concatenazione tra
   la stringa $X$ e la stringa $Y$:
   \begin{equation}
     \label{eq:bwt2}
-    rot_T(i)=T[i,n-1]\cdot T[0,i-1],\,\,\forall\, i\in\{0,n-1\}
+    \ROT_T(i)=T[i,n-1]\cdot T[0,i-1],\,\,\forall\, i\in\{0,n-1\}
   \end{equation}
 \end{definizione}
-Data questa definizione, quindi, la \textit{BWT} del testo $T$ risulta essere
-l'ultima colonna della matrice, detta \textbf{Burrows-Wheeler Matrix
-  (\textit{BWM})}, che si ottiene riordinando tutte le 
-\textit{rotazioni} di $T$, che altro non sono che i suffissi già riordinati per
-il calcolo del \textit{SA} a cui viene concatenata la parte restante del
+Data questa definizione, quindi, la $\BWT$ del testo $T$ risulta essere
+l'ultima colonna della matrice, detta \textbf{Burrows-Wheeler Matrix} ($\BWM$),
+che si ottiene riordinando tutte le  
+rotazioni di $T$, che altro non sono che i suffissi già riordinati per
+il calcolo di $\SA_T$ a cui viene concatenata la parte restante del
 testo.\\
-Un altro array spesso utilizzato insieme alla \textit{BWT} è il cosiddetto
-\textbf{array $\mathbf{F}$}, lungo $|T|$, che è l'array formato
-dalla prima colonna della \textit{BWM}. In pratica l'array $F$ è.
+Un altro array spesso utilizzato insieme alla $\BWT$ è il cosiddetto
+array $\F$, lungo $|T|$, che è l'array formato
+dalla prima colonna della $\BWM$. In pratica l'array $\F_T$ è,
 banalmente, l'array formato dal riordinamento 
 lessicografico dei caratteri del testo $T$.
 \begin{esempio}
   Si prenda la stringa:
   \[s=\mbox{mississippi\$},\,\,|s|=12\]
-  Si produce la $BWM_T$, da cui si estraggono $F_T$ e $BWT_T$:
+  Si produce la $\BWM_T$, da cui si estraggono $\F_T$ e $\BWT_T$:
   \begin{table}[H]
     \centering
     \footnotesize
     \begin{tabular}{c|c|c|c|c} 
-      \textbf{Indice} & $\mathbf{SA_T}$ & $\mathbf{F_T}$ & $\mathbf{BWM_T}$
-      & $\mathbf{BWT_T}$\\ 
+      \textbf{Indice} & $\SA_T$ & $\F_T$ & $\BWM_T$
+      & $\BWT_T$\\ 
       \hline
       0 & 11 & \$ & \$mississippi & i\\
       1 & 10 & i & i\$mississipp & p\\
@@ -81,36 +81,38 @@ lessicografico dei caratteri del testo $T$.
   \end{table}
 \end{esempio}
 L'importanza di questa trasformata è dovuta soprattutto al fatto che sia
-\textit{reversibile}, implicando quindi che a partire da $BWT_T$ è possibile
+reversibile, implicando quindi che, a partire da $\BWT_T$, sia possibile
 ricostruire $T$. Questo è possibile grazie ad una proprietà intrinseca della
 trasformata che viene riassunta nel concetto di \textbf{LF-mapping}.
 \begin{definizione}
-  Dato un testo $T$, tale che $|T|=n$, data la sua $BWT_T$ e il suo array $F_T$
-  si definisce \textbf{LF-mapping} come la proprietà per la quale l'$i$-esima
-  occorrenza di un carattere $\sigma$ in $BWT_T$ corrisponde all'$i$-esima
-  occorrenza dello stesso carattere in $F_T$.
+  Dato un testo $T$, tale che $|T|=n$, data la sua $\BWT_T$ e il suo array
+  $\F_T$ 
+  si definisce LF-mapping come la proprietà per la quale l'$i$-esima
+  occorrenza di un carattere $\sigma$ in $\BWT_T$ corrisponde all'$i$-esima
+  occorrenza dello stesso carattere in $\F_T$.
 \end{definizione}
 Grazie a questa definizione è possibile partire dall'ultimo carattere del testo,
-\$, e ricostruire l'intero testo a ritroso. Si vede quindi un breve esempio.
+ovvero $\sigma=\$$, e ricostruire l'intero testo a ritroso. Si vede quindi un
+breve esempio. 
 \begin{esempio}
   Si riprende l'esempio precedente, avendo:
-  \[BWT_T=\mbox{ipssm\$pissii}\mbox{ e }F_T=\mbox{\$iiiimppssss}\]
+  \[\BWT_T=\mbox{ipssm\$pissii}\mbox{ e }\F_T=\mbox{\$iiiimppssss}\]
   E avendo i seguenti caratteri associati dall'\textit{LF-mapping}:
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.33]{img/lf.pdf}
   \end{figure}
-  Si comincia dal simbolo '\$' in $BWT_T$, che è l'ultimo carattere di $T$. Si
-  ha che esso corrisponde al primo e unico simbolo '\$' in $F_T$, all'indice
+  Si comincia dal simbolo '\$' in $\BWT_T$, che è l'ultimo carattere di $T$. Si
+  ha che esso corrisponde al primo e unico simbolo '\$' in $\F_T$, all'indice
   $0$. Tale simbolo, per l'ovvia proprietà delle rotazioni è preceduto dal
-  simbolo $BWT_T[0]=\mbox{'i'}$ in $T$. Quindi $\mbox{'i'}$ precederà '\$' in
+  simbolo $\BWT_T[0]=\mbox{'i'}$ in $T$. Quindi $\mbox{'i'}$ precederà '\$' in
   $T$:
   \[T=\ldots\mbox{i\$}\]
   Si sa inoltre che
-  tale $\mbox{'i'}$ è il primo $\mbox{'i'}$ in $BWT_T$. Si cerca quindi il primo
-  simbolo $\mbox{'i'}$ anche in $F_T$,
+  tale $\mbox{'i'}$ è il primo $\mbox{'i'}$ in $\BWT_T$. Si cerca quindi il
+  primo simbolo $\mbox{'i'}$ anche in $\F_T$,
   sapendo che sono lo stesso simbolo nel testo. A questo punto il simbolo allo
-  stesso indice di tale $\mbox{'i'}$ nella $BWT_T$, ovvero il simbolo
+  stesso indice di tale $\mbox{'i'}$ nella $\BWT_T$, ovvero il simbolo
   $\mbox{'p'}$, sarà il simbolo che precede $\mbox{'i'}$ nel testo:
   \[T=\ldots\mbox{pi\$}\]
   Proseguendo a ritroso si ricostruisce l'intero testo:
