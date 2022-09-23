@@ -230,14 +230,14 @@ seguente lemma \cite{plcp3}.
   Dato un testo $T$, tale che $|T|=n$, si ha che:
   \begin{equation}
     \label{eq:plcpdef3}
-    \PCLP_T[i]\geq \PLCP_T[i-1]-1,\,\,\forall\, i\in\{1,n-1\}
+    \PLCP_T[i]\geq \PLCP_T[i-1]-1,\,\,\forall\, i\in\{1,n-1\}
   \end{equation}
 \end{lemma}
 Grazie a tale lemma si può memorizzare l'$\,\PLCP$ sparso.
 \begin{definizione}
   Dato un intero
   $q$, per il quale calcolo (basato sul lemma precedente) si rimanda al paper di
-  Kasai \cite{plcp3}, si definisce array $\PCLP$ sparso, lungo
+  Kasai \cite{plcp3}, si definisce array $\PLCP$ sparso, lungo
   $\left\lfloor\frac{n}{q}\right\rfloor$ e denotato $\PLCP_q$, come l'array che
   memorizza ogni $q$-esimo valore del $\PLCP$, avendo che:
   \begin{equation}
