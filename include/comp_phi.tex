@@ -1,52 +1,52 @@
 \subsection{Componente per la struttura Phi}
 \label{secphi}
-L'ottenimento dell'array \textit{matching statistics} permette di sapere solo
-l'indice di una della righe del pannello per le quali si ha un match con
-l'aplotipo query. Analogamente a quanto discusso in \textit{PHONI} \cite{phoni},
-anche per la \textit{RLPBWT} si è pensato a due funzioni, $\boldsymbol\varphi$ e
-$\boldsymbol\varphi\mathbf{^{-1}}$, per il riconoscimento di tutte le
-righe del pannello per cui si ha il match. La struttura che permette il calcolo
+L'ottenimento dell'array matching statistics permette di sapere solo
+l'indice di una della righe del pannello per le quali si ha uno $\SMEM$ con
+l'aplotipo query. Analogamente a quanto discusso in PHONI \cite{phoni},
+anche per la $\RLPBWT$ si è pensato a due funzioni, $\varphi$ e
+$\varphi^{-1}$, per il riconoscimento di tutte le
+righe del pannello per cui si ha il medesimo $\SMEM$. La componente che permette
+il calcolo 
 di tali funzioni è la componente denotata \texttt{PHI}.\\
 \dc{Qui non ho PLCP quindi calcolo ogni volta}
 L'intuizione alla base del ragionamento è molto semplice. Nell'ordinamento alla
-colonna $k$-esima, dato da $a_k$, tutte le righe per le quali si ha un match
-sono poste consecutivamente, questo a causa del fatto che l'ordinamento è
-lessicografico.
+colonna $k$-esima, dato da $a_k$, tutte le righe per le quali si ha un certo
+$\SMEM$ sono poste consecutivamente, questo a causa dell'ordinamento
+lessicografico inverso.
 \begin{definizione}
-  Dati:
-  \begin{itemize}
-    \item un pannello $X$, di dimensioni $N\times M$
-    \item una colonna $k$, il \textit{prefix array} $a_k$ e la sua permutazione
-    inversa $\alpha_k$
-  \end{itemize}
-  Si definiscono formalmente:
+  Dati un pannello $X$, di dimensioni $N\times M$, e una colonna $k$, con
+  prefix array $a_k$ e permutazione inversa del prefix array $\alpha_k$, si
+  definiscono formalmente: 
   \[\varphi_k(p)=
     \begin{cases}
-      null&\mbox{se }\alpha_k[p]=0\\
+      \NULL&\mbox{se }\alpha_k[p]=0\\
       a_k[\alpha_k[p]-1]&\mbox{altrimenti}
     \end{cases},\forall p\in\{0,M-1\}
   \]
   \[\varphi^{-1}_k(p)=
     \begin{cases}
-      null&\mbox{se }\alpha_k[p]=M-1\\
+      \NULL&\mbox{se }\alpha_k[p]=M-1\\
       a_k[\alpha_k[p]+1]&\mbox{altrimenti}
     \end{cases},\forall p\in\{0,M-1\}
   \]
-  In altri termini, avendo $a_k[j]=p$ si ha che:
-  \[\varphi_k(p)=
+  In altri termini, si ha che:
+  \[\varphi_k(a_k[j])=
     \begin{cases}
-      null&\mbox{se }j=0\\
+     \NULL&\mbox{se }j=0\\
       a_k[j-1]&\mbox{altrimenti}
-    \end{cases},\forall p\in\{0,M-1\}
+    \end{cases},\forall j\in\{0,M-1\}
   \]
-  \[\varphi^{-1}_k(p)=
+  \[\varphi^{-1}_k(a_k[j])=
     \begin{cases}
-      null&\mbox{se }j=M-1\\
+      \NULL&\mbox{se }j=M-1\\
       a_k[j+1]&\mbox{altrimenti}
-    \end{cases},\forall p\in\{0,M-1\}
+    \end{cases},\forall j\in\{0,M-1\}
   \]
+  Quindi, dato un elemento di $a_k$, le due funzioni restituiscono il valore
+  antecedente, se esistente, e il valore successivo, se esistente, ad esso nel
+  prefix array.
 \end{definizione}
-\textbf{VERIFICARE DEFINIZIONE IN QUANTO ``NUOVA''}
+\dc{VERIFICARE DEFINIZIONE IN QUANTO ``NUOVA''}
 \begin{esempio}
   Per praticità si riporta un breve esempio.\\
   Si ipotizzi di avere, come per l'esempio \ref{es:pbwt1}:
@@ -56,38 +56,43 @@ lessicografico.
   \[\varphi(3)=a_6[\alpha_6[3]-1]=a_6[14-1]=a_6[13]=2\]
   \[\varphi^{-1}(3)=a_6[\alpha_6[3]+1]=a_6[14+1]=a_6[15]=17\]
 \end{esempio}
-Avendo quindi $MS[i].row=p$ e $MS[i].len=l$ basta iterare le righe a partire a
-$p$ in $a_i$, che denotiamo con l'indice $q$, fino a che si ha si ha 
-$LCE_k(x_p, x_q)\geq l$. Ovviamente bisogna iterare in entrambe le
-direzioni. Tutte le righe $x_q$ che soddisfano un match di lunghezza $l$ con
-l'aplotipo query. L'algoritmo \ref{algo:phiext} rappresenta esattamente quanto
-detto, avendo che con la funzione $lce\_bounded$ si limita il calcolo della
-\textit{LCE} alla lunghezza $l$. La complessità temporale di questo algoritmo
-varia a seconda della componente \texttt{RA} (e della conseguente presenza della
+Avendo quindi $\MS[i].\row=p$ e $\MS[i].\len=l$ basta iterare le righe a partire
+da 
+$p$ in $a_i$, righe che denotiamo con l'indice $q$, fino a che si ha 
+$\LCE_k(x_p, x_q)\geq l$. Ovviamente bisogna iterare in entrambe le
+direzioni. Tutte le righe $x_q$ che soddisfano tale condizione presentano uno
+$\SMEM$ di lunghezza $l$ con 
+l'aplotipo query. L'algoritmo \ref{algo:phiext} rappresenta quanto
+appena descritto, avendo che la funzione $\lceb$ limita il calcolo
+della 
+$\LCE$ alla lunghezza desiderata $l$, escludendo computazioni inutili oltre tale
+lunghezza. Tale funzione è riproducile, per mezzo di iterazioni, anche sulla
+componente \texttt{RA-BV}. La complessità temporale di questo algoritmo
+varia a seconda della componente per il random access (e della conseguente
+presenza della 
 componente \texttt{LCE}). Inoltre è difficile poter dare una stima asintotica in
-quanto varia sul numero di righe che presentano un certo \textit{SMEM}, che
-denominiamo qui $\nu$, e dalla lunghezza dello stesso, indicata con
-$\lambda$. Quindi, si ha che, qualora si avesse la componente \texttt{RA-BV}, si
-avrebbe un tempo proporzionale a:
+quanto varia sul numero di righe $\nu$ che presentano un certo $\SMEM$, e sulla
+lunghezza dello stesso $\lambda$. Quindi, si ha, con la
+componente \texttt{RA-BV}, un tempo proporzionale a:
 \begin{equation}
   \label{eq:phiaccbv}
   \mathcal{O}(\nu\lambda)
 \end{equation}
 Mentre con l'uso della componente \texttt{LCE}, avendo il pannello in memoria
-con la componente \texttt{RA-SLP}, si avrebbe una complessità in tempo:
+sotto forma di $\SLP$, si ha complessità in tempo:
 \begin{equation}
   \label{eq:phiaccbv2}
   \mathcal{O}(\nu\lambda\log NM)
 \end{equation}
-\\
 \begin{algorithm}
+  \small
   \begin{algorithmic}[1]
     \Function{extend\_matches}{$k, row, len$}
     \State $haplos\gets []$
     \State $check_{down}\gets \top,\,\,check_{up}\gets \top$
     \While {$check_{down}$}
     \State $down_{row}\gets \varphi^{-1}(row, k)$
-    \If{$lce\_bounded(k, row, down_{row}, len)$}
+    \If{$\lceb(k, row, down_{row}, len)$}
     \State $push(haplos, down_{row})$
     \State $row \gets down_{row}$
     \Else
@@ -96,7 +101,7 @@ con la componente \texttt{RA-SLP}, si avrebbe una complessità in tempo:
     \EndWhile
     \While {$up_{down}$}
     \State $up_{row}\gets \varphi(row, k)$
-    \If{$lce\_bounded(k, row, up_{row}, len)$}
+    \If{$\lceb(k, row, up_{row}, len)$}
     \State $push(haplos, up_{row})$
     \State $row \gets up_{row}$
     \Else
@@ -106,85 +111,87 @@ con la componente \texttt{RA-SLP}, si avrebbe una complessità in tempo:
     \State \textbf{return} $haplos$
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per estendere uno SMEM in colonna $k$ usando $\varphi$,
-  $\varphi^{-1}$.}
+  \caption{\footnotesize{Algoritmo per il calcolo di ogni $\SMEM$ in colonna $k$
+  tramite la 
+  componente \texttt{PHI}.}}
   \label{algo:phiext}
 \end{algorithm}
-Questa è la definizione formale delle due funzioni ma, all'atto pratico, in
-memoria si hanno solo i \textit{prefix array sample}, ad inizio e fine di ogni
-run, e nessuna informazione in merito alla \textit{permutazione inversa} del
-\textit{prefix array}. Si è quindi pensato ad una struttura dati, basata
-anch'essa su \textit{bitvector sparsi}, che permettesse il calcolo delle due
-funzioni. 
+Si è presentata la definizione formale delle due funzioni ma, con la $\RLPBWT$,
+si hanno in memoria solo i prefix array sample  e nessuna informazione in merito
+alla permutazione inversa del 
+prefix array. Quindi, si è pensato ad una struttura dati, basata
+anch'essa su bitvector sparsi e intvector compressi, che permettesse il calcolo
+delle due funzioni senza informazioni complete in memoria. 
 \subsubsection{Costruzione della struttura di supporto}
 L'idea di base per la costruzione della struttura a supporto delle
-\textbf{funzioni} $\boldsymbol\varphi$ e $\boldsymbol\varphi\mathbf{^{-1}}$ si
+funzioni $\varphi$ e $\varphi^{-1}$ si
 basa sul fatto che, data una colonna $k$ e dati due valori consecutivi $p$ e $q$
 in $a_k$ (avendo $a_k[i]=p$ e $a_k[i+1]=q$), essi rimarranno consecutivi anche
-in $a_{k+o}$, \textit{prefix array} dell'arbitraria colonna $k+o$, fino a che
+in $a_{k+o}$ (prefix array dell'arbitraria colonna $k+o$), fino a che
 che $x_{p}[k+o]\neq x_{q}[k+o]$, ovvero fino a che, in colonna $k+o$, tali righe
-non corrisponderanno a due simboli diversi. Cruciale è che, in quella colonna,
-$p$ sarà memorizzato come \textit{prefix array sample} della fine della run $r$
-mentre $q$ come \textit{prefix array sample} dell'inizio della run $r+1$. Grazie
+corrisponderanno a due simboli diversi. Cruciale è che, in quella colonna,
+$p$ sarà memorizzato come prefix array sample della fine della run $r$
+mentre $q$ come prefix array sample dell'inizio della run $r+1$. Grazie
 a questa informazione si può costruire una struttura che, data una colonna
-arbitraria e un arbitrario valore di \textit{prefix array}, permetta di
+arbitraria e un arbitrario valore di prefix array, permetta di
 computare $\varphi$ e $\varphi^{-1}$.\\
 Tale struttura dati è composta da:
 \begin{itemize}
-  \item un vettore di \textit{sparse bitvector} per $\varphi$, che denotiamo con
+  \item un vettore di bitvector sparsi per $\varphi$, che denotiamo con
   $\varPhi$, tale che $\varPhi[i][j]=1$ sse la riga $i$ indicizza una testa di
-  run alla colonna $j$ nella \textit{matrice PBWT}. Si ha quindi che $\varPhi$
+  run alla colonna $j$ nella matrice $\PBWT$. Si ha quindi che $\varPhi$
   ha dimensione $M\times N$
-  \item un vettore di \textit{sparse bitvector} per $\varphi^{-1}$, che
+  \item un vettore di bitvector sparsi per $\varphi^{-1}$, che
   denotiamo con $\varPhi^{-1}$, tale che $\varPhi[i][j]=1$ sse la riga $i$
-  indicizza una coda di run alla colonna $j$ nella \textit{matrice PBWT}. Si ha
+  indicizza una coda di run alla colonna $j$ nella matrice $\PBWT$. Si ha
   quindi che $\varPhi^{-1}$ ha dimensione $M\times N$
-  \item un vettore di interi a supporto, denotato $\varPhi_{supp}$, del vettore
-  di \textit{sparse bitvector} 
-  per $\varphi$ che memorizza, per ogni 1 di tale vettore, il
-  \textit{prefix array sample} della coda della run precedente o l'altezza
+  \item un vettore di intvector compressi, denotato $\varPhi_{supp}$, a supporto
+  del vettore $\varPhi$ che memorizza, per ogni 1 di tale vettore, il
+  prefix array sample della coda della run precedente o l'altezza
   del pannello, $M$, qualora non si abbia alcuna run precedente
-  \item un vettore di interi a supporto, denotato $\varPhi^{-1}_{supp}$, del
-  vettore di \textit{sparse bitvector} 
-  per $\varphi^{-1}$ che memorizza, per ogni 1 di tale vettore,
-  il \textit{prefix array sample} della testa della run successiva o l'altezza
-  del pannello, $M$, qualora non si abbia alcuna run successiva. 
+  \item un vettore di intvector compressi, denotato $\varPhi^{-1}_{supp}$,
+  a supporto del vettore $\varPhi^{-1}$ che memorizza, per ogni 1 di tale vettore,
+  il prefix array sample della testa della run successiva o l'altezza
+  del pannello, $M$, qualora non si abbia alcuna run successiva
 \end{itemize}
-Si ha quindi che la lunghezza della riga $i$-esima di $\varPhi_{supp}$ è
-uguale al numero di uni presenti nella riga $i$-esima di $\varPhi$. Analogamente
+Si ha che la lunghezza della riga $i$-esima di $\varPhi_{supp}$ è
+uguale al numero di simboli $\sigma=1$ presenti nella riga $i$-esima di
+$\varPhi$. Analogamente 
 si ha per $\varPhi^{-1}_{supp}$. In entrambi i casi, inoltre, si hanno $M$
 righe.\\ 
-Al fine della costruzione bisogna, inoltre, sfruttare $a_{N-1}$ per poter
+Al fine della costruzione, bisogna sfruttare $a_{N-1}$ per poter
 identificare quelle coppie di valori consecutivi non presenti nei vari
-\textit{prefix array samples}, in modo che sia possibile effettuare le query per
-qualsiasi valore di \textit{prefix array} in input.\\
-L'algoritmo \ref{algo:phicos} riporta quindi la costruzione della struttura,
-iterando in primis i vari \textit{prefix array samples} e completando i
+prefix array sample, in modo che sia possibile effettuare le query per
+qualsiasi valore di prefix array in input.\\
+L'algoritmo \ref{algo:phicos} riporta la costruzione della struttura,
+iterando prima i vari prefix array sample e completando i
 risultati con $a_{N-1}$. Tale algoritmo ha complessità in tempo, nel caso
 peggiore, pari a:
 \begin{equation}
   \label{eq:phicos}
   \mathcal{O}(NM)
 \end{equation}
-Che si ha qualora ogni colonna della \textit{matrice PBWT} abbia un numero di
+Che si ha qualora ogni colonna della matrice $\PBWT$ abbia un numero di
 run pari all'altezza stessa della colonna. Indicando con $\rho$ il numero medio
-complessivo di run, si può dire che la complessità nel caso medio è:
+di run per colonna, si può dire che la complessità nel caso medio è:
 \begin{equation}
   \label{eq:phicos2}
-  \mathcal{O}(N\rho)
+  \varTheta(N\rho)
 \end{equation}
-\textbf{CAPIRE SE COMMENTARE ULTERIORMENTE LA COSTRUZIONE}\\
+\dc{CAPIRE SE COMMENTARE ULTERIORMENTE LA COSTRUZIONE}
 \begin{algorithm}
   \footnotesize
   \begin{algorithmic}[1]
     \Function{Build\_phi}{$cols, panel, prefix$}
-    \Comment  $prefix$ is the last prefix array
+    \Comment  $prefix=a_{N-1}$ 
     \State $\varPhi\gets [[0..0]..[0..0]],\,\,\varPhi^{-1}\gets
     [[0..0]..[0..0]]$ 
-    \Comment sparse bit vector panels for $\varphi$ and $\varphi^{-1}$
+    \Comment vettori di bitvector sparsi per $\varphi$ e $\varphi^{-1}$
     \State $\varPhi_{supp} = [],\,\,\varPhi_{supp}^{-1} = []$
-    \Comment vectors for $\varphi$ and $\varphi^{-1}$ row values
+    \Comment vettori di intvector compressi di supporto per $\varphi$ e
+    $\varphi^{-1}$  
     \For {\textit{every} $k\in [0,|cols|)$}
+    \Comment costruzione da prefix array sample
     \For {\textit{every} $i\in [0,|samples_{beg}|)$}
     \State $\varPhi[sample_{beg}^{k}[i]][k]\gets 1$
     \If{$i=0$}
@@ -202,6 +209,7 @@ complessivo di run, si può dire che la complessità nel caso medio è:
     \EndFor
     \EndFor
     \For {\textit{every} $k\in [0,|prefix|)$}
+    \Comment costruzione da ultimo prefix array
     \If{$\varPhi[k][|\varPhi[k]|-1] = 0$}
     \State $\varPhi[k][|\varPhi[k]|-1]\gets 1$
     \If{$k=0$}
@@ -219,7 +227,8 @@ complessivo di run, si può dire che la complessità nel caso medio è:
     \EndIf
     \EndIf
     \EndFor
-    \State \textit{costruzione della struttura rank per ogni bitvector sparso}
+    \State \textit{costruzione della struttura $\rank$ per ogni bitvector
+    sparso} 
     $\varPhi$ e $\varPhi^{-1}$
     \EndFunction
   \end{algorithmic}
@@ -227,27 +236,26 @@ complessivo di run, si può dire che la complessità nel caso medio è:
   \label{algo:phicos}
 \end{algorithm}
 Dal punto di vista delle query, data una colonna $k$ e un valore di
-\textit{prefix array} $p$, si procede quindi nel seguente modo:
-\begin{itemize}
-  \item per la funzione $\varphi$ si effettua la $rank^\varphi(k)$ sulla riga
-  $p$ di $\varPhi$, avendo che:
-  \[\varphi_k(p)=
-    \begin{cases}
-      null&\mbox{se }\varPhi_{supp}^p[rank^\varphi_p(k)]=M\\
-      \varPhi_{supp}^p[rank^\varphi_p(k)]&\mbox{altrimenti }
-    \end{cases}
-  \]
-  \item per la funzione $\varphi^{-1}$ si effettua la $rank^{\varphi^{-1}}(k)$
-  sulla riga $p$ di $\varPhi^{-1}$, avendo che:
-  \[\varphi_k^{-1}(p)=
-    \begin{cases}
-      null&\mbox{se }\varPhi^{-1\,\,p}_{supp}[rank^{\varphi^{-1}}_p(k)]=M\\
-      \varPhi^{-1\,\,p}_{supp}[rank^{\varphi^{-1}}_p(k)]&\mbox{altrimenti }
-    \end{cases}
-  \]
-\end{itemize}
+prefix array $p$, per la funzione $\varphi$, si effettua  $\rank^\varphi(k)$
+sulla riga $p$ di $\varPhi$, avendo che:
+\[\varphi_k(p)=
+  \begin{cases}
+    \NULL&\mbox{se }\varPhi_{supp}^p[\rank^\varphi_p(k)]=M\\
+    \varPhi_{supp}^p[\rank^\varphi_p(k)]&\mbox{altrimenti }
+  \end{cases}
+\]
+Analogamente, per la funzione $\varphi^{-1}$ si effettua la
+$rank^{\varphi^{-1}}(k)$ 
+sulla riga $p$ di $\varPhi^{-1}$, avendo che:
+\[\varphi_k^{-1}(p)=
+  \begin{cases}
+    \NULL&\mbox{se }\varPhi^{-1\,\,p}_{supp}[\rank^{\varphi^{-1}}_p(k)]=M\\
+    \varPhi^{-1\,\,p}_{supp}[\rank^{\varphi^{-1}}_p(k)]&\mbox{altrimenti }
+  \end{cases}
+\]
+\dc{Serve altro?}
 \begin{esempio}
-  Si ha la seguente situazione nella \textit{matrice PBWT}:
+  Si supponga di avere la seguente situazione nella matrice $\PBWT$:
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.8]{img/phi.pdf}   
@@ -256,21 +264,22 @@ Dal punto di vista delle query, data una colonna $k$ e un valore di
   consecutivi. \\
   In colonna $k$, che per praticità assumiamo essere $k=0$, si vorrebbe avere
   informazione in merito a $\varphi_k(j)$ e $\varphi^{-1}_k(m)$. \\
-  Si nota che, per definizione della struttura dati, si ha che (limitandoci alle
+  Si nota che, per definizione della struttura dati, si ha (limitandoci alle
   colonne della figura):
   \[\varPhi_j=[0,0,0,1,0, \ldots]\]
   \[\varPhi^{-1}_m=[0,0,0,1,0,\ldots]\]
-  In quanto, in entrambi i casi, rispettivamente per la riga $j$ e la riga $m$,
-  in colonna $k+3$, si che $j$ è il \textit{prefix array} di una testa di run
+  In quanto, in entrambi i casi, rispettivamente per la riga $j$ e per la riga
+  $m$, 
+  in colonna $k+3$, si che $j$ è il valore del prefix array di una testa di run
   mentre $m$ di una coda di run. In colonna $k+3$ si conoscono anche,
-  rispettivamente, $i$, \textit{prefix array} della coda della run precedente a
-  quella di $j$, e $n$, \textit{prefix array} della testa della run successiva
-  quella di $m$. Si ottengono quindi:
+  rispettivamente, $i$, valore del prefix array della coda della run precedente
+  a quella di $j$, e $n$, valore del prefix array della testa della run
+  successiva quella di $m$. Si ottengono quindi:
   \[\varPhi_{supp}=[i,\ldots]\]
   \[\varPhi^{-1}_{supp}=[n,\ldots]\]
   Si vogliono quindi calcolare $\varphi_0(j)$ e  $\varphi^{-1}_0(m)$. Si ha:
-  \[\varPhi_{supp}^j[rank^\varphi_j(0)]=\varPhi_{supp}^j[0]=i\]
-  \[\varPhi^{-1\,\,m}_{supp}[rank^{\varphi^{-1}}_m(0)]=\varPhi^{-1\,\,m}_{supp}[0]=n\]
+  \[\varPhi_{supp}^j[\rank^\varphi_j(0)]=\varPhi_{supp}^j[0]=i\]
+  \[\varPhi^{-1\,\,m}_{supp}[\rank^{\varphi^{-1}}_m(0)]=\varPhi^{-1\,\,m}_{supp}[0]=n\]
   Si noti che uguali risultati si avrebbero per $k+1$, $k+2$ e $k+3$.
 \end{esempio}
 \dc{SISTEMARE UN PO' TUTTO}

@@ -1,43 +1,43 @@
 \section{Strutture dati per la RLPBWT}
 Assemblando le componenti descritte nella sezione precedente si ottengono otto
-varianti della \textit{RLPBWT}:
-\dc{ref sezione}
+varianti della $\RLPBWT$:
 \begin{itemize}
   \item due strutture dati composte unicamente dalle componenti dedicate al
-  mapping e dall'intero \textit{array LCP}. Tali strutture sono nominate:
+  mapping e dall'intero $\RLCP$. Tali strutture sono nominate:
   \begin{enumerate}
-    \item[1] \texttt{MAP-INT + LCP}
-    \item[2] \texttt{MAP-BV + LCP}
+    \item[1] \texttt{MAP-INT + RLCP}
+    \item[2] \texttt{MAP-BV + RLCP}
   \end{enumerate}
-  Queste soluzioni, che non permettono di sapere quali righe del pannello
-  presentano uno \textit{SMEM}, terminante in una certa colonna, ma solo quante
-  esse siano, sono basate su una re-implementazione dell'\textit{algoritmo 5 di
-    Durbin}
-  \item quattro strutture composte per il calcolo degli \textit{SMEM} tramite la
+  Queste soluzioni non permettono di sapere quali righe del pannello
+  presentano uno $\SMEM$, terminante in una certa colonna, ma solo quante
+  esse siano. Il funzionamento dell'algoritmo è basato su una re-implementazione
+  dell'algoritmo 5 di Durbin
+  \item quattro strutture composte per il calcolo degli $\SMEM$ tramite la
   computazione 
-  in due passaggi dell'array delle \textit{matching statistics}, in modo analogo
-  a quanto introdotto in \textit{MONI} per la \textit{BWT}, tramite
-  \textit{threshold} e \textit{random access} al pannello. Il pannello, come
-  anticipato, è memorizzato come \textit{vettore di bitvector} o come
-  \textit{SLP}. L'algoritmo  
+  in due passaggi dell'array delle matching statistics, in modo analogo
+  a quanto introdotto in MONI \cite{moni} per la $\RLBWT$, tramite
+  threshold e random access al pannello. In merito a quest'ultimo, come
+  anticipato, si ha che può essere memorizzato come vettore di
+  bitvector o come 
+  $\SLP$. L'algoritmo  
   necessita, inoltre, sia della componente atta al mapping che di quella
-  relativa ai \textit{sample di prefix array}. Infine, al fine di estendere il
-  riconoscimento a tutte le righe che presentano uno SMEM fino ad una certa
-  colonna, si necessita della struttura che permette di ``emulare'' le
-  \textit{funzioni} $\varphi$ e $\varphi^{-1}$. Tali strutture sono nominate:
+  relativa ai prefix array sample. Infine, al fine di estendere il
+  riconoscimento a tutte le righe che presentano un medesimo $\SMEM$ fino ad una
+  certa colonna, si necessita della struttura che permette di calcolare le
+  funzioni $\varphi$ e $\varphi^{-1}$. Tali strutture sono nominate:
   \begin{enumerate}
     \item[3] \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}
     \item[4] \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI}
     \item[5] \texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI}
     \item[6] \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
   \end{enumerate}
-  \item due strutture composte per il calcolo degli \textit{SMEM} tramite la
+  \item due strutture composte per il calcolo degli $\SMEM$ tramite la
   computazione 
-  in un singolo passaggio dell'array delle \textit{matching statistics}, in modo
-  analogo a quanto introdotto in \textit{PHONII} per la \textit{BWT}, tramite
-  l'uso delle \textit{LCE query}, con le quali, rispetto alle quattro
-  precedenti, si sostituisce l'uso delle \textit{threshold} e del \textit{random
-    access} al pannello. Tali strutture sono nominate:
+  in un singolo passaggio dell'array delle matching statistics, in modo
+  analogo a quanto introdotto in PHONI \cite{phoni} per la $\RLBWT$, tramite
+  l'uso delle $\LCE$ query. Queste ultime sostituiscono l'uso delle
+  threshold e del random access al pannello. Tali strutture
+  sono nominate: 
   \begin{enumerate}
     \item[7] \texttt{MAP-INT + LCE + PERM + PHI}
     \item[8] \texttt{MAP-BV + LCE + PERM + PHI}
@@ -48,29 +48,30 @@ Una visualizzazione grafica di quanto descritto è rappresentata alla figura
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{img/ds.pdf}
-  \caption{Schema grafico dell'ottenimento delle otto strutture dati.}
+  \caption{Schema grafico dell'ottenimento delle otto strutture dati a partire
+    dalle varie componenti.}
   \label{fig:compon}
 \end{figure}
-\subsection{Calcolo degli SMEM con LCP}
-Questa prima soluzione per il calcolo degli SMEM con un aplotipo esterno è
+\subsection{Calcolo degli SMEM con RLCP}
+Questa prima soluzione per il calcolo degli $\SMEM$ con un aplotipo esterno è
 quella che può essere effettuata tramite le strutture dati composte:
 \begin{itemize}
-  \item \texttt{MAP-INT + LCP}
-  \item \texttt{MAP-BV + LCP}
+  \item \texttt{MAP-INT + RLCP}
+  \item \texttt{MAP-BV + RLCP}
 \end{itemize}
-I due algoritmi riprendono esattamente quanto discusso nell'\textit{algoritmo 5
-  di Durbin}. Tali algoritmi, di 
-fatto, non sfruttano l'uso delle matching statistics e sono limitati dal non
-poter calcolare quali righe presentano un solo SMEM, calcolando solo quante
+I due algoritmi riprendono esattamente quanto discusso per l'algoritmo 5
+  di Durbin. Tali algoritmi non sfruttano l'uso delle matching statistics e sono
+  limitati dal non 
+poter calcolare quali righe presentano un solo $\SMEM$, calcolando solo quante
 siano. Il secondo limite è dato dal fatto che necessitano di avere interamente
-in memoria l'\textit{LCP} array. Questo comporta avere in memoria una
-struttura non run-length encoded occupante $4NM$ bytes.\\
+in memoria l'$\,\RLCP$ array. Questo comporta avere in memoria una
+struttura non run-length encoded.\\
 Il metodo procede, quindi, con l'aggiornamento dei tre indici $e_k$, $f_k$ e
 $g_k$, avendo che gli ultimi due possono assumere qualsiasi valore in
 $\{0,\ldots, M\}$,
-come con la \textit{PBWT} classica. Avendo memorizzato solo informazioni
-relative alle \textit{run} bisogna quindi, ogni volta, ricondurre l'indice alla
-run corretta.
+come con la $\PBWT$. Avendo memorizzato solo informazioni
+relative alle run bisogna, ogni volta, ricondurre gli indici di riga alla
+run a cui appartengono.
 % Si ricordano quindi i tempi di tale operazione, avendo $r$ numero
 % di run per la colonna $k$:
 % \begin{itemize}
@@ -85,40 +86,45 @@ run corretta.
 %     \mathcal{O}\left(\log\frac{M}{r}\right)
 %   \end{equation}
 % \end{itemize}
-Inoltre Durbin sfruttava il \textit{random access} al pannello, avendo in
-memoria sia il pannello che il \textit{prefix array}, al fine di aggiornare il
-valore di $e_k$. In entrambe le struttura dati, però,
-non si ha in memoria né il \textit{prefix array} né il pannello ma solo solo la
-rappresentazione compatta della \textit{matrice PBWT}. Si è quindi dovuto
-pensare ad un metodo che ricomponga data una riga $x_j$ del pannello $X$ a
+Inoltre Durbin sfruttava il random access al pannello in input, avendolo in
+memoria insieme al prefix array e al divergence array, al fine di aggiornare il
+valore di $e_k$. In entrambe le struttura dati run-length encoded, però,
+non si ha in memoria né il prefix array né il pannello ma solo solo la
+rappresentazione compatta della matrice $\PBWT$. Quindi, si è dovuto
+pensare ad un metodo che ricomponga una data riga $x_j$ del pannello $X$ a
 partire da un elemento, indicizzato con $a_{k+1}[i]=j$, con $0\leq i<M$, alla
 colonna $k+1$, della 
-\textit{matrice PBWT}, muovendosi da destra a sinistra e seguendo in modo
-inverso la permutazione che produce il \textit{prefix array}. In altri termini,
-tale metodo permette un \textit{mapping inverso} che segua una riga del
-pannello originale nella \textit{matrice PBWT}.\\ 
-Per ottenere l'indice alla colonna $k$-esima da cui ``proviene'' la riga $j$,
-indicizzata all'indice $i$ in
-colonna $k+1$, si inizia analizzando il valore $c[k]$. Infatti, se $i<c[k]$,
-allora sicuramente, in colonna $k$, è un indice corrispondente a $\sigma=0$
-quello dal quale proviene, ricordando come la costruzione della colonna $k+1$
-nella \textit{matrice PBWT} si abbia grazie ad ordinamento stabile. Si sfruttano
+matrice $\PBWT$. Questo risultato si può ottenere muovendosi da destra a
+sinistra, seguendo in modo 
+inverso la permutazione che produce il prefix array. In altri termini,
+tale metodo permette un mapping inverso, che segue una riga del
+pannello originale nella matrice $\PBWT$ a ritroso.\\ 
+Per ottenere l'indice alla colonna $k$-esima della matrice $\PBWT$ da cui
+proviene la riga $j$, indicizzata all'indice $i$ in
+colonna $k+1$d ella matrice $\PBWT$, si inizia analizzando il valore
+$c[k]$. Infatti, se $i<c[k]$, 
+allora sicuramente, in colonna $k$, $i$ è un indice di riga corrispondente a
+$\sigma=0$, ricordando come la costruzione della colonna $k+1$
+nella matrice $\PBWT$ si abbia grazie ad ordinamento stabile. In caso contrario
+$i$ corrisponde ad un elemento $\sigma=1$ in colonna $k$ della matrice $\PBWT$.
+Si sfruttano 
 così o l'array $p_k$ o le funzioni 
-$rank_{h_k}$ e $select_{h_k}$ per risalire all'indice in colonna $k$, calcolando
+$\rank_{h_k}$ e $\select_{h_k}$ per risalire all'indice in colonna $k$,
+calcolando 
 prima l'indice di run e l'eventuale offset, per il quale il mapping porta
-all'indice $i'$ in colonna $k+1$, seguendo ``virtualmente'' la riga $x_j$ del
+all'indice $i'$ in colonna $k+1$, seguendo virtualmente la riga $x_j$ del
 pannello originale. 
-Per quanto riguarda la \texttt{MAP-INT + LCP} si ha lo pseudocodice per il
+Per quanto riguarda la \texttt{MAP-INT + RLCP} si ha lo pseudocodice per il
 mapping inverso consultabile all'algoritmo \ref{algo:lfrev} mentre per quanto
-riguarda la \texttt{MAP-BV + LCP} si ha l'algoritmo
-\ref{algo:lfrevbv}. Parlando in termini di complessità in tempo si ha che, nel
-caso della componente \texttt{MAP-INT}, si ha, con $r$ numero di run alla
+riguarda la \texttt{MAP-BV + RLCP} si ha l'algoritmo
+\ref{algo:lfrevbv}. Parlando in termini di complessità in tempo si ha che,
+usando la componente \texttt{MAP-INT}, si ha, con $r$ numero di run alla
 colonna $k$, un caso peggiore proporzionale a:
 \begin{equation}
   \label{eq:revint}
   \mathcal{O}(r)
 \end{equation}
-Nel caso, invece, in cui si ha la componente \texttt{MAP-BV}, si ha:
+Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
 \begin{equation}
   \label{eq:revbv}
   \mathcal{O}\left(\log\frac{M}{r}\right)
@@ -128,10 +134,11 @@ Nel caso, invece, in cui si ha la componente \texttt{MAP-BV}, si ha:
   \begin{algorithmic}[1]
     \Function{reverse\_map}{$k, \,\,i$}
     \Comment $k$ indice di colonna, $i$ indice di riga
-    \If{$k=0$}
+    \State \textbf{if} $k=0$ \textbf{then} \textbf{return} $0$
+    %\If{$k=0$}
     \Comment by design
-    \State \textbf{return} $0$
-    \EndIf
+    %\State \textbf{return} $0$
+    %\EndIf
     \State $k\gets k-1$
     \State $c\gets rlpbwt[k].c$
     \State $u\gets 0$, $v\gets 0$, $offset\gets 0$, $run \gets 0$,
@@ -143,13 +150,14 @@ Nel caso, invece, in cui si ha la componente \texttt{MAP-BV}, si ha:
     \State $(prev_0,\_) \gets uvtrick(k,j)$
     \State $(next_0,\_) \gets uvtrick(k,j+1)$
     \If{$prev_0\leq u<next_0$}
-    \State $run\gets j$,$found\gets \top$
+    \State $run\gets j$, $found\gets \top$
     \State \textbf{break}
     \EndIf
     \EndFor
-    \If{$\neg found$}
-    \State $run \gets |p_k|-1$
-    \EndIf
+    \State \textbf{if} $\neg found$ \textbf{then} $run \gets |p_k|-1$
+    % \If{$\neg found$}
+    % \State $run \gets |p_k|-1$
+    % \EndIf
     \State $(curr_u,\_)\gets uvtrick(k, run)$, $offset\gets u-curr_u$
     \State \textbf{return} $p_k[run]+offset$
     \Else
@@ -160,19 +168,20 @@ Nel caso, invece, in cui si ha la componente \texttt{MAP-BV}, si ha:
     \State $(\_,prev_1) \gets uvtrick(k,j)$
     \State $(\_,next_1) \gets uvtrick(k,j+1)$
     \If{$prev_1\leq v<next_1$}
-    \State $run\gets j$,$found\gets \top$
+    \State $run\gets j$, $found\gets \top$
     \State \textbf{break}
     \EndIf
     \EndFor
-    \If{$\neg found$}
-    \State $run \gets |p_k|-1$
-    \EndIf
+    \State \textbf{if} $\neg found$ \textbf{then} $run \gets |p_k|-1$
+    % \If{$\neg found$}
+    % \State $run \gets |p_k|-1$
+    % \EndIf
     \State $(curr_v,curr_u)\gets uvtrick(k, run)$, $offset\gets v-curr_v$
     \State \textbf{return} $p_k[run]+offset$
     \EndIf
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per il mapping inverso con la \texttt{MAP-INT + LCP}.}
+  \caption{Algoritmo per il mapping inverso con la \texttt{MAP-INT + RLCP}.}
   \label{algo:lfrev}
 \end{algorithm}
 
@@ -180,71 +189,78 @@ Nel caso, invece, in cui si ha la componente \texttt{MAP-BV}, si ha:
   \begin{algorithmic}[1]
     \Function{reverse\_map}{$k, \,\,i$}
     \Comment $k$ indice di colonna, $i$ indice di riga
-    \If{$k=0$}
+    \State \textbf{if} $k=0$ \textbf{then} \textbf{return} $0$
+    %\If{$k=0$}
     \Comment by design
-    \State \textbf{return} $0$
-    \EndIf
+    %\State \textbf{return} $0$
+    %\EndIf
     \State $k\gets k-1$
-    \State $c\gets rlpbwt[k].c$
+    \State $c\gets c[k]$
     \If{$i<c$}
     \If{$start_k$}
-    \State $run\gets rank_u^{k}(i)\cdot 2$
+    \State $run\gets \rank_u^{k}(i)\cdot 2$
     \Else
-    \State $run\gets rank_u^{k}(i)\cdot 2+1$
+    \State $run\gets \rank_u^{k}(i)\cdot 2+1$
     \EndIf
     \State $i_{run}\gets 0$
-    \If{$run\neq 0$}
-    \State $i_{run}\gets select_h^{k}(run)+1$
-    \EndIf
+    \State \textbf{if} $run\neq 0$ \textbf{then} $i_{run}\gets
+    \select_h^{k}(run)+1$ 
+    % \If{$run\neq 0$}
+    % \State $i_{run}\gets select_h^{k}(run)+1$
+    % \EndIf
     \State $(prev_0,\,\,\_)\gets uvtrick(k,\,\,i_{run})$
     \State \textbf{return} $i_{run}+(i-prev_0)$
     \Else
     \If{$start_k$}
-    \State $run\gets rank_v^{k}(i)\cdot 2+1$
+    \State $run\gets \rank_v^{k}(i)\cdot 2+1$
     \Else
-    \State $run\gets rank_v^{k}(i)\cdot 2$
+    \State $run\gets \rank_v^{k}(i)\cdot 2$
     \EndIf
     \State $i_{run}\gets 0$
-    \If{$run\neq 0$}
-    \State $i_{run}\gets select_h^{k}(run)+1$
-    \EndIf
+    \State \textbf{if} $run\neq 0$ \textbf{then} $i_{run}\gets
+    \select_h^{k}(run)+1$ 
+    % \If{$run\neq 0$}
+    % \State $i_{run}\gets select_h^{k}(run)+1$
+    % \EndIf
     \State $(\_,\,\,prev_1)\gets uvtrick(k,\,\,i_{run})$
     \State \textbf{return} $i_{run}+(i-(c+prev_1))$
     \EndIf
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per il mapping inverso con la \texttt{MAP-BV + LCP}.}
+  \caption{Algoritmo per il mapping inverso con la \texttt{MAP-BV + RLCP}.}
   \label{algo:lfrevbv}
 \end{algorithm}
-Si procede quindi riadattando l'algoritmo di Durbin all'uso delle \textit{run},
+Si ha un riadattamento dell'algoritmo di Durbin all'uso delle run,
 ottenendo, ad ogni step, i medesimi valori per $e_k$, $f_k$ e $g_k$. Le uniche
 differenze sono:
 \begin{itemize}
   \item il calcolo del mapping necessità dell'estrazione dei valori $u$ e $v$,
-  tenendo conto esplicito degli offset nel caso della \texttt{MAP-INT + LCP}
-  \item non si ha \textit{random access} al pannello quindi bisogna procedere
-  ogni volta con il'inverso del mapping e il calcolo del simbolo a partire
+  tenendo conto esplicito degli offset nel caso della \texttt{MAP-INT + RLCP}
+  \item non si ha random access al pannello quindi bisogna procedere,
+  ogni volta, con il'inverso del mapping e il calcolo del simbolo a partire
   dall'indice della run
-  \item non si ha il \textit{prefix array} in memoria quindi non è possibile
-  sapere quali siano le righe che stanno matchando fino alla colonna $k$ ma solo
-  quante, sapendo che sono $g_k-f_k$
+  \item non si ha il prefix array in memoria, quindi non è possibile
+  sapere quali siano le righe per le quali si ha uno $\SMEM$ fino alla colonna
+  $k$ ma è possibile conoscere solo quante siano, ovvero $g_k-f_k$
 \end{itemize}
 Anche in questo caso lo pseudocodice è consultabile all'algoritmo
 \ref{algo:matchlcp}. Calcolare la complessità di tale algoritmo non è semplice,
 come già visto nel caso dell'algoritmo 5 di Durbin. In modo analogo si può
 comunque intuire come i vari cicli interni siano limitati superiormente dalla
 larghezza del pannello e dai tempi di mapping. Questo si può stimare in quanto
-le occorrenze dei cicli interni sono proporzionali al numero di SMEM e al numero
-di ``step'' all'indietro necessari a ri-computare il nuovo intervallo, numero di
-step che scala sul numero di caratteri in overlap tra due SMEM
-consecutivi. Fatta questa premessa si può stimare che il calcolo degli SMEM con
-la struttura \texttt{MAP-INT + LCP} è proporzionale, con $\rho$ numero medio di
+le occorrenze dei cicli interni sono proporzionali al numero di $\SMEM$ e al
+numero 
+di step all'indietro necessari a computare il nuovo intervallo. Tale numero di
+step che scala sul numero di caratteri in overlap tra due $\SMEM$
+consecutivi. Fatta questa premessa, si può stimare che il calcolo degli $\SMEM$
+con
+la struttura \texttt{MAP-INT + RLCP} è proporzionale, con $\rho$ numero medio di
 run per una colonna, a:
 \begin{equation}
   \label{eq:lcpmatchint}
   \mathcal{O}(N\log \rho)
 \end{equation}
-Nel caso, invece, della struttura \texttt{MAP-BV + LCP} si ha:
+Nel caso, invece, della struttura \texttt{MAP-BV + RLCP} si ha:
 \begin{equation}
   \label{eq:lcpmatchbv}
   \mathcal{O}\left(N\log\frac{M}{\rho}\right)
@@ -260,10 +276,10 @@ Nel caso, invece, della struttura \texttt{MAP-BV + LCP} si ha:
     \State $g\gets 0,\,\,g_{run}\gets 0,\,\,g'\gets 0$
     \State $e\gets 0,\,\,nh\gets 0$
     \For {\textit{every} $k\in\left[0,\,\, |z|\right)$}
-    \State $f_{run}\gets index\_to\_run(f,k)$ \textbf{oppure} $f_{run}\gets
-    rank_h^k(f)$ 
-    \State $g_{run}\gets index\_to\_run(g,k)$ \textbf{oppure} $f_{run}\gets
-    rank_h^k(g)$ 
+    \State $f_{run}\gets \ITR(f,k)$ \textbf{oppure} $f_{run}\gets
+    \rank_h^k(f)$ 
+    \State $g_{run}\gets \ITR(g,k)$ \textbf{oppure} $f_{run}\gets
+    \rank_h^k(g)$ 
     \State $f'\gets w(k,\,\, f,\,\, z[k]),\,\,g'\gets w(k,\,\,
     g,\,\, z[k]),\,\,nh\gets g-f$
     \If{$f'<g'$}
@@ -286,16 +302,16 @@ Nel caso, invece, della struttura \texttt{MAP-BV + LCP} si ha:
     \If{$e\geq 1$}
     \State $f_{rev}\gets f',\,\,k'\gets k+1$
     \While { $k'\neq e-1$}
-    \State  $f_{rev}\gets reverse\_map(k',\,\,f_{rev}),\,\,k'\gets k'-1$
+    \State  $f_{rev}\gets \RM(k',\,\,f_{rev}),\,\,k'\gets k'-1$
     \EndWhile
-    \State $run\gets index\_to\_run(f_{rev},k')$ \textbf{oppure} $run\gets
-    rank_h^{k'}(f_{rev})$
-    \State $symb\gets get\_symbol(start_{k'}, run)$ 
+    \State $run\gets \ITR(f_{rev},k')$ \textbf{oppure} $run\gets
+    \rank_h^{k'}(f_{rev})$
+    \State $symb\gets \GS(start_{k'}, run)$ 
     \While {$e>0\land z[e-1]=symb$}
-    \State $e\gets e-1,\,\,f_{rev}\gets reverse\_map(e, \,\,f_{rev})$
-    \State $run\gets index\_to\_run(f_{rev}, e-1)$ \textbf{oppure} $run\gets
-    rank_h^{e-1}(f_{rev})$
-    \State $symb\gets get\_symbol(start_{e-1}, run)$ 
+    \State $e\gets e-1,\,\,f_{rev}\gets \RM(e, \,\,f_{rev})$
+    \State $run\gets \ITR(f_{rev}, e-1)$ \textbf{oppure} $run\gets
+    \rank_h^{e-1}(f_{rev})$
+    \State $symb\gets \GS(start_{e-1}, run)$ 
     \EndWhile
     \EndIf
     \State \textbf{while} $f'>0\land (k+1)-l_{k+1}[f]\leq e$ \textbf{do}
@@ -306,18 +322,17 @@ Nel caso, invece, della struttura \texttt{MAP-BV + LCP} si ha:
     \If{$e\geq 1$}
     \State $f_{rev}\gets f',\,\,k'\gets k+1$
     \While {$k'\neq e-1$}
-    \State  $f_{rev}\gets reverse\_map(k',\,\,f_{rev}),\,\,k'\gets k'-1$
+    \State  $f_{rev}\gets \RM(k',\,\,f_{rev}),\,\,k'\gets k'-1$
     \EndWhile
-    \State $run\gets index\_to\_run(f_{rev},k')$ \textbf{oppure} $run\gets
-    rank_h^{k'}(f_{rev})$
-    \State $symb\gets
-    get\_symbol(start_{k'}, 
+    \State $run\gets \ITR(f_{rev},k')$ \textbf{oppure} $run\gets
+    \rank_h^{k'}(f_{rev})$
+    \State $symb\gets \GS(start_{k'}, 
     run)$ 
     \While {$e>0\land z[e-1]=symb$}
-    \State $e\gets e-1,\,\,f_{rev}\gets reverse\_map(e, \,\,f_{rev})$
-    \State $run\gets index\_to\_run(f_{rev},e-1)$ \textbf{oppure} $run\gets
-    rank_h^{e-1}(f_{rev})$
-    \State $symb\gets get\_symbol(start_{e-1}, run)$ 
+    \State $e\gets e-1,\,\,f_{rev}\gets \RM(e, \,\,f_{rev})$
+    \State $run\gets \ITR(f_{rev},e-1)$ \textbf{oppure} $run\gets
+    \rank_h^{e-1}(f_{rev})$
+    \State $symb\gets \GS(start_{e-1}, run)$ 
     \EndWhile
     \EndIf
     \State \textbf{while} $e<M\land (k+1)-l_{k+1}[g']\leq e$ \textbf{do}
@@ -334,7 +349,7 @@ Nel caso, invece, della struttura \texttt{MAP-BV + LCP} si ha:
     \EndFunction
   \end{algorithmic}
   \caption{\footnotesize{Calcolo degli SMEM con aplotipo esterno per
-  \texttt{MAP-INT/BV + LCP}, con eventuali usi diversificati per
+  \texttt{MAP-INT/BV + RLCP}, con eventuali usi diversificati per
   \texttt{MAP-INT} e \texttt{MAP-BV} segnalati con ``oppure''.}} 
   \label{algo:matchlcp}
 \end{algorithm}

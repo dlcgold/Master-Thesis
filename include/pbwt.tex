@@ -1,8 +1,8 @@
-\section{Trasformata di Burrows-Wheeler posizionale}
+\section{Trasformata di Burrows--Wheeler posizionale}
 \label{secpbwt}
 Presentata nel 2014 da Richard Durbin \cite{pbwt}, la \textbf{Positional
-  Burrows-Wheeler Transform} ($\PBWT$), traducibile con
-\textit{trasformata di Burrows-Wheeler posizionale}, è una struttura efficiente
+  Burrows--Wheeler Transform} ($\PBWT$), traducibile con
+\textit{trasformata di Burrows--Wheeler posizionale}, è una struttura efficiente
 per la memorizzazione e l'interrogazione di pannelli di aplotipi.\\
 La costruzione di tali pannelli avviene tramite il riconoscimento delle
 variazioni di un singolo nucleotide tra le sequenze genomiche di diversi
@@ -871,26 +871,24 @@ dove, la $j$-esima riga della $k$ tabella contiene:
   o $\sigma =1$. Si noti che tale valore non è esplicitato nel'articolo ma
   risulta necessario
 \end{itemize}
-Il paper presenta anche il metodo per l'estrazione della $i$-esima riga:
-\begin{enumerate}
-  \item si cerca della prima ``tabella'' la riga relativa alla run, con indice
-  di testa $p$, contenente
-  l'indice $i$. Si noti che la prima ``tabella'', relativa alla colonna $k=0$
-  non presenta permutazioni e quindi 
-  l'indice $i$ del pannello è anche l'indice $i$ della matrice $\PBWT$
-  \item si calcola la permutazione per l'indice $i$ (alla prima operazione
-  si avrà $k=1$):
-  \begin{equation}
-    \label{eq:pbwttrick2}
-    \pi_k(i)=\pi_k(p)+i-p
-  \end{equation}
-  \item si cerca poi la riga relativa alla run contenente il simbolo $\pi_k(p)$
-  nella ``tabella'' successiva e si scansionano le righe di tale tabella a
-  partire da quella appena identificata fino a trovare la run che contiene
-  $\pi_k(i)$ (alla prima
-  operazione si avrà $k=1$). Infine, si estrae il simbolo relativo a tale run 
-  \item si ripete la procedura dal punto 2) per ogni colonna $k$
-\end{enumerate}
+Il paper presenta anche il metodo per l'estrazione della $i$-esima
+riga. Inizialmente, si cerca della prima ``tabella'' la riga relativa alla run,
+con indice di testa $p$, contenente l'indice $i$. Si noti che la prima
+``tabella'', relativa alla colonna $k=0$ non presenta permutazioni e quindi  
+l'indice $i$ del pannello è anche l'indice $i$ della matrice $\PBWT$.
+Si può calcolare, quindi, la permutazione per l'indice $i$ (alla prima
+operazione si avrà $k=1$):
+\begin{equation}
+  \label{eq:pbwttrick2}
+  \pi_k(i)=\pi_k(p)+i-p
+\end{equation}
+Si identifica, poi, la riga relativa alla run contenente il simbolo $\pi_k(p)$
+nella ``tabella'' successiva e si scansionano le righe di tale tabella a
+partire da quella appena identificata fino a trovare la run che contiene
+$\pi_k(i)$ (alla prima
+operazione si avrà $k=1$). Infine, si estrae il simbolo relativo a tale run.
+Ripetendo la procedura, per ogni colonna $k$, dal computo della permutazione, si
+può calcolare la riga $i$-esima del pannello.\\
 Inoltre,
 vengono proposti ulteriori ottimizzazioni, basate sul metodo detto
 \textit{fractional cascading}. Con tale rappresentazione, si riesce a ridurre il
@@ -898,14 +896,10 @@ numero di run che devono essere scansionate nel passaggio 3, al costo di una
 maggior richiesta di spazio. Infatti, aumentando il numero totale di
 righe in tutte le tabelle di un fattore al più $\left(1+\frac{1}{d}\right)$, è
 possibile garantire che si avranno al più $d$ iterazioni, in ogni tabella, per
-ottenere l'estrazione del simbolo desiderato.\\
-\textit{Si segnala che, nel paper, non vengono specificati metodi per
-effettuare query a 
-tale struttura dati, indicando solo che dovrebbe essere possibile interrogare
-tale struttura a tabelle}.\\
+ottenere l'estrazione del simbolo desiderato.
 Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
 \begin{esempio}
-   Supponendo di voler ricostruire la riga $i=9$, si assuma la matrice
+   Supponendo di voler ricostruire la riga $i=9$, si assuma la seguente matrice
    $\PBWT$, avendo che in rosso sono segnati i simboli appartenenti alla riga 9: 
   \begin{table}[H]
     \centering
@@ -914,35 +908,35 @@ Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
       X & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 \\
       \hline
       00 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
-      01 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & {\color{nordred}\textbf{1}}
+      01 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & {\color{nordred}\textbf{\underline{1}}}
                                                                & 1 \\
       02 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 1 \\
-      03 & 1 & 1 & 0 & {\color{nordred}\textbf{0}} & {\color{nordred}\textbf{0}}
-                                 & {\color{nordred}\textbf{1}} & 0 & 0 & 1 & 1
+      03 & 1 & 1 & 0 & {\color{nordred}\textbf{\underline{0}}} & {\color{nordred}\textbf{\underline{0}}}
+                                 & {\color{nordred}\textbf{\underline{1}}} & 0 & 0 & 1 & 1
                                                           & 0 & 1 \\
       04 & 1 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 1 \\
-      05 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & {\color{nordred}\textbf{0}} & 0
+      05 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & {\color{nordred}\textbf{\underline{0}}} & 0
                                                                & 1 \\
       06 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
       07 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 \\
-      08 & 0 & 1 & {\color{nordred}\textbf{0}} & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0
+      08 & 0 & 1 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0
                                                                & 1 \\
-      09 & {\color{nordred}\textbf{1}} & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0
+      09 & {\color{nordred}\textbf{\underline{1}}} & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0
                                                                & 1 \\
       10 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
       11 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
       12 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
       13 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
-      14 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{0}} & 0 & 0
+      14 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0
                                                                & 1 \\
-      15 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{0}} & 0 & 0 & 0
+      15 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 0
                                                                & 1 \\
-      16 & 1 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{0}} & 0 & 1 & 0 & 0
+      16 & 1 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 1 & 0 & 0
                                                                & 1 \\
-      17 & 0 & {\color{nordred}\textbf{0}} & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
+      17 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
                                                                & 1 \\
       18 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
-                                         & {\color{nordred}\textbf{1}} \\ 
+                                         & {\color{nordred}\textbf{\underline{1}}} \\ 
       19 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 \\
     \end{tabular}
   \end{table}
@@ -973,11 +967,15 @@ Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
     \end{itemize}
   \end{multicols}
   Sfruttando quindi il valore booleano (non rappresentato nelle tabelle ma
-  necessario in memoria) che ci dice con che simbolo inizia una colonna e
+  necessario in memoria) che ci dice con che simbolo inizia una colonna
+  della matrice $\PBWT$ e
   sapendo che, 
-  essendo un pannello binario si alternano le run con simboli $\sigma=0$ e
+  essendo un pannello binario, si alternano run con simboli $\sigma=0$ e
   $\sigma=1$, si può ricostruire la riga 9 del pannello originale:
   \[x_9=100001000011\]
 \end{esempio}
-
+Si segnala che, nel paper, non vengono specificati metodi per
+effettuare query a 
+tale struttura dati, indicando solo che dovrebbe essere possibile interrogare
+tale struttura a tabelle.
 % LocalWords:  pseudocodice aplotipi mismatch

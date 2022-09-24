@@ -126,6 +126,8 @@
 \def\RMQ{\mbox{\rm {\sf RMQ}}}
 \def\BWT{\mbox{\rm {\sf BWT}}}
 \def\BWM{\mbox{\rm {\sf BWM}}}
+\def\ITR{\mbox{\rm {\sf index\_to\_run}}}
+\def\GS{\mbox{\rm {\sf get\_symbol}}}
 \def\PBWT{\mbox{\rm {\sf PBWT}}}
 \def\MPBWT{\mbox{\rm {\sf mPBWT}}}
 \def\DPBWT{\mbox{\rm {\sf dPBWT}}}
@@ -140,6 +142,10 @@
 \def\DM{\mbox{\rm {\sf DM}}}
 \def\PA{\mbox{\rm {\sf PA}}}
 \def\LCE{\mbox{\rm {\sf LCE}}}
+\def\UP{\mbox{\rm {\sf update}}}
+\def\lceb{\mbox{\rm {\sf lce\_bounded}}}
+\def\RM{\mbox{\rm {\sf reverse\_map}}}
+
 \newcommand{\Oh}{\mathcal{O}}
 
 % \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
@@ -297,7 +303,7 @@ bioinformatica, ovvero il passaggio dallo studio della sequenza lineare di un
 singolo genoma a quello di un insieme di genomi, provenienti da un gran numero
 di individui, al fine di poter considerare anche le varianti
 geniche. Questo nuovo concetto è stato nominato per la prima volta, nel 2005,
-da Tettelin \cite{tettelin} con il termine di \textit{pangenoma}. Grazie ai
+da Tettelin \cite{tettelin} con il termine di \textbf{pangenoma}. Grazie ai
 risultati ottenuti in pangenomica, ci sono stati miglioramenti sia nel 
 campo della biologia che in quello della medicina personalizzata, grazie al
 fatto che, con il pangenoma, si migliora la precisione della rappresentazione di
@@ -403,8 +409,9 @@ della $\RLPBWT$.\\
 \label{metchap}
 In questo capitolo verranno illustrate le metodologie usate in questa tesi,
 trattando, sia dal punto di vista teorico che sperimentale, tutte le soluzioni
-che hanno portato alla costruzione di diverse varianti della \textbf{RLPBWT}.\\
-Nel dettaglio, si approfondiranno tutte le varianti della \textbf{RLPBWT}
+che hanno portato alla costruzione di diverse varianti della $\RLPBWT$.\\
+Nel dettaglio, si approfondiranno tutte le varianti (intese come strutture dati
+composte) della $\RLPBWT$ 
 ottenute durante lo studio, evidenziandone pro e contro.
 
 % sezione varianti RLPBWT

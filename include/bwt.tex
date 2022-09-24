@@ -16,7 +16,7 @@ prodotta dalla trasformata. Questa proprietà è causata dalle ripetizioni di
 sottostringhe all'interno del testo stesso.
 \begin{definizione}
   Dato un testo $T$ \$-terminato, tale che $|T|=n$, si definisce la
-  Burrows-Wheeler Transform di $T$, denotata con
+  Burrows--Wheeler Transform di $T$, denotata con
   $\BWT_T$, come un array di caratteri lungo $n$ dove l'elemento $i$-esimo è il
   carattere che precede l'$i$-esimo suffisso $T$ nel riordinamento
   lessicografico. Più formalmente si ha che:
@@ -44,7 +44,7 @@ lessicograficamente tutte le possibili rotazioni del testo $T$.
   \end{equation}
 \end{definizione}
 Data questa definizione, quindi, la $\BWT$ del testo $T$ risulta essere
-l'ultima colonna della matrice, detta \textbf{Burrows-Wheeler Matrix} ($\BWM$),
+l'ultima colonna della matrice, detta \textbf{Burrows--Wheeler Matrix} ($\BWM$),
 che si ottiene riordinando tutte le  
 rotazioni di $T$, che altro non sono che i suffissi già riordinati per
 il calcolo di $\SA_T$ a cui viene concatenata la parte restante del
@@ -132,7 +132,7 @@ $P[i-1]$ selezionando il nuovo intervallo sul suffix array. Tale
 aggiornamento è detto \textit{backward step} e consiste nell'aggiornare
 l'intervallo sul suffix array a quei suffissi del testo che, estesi a sinistra
 col carattere $(i-1)$-esimo del pattern, presentano un match con $P[i-1,
-|P|-1]$.\\  
+|P|-1]$.\\   
 Usando la $\BWT$ è possibile usare due funzioni, dette $\C$ e $\Occ$, per
 computare la backward search.
 \begin{definizione}
@@ -332,7 +332,7 @@ caratteri su $\F_T$, calcolando il nuovo intervallo $[f,g)$.
   Avendo quindi che le occorrenze del pattern $P=\mbox{iss}$ iniziano alle
   posizioni $\SA_T[3]=4$ e $\SA_T[4]=1$ del testo.
 \end{esempio}
-\section{Trasformata di Burrows-Wheeler run-length encoded}
+\section{Trasformata di Burrows--Wheeler run-length encoded}
 Come già introdotto, la $\BWT$ tende ad avere caratteri uguali in
 posizioni consecutive all'interno della sua sequenza. Si è quindi 
 pensato, fin da subito, ad un modo efficiente per memorizzare in modo compresso
@@ -349,7 +349,7 @@ uguali, mediante coppie:
 \end{esempio}
 \subsection{RLBWT e r-index}
 In questa direzione, nel 2005, M\"{a}niken e Navarro proposero la
-\textbf{Run-Length encoded Burrows–Wheeler Transform} ($\RLBWT$)
+\textbf{Run-Length encoded Burrows-–Wheeler Transform} ($\RLBWT$)
 \cite{rlbwt}.
 \begin{definizione}
   Dato un testo $T$ si definisce la \RLBWT di $T$

@@ -1,51 +1,28 @@
 \subsection{Componente per le threshold}
-Come discusso per \textit{MONI}, l'uso delle \textbf{threshold} è parte
-fondamentale di uno dei due modi per ottenere le \textit{matching
-  statistics}. \\
+Come discusso per MONI per la $\RLBWT$, l'uso delle threshold è 
+uno dei due modi per computare l'array delle matching statistics. \\
 \begin{definizione}
-  Data la colonna $k$-esima della \textbf{matrice PBWT}, $y^k$, memorizzata
-  tramite compressione \textbf{run-length} e data la run $j$-esima, indicizzata
-  da $i$ a $i'$, si definisce \textbf{threshold} come l'indice del minimo valore
-  \textit{LCP}, che ricordiamo essere calcolato sull'ordinamento inverso,
-  compreso negli indici della run, compreso l'eventuale 
-  $LCP_k[i'+1]$, qualora $i'\neq M-1$. Si noti che quest'ultimo valore, se
-  esistente, deve essere considerato in quanto per il suo calcolo, come
-  specificato nei preliminari alla sezione \ref{secpbwt}, si prende in
-  considerazione $y^k_{i'}$ e $y^k_{i'+1}$.
+  Data la colonna $k$-esima della matrice $\PBWT$, $y^k$, memorizzata
+  tramite compressione run-length e data la run $j$-esima, indicizzata
+  da $i$ a $i'$, si definisce threshold come l'indice del minimo valore
+  dell'$\,\RLCP$,
+  compreso negli indici della run, considerando anche l'eventuale 
+  $\RLCP_k[i'+1]$, qualora $i'\neq M-1$. Si noti che quest'ultimo valore, se
+  esistente, deve essere considerato in quanto calcolato prendendo in
+  considerazione $y^k_{i'}$ (valore appartenente alla run in analisi) e
+  $y^k_{i'+1}$. \\
+  Qualora si abbiano più valori minimi uguali in $\RLCP_k$ si seleziona il primo
+  per convenzione.
 \end{definizione}
-% Con tale informazione, unita ai \textit{prefix array sample}, si può quindi
-% ottenere un comportamento analogo a quanto si ottiene con l'\textbf{R-index} per
-% la \textit{RLBWT}.\\
-% Sia infatti data $t$ la posizione della \textit{threshold} nella run corrente,
-% in colonna $k$, e
-% si supponga che tale run, con testa all'indice $h$, non sia associata al simbolo
-% desiderato, ovvero $z[k]$. Si supponga che, con il mapping, si sia arrivati
-% all'indice $i$ della colonna $k$. Si supponga inoltre che la run successiva
-% abbia testa in indice $e$. Si hanno due casi possibili, denotando con
-% $LCS(x,y)$ il \textit{longest common suffix} tra le stringhe $X$ e $Y$ e con
-% $a_k$ il \textit{prefix array} in colonna $K$:
-% \begin{enumerate}
-%   \item $i<t$ allora, per definizione di \textit{threshold}:
-%   \[LCS(z[0,k], x_{a_{k}[h-1]}[0,k])\geq LCS(z[0,k], x_{a_{k}[e]}[0,k])\]
-%   Quindi si ha che $MS[k].row=a_{k}[h-1]$ e il mapping potrà proseguire
-%   dall'indice $h-1$
-%   \item  $i\geq t$ allora, per definizione di \textit{threshold}:
-%   \[LCS(z[0,k], x_{a_{k}[h-1]}[0,k])\leq LCS(z[0,k], x_{a_{k}[e]}[0,k])\]
-%   Quindi si ha che $MS[k].row=a_{k}[e]$ e il mapping potrà proseguire
-%   dall'indice $e$
-% \end{enumerate}
-% Qualora una colonna presenti solo simboli $\sigma\neq z[k]$, per convenzione, si
-% imposta che $MS[k].row = M$ e si ricomincia, in colonna $k+1$, dall'ultima
-% posizione, indicizzata nel pannello originale dal valore finale del
-% \textit{prefix array sample} dell'ultima run.\\
 Da un punto di vista implementativo, come anticipato, si hanno due soluzioni,
-una basata su \textit{intvector} e una basata su \textit{bitvector sparsi}. In
-entrambi i casi il calcolo si può effettuare in parallelo a quello di
-\texttt{MAP-INT} e \texttt{MAP-BV}.
-\subsubsection{Threshold con intvector}
-In questo caso la memorizzazione delle threshold avviene in modo molto semplice,
-usando un \textit{vettore di interi bit-compressed}. Data una colonna $k$ della
-\textit{PBWT matrix}, con $r$ numero di run, si calcola $t_k$ tale che
+una basata su intvector compressi e una basata su bitvector sparsi. In
+entrambi i casi il calcolo si può effettuare in parallelo a quello delle
+componenti \texttt{MAP-INT} e \texttt{MAP-BV}.
+\subsubsection{Threshold con intvector compressi}
+Con questa componente, la memorizzazione delle threshold avviene in modo molto
+semplice, 
+usando un vettore di interi bit-compressed. Data una colonna $k$ della
+matrice $\PBWT$, con $r$ numero di run, si calcola $t_k$ tale che
 $t_k[i]=j$ sse $j$ è l'indice della threshold dell'$i$-esima run.\\
 Lo pseudocodice per la costruzione della componente
 \texttt{THR-INT} della colonna $k$ è consultabile all'algoritmo
@@ -57,10 +34,10 @@ proporzionale a:
   \label{eq:thrint}
   \mathcal{O}(M)
 \end{equation}
-Si noti che, qualora minimo LCP si trovi nella testa della run successiva (da
-considerare in quanto calcolato anche grazie all'ultimo elemento della run
-corrente), si può tranquillamente memorizzare l'indice della testa della run
-successiva come \textit{threshold}.
+Si noti che, qualora minimo $\RLCP$ si trovi nella testa della run successiva
+(da considerare in quanto calcolato anche grazie all'ultimo elemento della run
+corrente), si memorizza l'indice della testa della run
+successiva come threshold.
 \begin{algorithm}
   \begin{algorithmic}
     \Function{Build\_thr\_int}{$col,\,\,pref,\,\,div$}
@@ -89,29 +66,23 @@ successiva come \textit{threshold}.
   \label{algo:thrint}
 \end{algorithm}
 \subsubsection{Threshold con bitvector}
-In questo caso le posizioni delle \textit{threshold} vengono
-memorizzate tramite un \textit{bitvector sparso} per ogni colonna $k$, denotato
-$thr_k$, avendo che $thr_k[i]=1$ sse $i$ è l'indice di una \textit{threshold}.
-Qualora il minimo \textit{LCP} si ritrovi nell'indice della testa della run
-successiva, la posizione della threshold verrà comunque memorizzata all'indice
-della coda della run corrente. Purtroppo questa è una situazione di ambiguità,
-avendo che, seguendo la definizione sopra, avendo la \textit{threshold} a fine
-run, bisognerebbe scegliere la testa della run successiva, qualora l'indice $i$
-si trovi esattamente a fine run. Invece, qualora la
-\textit{threshold} sia a fine run a causa del fatto che il minimo \textit{LCP}
-si trovi nella testa della run successiva, bisogna scegliere la coda della run
-precedente. L'unico modo per disambiguare è quindi effettuare \textit{random
-  access} al pannello per vedere quale sia la
-soluzione migliore, ovvero quale tra la coda della run precedente e la testa
-della run successiva siano relative alla riga del pannello originale con un
-suffisso comune alla query più lungo.\\
-Purtroppo non è possibile salvare la threshold direttamente nella testa della
+Con questa componente, le posizioni delle threshold vengono
+memorizzate, per ogni colonna $k$, tramite un bitvector sparso, denotato
+$thr_k$, avendo che $thr_k[i]=1$ sse $i$ è l'indice di una threshold.
+Qualora il minimo $\RLCP$ si trovi nell'indice della testa della run
+successiva, la posizione della threshold verrà memorizzata all'indice
+della coda della run corrente. Purtroppo questa è una situazione di ambiguità.
+Infatti, come si vedrà poi durante lo studio dell'algoritmo di calcolo delle
+matching statistics tramite threshold, il fatto che una threshold posta a fine
+run corrisponda effettivamente ad un minimo $\RLCP$ in quella posizione o a
+quella successiva comporta differenze dal punto di vista del calcolo dell'array
+$\MS$. 
+Purtroppo, non è possibile salvare la threshold direttamente nella testa della
 run successiva in quanto questa potrebbe essere anche la posizione della
 threshold della run successiva e avere due threshold sovrapposte impedirebbe di
 capire a quale run appartiene una certa threshold, tramite la funzione
-\textit{rank}. \\
-Tale bitvector deve essere quindi aggiunto alle informazioni memorizzate per
-ogni singola colonna. Lo pseudocodice per la costruzione della componente
+$\rank$. \\
+Lo pseudocodice per la costruzione della componente
 \texttt{THR-BV} della colonna $k$ è consultabile all'algoritmo \ref{algo:thrbv}
 e, dovendo scorrere la colonna permutata dal prefix array $a_k$ e dovendo
 accedere ai valori di $l_k$, tale operazione ha complessità in tempo
@@ -142,10 +113,11 @@ proporzionale a:
     \EndIf
     \EndIf
     \EndFor
-    \State \textit{costruzione delle strutture rank/select per thr}
+    \State \textit{costruzione delle strutture $\rank$/$\select$ per thr}
     \State \textbf{return} $thr$  
     \EndFunction
   \end{algorithmic}
   \caption{Algoritmo per la costruzione della componente \texttt{THR-BV}.}
   \label{algo:thrbv}
 \end{algorithm}
+\dc{Serve ridire quanto pesa un bv?}

@@ -1,14 +1,14 @@
-\subsection{Componente per i prefix array samples}
-Come introdotto parlando delle \textit{matching statistics}, qualora si abbia un
-cambio di riga da memorizzare si seleziona sempre o quella relativa alla coda
+\subsection{Componente per i prefix array sample}
+Come introdotto parlando delle matching statistics, qualora si abbia un
+cambio di riga da memorizzare, si seleziona sempre o quella relativa alla coda
 della run precedente o quella relativa alla testa della run successiva. Risulta
 quindi necessario, in colonna $k$, memorizzare i valori di $a_k$ all'inizio e
-alla fine di ogni run, sotto forma di \textit{vettori di interi
-  bit-compressed}. Tali valori sono quindi un sample dei valori che permettono
-le permutazioni che costruiscono la \textit{matrice PBWT} e quindi tale
+alla fine di ogni run. Anche in questo caso si sono scelti i vettori di interi
+bit-compressed. Tali valori sono un sample dei valori che permettono
+le permutazioni che costruiscono la matrice $\PBWT$ e quindi tale
 componente prende il nome di \texttt{PERM}.\\
 All'algoritmo \ref{algo:buildperm} è possibile analizzare lo pseudocodice del
-metodo usato per calcolare la componente \texttt{PERM} per la colonna
+metodo usato per calcolare tale componente per la colonna
 $k$-esima. L'algoritmo, dovendo iterare l'intera colonna della \textit{matrice
   PBWT} ha costo, in tempo:
 \begin{equation}
@@ -19,12 +19,15 @@ La costruzione può essere fatta in contemporanea a quelle delle componenti gia
 descritte, ovvero: 
 \texttt{MAP-INT}/\texttt{MAP-BV} e \texttt{THR-INT}/\texttt{THR-BV}.
 \begin{algorithm}
+  \small
   \begin{algorithmic}[1]
     \Function{build\_perm}{$col,\,\, pref$}
     \Comment $pref = a_k$
     \State $tmp_{beg}\gets 0,\,\,beg_{run}\gets \top$
-    \State $samples_{beg} \gets [],\,\,samples_{end}\gets []$
-    \Comment vettori per i prefix array samples ad inizio/fine di ogni run
+    \State $samples_{beg} \gets []$
+    \Comment vettore per i prefix array sample ad inizio di ogni run
+    \State $samples_{end}\gets []$
+    \Comment vettore per i prefix array sample a fine di ogni run
     \For {\textit{every} $k\in\left[0,\,\, height\right)$}
     \If{$beg_{run}$}
     \State $tmp_{beg}\gets pref[k]$
