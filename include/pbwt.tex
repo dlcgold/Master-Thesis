@@ -311,7 +311,7 @@ $\BWT$ e $\PBWT$ (e le rispettive varianti run-length
   \end{tabular}
 \end{table}
 \end{esempio}
-\subsection{Match massimali con aplotipo esterno}
+\subsection{Set-maximal match con aplotipo esterno}
 Durbin, nel suo articolo, propone diversi algoritmi per l'uso effettivo della
 sua trasformata. Ad esempio, viene proposto un algoritmo per il calcolo
 di match interni ad $X$ più lunghi di una lunghezza minima $L$ e uno per la
@@ -328,7 +328,8 @@ $[f_k,g_k)\subseteq[0,\ldots,M)$ invece identifica il sotto-intervallo di
 $a_k$ contenente gli indici degli aplotipi appartenetenti a tale match. Si noti
 come si riprenda quindi l'idea, vista con la backward search per la
 $\BWT$, di studiare un intervallo $[f_k,g_k)$ su $\SA_T$ per identificare i
-match tra un pattern e un testo. 
+match tra un pattern e un testo. In questo caso si ha però a che fare con una
+forward search.
 \begin{definizione}
   Dato un pannello $X$, con $M$ aplotipi/righe e $N$ siti/colonne, e un aplotipo
   query $z$, tale che $|z|=N$, si definisce uno $\SMEM$ iniziante in colonna
@@ -346,7 +347,7 @@ match tra un pattern e un testo.
 \end{definizione}
 Bisogna capire come aggiornare $e_k$, $f_k$ e $g_k$ passando dalla
 colonna $k$ alla colonna $k+1$. Si procede esattamente come visto per la
-backward search, selezionando, per calcolare  $[f_{k+1},g_{k+1})$, il
+backward search nella $\BWT$, selezionando, per calcolare $[f_{k+1},g_{k+1})$, il
 sottointervallo di $[f_k,g_k)$ in cui si hanno aplotipi che possono essere estesi
 a destra con il simbolo $z[k+1]$. L'idea è quella per cui, avendo
 $f_{k+1}<g_{k+1}$ allora sicuramente ho ancora delle righe che presentano un
@@ -358,7 +359,8 @@ ottenedo i relativi valori $f_{k+1}$ e $g_{k+1}$, al fine di trovare la nuova
 colonna da cui parte lo $\SMEM$ successivo e le righe del pannello per le quali
 si ha tale $\SMEM$. \\
 Bisogna, quindi, capire come funzioni la
-variante del backward-step introdotta per la $\BWT$. Tale funzione,
+variante del backward-step introdotta per la $\BWT$. Nella $\PBWT$ si può
+parlare di forward-step. Tale funzione,
 guidata dal carattere corrente dell'aplotipo query, permette di ottenere
 $f_{k+1}$ e $g_{k+1}$ a partire da $f_k$ e $g_k$.\\ 
 Per effettuare il mapping abbiamo bisogno di tre componenti, che,
@@ -450,7 +452,7 @@ funzione $w_k$:
   \[\alpha_{6}[2]=w_5(\alpha_5[2],x_2[5])=w_5(18,0)=13\]
   Come volevasi dimostrare.
 \end{esempio}
-\dc{Capire se dire altro su $w()$}
+\dc{Capire se dire altro su $\W()$}
 L'ultima equazione ci suggerisce che la funzione $w_k$
 consente il corretto aggiornamento di $f_k$ e $g_k$.
 Definendo, infatti:
@@ -629,8 +631,8 @@ rivoluzionari per lo studio di pannelli di aplotipi.
     \EndFunction
     \State
     \Function{Update\_Matches}{$k, z, e, f, g$}
-    \State $f'\gets w(k, f, z[k])$
-    \State $g'\gets w(k, g, z[k])$
+    \State $f'\gets \W(k, f, z[k])$
+    \State $g'\gets \W(k, g, z[k])$
     \If{$f'<g'$}
     \Comment\textit{{se $k$ è $N-1$ report degli $\SMEM$ da $e_k$ a $N-1$}}
     \State $e'\gets e_k$
@@ -663,7 +665,7 @@ algoritmo. Si ipotizzi di non ricalcolare, colonna per colonna, comportando
 un'incremento dal punto di vista temporale in caso di dover studiare più query
 $z$, tutti gli array  
 necessari a costruire la $\PBWT$ e a permettere di computare la funzione
-$w(i,\sigma)$.\\
+$\W(i,\sigma)$.\\
 Ricapitolando, per poter eseguire l'algoritmo 5, si necessita di avere in
 memoria, con \textit{random access}:
 \begin{itemize}
@@ -684,7 +686,7 @@ richiesta,
 ovvero\footnote{\scriptsize{\url{https://github.com/richarddurbin/pbwt/blob/0de8d02df1b77146ded81e9e196991fdab520767/pbwtMatch.c\#L252}}}:
 \begin{equation}
   \label{eq:pbwtsize2}
-  13NM\mbox{ bytes}
+  13NM\mbox{ byte}
 \end{equation}
 Per poter capire meglio la problematica conseguente a tali richieste di spazio,
 prendiamo, ad esempio, un pannello di 

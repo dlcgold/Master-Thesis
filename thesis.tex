@@ -1,5 +1,5 @@
-%\documentclass[a4paper,12pt, oneside]{book}
-\documentclass[a4paper,12pt, oneside, draft]{book}
+\documentclass[a4paper,12pt, oneside]{book}
+%\documentclass[a4paper,12pt, oneside, draft]{book}
 % \usepackage{fullpage}
 \usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
@@ -111,6 +111,8 @@
 \def\row{\mbox{\rm {\sf row}}}
 \def\LF{\mbox{\rm {\sf LF}}}
 \def\FL{\mbox{\rm {\sf FL}}}
+\def\W{\mbox{\rm {\sf w}}}
+\def\A{\mbox{\rm {\sf A}}}
 \def\A{\mbox{\rm {\sf A}}}
 \def\SA{\mbox{\rm {\sf SA}}}
 \def\LCP{\mbox{\rm {\sf LCP}}}
@@ -119,6 +121,8 @@
 \def\RLCP{\mbox{\rm {\sf RLCP}}}
 \def\RLBWT{\mbox{\rm {\sf RLBWT}}}
 \def\MEM{\mbox{\rm {\sf MEM}}}
+\def\KMEM{\mbox{\rm {\sf K-MEM}}}
+\def\KSMEM{\mbox{\rm {\sf K-SMEM}}}
 \def\MS{\mbox{\rm {\sf MS}}}
 \def\LCP{\mbox{\rm {\sf LCP}}}
 \def\NSV{\mbox{\rm {\sf NSV}}}
@@ -130,6 +134,7 @@
 \def\GS{\mbox{\rm {\sf get\_symbol}}}
 \def\PBWT{\mbox{\rm {\sf PBWT}}}
 \def\MPBWT{\mbox{\rm {\sf mPBWT}}}
+\def\MRLPBWT{\mbox{\rm {\sf mRLPBWT}}}
 \def\DPBWT{\mbox{\rm {\sf dPBWT}}}
 \def\RLPBWT{\mbox{\rm {\sf RLPBWT}}}
 \def\SMEM{\mbox{\rm {\sf SMEM}}}
@@ -445,19 +450,19 @@ ottenute durante lo studio, evidenziandone pro e contro.
 
 \chapter{Risultati sperimentali}
 \label{reschap}
-Verranno ora riportati alcuni risultati sperimentali
-relativi all'implementazione della \textbf{RLPBWT}. In primis,
+Si riportano alcuni risultati sperimentali
+relativi alle diverse implementazioni della $\RLPBWT$. In primis,
 verranno discusse le modalità di sperimentazione per poi trattare i
-risultati ottenuti su alcuni pannelli della \textit{phase 3} del \textbf{1000
-  Genome Project (\textit{1KGP})} \cite{1kgp}, progetto, che ha avuto inizio nel
+risultati ottenuti su alcuni pannelli della phase 3 del \textit{1000
+  Genome Project} (1KGP) \cite{1kgp}, progetto, nato nel
 2008, il quale 
 ha visto lo sforzo della comunità 
 scientifica internazionale per catalogazione delle variazioni geniche
-umane. Il \textit{1KGP} risulta essere uno dei più importanti progetti del
-settore. \\ 
+umane. Il 1KGP risulta essere uno dei più importanti progetti nell'ambito
+bioinformatico. \\  
 Verranno quindi confrontate le implementazioni degli algoritmi di calcolo degli
-\textit{SMEM} della \textit{PBWT} di Durbin e delle varianti per la
-\textit{RLPBWT}.  
+$\SMEM$ della $\PBWT$ di Durbin e delle varianti per la
+$\RLPBWT$.  
 \dc{Magari servono dettagli per il 1kgp}
 % sezione strumenti
 \input{include/strumenti}
@@ -471,24 +476,39 @@ Verranno quindi confrontate le implementazioni degli algoritmi di calcolo degli
 \chapter{Conclusioni}
 \label{conchap}
 Fissato l'iniziale obbiettivo di risolvere le problematiche relative alla
-memoria richiesta dall'\textit{algoritmo 5} di Durbin, l'implementazione della
-\textbf{RLPBWT}, principalmente nelle strutture dati composte segnalate nel
-Capitolo \ref{reschap}, ha riportato risultati molto incoraggianti. Come
-descritto nel medesimo capitolo, la quantità di memoria richiesta risulta essere 
-incredibilmente inferiore rispetto a quella richiesta dall'algoritmo
+memoria richiesta dall'algoritmo 5 di Durbin, le implementazioni della
+$\RLPBWT$ proposte in questa tesi, principalmente nelle strutture dati composte
+segnalate nel 
+Capitolo \ref{reschap}, hanno riportato risultati molto incoraggianti. Come
+descritto nel medesimo capitolo, la quantità di memoria richiesta per il calcolo
+degli $\SMEM$ risulta essere 
+molto inferiore rispetto a quella richiesta dall'algoritmo
 \texttt{matchIndexed}. D'altro canto, l'algoritmo \texttt{matchDynamic} di 
 Durbin, per quanto non approfondito nell'articolo del 2014 \cite{pbwt}, risulta
 essere ancor meno esoso di risorse, nonché incredibilmente più veloce dal punto
 di vista dei tempi di calcolo, ad eccezion del caso limite di avere un numero
 esiguo di query. Lo svantaggio si ritrova anche nell'ordinamento dei risultati
-e nella creazione di un'ulteriore \textit{PBWT}
-che, giudicando la letteratura degli ultimi anni le cui trattazioni si basano
+e nella creazione di un'ulteriore $\PBWT$
+che, giudicando la letteratura degli ultimi anni, le cui trattazioni si basano
 sempre sull'algoritmo 5, sembrano implicare un non facile 
 riadattamento per la risoluzione di altri task.\\
-Si possono comunque rilevare alcune possibili migliorie in merito
-alle varie implementazioni della \textit{RLPBWT} presentate in questa tesi,
+In termini di casi d'uso, ipotizzando un possibile futuro in cui diventi comune
+interrogare pannelli di aplotipi frequentemente, magari con singole query da
+un'interfaccia web o tramite API (alla stregua di quanto avviene
+quotidianamente, ad esempio, con BLAST), l'uso della $\RLPBWT$, in una delle sue
+migliori varianti, avrebbe evidenti vantaggi in termini di tempo di calcolo
+degli $\SMEM$, non solo
+rispetto all'algoritmo 5 di Durbin ma anche rispetto all'algoritmo
+\texttt{matchDynamic}, 
+alla luce dei risultati su singole query. Inoltre, quest'ultimo richiederebbe
+ogni volta la ricostruzione della permutazione, a differenza delle
+implementazioni della $\RLPBWT$ che potrebbero essere costruite e caricate in
+memoria \textit{una tantum}.\\
+\dc{Frase da rivedere}
+Si possono rilevare alcune possibili migliorie in merito
+alle varie implementazioni della $\RLPBWT$ presentate in questa tesi,
 riferendosi essenzialmente alle soluzioni che prevedono il calcolo
-dell'array delle \textit{matching statistics}: 
+dell'array delle matching statistics: 
 \begin{itemize}
   \item si potrebbe pensare ad un metodo per gestire in modo efficiente lo
   studio di più query contemporaneamente, migliorando i tempi di calcolo
@@ -496,24 +516,31 @@ dell'array delle \textit{matching statistics}:
   stregua di quanto visto con l'algoritmo \texttt{matchDynamic}, caricare in
   memoria, di volta in volta, solo la 
   colonna necessaria ad un dato passo di computazione o comunque un sottoinsieme
-  di colonne. In tal modo, si ridurrebbe l'uso massimo di memoria 
+  di colonne. In tal modo, si ridurrebbe l'uso massimo di memoria, qualora non
+  fosse necessario tenere in memoria la struttura per rispondere a diverse query
+  provenienti da diverse fonti
   \item studiare eventuali ottimizzazioni per la componente \texttt{MAP-BV} al
   fine di comprendere se sia possibile tenere in
-  memoria un solo bitvector $uv_k$ che funzioni in modo similare a quanto si ha
+  memoria un solo bitvector $uv_k$, che funzioni in modo similare a quanto si ha
   con la componente \texttt{MAP-INT}
 \end{itemize}
-Nonostante queste possibili migliorie, la qualità dei risultati è sufficiente
-per stabilire che una variante \textit{run-length encoded} della \textit{PBWT},
-alla 
-stregua di quanto analizzato negli ultimi anni sulla \textit{RLBWT} con
-\textit{MONI} \cite{moni} e \textit{PHONI} \cite{phoni}, sia possibile e possa
+Inoltre, risulterebbe interessante, dal solo punto di vista teorico, una più
+approfondita caratterizzazioni delle complessità asintotiche, sia in spazio che
+in tempo. Questa analisi, a causa degli algoritmi stessi e dell'uso di strutture
+dati succinte, sarebbe sicuramente molto difficile ma potrebbe portare a nuovi
+spunti di riflessione per il campo dell'informatica teorica, oltre che della
+bioinformatica.\\
+Nonostante quanto detto, la qualità dei risultati è sufficiente
+per stabilire che una variante run-length encoded della $\PBWT$,
+come analizzato negli ultimi anni per la $\RLBWT$ con
+MONI \cite{moni} e PHONI \cite{phoni}, sia possibile e possa
 permettere, nel prossimo futuro, la memorizzazione compatta delle informazioni
 necessarie allo studio di grandi pannelli di aplotipi. In un futuro in cui le
 tecnologie di sequencing produrranno sempre più dati, provenienti da sempre più
 individui, avere a disposizione strutture dati efficienti dal punto di vista
 della memorizzazione permetterà uno studio sempre più approfondito dei dati
-stessi, nei campi dei \textit{Genome-Wide Association Studies (GWAS)}, della
-\textit{medicina personalizzata} etc\ldots 
+stessi, nei campi dei Genome-Wide Association Studies (GWAS), della
+medicina personalizzata etc\ldots 
 % sezione sviluppi
 \input{include/sviluppi}
 %% BIBLIOGRAFIA

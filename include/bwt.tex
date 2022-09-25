@@ -594,7 +594,7 @@ di MONI \cite{moni}.
     \State $\MS\gets[(\pos : 0, \len : 0) \ldots (0, 0)]$
     \Comment $|P| = m$, $|T| = n$, $|\MS| = m$
     \State $q\gets\mbox{posizione dell'ultima occorrenza di }P[m-1] \mbox{ in }
-    \BWT_T$
+    \BWT_T$ 
     \State $pos \gets \SA_T[q]$
     \Comment calcolo $\MS[i].\pos$
     \For {\textit{every} $i\in[0,m-1]$}
@@ -674,7 +674,8 @@ MONI, qualora bisogni scegliere una nuova posizione dopo un mismatch,
 si usa il 
 risultato delle $\LCE$ query. In tal modo, in contemporanea,
 si possono computare i valori 
-$\MS[i].\len$, $\forall \in \{0,m-1\}$. Sfruttando, infatti, $\MS[i+1].\len$ e la lunghezza del risultati
+$\MS[i].\len$, $\forall \in \{0,m-1\}$. Sfruttando, infatti, $\MS[i+1].\len$ e
+la lunghezza del risultati 
 della $\LCE$ query è possibile tenere conto di eventuali overlap tra i
 match e computare correttamente $\MS[i].\len$. Alternativamente, qualora si possa
 proseguire avendo un match tra  
@@ -697,12 +698,8 @@ bitvector (sparso) $B_{\sigma}$, lungo $n$ (ovvero quanto il testo), tale che:
 \end{equation}
 L'algoritmo \ref{algo:phonims} \cite{phoni}
 riporta il calcolo completo dell'array delle matching statistics presente in
-\textit{PHONI}, la cui 
-complessità temporale è stimata in:
-\begin{equation}
-  \label{eq:rlbwt11}
-  \mathcal{O}(m\log\log n)
-\end{equation}
+PHONI, la cui 
+complessità temporale è stimata in $\mathcal{O}(m\log\log n)$.
 Anche in questo caso la stima asintotica è difficile da stimare in modo 
 corretto ed è fortemente dipendente dalle strutture dati in uso, ad esempio 
 per il calcolo delle $\LCE$ query.

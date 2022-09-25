@@ -1,9 +1,12 @@
 \subsection{Componente per il mapping}
 La prima componente che si descrive è quella relativa
-al mapping tra una colonna e la sua successiva. Bisogna memorizzare, per
+al mapping tra una colonna e la sua successiva. In altri termini, bisogna
+studiare come effettuare il forward-step, che viene qui nominato
+\textit{mapping}, nella $\RLPBWT$. Bisogna memorizzare, 
+per 
 ogni colonna $k$ e in modo proporzionale al numero di run della stessa, le
 informazioni atte a ottenere i medesimi risultati ottenibili con la funzione
-$w(i,\sigma)$, secondo la notazione di Durbin \cite{pbwt}. 
+$\W(i,\sigma)$, secondo la notazione di Durbin \cite{pbwt}. 
 \subsubsection{Mapping con intvector compressi}
 La prima variante che si descrive è quella denominata \texttt{MAP-INT}.\\
 L'ispirazione iniziale per tale componente è stata data dall'articolo di Gagie
@@ -172,7 +175,7 @@ Da un punto di vista implementativo, gli array di interi $p_k$ e $uv_k$ vengono
 memorizzati in vettori di interi bit-compressed (intvector compressi),
 disponibili bella libreria 
 SDSL. Dato un array $v$, 
-tale che $x$ è il massimo indice, si memorizzano le componenti di $v$ in un
+tale che $x$ è il massimo valore, si memorizzano le componenti di $v$ in un
 vettore di interi con componenti memorizzate in $b$ bit, avendo:
 \begin{equation}
   \label{eq:bc1}
@@ -181,12 +184,21 @@ vettore di interi con componenti memorizzate in $b$ bit, avendo:
 Ricapitolando, per la componente \texttt{MAP-INT}, si hanno in memoria, per
 ogni colonna $k$:
 \begin{itemize}
-  \item $start_k$, ovvero il booleano atto a capire il simbolo della prima run
-  \item $p_k$, ovvero gli indici delle teste di run
+  \item $start_k$, ovvero il booleano atto a capire il simbolo della prima
+  run
+  \item $p_k$, ovvero gli indici delle teste di run. 
   \item $uv_k$, ovvero i valori compatti di $u_k$ e $v_k$ per le teste di run
   \item $c[k]$, ovvero il numero totale di simboli $\sigma=0$ nella colonna
   $k$ della matrice $\PBWT$
 \end{itemize}
+Facendo una prima stima della memoria occupata da questa componente si ha che,
+avendo $\rho$ numero medio di run per colonna e considerando che un elemento di
+un intvector 
+compresso necessita $\frac{\lceil\log(M-1)\rceil+1}{8}$ byte, essa è:
+\begin{equation}
+  \label{eq:mapintmem}
+  \approx N\left(2\frac{\lceil\log(M-1)\rceil+1}{8}\rho+5\right)
+\end{equation}
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
@@ -828,4 +840,21 @@ visto all'equazione \ref{eq:bvuvtime}.
   \caption{Algoritmo per il mapping con \texttt{MAP-BV}.}
   \label{algo:lfr}
 \end{algorithm}
+Facendo una prima stima della memoria occupata da questa componente si ha che,
+avendo $\rho$ numero medio di run per colonna, essa è:
+\begin{equation}
+  \label{eq:mapbvmem}
+  \approx N\left(3\rho\left(2+\log\frac{M}{\rho}\right)+5\right)
+\end{equation}
+Si noti che confrontare analiticamente le stime in memoria delle due componenti
+possibili per il mapping, non è banale, valutando la
+disequazione (relativa ad un solo bitvector sparso e ad un solo intvector
+compresso): 
+\begin{equation}
+  \label{eq:mapbvintmem}
+  \rho\left(2+\log\frac{M}{\rho}\right)>\rho\frac{\lceil\log(M-1)\rceil+1}{8}
+\end{equation}
+Solo valutazioni sperimentali hanno mostrato come, con valori di $M$ e $\rho$
+relativi ai pannelli di aplotipi studiati, l'uso degli intvector compressi sia
+più vantaggioso in termini di memoria richiesta.
 \dc{Serve altro?}

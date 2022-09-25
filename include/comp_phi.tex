@@ -71,18 +71,17 @@ componente \texttt{RA-BV}. La complessità temporale di questo algoritmo
 varia a seconda della componente per il random access (e della conseguente
 presenza della 
 componente \texttt{LCE}). Inoltre è difficile poter dare una stima asintotica in
-quanto varia sul numero di righe $\nu$ che presentano un certo $\SMEM$, e sulla
-lunghezza dello stesso $\lambda$. Quindi, si ha, con la
+quanto varia sul numero di righe $\nu$ che presentano un certo $\SMEM$ . Quindi, si ha, con la
 componente \texttt{RA-BV}, un tempo proporzionale a:
 \begin{equation}
   \label{eq:phiaccbv}
-  \mathcal{O}(\nu\lambda)
+  \mathcal{O}(\nu N)
 \end{equation}
 Mentre con l'uso della componente \texttt{LCE}, avendo il pannello in memoria
 sotto forma di $\SLP$, si ha complessità in tempo:
 \begin{equation}
   \label{eq:phiaccbv2}
-  \mathcal{O}(\nu\lambda\log NM)
+  \mathcal{O}(\nu\log (NM))
 \end{equation}
 \begin{algorithm}
   \small
@@ -158,7 +157,9 @@ Si ha che la lunghezza della riga $i$-esima di $\varPhi_{supp}$ è
 uguale al numero di simboli $\sigma=1$ presenti nella riga $i$-esima di
 $\varPhi$. Analogamente 
 si ha per $\varPhi^{-1}_{supp}$. In entrambi i casi, inoltre, si hanno $M$
-righe.\\ 
+righe. Queste osservazioni si ripercuotono sul costo in memoria della componente
+\texttt{PHI}, avendo che può essere stimata coi costi in memoria dei bitvector
+sparsi e degli intvector compressi, come fatto per le precedenti componenti.\\ 
 Al fine della costruzione, bisogna sfruttare $a_{N-1}$ per poter
 identificare quelle coppie di valori consecutivi non presenti nei vari
 prefix array sample, in modo che sia possibile effettuare le query per
