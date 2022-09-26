@@ -903,49 +903,99 @@ Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
 \begin{esempio}
    Supponendo di voler ricostruire la riga $i=9$, si assuma la seguente matrice
    $\PBWT$, avendo che in rosso sono segnati i simboli appartenenti alla riga 9: 
-  \begin{table}[H]
-    \centering
-    \footnotesize
-    \begin{tabular}{c|ccccccccccccccc}
-      X & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 \\
-      \hline
-      00 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
-      01 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & {\color{nordred}\textbf{\underline{1}}}
-                                                               & 1 \\
-      02 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 1 \\
-      03 & 1 & 1 & 0 & {\color{nordred}\textbf{\underline{0}}} & {\color{nordred}\textbf{\underline{0}}}
-                                 & {\color{nordred}\textbf{\underline{1}}} & 0 & 0 & 1 & 1
-                                                          & 0 & 1 \\
-      04 & 1 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 1 \\
-      05 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & {\color{nordred}\textbf{\underline{0}}} & 0
-                                                               & 1 \\
-      06 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
-      07 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 \\
-      08 & 0 & 1 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0
-                                                               & 1 \\
-      09 & {\color{nordred}\textbf{\underline{1}}} & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0
-                                                               & 1 \\
-      10 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
-      11 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
-      12 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
-      13 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
-      14 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0
-                                                               & 1 \\
-      15 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 0
-                                                               & 1 \\
-      16 & 1 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 1 & 0 & 0
-                                                               & 1 \\
-      17 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
-                                                               & 1 \\
-      18 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
-                                         & {\color{nordred}\textbf{\underline{1}}} \\ 
-      19 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 \\
-    \end{tabular}
-  \end{table}
-  Si costruiscono quindi le seguenti tabelle \cite{tricks}:
+   \begin{table}[H]
+     \centering
+     \footnotesize
+     \begin{tabular}{c|ccccccccccccccc}
+       X & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 \\
+       \hline
+       00 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
+       01 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & {\color{nordred}\textbf{\underline{1}}}
+                                                                & 1 \\
+       02 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 1 & 1 \\
+       03 & 1 & 1 & 0 & {\color{nordred}\textbf{\underline{0}}} & {\color{nordred}\textbf{\underline{0}}}
+                                  & {\color{nordred}\textbf{\underline{1}}} & 0 & 0 & 1 & 1
+                                                           & 0 & 1 \\
+       04 & 1 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 1 \\
+       05 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & {\color{nordred}\textbf{\underline{0}}} & 0
+                                                                & 1 \\
+       06 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+       07 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 \\
+       08 & 0 & 1 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0
+                                                                & 1 \\
+       09 & {\color{nordred}\textbf{\underline{1}}} & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0
+                                                                & 1 \\
+       10 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+       11 & 0 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 \\
+       12 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+       13 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+       14 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0
+                                                                & 1 \\
+       15 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 0
+                                                                & 1 \\
+       16 & 1 & 0 & 0 & 0 & 0 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 1 & 0 & 0
+                                                                & 1 \\
+       17 & 0 & {\color{nordred}\textbf{\underline{0}}} & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
+                                                                & 1 \\
+       18 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0
+                                                                & {\color{nordred}\textbf{\underline{1}}} \\ 
+       19 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 \\
+     \end{tabular}
+   \end{table}
+   \noindent
+   Si costruiscono quindi le seguenti tabelle \cite{tricks}:
    \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.3]{img/trick.jpg}
+     \centering
+     %\includegraphics[scale=0.3]{img/trick.jpg}
+     %\resizebox{0.75\textwidth}{!}
+     {\begin{tabular}{r|rrr|rrr|rrr|rrr|rrr|rrr}
+        \multicolumn{1}{c}{} &
+                               \multicolumn{3}{c}{table 1} &
+                                                             \multicolumn{3}{c}{table 2} &
+                                                                                           \multicolumn{3}{c}{table 3} &
+                                                                                                                         \multicolumn{3}{c}{table 4} &
+                                                                                                                                                       \multicolumn{3}{c}{table 5} &
+                                                                                                                                                                                     \multicolumn{3}{c}{table 6} \\
+        \hline
+        0 &  0 &  9 &  3 &  0 & 11 &  4 &  0 &  0 &  0 &  \textcolor{nordred}{0} &  \textcolor{nordred}{0} &  \textcolor{nordred}{0}
+                                        &  \textcolor{nordred}{0} &  \textcolor{nordred}{0} &  \textcolor{nordred}{0}
+                                                       &  \textcolor{nordcyan}{0} & \textcolor{nordcyan}{14} &  \textcolor{nordcyan}{2} \\
+        1 &  8 &  0 &  0 &  4 &  0 &  0 &  2 & 15 &  2 & 11 & 19 &  2 & 11 & 17 &  5 &  2 &  0 &  0 \\
+        2 &  \textcolor{nordred}{9} & \textcolor{nordred}{17} &  \textcolor{nordred}{5}
+                                                                                                                       &  7 & 15 &  4 &  3 &  2 &  0 & 12 & 11 &  1 & 14 & 11 &  5 &  \textcolor{nordred}{3} & \textcolor{nordred}{16} &  \textcolor{nordred}{2} \\
+        3 & 11 &  1 &  0 &  9 &  3 &  2 &  \textcolor{nordcyan}{4} & \textcolor{nordcyan}{16} &  \textcolor{nordcyan}{2}
+                         &    &    &    &    &    &    &  5 &  1 &  0 \\
+        4 & 16 & 19 &  5 & 10 & 17 &  4 &  \textcolor{nordred}{8} &  \textcolor{nordred}{3} &  \textcolor{nordred}{0}
+                         &    &    &    &    &    &    &  8 & 18 &  2 \\
+        5 & 17 &  6 &  1 & \textcolor{nordred}{13} &  \textcolor{nordred}{4} &  \textcolor{nordred}{3}
+          &    &    &    &    &    &    &    &    &    & 10 &  4 &  2 \\
+        \multicolumn{7}{c}{} \\[3ex]
+        \multicolumn{1}{c}{} &
+                               \multicolumn{3}{c}{table 7} &
+                                                             \multicolumn{3}{c}{table 8} &
+                                                                                           \multicolumn{3}{c}{table 9} &
+                                                                                                                         \multicolumn{3}{c}{table 10} &
+                                                                                                                                                        \multicolumn{3}{c}{table 11} &
+                                                                                                                                                                                       \multicolumn{3}{c}{table 12} \\
+        \hline
+        0 &  0 &  0 &  0 &  0 &  0 &  0 &  \textcolor{nordcyan}{0} &  \textcolor{nordcyan}{7} &  \textcolor{nordcyan}{4}
+                         &  0 & 13 &  1 &  \textcolor{nordred}{0} & \textcolor{nordred}{17} &  \textcolor{nordred}{2}
+                                                       &  0 & \\
+        1 &  2 & 19 &  3 &  \textcolor{nordcyan}{2} & \textcolor{nordcyan}{16} &  \textcolor{nordcyan}{4}
+          &  7 &  0 &  0 &  2 &  0 &  0 &  3 &  0 &  0 &  6 & \\
+        2 &  \textcolor{nordred}{3} &  \textcolor{nordred}{2} &  \textcolor{nordred}{1}
+                                                                                                                       &  \textcolor{nordred}{3} &  \textcolor{nordred}{2} &  \textcolor{nordred}{0}
+          & 10 & 14 &  7 &  \textcolor{nordcyan}{3} & \textcolor{nordcyan}{15} &  \textcolor{nordcyan}{1}
+                                        &    &    &    &  \textcolor{nordred}{7} & \\
+        3 &    &    &    & 17 & 17 &  4 & \textcolor{nordred}{12} &  \textcolor{nordred}{3} &  \textcolor{nordred}{2}
+                         &  \textcolor{nordred}{5} &  \textcolor{nordred}{1} &  \textcolor{nordred}{0} &    &    &    &    & \\
+        4 &    &    &    &    &    &    & 16 & 16 &  7 &  7 & 17 &  1 &    &    &    &    & \\
+        5 &    &    &    &    &    &    &    &    &    &  9 &  3 &  1 &    &    &    &    & \\
+        6 &    &    &    &    &    &    &    &    &    & 10 & 19 &  1 &    &    &    &    & \\
+        7 &    &    &    &    &    &    &    &    &    & 11 &  4 &  1 &    &    &    &    &
+      \end{tabular}
+    }
+
   \end{figure}
   Nelle tabelle, in rosso, si hanno le varie $\pi_k(i)$ calcolate nel processo,
   ottenute, 

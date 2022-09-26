@@ -78,32 +78,57 @@
 \def\rank{\mbox{\rm {\sf rank}}}
 \def\lcs{\mbox{\rm {\sf lcs}}}
 \def\lcp{\mbox{\rm {\sf lcp}}}
+\def\lce{\mbox{\rm {\sf lce}}}
+\def\LCE{\mbox{\rm {\sf LCE}}}
+\def\ROT{\mbox{\rm {\sf ROT}}}
 \def\select{\mbox{\rm {\sf select}}}
 \def\col{\mbox{\rm {\sf col}}}
+\def\NULL{\mbox{\rm {\sf null}}}
 \def\len{\mbox{\rm {\sf len}}}
 \def\pos{\mbox{\rm {\sf pos}}}
 \def\row{\mbox{\rm {\sf row}}}
 \def\LF{\mbox{\rm {\sf LF}}}
 \def\FL{\mbox{\rm {\sf FL}}}
+\def\W{\mbox{\rm {\sf w}}}
+\def\A{\mbox{\rm {\sf A}}}
 \def\A{\mbox{\rm {\sf A}}}
 \def\SA{\mbox{\rm {\sf SA}}}
+\def\LCP{\mbox{\rm {\sf LCP}}}
+\def\ISA{\mbox{\rm {\sf ISA}}}
+\def\PLCP{\mbox{\rm {\sf PLCP}}}
+\def\RLCP{\mbox{\rm {\sf RLCP}}}
 \def\RLBWT{\mbox{\rm {\sf RLBWT}}}
 \def\MEM{\mbox{\rm {\sf MEM}}}
+\def\KMEM{\mbox{\rm {\sf K-MEM}}}
+\def\KSMEM{\mbox{\rm {\sf K-SMEM}}}
+\def\MS{\mbox{\rm {\sf MS}}}
 \def\LCP{\mbox{\rm {\sf LCP}}}
 \def\NSV{\mbox{\rm {\sf NSV}}}
 \def\PSV{\mbox{\rm {\sf PSV}}}
 \def\RMQ{\mbox{\rm {\sf RMQ}}}
 \def\BWT{\mbox{\rm {\sf BWT}}}
+\def\BWM{\mbox{\rm {\sf BWM}}}
+\def\ITR{\mbox{\rm {\sf index\_to\_run}}}
+\def\GS{\mbox{\rm {\sf get\_symbol}}}
 \def\PBWT{\mbox{\rm {\sf PBWT}}}
+\def\MPBWT{\mbox{\rm {\sf mPBWT}}}
+\def\MRLPBWT{\mbox{\rm {\sf mRLPBWT}}}
+\def\DPBWT{\mbox{\rm {\sf dPBWT}}}
 \def\RLPBWT{\mbox{\rm {\sf RLPBWT}}}
 \def\SMEM{\mbox{\rm {\sf SMEM}}}
 \def\M{\mbox{\rm {\sf M}}}
+\def\C{\mbox{\rm {\sf C}}}
+\def\Occ{\mbox{\rm {\sf Occ}}}
 \def\L{\mbox{\rm {\sf L}}}
 \def\F{\mbox{\rm {\sf F}}}
 \def\DA{\mbox{\rm {\sf DA}}}
 \def\DM{\mbox{\rm {\sf DM}}}
 \def\PA{\mbox{\rm {\sf PA}}}
 \def\LCE{\mbox{\rm {\sf LCE}}}
+\def\UP{\mbox{\rm {\sf update}}}
+\def\lceb{\mbox{\rm {\sf lce\_bounded}}}
+\def\RM{\mbox{\rm {\sf reverse\_map}}}
+
 \newcommand{\Oh}{\mathcal{O}}
 
 \title[] {Algoritmi per la trasformata di Burrows-Wheeler posizionale con
@@ -179,55 +204,55 @@
   \end{block}
 \end{frame}
 \section{Preliminari}
-\subsection{Bitvector e straight-line program}
-\begin{frame}[fragile]{BV e SLP}
-  \only<1,2>{
-    \begin{block}{BV}
-      \begin{center}
-        \begin{tikzpicture} [nodes in empty cells,
-          nodes={minimum width=0.6cm, minimum height=0.6cm},
-          row sep=-\pgflinewidth, column sep=-\pgflinewidth,ampersand replacement=\&]
-          border/.style={draw}
+% \subsection{Bitvector e straight-line program}
+% \begin{frame}[fragile]{BV e SLP}
+%   \only<1,2>{
+%     \begin{block}{BV}
+%       \begin{center}
+%         \begin{tikzpicture} [nodes in empty cells,
+%           nodes={minimum width=0.6cm, minimum height=0.6cm},
+%           row sep=-\pgflinewidth, column sep=-\pgflinewidth,ampersand replacement=\&]
+%           border/.style={draw}
           
-          \matrix(vector)[matrix of nodes,
-          row 1/.style={nodes={draw=none, minimum width=0.3cm}},
-          nodes={draw}]
-          {
-            \tiny{0} \& \tiny{1} \& \tiny{2} \& \tiny{3} \& \tiny{4} \& \tiny{5}\&\tiny{6}
-            \& \tiny{7} \& \tiny{8} \& \tiny{9} \& \tiny{10} \& \tiny{11} \& \tiny{12} \&
-            \tiny{13}\\  
-            $\mathbf{1}$ \& $0$ \& $0$ \& $\mathbf{1}$ \& $0$ \& $\mathbf{1}$ \& $0$ \&
-            $\mathbf{1}$ \& $0$ \& $\mathbf{1}$ \& $0$ \& $0$ \& $\mathbf{1}$ \& $0$\\ 
-          };
-        \end{tikzpicture}
-      \end{center}
-      \[\mathtt{rank}(6)=3\quad\quad\mathtt{select}(5) =9\]
-    \end{block}
-    \pause
-    \begin{block}{SLP}
-      \[s=\mbox{GATTAGATACAT}\$\mbox{GATTACATAGAT}\]
-      \[\mbox{S}\to \mbox{ZWAY}\,\$\mbox{ZYAW}\]
-      \vspace{-8mm}
-      \begin{multicols*}{5}
-        \small
-        \begin{itemize}
-          \item $\mbox{Z}\to \mbox{WX}$
-          \item $\mbox{Y}\to \mbox{CV}$
-          \item $\mbox{X}\to \mbox{TA}$
-          \item $\mbox{W}\to \mbox{GV}$
-          \item $\mbox{V}\to \mbox{AT}$
-        \end{itemize}
-      \end{multicols*}
-    \end{block}
-  }\only<3>{
-    \begin{block}{SLP}
-      \begin{figure}[H]
-        \centering
-        \includegraphics[width=\textwidth]{img/slpgagie.pdf}
-      \end{figure}
-    \end{block}
-  }
-\end{frame}
+%           \matrix(vector)[matrix of nodes,
+%           row 1/.style={nodes={draw=none, minimum width=0.3cm}},
+%           nodes={draw}]
+%           {
+%             \tiny{0} \& \tiny{1} \& \tiny{2} \& \tiny{3} \& \tiny{4} \& \tiny{5}\&\tiny{6}
+%             \& \tiny{7} \& \tiny{8} \& \tiny{9} \& \tiny{10} \& \tiny{11} \& \tiny{12} \&
+%             \tiny{13}\\  
+%             $\mathbf{1}$ \& $0$ \& $0$ \& $\mathbf{1}$ \& $0$ \& $\mathbf{1}$ \& $0$ \&
+%             $\mathbf{1}$ \& $0$ \& $\mathbf{1}$ \& $0$ \& $0$ \& $\mathbf{1}$ \& $0$\\ 
+%           };
+%         \end{tikzpicture}
+%       \end{center}
+%       \[\mathtt{rank}(6)=3\quad\quad\mathtt{select}(5) =9\]
+%     \end{block}
+%     \pause
+%     \begin{block}{SLP}
+%       \[s=\mbox{GATTAGATACAT}\$\mbox{GATTACATAGAT}\]
+%       \[\mbox{S}\to \mbox{ZWAY}\,\$\mbox{ZYAW}\]
+%       \vspace{-8mm}
+%       \begin{multicols*}{5}
+%         \small
+%         \begin{itemize}
+%           \item $\mbox{Z}\to \mbox{WX}$
+%           \item $\mbox{Y}\to \mbox{CV}$
+%           \item $\mbox{X}\to \mbox{TA}$
+%           \item $\mbox{W}\to \mbox{GV}$
+%           \item $\mbox{V}\to \mbox{AT}$
+%         \end{itemize}
+%       \end{multicols*}
+%     \end{block}
+%   }\only<3>{
+%     \begin{block}{SLP}
+%       \begin{figure}[H]
+%         \centering
+%         \includegraphics[width=\textwidth]{img/slpgagie.pdf}
+%       \end{figure}
+%     \end{block}
+%   }
+% \end{frame}
 %\subsection{Trasformata di Burrows-Wheeler, suffix array e maximal exact matches} 
 \subsection{Run-length encoded BWT}
 \begin{frame}{RLBWT}
@@ -262,67 +287,67 @@
   
 \end{frame}
 \subsection{Matching statistics e maximal exact matches} 
-\begin{frame}{MS e MEM}
-  \begin{block}{MS}
-      \footnotesize
-      Dato un testo $T$, con $|T|=n$, e un pattern $P$, con $|P|=m$, si
-      definisce \textbf{matching statistics} di $P$ su $T$ un array $MS$ di
-      coppie $(pos, len)$, lungo quanto il pattern, tale che:
-      \begin{itemize}
-        \item $T[MS[i].pos,MS[i].pos+MS[i].len-1]=P[i,i+MS[i].len-1]$, quindi si
-        ha un match tra $P$ e $T$ lungo $MS[i].len$ a partire da $MS[i].pos$ in
-        $T$ e da $i$ in $P$
-        \item $P[i,i+MS[i].len]$ non occorre in $T$, quindi il match non è
-        ulteriormente estendibile 
-      \end{itemize}
-  \end{block}
-  \pause
-  \begin{block}{MEM}
-      \footnotesize
-      Dato un testo $T$, con $|T|=n$, e un pattern $P$, con $|P|=m$, si definisce
-      una sottostringa $P[i,i+l-1]$, di lunghezza $l$, \textbf{MEM} di $P$ in $T$
-      se:
-      \begin{itemize}
-        \item $P[i,i+l-1]$ è una sottostringa di $T$
-        \item $P[i-1,i+l-1]$ non è una sottostringa di $T$ (non si può estendere a
-        sinistra) e $P[i,i+l]$ non è una sottostringa di $T$ (non si può estendere a
-        destra) 
-      \end{itemize}
-      Un MEM si può calcolare dalle MS:
-      \[MS[i].len=l\land MS[i-1].len\leq MS[i].len\]
-  \end{block}
-\end{frame}
+% \begin{frame}{MS e MEM}
+%   \begin{block}{MS}
+%       \footnotesize
+%       Dato un testo $T$, con $|T|=n$, e un pattern $P$, con $|P|=m$, si
+%       definisce \textbf{matching statistics} di $P$ su $T$ un array $MS$ di
+%       coppie $(pos, len)$, lungo quanto il pattern, tale che:
+%       \begin{itemize}
+%         \item $T[MS[i].pos,MS[i].pos+MS[i].len-1]=P[i,i+MS[i].len-1]$, quindi si
+%         ha un match tra $P$ e $T$ lungo $MS[i].len$ a partire da $MS[i].pos$ in
+%         $T$ e da $i$ in $P$
+%         \item $P[i,i+MS[i].len]$ non occorre in $T$, quindi il match non è
+%         ulteriormente estendibile 
+%       \end{itemize}
+%   \end{block}
+%   \pause
+%   \begin{block}{MEM}
+%       \footnotesize
+%       Dato un testo $T$, con $|T|=n$, e un pattern $P$, con $|P|=m$, si definisce
+%       una sottostringa $P[i,i+l-1]$, di lunghezza $l$, \textbf{MEM} di $P$ in $T$
+%       se:
+%       \begin{itemize}
+%         \item $P[i,i+l-1]$ è una sottostringa di $T$
+%         \item $P[i-1,i+l-1]$ non è una sottostringa di $T$ (non si può estendere a
+%         sinistra) e $P[i,i+l]$ non è una sottostringa di $T$ (non si può estendere a
+%         destra) 
+%       \end{itemize}
+%       Un MEM si può calcolare dalle MS:
+%       \[MS[i].len=l\land MS[i-1].len\leq MS[i].len\]
+%   \end{block}
+% \end{frame}
 \subsection{Algoritmo di Bannai, MONI e PHONI}
 \begin{frame}{MONI e PHONI}
   \begin{block}{MONI}
     \small
-    Rossi et al., nel 2021, sfruttarono tutte le conoscenze relative
-    alla \textbf{RLBWT}, all'\textbf{r-index} e alle \textbf{matching statistics}
+    Rossi et al., nel 2021, sfruttarono le conoscenze relative
+    alla $\RLBWT$ e all'r-index 
     per ideare \textbf{MONI:\textit{ A Pangenomics Index for Finding MEMs}}
-    \cite{moni}. In questa soluzione si ha quindi la costruzione, in due
-    \textit{sweep}, tramite l'uso delle \textit{threshold} (\textbf{algoritmo di
-      Bannai}), dell'array delle 
-    \textit{matching statistics}. 
+    \cite{moni}. In questa soluzione si ha la costruzione, in due
+    sweep, tramite l'uso delle threshold (\textit{algoritmo di
+      Bannai}), dell'array delle matching statistics, da cui si computano i
+    maximal exact match. 
   \end{block}
-  \pause
-  \begin{block}{LCE}
-    \small
-      Dato un testo $T$, tale che $|T|=n$, il risultato della \textbf{LCE query}
-      tra 
-      due posizioni $i$ e $j$, tali che $0\leq i,j<n$, corrisponde al più lungo
-      prefisso comune tra le sotto-stringhe che hanno come indice di partenza
-      $i$ e 
-      $j$, avendo quindi il più lungo prefisso comune tra $T[i,n-1]$ e
-      $T[j,n-1]$. 
-  \end{block}
+  % \pause
+  % \begin{block}{LCE}
+  %   \small
+  %     Dato un testo $T$, tale che $|T|=n$, il risultato della \textbf{LCE query}
+  %     tra 
+  %     due posizioni $i$ e $j$, tali che $0\leq i,j<n$, corrisponde al più lungo
+  %     prefisso comune tra le sotto-stringhe che hanno come indice di partenza
+  %     $i$ e 
+  %     $j$, avendo quindi il più lungo prefisso comune tra $T[i,n-1]$ e
+  %     $T[j,n-1]$. 
+  % \end{block}
   \pause
   \begin{block}{PHONI}
     \small
     Nel 2021, Boucher, Gagie, Rossi et al. proposero un ulteriore miglioramento di
-    quanto fatto in \textit{MONI}, con \textbf{PHONI: \textit{Streamed Matching
+    quanto fatto in MONI, con \textbf{PHONI: \textit{Streamed Matching
         Statistics with Multi-Genome References}}\cite{phoni}, usando le
-    \textit{LCE query} 
-    al posto delle \textit{threshold}.
+    $\LCE$ query 
+    al posto delle threshold.
   \end{block}
 \end{frame}
 \subsection{Trasformata di Burrows-Wheeler posizionale}
@@ -364,25 +389,34 @@
   \begin{block}{SMEM}
     Dato un pannello $X$, con $M$ aplotipi/righe e $N$ siti/colonne, e un
     aplotipo 
-    query $z$, tale che $|z|=N$, si definisce un \textbf{Set-Maximal Exact Match 
-      (\textit{SMEM})}, iniziante in colonna $e_k$ e terminante il colonna
+    query $z$, tale che $|z|=N$, si definisce un \textbf{Set-Maximal Exact
+      Match}  
+      ($\SMEM$), iniziante in colonna $e_k$ e terminante il colonna
     $k$, tra 
     la query $z$ e le righe del pannello indicizzate dai valori compresi
     nell'intervallo $[f_k,g_k)$ in $a_k$ sse:
     \[z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall\, i\mbox{
         t.c. }f_k\leq i < g_k\]
     Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle righe per le quali si ha
-    tale \textit{SMEM}.
+    tale $\SMEM$.
   \end{block}
   \begin{block}{}
     Il calcolo viene effettuato tramite il cosiddetto \textbf{algoritmo 5 di
       Durbin}\cite{pbwt} in tempo Avg.$\mathcal{O}(N+c)$\cite{dpbwt}, avendo $N$
     aplotipi e 
-    $c$ SMEM, con una memoria richiesta di 13NM byte.
+    $c$ $\SMEM$, con una memoria richiesta di 13NM byte.
   \end{block}
 \end{frame}
 \section{Metodo}
-\subsection{Perché una variante run-length della PBWT}
+\subsection{Componenti}
+\begin{frame}{Componenti e strutture dati}
+  \begin{block}{}
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.85\textwidth]{img/ds.pdf}
+    \end{figure}
+  \end{block}
+\end{frame}
 \subsection{Mapping, threshold e prefix array sample}
 \subsection{Random access e longest common extension query}
 \subsection{Struttura per le funzioni $\varphi$ e $\varphi^{-1}$}
@@ -391,7 +425,25 @@
 \section{Risultati sperimentali}
 \subsection{1000 Genome Project, ambiente di test e implementazioni}
 \subsection{Risultati costruzione strutture}
+\begin{frame}{Performance costruzione strutture dati}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/make_time_mem_paper.png}
+  \end{figure}
+\end{frame}
 \subsection{Risultati calcolo degli SMEM}
+\begin{frame}{Performance calcolo degli $\SMEM$ con 100 query}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/exe_time_mem_paper.png}
+  \end{figure}
+\end{frame}
+\begin{frame}{Performance calcolo degli $\SMEM$ per singole query}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/exe_time_single_paper.png}
+  \end{figure}
+\end{frame}
 \section{Conclusioni e sviluppi futuri}
 \subsection{Ottimizzazioni, generalizzazioni ed estensioni}
 \section{Bibliografia}
