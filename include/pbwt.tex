@@ -59,11 +59,13 @@ formalismi utilizzati:
     \label{eq:pbwtmem}
     (k_1=0\lor x_i[k_1-1]\neq x_j[k_1-1])\land (k_2=N\lor x_i[k_2]\neq x_j[k_2])
   \end{equation}
-  \item comparando una sequenza $z$ ad un pannello di aplotipi $X$ si definisce
-  che $s$ ha un set-maximal exact match ($\SMEM$) con $x_i$, che inizia
-  alla colonna $k_1$ e termina alla colonna $k_2-1$, sse tale match è
-  localmente massimale e non si ha alcun altro match di $z$ con un
-  altro $x_j$ che include ed estende l'intervallo $[k_1,k_2)$. Si ha che $z$
+  \item comparando una sequenza $z$ ad un pannello di aplotipi $X$, si definisce
+  set-maximal exact match ($\SMEM$) di $z$ contro $x_i\in X$ un match
+  localmente massimale, iniziante 
+  alla colonna $k_1$ e terminante alla colonna $k_2-1$,
+  sse non si ha alcun altro match localmente
+  massimale di $z$ con un 
+  altro $x_j$ che include ed estende l'intervallo $[k_1,k_2)$. La sequenza $z$
   può avere uno $\SMEM$, tra $k_1$ e $k_2-1$, con più di un aplotipo del
   pannello. Per praticità, si è introdotta la definizione di $\SMEM$ usando un
   aplotipo esterno. Tale definizione può essere riferita anche a due righe
