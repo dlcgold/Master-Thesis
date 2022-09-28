@@ -1,6 +1,6 @@
 % \documentclass[handout]{beamer}
-%\documentclass[]{beamer}
-\documentclass[draft]{beamer}
+\documentclass[]{beamer}
+%\documentclass[draft]{beamer}
 
 \mode<presentation>
 {
@@ -55,6 +55,10 @@
 \definecolor{nord7}{RGB}{191, 97, 106}
 \definecolor{nordred}{RGB}{191, 97, 106}
 \definecolor{nordgreen}{RGB}{135, 157, 116}
+\definecolor{nordred}{RGB}{191, 97, 106}
+\definecolor{nordcyan}{RGB}{94,129,172}
+\definecolor{nordgreen}{RGB}{135, 157, 116}
+\definecolor{nordpurple}{RGB}{180,142,173}
 
 \setbeamercolor{palette primary}{bg=nord2,fg=white}
 \setbeamercolor{palette secondary}{bg=nord3,fg=white}
@@ -135,6 +139,14 @@
 
 \newcommand{\Oh}{\mathcal{O}}
 
+\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+\newcommand{\DrawBox}[3][]{%
+    \tikz[overlay,remember picture]{
+    \draw[black,#1]
+      ($(#2)+(-0.2em,2.0ex)$) rectangle
+      ($(#3)+(0.2em,-0.5ex)$);}
+  }
+  
 \title[] {Algoritmi per la trasformata di Burrows-Wheeler posizionale con
   compressione run-length}
 
@@ -473,6 +485,31 @@
 % \end{frame}
 \subsection{Algoritmo di calcolo degli SMEM con LCP}
 \subsection{Algoritmo di calcolo degli SMEM con MS}
+\begin{frame}{Matching statistics}
+  \vspace{-0.35cm}
+ \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.205]{img/pbwtmatch.pdf}
+  \end{figure}
+  \vspace{-0.5cm}
+  \begin{table}[H]
+    \scriptsize
+    \centering
+    \begin{tabular}{c|ccccccccccccccc}
+      $k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordcyan}05} & 06 & 07 & 08
+      &  {\color{nordred}09} & 10 &  {\color{nordgreen}11} & 12 & 13
+      &  {\color{nordpurple}14} \\
+      \hline
+      \hline
+      $\row$ & 19 & 19 & 16 & 15 & 13 &  {\color{nordcyan}13} & 19 & 19 & 19
+      &  {\color{nordred}19} & 11 &  {\color{nordgreen}11} & 17 & 17
+      &  {\color{nordpurple}17} \\
+      $\len$ & 1 & 2 & 3 & 4 & 5 & {\color{nordcyan}6} & 4 & 5 & 6
+      & {\color{nordred}7} & 4 & {\color{nordgreen}5} & 2 & 3
+      & {\color{nordpurple}4}\\
+    \end{tabular}
+  \end{table}
+\end{frame}
 \section{Risultati sperimentali}
 \subsection{1000 Genome Project, ambiente di test e implementazioni}
 \begin{frame}{Sperimentazione e dati}
