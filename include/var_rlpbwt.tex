@@ -144,29 +144,30 @@ MONI \cite{moni} e PHONI \cite{phoni} per la $\RLBWT$:
   \end{figure}
   In tal caso l'array $\MS$ sarebbe, avendo scelto come riga iniziale la 19:
   \begin{table}[H]
-    \footnotesize{}
+    \footnotesize
     \centering
     \begin{tabular}{c|ccccccccccccccc}
-      $k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordgreen}05} & 06 & 07 & 08
-      &  {\color{nordgreen}09} & 10 &  {\color{nordgreen}11} & 12 & 13
-      &  {\color{nordgreen}14} \\
+      $k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordcyan}05} & 06 & 07 & 08
+      &  {\color{nordred}09} & 10 &  {\color{nordgreen}11} & 12 & 13
+      &  {\color{nordpurple}14} \\
       \hline
       \hline
-      $z$ & 0 & 1 & 0 & 0 & 1 &  {\color{nordgreen}0} & 1 & 0 & 0
-      &  {\color{nordgreen}0} & 1 &  {\color{nordgreen}1} & 1 & 0
-      &  {\color{nordgreen}1} \\
+      $z$ & 0 & 1 & 0 & 0 & 1 &  {\color{nordcyan}0} & 1 & 0 & 0
+      &  {\color{nordred}0} & 1 &  {\color{nordgreen}1} & 1 & 0
+      &  {\color{nordpurple}1} \\
       \hline
-      $row$ & 19 & 19 & 16 & 15 & 13 &  {\color{nordgreen}13} & 19 & 19 & 19
-      &  {\color{nordgreen}19} & 11 &  {\color{nordgreen}11} & 17 & 17
-      &  {\color{nordgreen}17} \\
-      $len$ & 1 & 2 & 3 & 4 & 5 & {\color{nordgreen}6} & 4 & 5 & 6
-      & {\color{nordgreen}7} & 4 & {\color{nordgreen}5} & 2 & 3
-      & {\color{nordgreen}4}\\
+      $\row$ & 19 & 19 & 16 & 15 & 13 &  {\color{nordcyan}13} & 19 & 19 & 19
+      &  {\color{nordred}19} & 11 &  {\color{nordgreen}11} & 17 & 17
+      &  {\color{nordpurple}17} \\
+      $\len$ & 1 & 2 & 3 & 4 & 5 & {\color{nordcyan}6} & 4 & 5 & 6
+      & {\color{nordred}7} & 4 & {\color{nordgreen}5} & 2 & 3
+      & {\color{nordpurple}4}\\
     \end{tabular}
   \end{table}
   Dove si possono riconoscere i vari $\SMEM$, la cui colonna di fine è
-  segnalata in verde (anche in questo caso i dettagli del calcolo
-  verranno esplicitati successivamente). 
+  segnalata nello stesso colore con cui si rappresentano gli $\SMEM$ nel
+  pannello. Anche in questo caso i dettagli del calcolo 
+  verranno esplicitati successivamente. 
 \end{esempio}
 \section{Componenti per la RLPBWT}
 Questo progetto di tesi è stato è stato incentrato sullo sviluppo di
