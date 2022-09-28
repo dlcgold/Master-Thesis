@@ -1,5 +1,7 @@
 % \documentclass[handout]{beamer}
-\documentclass[]{beamer}
+%\documentclass[]{beamer}
+\documentclass[draft]{beamer}
+
 \mode<presentation>
 {
   \usetheme{Warsaw}
@@ -156,18 +158,19 @@
 \pgfdeclareimage[height=0.5cm]{university-logo}{img/logo_unimib.pdf}
 \logo{\pgfuseimage{university-logo}}
 
-% \AtBeginSection[]
-% {
-%   \begin{frame}<beamer>{Outline}
-%     \tableofcontents[currentsection, currentsubsection]
-%   \end{frame}
-% }
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection, currentsubsection]
+  \end{frame}
+}
 
 
 % If you wish to uncover everything in a step-wise fashion, uncomment
 % the following command: 
 
 % \beamerdefaultoverlayspecification{<+->}
+\def\Cplusplus{C\raisebox{0.5ex}{\tiny\textbf{++}}}
 
 
 \begin{document}
@@ -254,37 +257,37 @@
 % \end{frame}
 % \subsection{Trasformata di Burrows-Wheeler, suffix array e maximal exact matches} 
 \subsection{Run-length encoded BWT}
-\begin{frame}{RLBWT}
-  \begin{block}{Esempio}
-    \begin{table}
-      \scriptsize
-      \begin{tabular}{ P{0.5cm}|P{0.5cm}|P{0.4cm}|P{1.5cm}|P{0.65cm}|P{1.4cm}|P{0.6cm}|P{2.8cm}  }
-        \hline
-        \multicolumn{2}{c|}{Thresholds} & &  &  &  & &  \\
-        \hline
-        {\tt A} & {\tt T}   & $\SA$ & $\SA$ sample  & $\BWT$    & Run heads & $\LCP$ & $\mathcal{M}$ \\
-        \hline
-                                        &           & 15    & 15           & {\tt A}   & {\tt A}   & 0 & {\tt \$ATTAGATTACATTA} \\
-        *     &           & 14    & 14           & {\tt T}   & {\tt T}   & 0 & {\tt A\$ATTAGATTACATT} \\
-                                        &            & 9     &              & {\tt T}   &           & 1 & {\tt ACATTA\$ATTAGATT} \\
-                                        &            & 4     &              & {\tt T}   &           & 1 & {\tt AGATTACATTA\$ATT} \\
-                                        &           & 11    & 11            & {\tt C}   & {\tt C}   & 1 & {\tt ATTA\$ATTAGATTAC} \\
-                                        &           & 6     & 6             & {\tt G}   & {\tt G}   & 4 & {\tt ATTACATTA\$ATTAG} \\
-                                        &           & 1     & 1             & {\tt \$}  & {\tt \$}  & 4 & {\tt ATTAGATTACATTA\$} \\
-                                        &    *       & 10    & 10            & {\tt A}   & {\tt A}   & 0 & {\tt CATTA\$ATTAGATTA} \\
-                                        &           & 5     &               & {\tt A}   &          & 0 & {\tt GATTACATTA\$ATTA} \\
-        *     &           & 13    & 13            & {\tt T}   & {\tt T}   & 0 & {\tt TA\$ATTAGATTACAT} \\
-                                        &           & 8     &               & {\tt T}   &           & 2 & {\tt TACATTA\$ATTAGAT} \\
-                                        &           & 3     &               & {\tt T}   &           & 2 & {\tt TAGATTACATTA\$AT} \\
-                                        &           & 12    & 12            & {\tt A}   & {\tt A}   & 1 & {\tt TTA\$ATTAGATTACA} \\
-                                        &           & 7     &               & {\tt A}  &           & 3 & {\tt TTACATTA\$ATTAGA} \\
-                                        &           & 2     &               & {\tt A}  &           & 3 & {\tt TTAGATTACATTA\$A} \\  
-        \hline
-      \end{tabular}
-    \end{table}
-  \end{block}
+% \begin{frame}{RLBWT}
+%   \begin{block}{}
+%     \begin{table}
+%       \scriptsize
+%       \begin{tabular}{ P{0.5cm}|P{0.5cm}|P{0.4cm}|P{1.5cm}|P{0.65cm}|P{1.4cm}|P{0.6cm}|P{2.8cm}  }
+%         \hline
+%         \multicolumn{2}{c|}{Thresholds} & &  &  &  & &  \\
+%         \hline
+%         {\tt A} & {\tt T}   & $\SA$ & $\SA$ sample  & $\BWT$    & Run heads & $\LCP$ & $\BWM$ \\
+%         \hline
+%                                         &           & 15    & 15           & {\tt A}   & {\tt A}   & 0 & {\tt \$ATTAGATTACATTA} \\
+%         *     &           & 14    & 14           & {\tt T}   & {\tt T}   & 0 & {\tt A\$ATTAGATTACATT} \\
+%                                         &            & 9     &              & {\tt T}   &           & 1 & {\tt ACATTA\$ATTAGATT} \\
+%                                         &            & 4     &              & {\tt T}   &           & 1 & {\tt AGATTACATTA\$ATT} \\
+%                                         &           & 11    & 11            & {\tt C}   & {\tt C}   & 1 & {\tt ATTA\$ATTAGATTAC} \\
+%                                         &           & 6     & 6             & {\tt G}   & {\tt G}   & 4 & {\tt ATTACATTA\$ATTAG} \\
+%                                         &           & 1     & 1             & {\tt \$}  & {\tt \$}  & 4 & {\tt ATTAGATTACATTA\$} \\
+%                                         &    *       & 10    & 10            & {\tt A}   & {\tt A}   & 0 & {\tt CATTA\$ATTAGATTA} \\
+%                                         &           & 5     &               & {\tt A}   &          & 0 & {\tt GATTACATTA\$ATTA} \\
+%         *     &           & 13    & 13            & {\tt T}   & {\tt T}   & 0 & {\tt TA\$ATTAGATTACAT} \\
+%                                         &           & 8     &               & {\tt T}   &           & 2 & {\tt TACATTA\$ATTAGAT} \\
+%                                         &           & 3     &               & {\tt T}   &           & 2 & {\tt TAGATTACATTA\$AT} \\
+%                                         &           & 12    & 12            & {\tt A}   & {\tt A}   & 1 & {\tt TTA\$ATTAGATTACA} \\
+%                                         &           & 7     &               & {\tt A}  &           & 3 & {\tt TTACATTA\$ATTAGA} \\
+%                                         &           & 2     &               & {\tt A}  &           & 3 & {\tt TTAGATTACATTA\$A} \\  
+%         \hline
+%       \end{tabular}
+%     \end{table}
+%   \end{block}
   
-\end{frame}
+% \end{frame}
 \subsection{Matching statistics e maximal exact matches} 
 % \begin{frame}{MS e MEM}
 %   \begin{block}{MS}
@@ -423,21 +426,86 @@
 \end{frame}
 \section{Metodo}
 \subsection{Componenti}
-\begin{frame}{Componenti e strutture dati, una panoramica}
-  \begin{block}{}
-    \begin{figure}[H]
-      \centering
-      \includegraphics[width=0.85\textwidth]{img/ds.pdf}
-    \end{figure}
+\begin{frame}{Le componenti}
+  \begin{block}{Componenti derivate dallo studio della $\RLBWT$ in ottica
+      $\PBWT$} 
+    \begin{itemize}
+      \item componenti per il mapping tra una colonna e la successiva nella
+      $\PBWT$, tramite bitvector sparsi (\texttt{MAP-BV}) o intvector compressi
+      (\texttt{MAP-INT})
+      \item componenti per le threshold (\texttt{THR-BV}/\texttt{THR-INT})
+      \item componente per i prefix array sample (\texttt{PERM})
+      \item componenti per il random access, tramite pannello di bitvector
+      (\texttt{RA-BV}) tramite $\SLP$ (\texttt{RA-SLP})
+      \item componente per le $\LCE$ query con $\SLP$ (\texttt{LCE})
+      \item componente per il calcolo delle funzioni $\varphi$ e $\varphi^{-1}$
+      (\texttt{PHI})
+      \item componente per il reverse longest common prefix (\texttt{RLCP})
+    \end{itemize}
   \end{block}
 \end{frame}
-\subsection{Mapping, threshold e prefix array sample}
-\subsection{Random access e longest common extension query}
-\subsection{Struttura per le funzioni $\varphi$ e $\varphi^{-1}$}
+\subsection{Strutture dati}
+\begin{frame}{Componenti e strutture dati, una panoramica}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{img/ds.pdf}
+  \end{figure}
+\end{frame}
+% \begin{frame}{Le strutture dati}
+%   \begin{block}{Strutture per il calcolo degli $\SMEM$ tramite $\RLCP$, non in
+%       grado di calcolare quali righe presentino uno $\SMEM$ ma solo quante.}
+%     \begin{itemize}
+%       \item \texttt{MAP-BV + RLCP}
+%       \item \texttt{MAP-INT + RLCP}
+%     \end{itemize}
+%   \end{block}
+%   \begin{block}{Strutture per il calcolo degli $\SMEM$ tramite $\MS$, in grado
+%       di calcolare tutte le righe che presentano uno $\SMEM$.}
+%     \begin{itemize}
+%       \item \texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI}
+%       \item \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
+%       \item \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}
+%       \item \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI}
+%       \item \texttt{MAP-BV + LCE + PERM + PHI}
+%       \item \texttt{MAP-INT + LCE + PERM + PHI}
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
 \subsection{Algoritmo di calcolo degli SMEM con LCP}
 \subsection{Algoritmo di calcolo degli SMEM con MS}
 \section{Risultati sperimentali}
 \subsection{1000 Genome Project, ambiente di test e implementazioni}
+\begin{frame}{Sperimentazione e dati}
+   \begin{block}{Implementazione e sperimentazione}
+    \small
+    La sperimentazione, orchestrata tramite \texttt{snakemake}, è stata
+    effettuata su una macchina con processore 
+    Intel Xeon E5-2640 V4 ($2,40$GHz), $756$GB di RAM, $768$GB di swap e
+    sistema operativo Ubuntu 20.04.4 LTS.\\
+    Si sono confrontate l'implementazione in \Cplusplus $\,\,$della $\RLPBWT$ e
+    l'implementazione in C ufficiale della $\PBWT$.
+  \end{block}
+  \begin{block}{Pannelli del 1000 Genome Project con 4908 sample, avendone
+      estratti 100 come query.
+      %I pannelli hanno una mediana di 3 run e un numero
+      %di 1 pari al 0,03\% del totale
+    } 
+    \begin{table}
+      \footnotesize
+      \centering
+      \begin{tabular}{c||c|c|c|c}
+        \textbf{Chr} & \textbf{\#Siti} & \textbf{\#Run totale}
+        & \textbf{Max run} & \textbf{Media run} \\ 
+        \hline
+        \texttt{chr22} & 1.055.454 & 14.772.105 & 2.450 & 14\\
+        \texttt{chr20} & 1.739.315 & 19.966.504 & 2.176 & 11\\
+        \texttt{chr18} & 2.171.378 & 24.288.263 & 2.365 & 11\\
+        \texttt{chr16} & 2.596.072 & 31.187.856 & 2.330 & 12\\
+        \texttt{chr1} & 6.196.151 & 69.671.952 & 2.721 & 11\\
+      \end{tabular}
+    \end{table}
+  \end{block}
+\end{frame}
 \subsection{Risultati costruzione strutture}
 \begin{frame}{Performance costruzione strutture dati}
   \begin{figure}[H]
@@ -471,7 +539,6 @@
       contro un pannello, è stato raggiunto con risultati molto interessanti
     \end{itemize}
   \end{block}
-  \pause
   \begin{block}{Sviluppi futuri}
     \small
     \begin{multicols}{2}
