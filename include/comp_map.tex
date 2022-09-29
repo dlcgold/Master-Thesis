@@ -844,7 +844,7 @@ Facendo una prima stima della memoria occupata da questa componente si ha che,
 avendo $\rho$ numero medio di run per colonna, essa è:
 \begin{equation}
   \label{eq:mapbvmem}
-  \approx N\left(3\rho\left(2+\log\frac{M}{\rho}\right)+5\right)
+  \approx N\left(3\rho\left(2+\log\frac{M}{\rho}\right)+5\right)\mbox{ bits}
 \end{equation}
 Si noti che confrontare analiticamente le stime in memoria delle due componenti
 possibili per il mapping, non è banale, valutando la
@@ -852,7 +852,7 @@ disequazione (relativa ad un solo bitvector sparso e ad un solo intvector
 compresso): 
 \begin{equation}
   \label{eq:mapbvintmem}
-  \rho\left(2+\log\frac{M}{\rho}\right)>\rho\frac{\lceil\log(M-1)\rceil+1}{8}
+  \rho\left(2+\log\frac{M}{\rho}\right)>\rho\lceil\log(M-1)\rceil+1
 \end{equation}
 Solo valutazioni sperimentali hanno mostrato come, con valori di $M$ e $\rho$
 relativi ai pannelli di aplotipi studiati, l'uso degli intvector compressi sia
