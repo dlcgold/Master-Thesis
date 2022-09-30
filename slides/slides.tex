@@ -456,6 +456,29 @@
     \end{itemize}
   \end{block}
 \end{frame}
+\begin{frame}{Alcune complessità}
+  \begin{block}{Complessità in tempo, pannelli $N\times M$, con $\rho$ numero di
+    run in una colonna}
+    \begin{itemize}
+      \item $\rank$ con bitvector sparsi:
+      $\mathcal{O}\left(\log\left(\frac{M}{\rho}\right)\right)$
+      \item $\select$ con bitvector sparsi: $\mathcal{O}\left(1\right)$
+      \item equivalente della funzione $\rank$ con intvector compressi:
+      $\mathcal{O}\left(\log\left(\rho\right)\right)$
+      \item equivalente della funzione $\select$ con intvector compressi:
+      $\mathcal{O}\left(1\right)$ 
+      \item random access con \texttt{RA-BV}: $\mathcal{O}(1)$
+      \item random access con \texttt{RA-SLP} e calcolo $\LCE$ query:
+      $\mathcal{O} (\log(NM))$
+    \end{itemize}
+  \end{block}
+\end{frame}
+\begin{frame}{Bitvector sparsi vs intvector compressi}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{img/bv_vs_iv.png}
+  \end{figure}
+\end{frame}
 \subsection{Strutture dati}
 \begin{frame}{Componenti e strutture dati, una panoramica}
   \begin{figure}[H]
@@ -483,8 +506,26 @@
 %     \end{itemize}
 %   \end{block}
 % \end{frame}
-\subsection{Algoritmo di calcolo degli SMEM con LCP}
-\subsection{Algoritmo di calcolo degli SMEM con MS}
+\subsection{Algoritmi di calcolo degli SMEM}
+\begin{frame}{Calcolo degli $\SMEM$}
+  \begin{block}{Due macro soluzioni}
+    \begin{enumerate}
+      \item usare l'$\,\RLCP$, adattando l'algoritmo 5 di Durbin. Tale soluzione
+      non permette di sapere quali righe del pannello in input presentino uno
+      $\SMEM$ fino ad una certa colonna ma solo quante
+      \item usare l'array $\MS$. Tale soluzione
+      permette di riconoscere ogni riga del pannello in input che presenti uno
+      $\SMEM$ fino ad una certa colonna
+    \end{enumerate}    
+  \end{block}
+  \pause
+  \begin{block}{Due macro alternative per il calcolo dell'array $\MS$}
+    \begin{enumerate}
+      \item usare le threshold e il random access al pannello
+      \item usare le $\LCE$ query
+    \end{enumerate}
+  \end{block}
+\end{frame}
 \begin{frame}{Matching statistics}
   \vspace{-0.35cm}
  \begin{figure}[H]
@@ -499,7 +540,6 @@
       $k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordcyan}05} & 06 & 07 & 08
       &  {\color{nordred}09} & 10 &  {\color{nordgreen}11} & 12 & 13
       &  {\color{nordpurple}14} \\
-      \hline
       \hline
       $\row$ & 19 & 19 & 16 & 15 & 13 &  {\color{nordcyan}13} & 19 & 19 & 19
       &  {\color{nordred}19} & 11 &  {\color{nordgreen}11} & 17 & 17
@@ -548,6 +588,12 @@
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{img/make_time_mem_paper.png}
+  \end{figure}
+\end{frame}
+\begin{frame}{Costo in memoria delle componenti}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/comp_mem.png}
   \end{figure}
 \end{frame}
 \subsection{Risultati calcolo degli SMEM}
