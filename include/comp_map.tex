@@ -197,8 +197,9 @@ un intvector
 compresso necessita $\frac{\lceil\log(M-1)\rceil+1}{8}$ byte, essa è:
 \begin{equation}
   \label{eq:mapintmem}
-  \approx N\left(2\frac{\lceil\log(M-1)\rceil+1}{8}\rho+5\right)
+  \approx N\left(\rho\frac{\lceil\log(M-1)\rceil+1}{4}+5\right)\mbox{ byte}
 \end{equation}
+\dc{Ricontrollare conto}
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
@@ -653,7 +654,7 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
     \label{eq:bv11}
     beg = \select_{h_k}(run)+1
   \end{equation}
-  e l'offset rispetto all'indice $i$ dato:
+  e l'offset rispetto all'indice $i$ dato da:
   \begin{equation}
     \label{eq:bv12}
     offset = i-beg
@@ -843,18 +844,39 @@ visto all'equazione \ref{eq:bvuvtime}.
 Facendo una prima stima della memoria occupata da questa componente si ha che,
 avendo $\rho$ numero medio di run per colonna, essa è:
 \begin{equation}
-  \label{eq:mapbvmem}
-  \approx N\left(3\rho\left(2+\log\frac{M}{\rho}\right)+5\right)\mbox{ bits}
+  \label{eq:mapintmem}
+  \approx N\left(\frac{\rho\left(2+\log\frac{M}{\rho}\right)}{4}+21\right)\mbox{ byte} 
 \end{equation}
+\dc{Ricontrollare conto}
+È possibile fare ora un piccolo confronto, ad alto livello, tra la memoria
+richiesta da un bitvector sparso e un intvector compresso.\\
 Si noti che confrontare analiticamente le stime in memoria delle due componenti
-possibili per il mapping, non è banale, valutando la
-disequazione (relativa ad un solo bitvector sparso e ad un solo intvector
+possibili per il mapping, non è banale, valutando l'equazione
+(relativo ad un solo bitvector sparso, comprendente le strutture per
+le funzioni $\rank$ e $\select$, e ad un solo intvector
 compresso): 
 \begin{equation}
   \label{eq:mapbvintmem}
-  \rho\left(2+\log\frac{M}{\rho}\right)>\rho\lceil\log(M-1)\rceil+1
+  \rho\left(2+\log\frac{M}{\rho}\right)+128=\rho\lceil\log(M-1)\rceil+1
 \end{equation}
+\dc{Ricontrollare conto}
 Solo valutazioni sperimentali hanno mostrato come, con valori di $M$ e $\rho$
 relativi ai pannelli di aplotipi studiati, l'uso degli intvector compressi sia
-più vantaggioso in termini di memoria richiesta.
+più vantaggioso in termini di memoria richiesta. Una stima derivata da tali
+conti è visibile in figura \ref{fig:bvvsint}, dove si evince che, qualora la
+media di run resti proporzionale a quanto visto con 4.908 sample
+(ovvero una media di 12 run come verrà
+analizzato nel Capitolo \ref{reschap}), l'uso dei
+bitvector sparso diventerebbe favorevole solo con pannelli con più di circa
+17.530 sample. 
+\begin{figure}
+  \centering
+  \includegraphics[scale = 0.7]{img/bv_vs_iv.png}
+  \caption{Confronto tra la stima di memoria in bit necessaria ai bitvector
+    sparsi e agli 
+    intvector compressi, al variare dell'altezza del pannello. Con la linea
+    verde si segnala il numero di sample dopo il quale si avrebbe un vantaggio
+    in memoria nell'usare i bitvector sparsi.}
+  \label{fig:bvvsint}
+\end{figure}
 \dc{Serve altro?}
