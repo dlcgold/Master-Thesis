@@ -198,23 +198,27 @@
 \subsection{Pangenoma e aplotipi}
 \begin{frame}{Un punto di vista per il pangenoma}
   \begin{block}{}
+    \small{
     Negli ultimi anni si è assistito a un cambio di paradigma nel campo della
     \textit{bioinformatica}, ovvero il passaggio dallo studio della sequenza
     lineare di 
     un singolo genoma a quello di un insieme di genomi, provenienti da un gran
     numero di individui, al fine di poter considerare anche le varianti geniche.
     Questo nuovo concetto è stato introdotto da Tettelin, nel 2005, con il
-    termine di \textbf{pangenoma}. 
+    termine di \textbf{pangenoma}.}
   \end{block}
   \begin{block}{}
+    \small{
     Uno degli approcci più usati per rappresentare il \textbf{pangenoma}
     è attraverso un pannello di aplotipi, ovvero, da un punto di vista
     computazionale, una matrice di M righe, corrispondenti agli individui, e N
-    colonne, corrispondenti ai siti con le varianti. 
+    colonne, corrispondenti ai siti con le varianti. Tale approccio ha permesso
+    studi di imputazione in GWAS etc$\ldots$}
   \end{block}
   \begin{block}{}
+    \small{
     Un \textbf{aplotipo} è  l'insieme di alleli, ovvero di
-    varianti che, a meno di mutazioni, un organismo eredita da ogni genitore. 
+    varianti che, a meno di mutazioni, un organismo eredita da ogni genitore. }
   \end{block}
 \end{frame}
 \section{Preliminari}
@@ -439,8 +443,8 @@
 \section{Metodo}
 \subsection{Componenti per la RLPBWT}
 \begin{frame}{Le componenti}
-  \begin{block}{Componenti derivate dallo studio della $\RLBWT$ in ottica
-      $\PBWT$} 
+  \begin{block}{Componenti innovative derivate dallo studio della $\RLBWT$ in
+      ottica $\PBWT$} 
     \begin{itemize}
       \item componenti per il mapping tra una colonna e la successiva nella
       $\PBWT$, tramite bitvector sparsi (\texttt{MAP-BV}) o intvector compressi
@@ -562,11 +566,9 @@
     Si sono confrontate l'implementazione in \Cplusplus $\,\,$della $\RLPBWT$ e
     l'implementazione in C ufficiale della $\PBWT$.
   \end{block}
-  \begin{block}{Pannelli del 1000 Genome Project con 4908 sample, avendone
-      estratti 100 come query.
-      %I pannelli hanno una mediana di 3 run e un numero
-      %di 1 pari al 0,03\% del totale
-    } 
+  \begin{block}{Pannelli del 1000 Genome Project con 4908 sample,
+        avendone 
+      estratti 100 come query.} 
     \begin{table}
       \footnotesize
       \centering
