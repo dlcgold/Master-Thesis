@@ -147,13 +147,13 @@
       ($(#3)+(0.2em,-0.5ex)$);}
   }
   
-\title[] {Algoritmi per la trasformata di Burrows-Wheeler posizionale con
-  compressione run-length}
+\title[Algoritmi per la $\RLPBWT$] {Algoritmi per la trasformata di
+  Burrows-Wheeler posizionale con compressione run-length}
 
 % \subtitle
 % {Presentation Subtitle} % (optional)
 
-\author[1]{\Large{Davide Cozzi}}
+\author[Davide Cozzi]{\Large{Davide Cozzi}}
 
 
 \institute[] {\large{\textbf{{\color{nord2}Relatore:}} \textit{Prof.~Raffaella
@@ -164,7 +164,7 @@
       (DISCo)\\
       Università degli Studi di Milano Bicocca}}}
 
-\date[] {25 Ottobre 2022}
+\date[26/10/2022] {26 Ottobre 2022}
 
 \subject{Presentatazione}
 \pgfdeclareimage[height=0.5cm]{university-logo}{img/logo_unimib.pdf}
@@ -268,7 +268,7 @@
 % }
 % \end{frame}
 % \subsection{Trasformata di Burrows-Wheeler, suffix array e maximal exact matches} 
-\subsection{Run-length encoded BWT}
+%\subsection{Run-length encoded BWT}
 % \begin{frame}{RLBWT}
 %   \begin{block}{}
 %     \begin{table}
@@ -300,7 +300,7 @@
 %   \end{block}
   
 % \end{frame}
-\subsection{Matching statistics e maximal exact matches} 
+%\subsection{Matching statistics e maximal exact matches} 
 % \begin{frame}{MS e MEM}
 %   \begin{block}{MS}
 %     \footnotesize
@@ -331,7 +331,7 @@
 %     \[MS[i].len=l\land MS[i-1].len\leq MS[i].len\]
 %   \end{block}
 % \end{frame}
-\subsection{Algoritmo di Bannai, MONI e PHONI}
+\subsection{Run-length BWT, MONI e PHONI}
 \begin{frame}{MONI e PHONI}
   \begin{block}{MONI}
     \small
@@ -437,7 +437,7 @@
   % tale $\SMEM$.
 \end{frame}
 \section{Metodo}
-\subsection{Componenti}
+\subsection{Componenti per la RLPBWT}
 \begin{frame}{Le componenti}
   \begin{block}{Componenti derivate dallo studio della $\RLBWT$ in ottica
       $\PBWT$} 
@@ -479,7 +479,7 @@
     \includegraphics[width=0.85\textwidth]{img/bv_vs_iv.png}
   \end{figure}
 \end{frame}
-\subsection{Strutture dati}
+\subsection{Strutture dati per la RLPBWT}
 \begin{frame}{Componenti e strutture dati, una panoramica}
   \begin{figure}[H]
     \centering
@@ -506,7 +506,7 @@
 %     \end{itemize}
 %   \end{block}
 % \end{frame}
-\subsection{Algoritmi di calcolo degli SMEM}
+\subsection{Algoritmi di calcolo degli SMEM con la RLPBWT}
 \begin{frame}{Calcolo degli $\SMEM$}
   \begin{block}{Due macro soluzioni}
     \begin{enumerate}
@@ -551,7 +551,7 @@
   \end{table}
 \end{frame}
 \section{Risultati sperimentali}
-\subsection{1000 Genome Project, ambiente di test e implementazioni}
+\subsection{Setup sperimentale}
 \begin{frame}{Sperimentazione e dati}
    \begin{block}{Implementazione e sperimentazione}
     \small
@@ -583,7 +583,7 @@
     \end{table}
   \end{block}
 \end{frame}
-\subsection{Risultati costruzione strutture}
+\subsection{Risultati della costruzione delle strutture}
 \begin{frame}{Performance costruzione strutture dati}
   \begin{figure}[H]
     \centering
@@ -596,7 +596,7 @@
     \includegraphics[width=0.9\textwidth]{img/comp_mem.png}
   \end{figure}
 \end{frame}
-\subsection{Risultati calcolo degli SMEM}
+\subsection{Risultati del calcolo degli SMEM}
 \begin{frame}{Performance calcolo degli $\SMEM$ con 100 query}
   \begin{figure}[H]
     \centering
@@ -609,8 +609,9 @@
     \includegraphics[width=0.9\textwidth]{img/exe_time_single_paper.png}
   \end{figure}
 \end{frame}
-\section{Conclusioni e sviluppi futuri}
-\begin{frame}{Considerazioni e sviluppi}
+\section{Conclusioni}
+\subsection{Conclusioni e sviluppi futuri}
+\begin{frame}{Considerazioni e sviluppi futuri}
   \begin{block}{Alcune considerazioni}
     \small
     \begin{itemize}
@@ -626,6 +627,7 @@
     \small
     \begin{multicols}{2}
       \begin{itemize}
+        \item ottimizzazioni per pannelli di query
         \item $\SMEM$ interni con $\RLPBWT$
         \item $\RLPBWT$ con dati mancanti
         \item $\RLPBWT$ multiallelica
@@ -633,12 +635,32 @@
       \end{itemize}
     \end{multicols}
   \end{block}
-  \pause
-  \begin{alertblock}{}
+\end{frame}
+\subsection{Pubblicazione}
+\begin{frame}{Futura pubblicazione}
+  \begin{block}{\small{Preprint disponibile su bioRxiv, paper in fase di
+        review per Genome Research}}
     \footnotesize{\textit{\textbf{Bonizzoni, Boucher, Cozzi, Gagie, Kashgouli,
           K\"{o}ppl e Rossi:} \\Compressed data structures for population-scale
         positional Burrows--Wheeler transforms, 2022}}
-  \end{alertblock}
+  \end{block}
+  \vspace{-0.2cm}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.6]{img/logo-bias-mini.png}
+  \end{figure}
+  \vspace{-0.3cm}
+  \begin{figure}[H]
+    \centering
+    % \includegraphics[scale = 1]{img/logo_unimib.pdf}
+    % \includegraphics[scale = 0.4]{img/ufl.png}
+    % \includegraphics[scale = 0.25]{img/dal.png}
+    % \includegraphics[scale = 0.15]{img/tmdu.jpg}
+    \includegraphics[width = 0.2\textwidth]{img/logo_unimib.pdf}~
+    \includegraphics[width = 0.19\textwidth]{img/ufl.png}~
+    \includegraphics[width = 0.2\textwidth]{img/dal.png}~
+    \includegraphics[width = 0.2\textwidth]{img/tmdu.jpg}
+  \end{figure}
 \end{frame}
 % \section{Bibliografia}
 % \begin{frame}[allowframebreaks]{Bibliografia} 
