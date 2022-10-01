@@ -851,7 +851,7 @@ avendo $\rho$ numero medio di run per colonna, essa è:
 È possibile fare ora un piccolo confronto, ad alto livello, tra la memoria
 richiesta da un bitvector sparso e un intvector compresso.\\
 Si noti che confrontare analiticamente le stime in memoria delle due componenti
-possibili per il mapping, non è banale, valutando l'equazione
+possibili per il mapping non è banale, valutando l'equazione
 (relativo ad un solo bitvector sparso, comprendente le strutture per
 le funzioni $\rank$ e $\select$, e ad un solo intvector
 compresso): 
@@ -860,15 +860,19 @@ compresso):
   \rho\left(2+\log\frac{M}{\rho}\right)+128=\rho\lceil\log(M-1)\rceil+1
 \end{equation}
 \dc{Ricontrollare conto}
+Bisogna considerare come difficoltà aggiuntiva il fatto che $M,\,\rho\in
+\mathbb{N}$ e che entrambi i lati dell'equazione hanno valori nell'insieme dei
+naturali.\\
+
 Solo valutazioni sperimentali hanno mostrato come, con valori di $M$ e $\rho$
 relativi ai pannelli di aplotipi studiati, l'uso degli intvector compressi sia
 più vantaggioso in termini di memoria richiesta. Una stima derivata da tali
 conti è visibile in figura \ref{fig:bvvsint}, dove si evince che, qualora la
-media di run resti proporzionale a quanto visto con 4.908 sample
+media del numero di run resti proporzionale a quanto visto con 4.908 sample
 (ovvero una media di 12 run come verrà
 analizzato nel Capitolo \ref{reschap}), l'uso dei
 bitvector sparso diventerebbe favorevole solo con pannelli con più di circa
-17.530 sample. 
+17.180 sample. 
 \begin{figure}
   \centering
   \includegraphics[scale = 0.7]{img/bv_vs_iv.png}
