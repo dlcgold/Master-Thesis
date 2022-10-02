@@ -184,7 +184,7 @@ Tale vincolo, da cui deriva il termine
 colonna (o indice della query) rappresenta un preciso sito per una specifica
 variante genica. Il tradeoff di questo algoritmo è la richiesta in termini di
 spazio ($13NM$ 
-bytes). Superare questo limite è l'obiettivo principale di
+byte). Superare questo limite è l'obiettivo principale di
 questo progetto di tesi.
 Il funzionamento della $\PBWT$ prevede la costruzione di due insiemi di
 array, tramite 
@@ -225,7 +225,7 @@ In letteratura è stata quindi proposta la \textit{trasformata di
   Burrows--Wheeler 
   Run-Length encoded} ($\RLBWT$) dove ogni run viene memorizzata in modo
 efficiente 
-come coppia (carattere, lunghezza della run). Ad esempio, la stringa
+come coppia \texttt{(carattere, lunghezza della run)}. Ad esempio, la stringa
 \texttt{aaaaaa} sarebbe memorizzata come \texttt{(a,6)}.
 Recentemente, per questa struttura dati compressa, è stato proposto un nuovo
 tipo di indicizzazione: il cosiddetto \textit{r-index}. Tale indice riduce lo
@@ -245,9 +245,10 @@ in entrambe le direzioni, senza introdurre un mismatch.
 Il calcolo dei $\MEM$ è direttamente
 correlato alla costruzione dell'array delle \textit{Matching Statistics}
 ($\MS$). Tale array, lungo quanto il pattern e formato da coppie (posizione
-$\pos$, lunghezza $\len$), annota, per ogni posizione del pattern, la lunghezza
+$\pos$, lunghezza $\len$), annota la lunghezza
 $\len$ di un match, anche non massimale, con una sottostringa nel testo avente
-indice iniziale $\pos$. Estraendo da tali match i $\MEM$ si possono poi ottenere
+indice iniziale $\pos$, per ogni posizione del pattern.
+Estraendo da tali match i $\MEM$ si possono poi ottenere
 tutte le altre occorrenze del medesimo $\MEM$ nel testo. 
 In MONI, per il calcolo delle $\MS$, è stato
 usato anche il concetto di \textit{threshold}, definito come
@@ -443,7 +444,7 @@ mentre con la $\RLPBWT$ in 1.142s, avendo una differenza, per quanto attesa,
 molto piccola.
 Si è passato, quindi, ad analizzare i risultati in termini di memoria. Secondo
 le stime di Durbin, gli array necessari al funzionamento del suo algoritmo
-richiederebbero $13NM$ bytes, implicando, per il pannello in analisi, circa
+richiederebbero $13NM$ byte, implicando, per il pannello in analisi, circa
 368GB di memoria. 
 Sperimentalmente, si sono registrati
 picchi di memoria prossimi ai 369GB, confermando le stime. Invece,
