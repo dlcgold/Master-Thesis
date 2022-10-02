@@ -101,9 +101,12 @@
 \def\A{\mbox{\rm {\sf A}}}
 \def\A{\mbox{\rm {\sf A}}}
 \def\SA{\mbox{\rm {\sf SA}}}
+\def\IISA{\mbox{\rm {\sf (I)SA}}}
 \def\LCP{\mbox{\rm {\sf LCP}}}
 \def\ISA{\mbox{\rm {\sf ISA}}}
 \def\PLCP{\mbox{\rm {\sf PLCP}}}
+\def\PPLCP{\mbox{\rm {\sf (P)LCP}}}
+
 \def\RLCP{\mbox{\rm {\sf RLCP}}}
 \def\RLBWT{\mbox{\rm {\sf RLBWT}}}
 \def\MEM{\mbox{\rm {\sf MEM}}}
@@ -156,7 +159,8 @@
 \author[Davide Cozzi]{\Large{Davide Cozzi}}
 
 
-\institute[] {\large{\textbf{{\color{nord2}Relatore:}} \textit{Prof.~Raffaella
+\institute[] {\large{\textbf{{\color{nord2}Relatore:}}
+    \textit{Prof.ssa~Raffaella 
       Rizzi}\quad 
     \textbf{\color{nord2}{Correlatore:}} \textit{Dr.~Yuri Pirola}}\\
   \vspace{4mm}
@@ -212,8 +216,7 @@
     Uno degli approcci più usati per rappresentare il \textbf{pangenoma}
     è attraverso un pannello di aplotipi, ovvero, da un punto di vista
     computazionale, una matrice di M righe, corrispondenti agli individui, e N
-    colonne, corrispondenti ai siti con le varianti. Tale approccio ha permesso
-    studi di imputazione in GWAS etc$\ldots$}
+    colonne, corrispondenti ai siti con le varianti. }
   \end{block}
   \begin{block}{}
     \small{
@@ -221,7 +224,51 @@
     varianti che, a meno di mutazioni, un organismo eredita da ogni genitore. }
   \end{block}
 \end{frame}
+\begin{frame}{Scopo della tesi}
+  \begin{alertblock}{}
+    Lo scopo di questa tesi, svolta in collaborazione con il laboratorio BIAS e
+    con diversi ricercatori internazionali (University of Florida, Dalhousie
+    University e Tokyo Medical and Dental University), è stato quello di creare
+    una variante \textbf{run-length encoded} della \textbf{trasformata di
+      Burrows--Wheeler posizionale} che permettesse, in modo efficiente dal
+    punto di vista della memoria richiesta, il calcolo dei
+    \textbf{set-maximal exact matches} di un aplotipo esterno contro un pannello
+    biallelico di aplotipi.
+  \end{alertblock}
+  \begin{block}{}
+    Ideare una struttura dati efficiente in spazio permetterà, nel breve futuro,
+    di gestire i sempre più grandi dati provenienti dal sequenziamento
+   comportando più precisi studi di imputazione coi GWAS etc$\ldots$
+  \end{block}
+\end{frame}
 \section{Preliminari}
+\begin{frame}{Alcuni concetti teorici}
+  \begin{block}{}
+    \small{
+    \begin{itemize}
+      \item bitvector, bitvector sparsi e intvector compressi
+      \item straight-line program ($\SLP$) e longest common extension ($\LCE$)
+      query 
+      \item trasformata di Burrows--Wheeler ($\BWT$), (inverse) suffix array
+      ($\IISA$), (permuted) longest common prefix ($\PPLCP$), FM-index,
+      $\LF$-mapping, funzione $\varphi$, maximal exact matches ($\MEM$) e
+      backward-search 
+      \item trasformata di Burrows--Wheeler run-length encoded ($\RLBWT$),
+      r-index, Toehold lemma e matching statistics ($\MS$)
+      \item $\BWT$ posizionale ($\PBWT$) e set-maximal
+      exact match ($\SMEM$)
+    \end{itemize}}
+  \end{block}
+  \begin{block}{}
+    \small{
+    La $\BWT$ ($\PBWT$) tendono ad avere caratteri uguali in posizioni
+    consecutive all'interno della sua sequenza (ogni sua colonna). Si usa il
+    run-length encoding che consiste nel memorizzare le cosiddette run, ovvero
+    sequenze massimali di caratteri uguali, mediante coppie \texttt{(carattere,
+    lunghezza della run)}, ad esempio la stringa \texttt{aaaaaa} sarebbe memorizzata come
+    \texttt{(a,6)}. }
+  \end{block}
+\end{frame}
 % \subsection{Bitvector e straight-line program}
 % \begin{frame}[fragile]{BV e SLP}
 %   \only<1,2>{
@@ -680,7 +727,8 @@
   \author[1]{\Large{Davide Cozzi}}
 
 
-  \institute[] {\large{\textbf{{\color{nord2}Relatore:}} \textit{Prof.~Raffaella
+  \institute[] {\large{\textbf{{\color{nord2}Relatore:}}
+      \textit{Prof.ssa~Raffaella 
         Rizzi}\quad 
       \textbf{\color{nord2}{Correlatore:}} \textit{Dr.~Yuri Pirola}}\\
     \vspace{4mm}
