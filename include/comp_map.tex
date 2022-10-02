@@ -167,7 +167,7 @@ quanto appena detto è consultabile all'algoritmo \ref{algo:uvnaive}.
     \EndIf
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per uvtrick con \texttt{MAP-INT}.}
+  \caption{Algoritmo per la funzione $\uvtrick$ con \texttt{MAP-INT}.}
   \label{algo:uvnaive}
 \end{algorithm}
 
@@ -361,7 +361,7 @@ anche il mapping da una colonna alla successiva avviene in tempo costante.
     \Else
     \State $off\gets i-p_k[run]$
     \EndIf
-    \State $(u,v)\gets uvtrick(k,\,\,i)$
+    \State $(u,v)\gets \uvtrick(k,\,\,i)$
     \If{$p_k[i]+off=M$}
     \State \textbf{if} $\GS(start_k, i)=0$ \textbf{then} $v\gets v-1$
     \textbf{else} $u\gets u-1$
@@ -820,7 +820,7 @@ visto all'equazione \ref{eq:bvuvtime}.
     \EndIf
     \EndFunction
   \end{algorithmic}
-  \caption{Algoritmo per uvtrick con \texttt{MAP-BV}.}
+  \caption{Algoritmo per la funzione $\uvtrick$ con \texttt{MAP-BV}.}
   \label{algo:uvbv}
 \end{algorithm}
 \begin{algorithm}
@@ -828,7 +828,7 @@ visto all'equazione \ref{eq:bvuvtime}.
     \Function{w}{$k,\,\, i, \,\,\sigma$}
     \Comment $k$ indice di colonna, $i$ indice di riga, $\sigma$ simbolo
     \State $c\gets c[k]$
-    \State $(u, v) \gets uvtrick(k,\,\,i)$
+    \State $(u, v) \gets \uvtrick(k,\,\,i)$
     \State \textbf{if} $\sigma = 0$ \textbf{then} \textbf{return} $u$
     \textbf{else}  \textbf{return} $c+v$
     % \If{$\sigma = 0$}
@@ -844,7 +844,7 @@ visto all'equazione \ref{eq:bvuvtime}.
 Facendo una prima stima della memoria occupata da questa componente si ha che,
 avendo $\rho$ numero medio di run per colonna, essa è:
 \begin{equation}
-  \label{eq:mapintmem}
+  \label{eq:mapintmem2}
   \approx N\left(\frac{\rho\left(2+\log\frac{M}{\rho}\right)}{4}+21\right)\mbox{ byte} 
 \end{equation}
 \dc{Ricontrollare conto}

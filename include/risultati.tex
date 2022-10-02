@@ -129,7 +129,8 @@ grammatiche.
 Si noti che, essendo la capacità di compressione di un $\SLP$
 direttamente correlata alle ripetizioni presenti nella stringa da comprimere, la
 dimensione dell'$\,\SLP$ non è perfettamente proporzionale al numero di siti
-dei pannelli in analisi.
+dei pannelli in analisi. Per riferimento, comprimere il pannello relativo al
+cromosoma 1, con una tecnica standard (GZip), richiede 0,5GB.
 \begin{figure}
   \centering
   \includegraphics[width=0.7\linewidth]{img/slp_vs_macs_log.png}
@@ -183,11 +184,11 @@ sparsi. Nel caso della componente
 per una classica popolazione di array di interi, è la fase di compressione degli
 stessi. Le analisi effettuate sulle componenti di mapping sono da
 ritenersi analoghe per le componenti dedicate alle threshold, in
-termini di uso di bitvector sparsi e intvector compressi.
+termini d'uso di bitvector sparsi e intvector compressi.
 Tali considerazioni sono valide anche per le altre strutture
 composte per la $\RLPBWT$. Infine, confrontando le strutture dati in grado
 di computare l'array $\MS$, si aggiungono le considerazioni sulle possibili
-strutture per il random access e, nel caso di uso dell'$\,\SLP$, per l'uso
+strutture per il random access e, nel caso d'uso dell'$\,\SLP$, per l'uso
 delle $\LCE$ query. Si nota come l'uso della componente \texttt{RA-BV}
 comporta, come atteso, una maggior richiesta di memoria, pur limitata dall'uso
 dei bitvector. Sempre in termini di tempi di esecuzione, si ha che la
@@ -491,7 +492,7 @@ per il calcolo degli $\SMEM$ delle varie implementazioni.\\
 Confrontando l'uso delle $\LCE$ query con l'uso della componente
 \texttt{RA-BV} si hanno, invece, tempi triplicati nel caso d'uso di componenti
 per mapping e 
-threshold con bitvector sparsi. Nel caso di uso degli intvector compressi, si
+threshold con bitvector sparsi. Nel caso d'uso degli intvector compressi, si
 hanno, d'altro canto, circa sette volte i tempi di 
 computazione. A priori delle componenti per mapping e
 threshold, l'uso della componente \texttt{RA-SLP} comporta circa sei

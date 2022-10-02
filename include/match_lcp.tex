@@ -147,8 +147,8 @@ Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
     \State $u\gets i$
     \State $prev_0\gets 0$, $next_0\gets 0$
     \For {\textit{every} $j\in [0,|p_k|)$}
-    \State $(prev_0,\_) \gets uvtrick(k,j)$
-    \State $(next_0,\_) \gets uvtrick(k,j+1)$
+    \State $(prev_0,\_) \gets \uvtrick(k,j)$
+    \State $(next_0,\_) \gets \uvtrick(k,j+1)$
     \If{$prev_0\leq u<next_0$}
     \State $run\gets j$, $found\gets \top$
     \State \textbf{break}
@@ -158,15 +158,15 @@ Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
     % \If{$\neg found$}
     % \State $run \gets |p_k|-1$
     % \EndIf
-    \State $(curr_u,\_)\gets uvtrick(k, run)$, $offset\gets u-curr_u$
+    \State $(curr_u,\_)\gets \uvtrick(k, run)$, $offset\gets u-curr_u$
     \State \textbf{return} $p_k[run]+offset$
     \Else
 
     \State $v\gets i-c$
     \State $prev_1\gets 0$, $next_1\gets 0$
     \For {\textit{every} $j\in [0,|p_k|)$}
-    \State $(\_,prev_1) \gets uvtrick(k,j)$
-    \State $(\_,next_1) \gets uvtrick(k,j+1)$
+    \State $(\_,prev_1) \gets \uvtrick(k,j)$
+    \State $(\_,next_1) \gets \uvtrick(k,j+1)$
     \If{$prev_1\leq v<next_1$}
     \State $run\gets j$, $found\gets \top$
     \State \textbf{break}
@@ -176,7 +176,7 @@ Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
     % \If{$\neg found$}
     % \State $run \gets |p_k|-1$
     % \EndIf
-    \State $(curr_v,curr_u)\gets uvtrick(k, run)$, $offset\gets v-curr_v$
+    \State $(curr_v,curr_u)\gets \uvtrick(k, run)$, $offset\gets v-curr_v$
     \State \textbf{return} $p_k[run]+offset$
     \EndIf
     \EndFunction
@@ -208,7 +208,7 @@ Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
     % \If{$run\neq 0$}
     % \State $i_{run}\gets select_h^{k}(run)+1$
     % \EndIf
-    \State $(prev_0,\,\,\_)\gets uvtrick(k,\,\,i_{run})$
+    \State $(prev_0,\,\,\_)\gets \uvtrick(k,\,\,i_{run})$
     \State \textbf{return} $i_{run}+(i-prev_0)$
     \Else
     \If{$start_k$}
@@ -222,7 +222,7 @@ Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
     % \If{$run\neq 0$}
     % \State $i_{run}\gets select_h^{k}(run)+1$
     % \EndIf
-    \State $(\_,\,\,prev_1)\gets uvtrick(k,\,\,i_{run})$
+    \State $(\_,\,\,prev_1)\gets \uvtrick(k,\,\,i_{run})$
     \State \textbf{return} $i_{run}+(i-(c+prev_1))$
     \EndIf
     \EndFunction

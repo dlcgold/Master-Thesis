@@ -336,15 +336,15 @@ caratteri su $\F_T$, calcolando il nuovo intervallo $[f,g)$.
 Come già introdotto, la $\BWT$ tende ad avere caratteri uguali in
 posizioni consecutive all'interno della sua sequenza. Si è quindi 
 pensato, fin da subito, ad un modo efficiente per memorizzare in modo compresso
-testi mediante l'uso del run-length encoding. Tale tecnica consiste nel
+testi mediante l'uso del run-length encoding. \\
+Tale tecnica consiste nel
 memorizzare le cosiddette run, ovvero sequenze massimali di caratteri
-uguali, mediante coppie: 
-\[(\mbox{carattere}, \mbox{lunghezza della run})\]
+uguali, mediante coppie \texttt{(carattere, lunghezza della run)}.
 \begin{esempio}
   Vediamo un breve esempio.\\
   Si ipotizzi di avere la seguente stringa:
   \[s=\mbox{aaaacctgggggg}\]
-  Una sua memorizzazione run-length sarebbe del tipo:
+  La sua memorizzazione run-length sarebbe:
   \[\{(a,4),(c,2),(t,1),(g,6)\}\]
 \end{esempio}
 \subsection{RLBWT e r-index}
