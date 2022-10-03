@@ -511,9 +511,9 @@
   \begin{block}{Complessità in tempo, pannelli $N\times M$, con $\rho$ numero di
     run in una colonna}
     \begin{itemize}
-      \item $\rank$ con bitvector sparsi:
+      \item funzione $\rank$ con bitvector sparsi:
       $\mathcal{O}\left(\log\left(\frac{M}{\rho}\right)\right)$
-      \item $\select$ con bitvector sparsi: $\mathcal{O}\left(1\right)$
+      \item funzione $\select$ con bitvector sparsi: $\mathcal{O}\left(1\right)$
       \item equivalente della funzione $\rank$ con intvector compressi:
       $\mathcal{O}\left(\log\left(\rho\right)\right)$
       \item equivalente della funzione $\select$ con intvector compressi:
@@ -524,10 +524,12 @@
     \end{itemize}
   \end{block}
 \end{frame}
-\begin{frame}{Bitvector sparsi vs intvector compressi}
+\begin{frame}{Qualche confronto in spazio}
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/bv_vs_iv.png}
+    \includegraphics[width=0.49\textwidth]{img/bv_vs_iv.png}
+    \includegraphics[width=0.49\textwidth]{img/slp_vs_macs_log.png}
+
   \end{figure}
 \end{frame}
 \subsection{Strutture dati per la RLPBWT}
@@ -572,8 +574,8 @@
   \pause
   \begin{block}{Due macro alternative per il calcolo dell'array $\MS$}
     \begin{enumerate}
-      \item usare le threshold e il random access al pannello
-      \item usare le $\LCE$ query
+      \item usare le threshold e il random access al pannello (come in MONI)
+      \item usare le $\LCE$ query (come in PHONI)
     \end{enumerate}
   \end{block}
 \end{frame}
