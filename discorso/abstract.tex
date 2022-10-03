@@ -216,6 +216,70 @@ ovvero il forward step, tra una colonna e la successiva nella matrice
 $\PBWT$. Superare questo limite è l’obiettivo principale di questo progetto di
 tesi.
 \subsection*{Slide 8}
+Si ha qui una breve panoramica delle componenti atomiche che hanno permesso la
+creazione delle varianti della RLPBWT:
+\begin{itemize}
+  \item componenti per il mapping tra una colonna e la successiva nella
+  $\PBWT$, tramite bitvector sparsi (\texttt{MAP-BV}) o intvector compressi
+  (\texttt{MAP-INT}). Tali componenti includono tutte le informazioni necessarie
+  al mapping tra una colonna e la successiva, memorizzando l'indice di ogni run
+  e gli 
+  equivalenti dell'FM-index. Inoltre si memorizza un singolo bool per poter
+  risalire la carattere di ogni singola run
+  \item componenti per le threshold (\texttt{THR-BV}/\texttt{THR-INT}), dove si
+  memorizza l'indice ogni threshold
+  \item componente per i prefix array sample (\texttt{PERM}), ovvero i valori di
+  prefix array ad inizio e fine di ogni run
+  \item componenti per il random access, tramite pannello di bitvector
+  (\texttt{RA-BV}) tramite $\SLP$ (\texttt{RA-SLP})
+  \item componente per le $\LCE$ query con $\SLP$ (\texttt{LCE})
+  \item componente per il calcolo delle funzioni $\varphi$ e $\varphi^{-1}$
+  (\texttt{PHI}), che permettono data una colonna e un valore di prefix array,
+  di sapere quale sia il valore precedente e quello successivo
+  \item componente per il reverse longest common prefix (\texttt{RLCP}), che non
+  scala sul numero di run
+\end{itemize}
+Il senso di queste multiple componenti si ritrova nel fatto che, parlando di
+strutture dati succinte e compresse, è difficile stimare l'effettivo spazio
+necessario basandosi solo sulle complessità asintotiche. Inoltre, dal punto di
+vista temporale, si aggiunge il problema che gli algoritmi tratti dipendono
+fortemente dalla caratteristica del dato. Al fine di esplorare a pieno le varie
+soluzioni quindi, oltre ad aver studiato e implementato le varianti di MONI e
+PHONI, si sono studiati gli usi di varie strutture dati sottostanti.
+\subsection*{Slide 9}
+Possiamo qui velocemente vedere alcune dei confronti tra le componenti con
+multiple rappresentazioni in termini di complessità temporale. Avendo che
+$M>>\rho$ si nota come gli intvector compressi si preannunciano più veloci.
+Si nota inoltre come il random access (o il calcolo delle $\LCE$ query), per
+quanto tale caso peggiore sia irrealistico nel nostro caso dovendosi in realtà
+basare sulla stringa prodotta dall'SLP, sia nettamente meno performante con tale
+grammatica compressa.
+\subsection*{Slide 10}
+Possiamo qui confrontare velocemente a sinistra le stime di memoria dell'uso di
+un bitvector sparso e un intvector compressso, stime derivanti dai dati di SDSL
+(la lib usata) e dal numero di run attese (proporzionale a quanto visto con i
+dati del 1000 genome project). Si nota quindi che, per quanto all'inizio gli
+intvector compressi richiedano meno memoria tale comportamento è destinato ad
+invertirsi all'aumentare del numero di sample.\\
+A destra invece possiamo notare il forte vantaggio dell'SLP, anticipando già i
+risultati, rispetto ai pannelli del 1000 genome project.
+\subsection*{Slide 11 e 12}
+Si ha quindi lo schema che mostra le 8 strutture dati studiate. Di fatto le
+soluzioni sono 3, che diventano 8 per il discorso di dualità visto
+precedentemente.
+Si hanno quindi:
+\begin{enumerate}
+  \item le strutture che vediamo in centro, basate sul rifacimento
+  dell'algoritmo 5 di Durbin e sull'uso dell'RLCP. Non è in grado di sapere
+  quali siano le righe che presentano un certo SMEM ma solo quante
+  \item le soluzioni ispirate a MONI
+  \item le soluzioni ispirate a PHONI
+\end{enumerate}
+Le ultime due soluzioni computano esattamente quali righe presentano uno SMEM.\\
+È superfluo notare come le prime due soluzioni non siano effettivamente
+utilizzabili ma sono state citate in quanto punto iniziale di questa tesi e dei
+primi studi sull'uso del run-length.
+\subsection*{Slide 13}
 
 \end{document}
 
