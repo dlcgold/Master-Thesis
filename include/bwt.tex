@@ -97,10 +97,10 @@ breve esempio.
 \begin{esempio}
   Si riprende l'esempio precedente, avendo:
   \[\BWT_T=\mbox{ipssm\$pissii}\mbox{ e }\F_T=\mbox{\$iiiimppssss}\]
-  E avendo i seguenti caratteri associati dall'\textit{LF-mapping}:
+  E avendo i seguenti caratteri associati dall'LF-mapping:
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.33]{img/lf.pdf}
+    \includegraphics[scale = 0.33]{img/lf2.pdf}
   \end{figure}
   Si comincia dal simbolo '\$' in $\BWT_T$, che è l'ultimo carattere di $T$. Si
   ha che esso corrisponde al primo e unico simbolo '\$' in $\F_T$, all'indice
@@ -166,7 +166,7 @@ ricordando anche che da essa si può ricostruire il testo $T$.
   \[T=\mbox{mississippi\$},\,\,|s|=12\]
   Che produce:
   \[\BWT_T=\mbox{ipssm\$pissii}\]
-  Si ha, per $\C(\sigma)$:
+  Si hanno, per $\C(\sigma)$ e $\Occ(\sigma, i)$:
   \begin{table}[H]
     \centering
     \begin{tabular}{c||c}
@@ -178,11 +178,7 @@ ricordando anche che da essa si può ricostruire il testo $T$.
       m & 5\\
       p & 6\\
       s & 8\\
-    \end{tabular}
-  \end{table}
-  Per $\Occ(\sigma, i)$, si ha:
-  \begin{table}[H]
-    \centering
+    \end{tabular}\quad\quad\quad\quad\quad
     \begin{tabular}{c||c|c|c|c|c}
       0 & 0 & 0 & 0 & 0 & 0 \\
       1 & 0 & 1 & 0 & 0 & 0 \\
@@ -765,7 +761,7 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   \textit{PHONI}. Per 
   semplicità si ignorano i casi in cui $q$, $q'$ e $q''$ non sono definiti. Si
   assume inoltre che $P[m-1]$ occorre in $T$. Con $\LF(\cdot)$ si intende il
-  calcolo dell'$\,\LF$-mapping.}
+  calcolo dell'LF-mapping.}
   \label{algo:phonims}
 \end{algorithm}
 \begin{esempio}
@@ -798,23 +794,24 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
     \end{tabular}
   \end{table}
   \dc{verificare bene threshold}
+  \noindent
   Iniziamo con l'algoritmo visto in \textit{MONI}.\\
   Si ha che $P[m-1]=\mbox{'s'}$, ne segue, seguendo la stessa notazione vista
   sopra e cercando l'ultima occorrenza di $\mbox{'s'}$ in $\BWT_T$, che $q=9$. Si
-  procede quindi con l'$\,\LF$-mapping avendo che $\LF(9)=11$. A questo punto
+  procede quindi con l'LF-mapping avendo che $\LF(9)=11$. A questo punto
   si ha il valore di $\MS[m-1].pos$:
   \[\MS.\pos = ???\SA_T[11]=???2\]
   Si ha poi che $\BWT_T[11]=\mbox{'i'}\neq P[m-2]=\mbox{'s'}$. Non avendo alcuna
   run di simboli $\mbox{'s'}$ sotto l'attuale run di simboli $\mbox{'i'}$ si
   procede aggiornando $q$ con l'indice della cosa della precedente run di
   simboli $\mbox{'s'}$, avendo quindi $q=9$. Si procede con
-  l'$\,\LF$-mapping avendo che $\LF(9)=11$ e si aggiorna l'array $\MS.\pos$:
+  l'LF-mapping avendo che $\LF(9)=11$ e si aggiorna l'array $\MS.\pos$:
   \[\MS.\pos = ??\SA_T[11]2=??22\]
   Si ha, a questo punto, che $\BWT_T[11]=\mbox{'i'}= P[m-2]=\mbox{'s'}$. Si
-  procede con l'$\,\LF$-mapping, ottenendo $\LF(11)=4$ e aggiornando $\MS$:
+  procede con l'LF-mapping, ottenendo $\LF(11)=4$ e aggiornando $\MS$:
   \[\MS.\pos = ?\SA_T[4]22=?122\]
   Infine, avendo $\BWT_T[4]=\mbox{'i'}\neq P[m-3]=\mbox{'m'}$ si conclude il
-  calcolo dell'array $\MS$ con l'ultimo l'$\,\LF$-mapping. Infatti $\LF(4)=5$,
+  calcolo dell'array $\MS$ con l'ultimo l'LF-mapping. Infatti $\LF(4)=5$,
   avendo quindi:
   \[\MS.\pos = \SA_T[5]122=0122\]
   A questo punto, tramite random access al testo, si calcolano i vari
@@ -853,7 +850,7 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
       $\len$ & ? & ? & ? & 1\\
     \end{tabular}
   \end{table}
-  Si procede con l'$\,\LF$-mapping, avendo $\LF(2)=8$. Si ha che
+  Si procede con l'LF-mapping, avendo $\LF(2)=8$. Si ha che
   $\BWT_T[8]=P[m-2]$ e quindi, essendo $\SA_T[8]=6$ si ottiene:
   \begin{table}[H]
     \centering
@@ -893,8 +890,7 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   l'indice della
   testa della run precedente di caratteri $\mbox{'m'}$ (che in questo caso non
   esiste e gli si assegna il valore 0) e della run successiva:
-  \[q'=\select_{'m'}(3)=0\]
-  \[q''=\select_{'m'}(4)=4\]
+  \[q'=\select_{'m'}(3)=0\quad \quad q''=\select_{'m'}(4)=4\]
   Seguendo l'algoritmo si ha che:
   \[l'=\min(3,\left|\LCE(\SA_T[0],4)\right|)=\min(3,\left|\LCE(11,4)\right|)
     =\min(3,0)=0\]
