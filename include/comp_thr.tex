@@ -1,6 +1,6 @@
 \subsection{Componente per le threshold}
-Come discusso per MONI per la $\RLBWT$, l'uso delle threshold è 
-uno dei due modi per computare l'array delle matching statistics. \\
+Come discusso con MONI per la $\RLBWT$, l'uso delle threshold è 
+uno dei due modi per computare l'array delle matching statistics. 
 \begin{definizione}
   Data la colonna $k$-esima della matrice $\PBWT$, $y^k$, memorizzata
   tramite compressione run-length e data la run $j$-esima, indicizzata
@@ -11,8 +11,8 @@ uno dei due modi per computare l'array delle matching statistics. \\
   esistente, deve essere considerato in quanto calcolato prendendo in
   considerazione $y^k_{i'}$ (valore appartenente alla run in analisi) e
   $y^k_{i'+1}$. \\
-  Qualora si abbiano più valori minimi uguali in $\RLCP_k$ si seleziona il primo
-  per convenzione.
+  Qualora si abbiano più valori minimi uguali in $\RLCP_k$ si seleziona il
+  primo, per convenzione.
 \end{definizione}
 Da un punto di vista implementativo, come anticipato, si hanno due soluzioni,
 una basata su intvector compressi e una basata su bitvector sparsi. In
@@ -34,10 +34,9 @@ proporzionale a:
   \label{eq:thrint}
   \mathcal{O}(M)
 \end{equation}
-Si noti che, qualora minimo $\RLCP$ si trovi nella testa della run successiva
-(da considerare in quanto calcolato anche grazie all'ultimo elemento della run
-corrente), si memorizza l'indice della testa della run
-successiva come threshold.
+Si noti che, qualora il minimo valore dell'$\,\RLCP$ si trovi nella testa della
+run successiva, si memorizza, come threshold, l'indice della testa della run
+successiva.
 \begin{algorithm}
   \begin{algorithmic}
     \Function{Build\_thr\_int}{$col,\,\,pref,\,\,div$}
@@ -68,7 +67,7 @@ successiva come threshold.
 \subsubsection{Threshold con bitvector}
 Con questa componente, le posizioni delle threshold vengono
 memorizzate, per ogni colonna $k$, tramite un bitvector sparso, denotato
-$thr_k$, avendo che $thr_k[i]=1$ sse $i$ è l'indice di una threshold.
+$t_k$, avendo che $t_k[i]=1$ sse $i$ è l'indice di una threshold.
 Qualora il minimo $\RLCP$ si trovi nell'indice della testa della run
 successiva, la posizione della threshold verrà memorizzata all'indice
 della coda della run corrente. Purtroppo questa è una situazione di ambiguità.
@@ -79,7 +78,7 @@ quella successiva comporta differenze dal punto di vista del calcolo dell'array
 $\MS$. 
 Purtroppo, non è possibile salvare la threshold direttamente nella testa della
 run successiva in quanto questa potrebbe essere anche la posizione della
-threshold della run successiva e avere due threshold sovrapposte impedirebbe di
+threshold della run successiva. Avere due threshold sovrapposte impedirebbe di
 capire a quale run appartiene una certa threshold, tramite la funzione
 $\rank$. \\
 Lo pseudocodice per la costruzione della componente
@@ -91,12 +90,15 @@ proporzionale a:
   \label{eq:thrbv}
   \mathcal{O}(M)
 \end{equation}
+\noindent
+In merito al confronto tra \texttt{THR-INT} e \texttt{THR-BV}, in termini di uso
+di memoria, valgono le stesse considerazioni fatte per le componenti di mapping.
 \begin{algorithm}
   \begin{algorithmic}
     \Function{Build\_thr\_bv}{$col,\,\,pref,\,\,div$}
     \Comment $pref=a_k,\,\,div=l_k$
     \State $curr_{lcs}\gets 0,\,\,tmp_{thr}\gets 0$
-    \State $thrs\gets[0..0]$
+    \State $t\gets[0..0]$
     \Comment bitvector sparso di lunghezza $M$
     \For {\textit{every} $k\in\left[0,\,\, M\right)$}
     \If{$k=0\lor col[pref[k]]\neq col[pref[k-1]]$}
@@ -107,20 +109,16 @@ proporzionale a:
     \EndIf
     \If{$k=M-1\lor col[pref[k]]\neq col[pref[k+1]]$}
     \If{$k\neq M-1\land div[k+1]<div[tmp_{thr}]$}
-    \State $thrs[k]\gets 1$
+    \State $t[k]\gets 1$
     \Else
-    \State $thrs[tmp_{thr}]\gets 1$
+    \State $t[tmp_{thr}]\gets 1$
     \EndIf
     \EndIf
     \EndFor
-    \State \textit{costruzione delle strutture $\rank$/$\select$ per thr}
-    \State \textbf{return} $thr$  
+    \State \textit{costruzione delle strutture $\rank$/$\select$ per} $t$
+    \State \textbf{return} $t$  
     \EndFunction
   \end{algorithmic}
   \caption{Algoritmo per la costruzione della componente \texttt{THR-BV}.}
   \label{algo:thrbv}
 \end{algorithm}
-\noindent
-In merito al confronto tra \texttt{THR-INT} e \texttt{THR-BV}, in termini di uso
-di memoria, valgono le stesse considerazioni fatte per le componenti di mapping.
-\dc{Serve ridire quanto pesa un bv?}

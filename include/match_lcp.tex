@@ -1,5 +1,5 @@
 \section{Strutture dati per la RLPBWT}
-Assemblando le componenti descritte nella sezione precedente si ottengono otto
+Assemblando le componenti descritte nella sezione precedente, si ottengono otto
 varianti della $\RLPBWT$:
 \begin{itemize}
   \item due strutture dati composte unicamente dalle componenti dedicate al
@@ -9,19 +9,21 @@ varianti della $\RLPBWT$:
     \item[2] \texttt{MAP-BV + RLCP}
   \end{enumerate}
   Queste soluzioni non permettono di sapere quali righe del pannello
-  presentano uno $\SMEM$, terminante in una certa colonna, ma solo quante
-  esse siano. Il funzionamento dell'algoritmo è basato su una re-implementazione
+  presentino uno $\SMEM$, terminante in una certa colonna, ma solo quante
+  esse siano. Non avendo traccia dei valori del prefix array, non si ha modo di
+  usare la componente \texttt{PHI}. Il funzionamento dell'algoritmo è basato su
+  una re-implementazione 
   dell'algoritmo 5 di Durbin
   \item quattro strutture composte per il calcolo degli $\SMEM$ tramite la
-  computazione 
-  in due passaggi dell'array delle matching statistics, in modo analogo
+  computazione, 
+  in due passaggi, dell'array delle matching statistics, in modo analogo
   a quanto introdotto in MONI \cite{moni} per la $\RLBWT$, tramite
   threshold e random access al pannello. In merito a quest'ultimo, come
   anticipato, si ha che può essere memorizzato come vettore di
   bitvector o come 
   $\SLP$. L'algoritmo  
   necessita, inoltre, sia della componente atta al mapping che di quella
-  relativa ai prefix array sample. Infine, al fine di estendere il
+  relativa ai prefix array sample. Infine, per estendere il
   riconoscimento a tutte le righe che presentano un medesimo $\SMEM$ fino ad una
   certa colonna, si necessita della struttura che permette di calcolare le
   funzioni $\varphi$ e $\varphi^{-1}$. Tali strutture sono nominate:
@@ -32,8 +34,8 @@ varianti della $\RLPBWT$:
     \item[6] \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
   \end{enumerate}
   \item due strutture composte per il calcolo degli $\SMEM$ tramite la
-  computazione 
-  in un singolo passaggio dell'array delle matching statistics, in modo
+  computazione, 
+  in un singolo passaggio, dell'array delle matching statistics, in modo
   analogo a quanto introdotto in PHONI \cite{phoni} per la $\RLBWT$, tramite
   l'uso delle $\LCE$ query. Queste ultime sostituiscono l'uso delle
   threshold e del random access al pannello. Tali strutture
@@ -59,12 +61,12 @@ quella che può essere effettuata tramite le strutture dati composte:
   \item \texttt{MAP-INT + RLCP}
   \item \texttt{MAP-BV + RLCP}
 \end{itemize}
-I due algoritmi riprendono esattamente quanto discusso per l'algoritmo 5
-  di Durbin. Tali algoritmi non sfruttano l'uso delle matching statistics e sono
-  limitati dal non 
+I due algoritmi riprendono  quanto discusso per l'algoritmo 5
+di Durbin. Tali algoritmi non sfruttano l'uso delle matching statistics e sono
+limitati dal non 
 poter calcolare quali righe presentano un solo $\SMEM$, calcolando solo quante
 siano. Il secondo limite è dato dal fatto che necessitano di avere interamente
-in memoria l'$\,\RLCP$ array. Questo comporta avere in memoria una
+in memoria l'$\,\RLCP$ array, una
 struttura non run-length encoded.\\
 Il metodo procede, quindi, con l'aggiornamento dei tre indici $e_k$, $f_k$ e
 $g_k$, avendo che gli ultimi due possono assumere qualsiasi valore in
@@ -98,25 +100,26 @@ matrice $\PBWT$. Questo risultato si può ottenere muovendosi da destra a
 sinistra, seguendo in modo 
 inverso la permutazione che produce il prefix array. In altri termini,
 tale metodo permette un mapping inverso, che segue una riga del
-pannello originale nella matrice $\PBWT$ a ritroso.\\ 
-Per ottenere l'indice alla colonna $k$-esima della matrice $\PBWT$ da cui
+pannello originale nella matrice $\PBWT$, a ritroso.\\ 
+Per ottenere l'indice alla colonna $k$-esima della matrice $\PBWT$, da cui
 proviene la riga $j$, indicizzata all'indice $i$ in
-colonna $k+1$d ella matrice $\PBWT$, si inizia analizzando il valore
+colonna $k+1$ della matrice $\PBWT$, si inizia analizzando il valore
 $c[k]$. Infatti, se $i<c[k]$, 
 allora sicuramente, in colonna $k$, $i$ è un indice di riga corrispondente a
 $\sigma=0$, ricordando come la costruzione della colonna $k+1$
-nella matrice $\PBWT$ si abbia grazie ad ordinamento stabile. In caso contrario
+nella matrice $\PBWT$ si abbia grazie ad ordinamento stabile. In caso contrario,
 $i$ corrisponde ad un elemento $\sigma=1$ in colonna $k$ della matrice $\PBWT$.
 Si sfruttano 
 così o l'array $p_k$ o le funzioni 
 $\rank_{h_k}$ e $\select_{h_k}$ per risalire all'indice in colonna $k$,
 calcolando 
 prima l'indice di run e l'eventuale offset, per il quale il mapping porta
-all'indice $i'$ in colonna $k+1$, seguendo virtualmente la riga $x_j$ del
+all'indice $i'$ in colonna $k+1$, e seguire, virtualmente, la riga $x_j$ del
 pannello originale. 
-Per quanto riguarda la \texttt{MAP-INT + RLCP} si ha lo pseudocodice per il
-mapping inverso consultabile all'algoritmo \ref{algo:lfrev} mentre per quanto
-riguarda la \texttt{MAP-BV + RLCP} si ha l'algoritmo
+Per quanto riguarda la struttura composta \texttt{MAP-INT + RLCP}, si ha lo
+pseudocodice per il 
+mapping inverso consultabile all'algoritmo \ref{algo:lfrev} mentre, per quanto
+riguarda la struttura composta \texttt{MAP-BV + RLCP}, si ha l'algoritmo
 \ref{algo:lfrevbv}. Parlando in termini di complessità in tempo si ha che,
 usando la componente \texttt{MAP-INT}, si ha, con $r$ numero di run alla
 colonna $k$, un caso peggiore proporzionale a:
@@ -230,7 +233,8 @@ Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
   \caption{Algoritmo per il mapping inverso con la \texttt{MAP-BV + RLCP}.}
   \label{algo:lfrevbv}
 \end{algorithm}
-Si ha un riadattamento dell'algoritmo di Durbin all'uso delle run,
+Si ha, di conseguenza, un riadattamento dell'algoritmo di Durbin all'uso delle
+run, 
 ottenendo, ad ogni step, i medesimi valori per $e_k$, $f_k$ e $g_k$. Le uniche
 differenze sono:
 \begin{itemize}
@@ -243,15 +247,16 @@ differenze sono:
   sapere quali siano le righe per le quali si ha uno $\SMEM$ fino alla colonna
   $k$ ma è possibile conoscere solo quante siano, ovvero $g_k-f_k$
 \end{itemize}
-Anche in questo caso lo pseudocodice è consultabile all'algoritmo
+Anche in questo caso, lo pseudocodice è consultabile all'algoritmo
 \ref{algo:matchlcp}. Calcolare la complessità di tale algoritmo non è semplice,
-come già visto nel caso dell'algoritmo 5 di Durbin. In modo analogo si può
-comunque intuire come i vari cicli interni siano limitati superiormente dalla
+come già visto nel caso dell'algoritmo 5 di Durbin. In modo analogo a quanto
+visto per quest'ultimo, si può,
+comunque, intuire come i vari cicli interni siano limitati superiormente dalla
 larghezza del pannello e dai tempi di mapping. Questo si può stimare in quanto
 le occorrenze dei cicli interni sono proporzionali al numero di $\SMEM$ e al
 numero 
 di step all'indietro necessari a computare il nuovo intervallo. Tale numero di
-step che scala sul numero di caratteri in overlap tra due $\SMEM$
+step scala sul numero di caratteri in overlap tra due $\SMEM$
 consecutivi. Fatta questa premessa, si può stimare che il calcolo degli $\SMEM$
 con
 la struttura \texttt{MAP-INT + RLCP} è proporzionale, con $\rho$ numero medio di

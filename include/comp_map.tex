@@ -1,19 +1,19 @@
 \subsection{Componente per il mapping}
 La prima componente che si descrive è quella relativa
-al mapping tra una colonna e la sua successiva. In altri termini, bisogna
-studiare come effettuare il forward-step, che viene qui nominato
-\textit{mapping}, nella $\RLPBWT$. Bisogna memorizzare, 
-per 
+al mapping tra una colonna e la sua successiva nella matrice $\PBWT$. In altri
+termini, bisogna 
+studiare come effettuare il forward-step/mapping nella $\RLPBWT$. Bisogna
+memorizzare, per 
 ogni colonna $k$ e in modo proporzionale al numero di run della stessa, le
 informazioni atte a ottenere i medesimi risultati ottenibili con la funzione
-$\W(i,\sigma)$, secondo la notazione di Durbin \cite{pbwt}. 
+$w(i,\sigma)$ (secondo la notazione di Durbin). 
 \subsubsection{Mapping con intvector compressi}
 La prima variante che si descrive è quella denominata \texttt{MAP-INT}.\\
 L'ispirazione iniziale per tale componente è stata data dall'articolo di Gagie
 et al \cite{tricks}, nonostante si abbiano, di fatto, diverse modifiche
 strutturali. Riprendendo quanto descritto al termine della sezione
 \ref{secpbwt}, si è deciso di
-memorizzare gli indici delle teste di run. Ovviamente questa informazione non è
+memorizzare gli indici delle teste di run. Ovviamente, quest'informazione non è
 sufficiente per poter sapere 
 se una run sia composta da simboli $\sigma=0$ o simboli
 $\sigma=1$. Fortunatamente, essendo lo studio limitato, come per la
@@ -23,7 +23,7 @@ potuto sfruttare il fatto che le run si alternano tra un carattere e
 l'altro. Basta quindi tenere in memoria un valore booleano nominato
 $start_k$, che permetta di 
 capire se, in colonna $k$, la prima run sia una run di simboli
-$\sigma=0$. Infatti, le run di 
+$\sigma=0$. Le run di 
 indice pari presentano lo stesso simbolo della prima run e quindi, dato un
 qualsiasi indice di run, è possibile sapere quale sia il simbolo corrispondente
 a tale run. L'implementazione di questo concetto banale si ritrova nella
@@ -48,27 +48,27 @@ visualizzabile all'algoritmo \ref{algo:extrchar} e richiede tempo costante.
 \end{algorithm}
 
 Si memorizzano gli indici delle teste di run in un array $p_k$, di lunghezza
-pari al numero di run in colonna $k$. Si memorizza un indice $i$ sse:
+pari al numero di run in colonna $k$. Si memorizza un indice $i\in\{0,M-1\}$
+sse: 
 \begin{equation}
   \label{eq:naive1}
   y_{i-1}^k[k]\neq y_i^k[k]
 \end{equation}
-Il passaggio successivo è stato quello di capire se le informazioni necessarie
-al mapping fossero tutte necessarie, ovvero se, data la colonna $k$
+Il passaggio successivo è stato quello di capire se le informazioni memorizzate
+per il mapping fossero tutte necessarie, ovvero se, data la colonna $k$
 nella matrice $\PBWT$, fossero necessari interamente $c[k]$, $u_k$ e $v_k$. In
-merito 
-al valore $c[k]$, esso è calcolabile, ipotizzando di avere solo $p_k$, in
-tempo $\mathcal{O}(r)$, dove $r$ è 
-il numero di run della colonna $k$-esima. Però, si è deciso che si potesse
-calcolarlo 
+merito al valore $c[k]$,  si è deciso che si potesse calcolarlo 
 in fase di costruzione delle $\RLPBWT$ e memorizzarlo esattamente come per
-la $\PBWT$. In merito, invece, ai vettori $u_k$ e $v_k$ si è cercato un modo
-per ottenerne una rappresentazione che implicasse avere un solo valore per ogni
+la $\PBWT$, avendo in totale $N$ valori per l'intera trasformata. In merito,
+invece, ai vettori $u_k$ e $v_k$ si è cercato un modo 
+per ottenerne una rappresentazione che implicasse memorizzare un solo valore per
+ogni 
 run della colonna. In altri termini, si è cercato di capire se fosse possibile
-tenere in memoria $r$ valori che permettessero di effettuare comunque il
+tenere in memoria $r$ valori (con $r$ numero di run in una colonna) che
+permettessero di effettuare comunque il 
 mapping, a partire da un indice arbitrario $i\in\{0,\ldots,M-1\}$. L'alternanza
 data dal caso binario ha permesso di trovare una 
-semplice soluzione, avendo che i valori di $u_k$ e $v_k$ crescono infatti in
+semplice soluzione, avendo che i valori di $u_k$ e $v_k$ crescono in
 modo 
 alternato. Infatti, a seconda del simbolo $\sigma$ rappresentato in una data
 run, si ha che solo i valori dell'array relativo a tale simbolo, nel range di
@@ -78,8 +78,6 @@ virtualmente all'interno di tale run, solo i valori di $u_k$, in quel
 range di indici, cresceranno di volta in volta di uno mentre per $v_k$, nello
 stesso range, si avrà sempre lo stesso valore.
 \begin{esempio}
-  Si vede un esempio per chiarire meglio quanto espresso in merito a $u_k$ e
-  $v_k$.\\
   Sia data la seguente colonna:
   \[y^5=00101111000000000000\]
   Si hanno, oltre a $c[5]=15$:
@@ -102,9 +100,10 @@ stesso range, si avrà sempre lo stesso valore.
       & 5 & 5 & 5
     \end{tabular}
   \end{table}
-  Dove si nota l'alternanza di crescita dei valori sopra descritta.
+  \noindent
+  Dove si nota l'alternanza di crescita dei valori, come sopra descritto.
 \end{esempio}
-Grazie a questo comportamento è possibile memorizzare, per ogni indice di
+Grazie a questo comportamento, è possibile memorizzare, per ogni indice di
 testa di run $i$, tale che $i\neq 0$, solo il valore di $u_k[i]$ o $v_k[i]$,
 rispettivamente se sia una run su simboli $\sigma=1$ o $\sigma=0$.
 % Infatti, se
@@ -135,8 +134,8 @@ $u_k$ e $v_k$ per una data testa di run. Nel dettaglio, dato $i\in{0,\ldots,
     $u_k[p[i]]=uv_k[i-1]$ e $v_k[p[i]]=uv_k[i]$   
   \end{itemize}
 \end{itemize}
-Tale operazione è eseguibile in tempo costante lo pseudocodice relativo a
-quanto appena detto è consultabile all'algoritmo \ref{algo:uvnaive}.
+Tale operazione è eseguibile in tempo costante e lo pseudocodice relativo a
+quanto appena descritto è consultabile all'algoritmo \ref{algo:uvnaive}.
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
@@ -173,18 +172,17 @@ quanto appena detto è consultabile all'algoritmo \ref{algo:uvnaive}.
 
 Da un punto di vista implementativo, gli array di interi $p_k$ e $uv_k$ vengono
 memorizzati in vettori di interi bit-compressed (intvector compressi),
-disponibili bella libreria 
-SDSL. Dato un array $v$, 
-tale che $x$ è il massimo valore, si memorizzano le componenti di $v$ in un
+disponibili nella libreria 
+SDSL. Dato un array $v$,  si memorizzano le componenti di $v$ in un
 vettore di interi con componenti memorizzate in $b$ bit, avendo:
 \begin{equation}
   \label{eq:bc1}
-  b=\lceil\log(x-1)\rceil+1
+  b=\lceil\log(\max_iv[i]-1)\rceil+1
 \end{equation}
-Ricapitolando, per la componente \texttt{MAP-INT}, si hanno in memoria, per
+Quindi, per la componente \texttt{MAP-INT}, si hanno in memoria, per
 ogni colonna $k$:
 \begin{itemize}
-  \item $start_k$, ovvero il booleano atto a capire il simbolo della prima
+  \item $start_k$, ovvero il booleano atto a sapere il simbolo della prima
   run
   \item $p_k$, ovvero gli indici delle teste di run. 
   \item $uv_k$, ovvero i valori compatti di $u_k$ e $v_k$ per le teste di run
@@ -272,7 +270,7 @@ La costruzione della componente \texttt{MAP-INT} per una certa colonna,
 analizzabile nell'algoritmo 
 \ref{algo:buildnaive}, ha costo temporale $\mathcal{O}(M)$, avendo che la
 costruzione 
-avviene scorrendo la colonna $k$ permutata dal 
+avviene scorrendo la colonna $k$, permutata dal 
 prefix array $a_k$.\\
 Per
 l'implementazione dei vari algoritmi si ha necessità di usare anche indici
@@ -281,10 +279,10 @@ fondamentali è quindi
 quella, dato un indice $i\in\{0,\ldots,M-1\}$, di computare a quale run esso
 appartenga, in una certa colonna $k$. Tale operazione può essere svolta usando
 una semplice variante della ricerca binaria che, anziché
-ritornare l'indice di un elemento qualora esista nell'array, restituisce
+ritornare l'indice di un elemento, qualora esista, nell'array, restituisce
 l'ultimo indice iniziale del sottointevallo usato dalla ricerca binaria,
 calcolato prima dell'interruzione dell'esecuzione dell'algoritmo. Pur essendo,
-di fatto, una funzione $\rank$ 
+di fatto, una funzione $\rank$.
 si è deciso, per comodità di lettura, di chiamare tale funzione
 $\ITR$, la quale, come visualizzabile 
 all'algoritmo \ref{algo:itr}, ha complessità in tempo:
@@ -345,10 +343,11 @@ ottenuto $u_k[p]$ e $v_k[p]$ da $uv_k[p]$:
 Tenendo eventualmente conto dell'offset $off$, qualora si abbia un simbolo
 $\sigma$ uguale a quello della run in analisi, è quindi possibile
 riadattare l'algoritmo per il 
-mapping visto per la $\PBWT$ di Durbin dalla colonna $k$ alla colonna
-$k+1$. Tale soluzione è riportata all'algoritmo \ref{algo:lfoff}. 
+mapping visto per la $\PBWT$ di Durbin.
+Tale soluzione è riportata all'algoritmo \ref{algo:lfoff}. 
 Ricordando che si può risalire ai valori $u[p]$ e $v[p]$ in tempo costante,
-anche il mapping da una colonna alla successiva avviene in tempo costante.
+anche il mapping da una colonna alla successiva avviene in tempo costante,
+usando la componente \texttt{MAP-INT}.
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{w}{$k,\,\, i, \,\,\sigma,\,\,o$}
@@ -384,13 +383,13 @@ anche il mapping da una colonna alla successiva avviene in tempo costante.
   \label{algo:lfoff}
 \end{algorithm}
 \subsubsection{Mapping con bitvector}
-La seconda variante della componente di mapping sfrutta, al posto degli
-intvector compressi, i bitvector sparsi, da cui la nomenclatura
+La seconda variante della componente di mapping, al posto degli
+intvector compressi, utilizza i bitvector sparsi, da cui la nomenclatura
 \texttt{MAP-BV}.\\
-L'idea è quindi quella di sostituire, data una colonna $k$, quanto necessario a
+L'idea è quella di sostituire, data una colonna $k$, quanto necessario a
 rappresentare le run e quanto
 necessario a permettere il mapping (ovvero i vettori $p_k$ e $uv_k$ della
-\texttt{MAP-INT}).\\ 
+\texttt{MAP-INT}), tramite bitvector sparsi.\\ 
 In primis, per poter localizzare le run nella $k$-esima colonna, si è scelto di
 usare un bitvector sparso, che denominiamo per praticità $h_k$, tale
 che $|h_k|=M$. Formalmente si ha che:
@@ -407,10 +406,11 @@ una run.\\
 La ratio dietro l'uso di questa struttura dati succinta è quella per cui ci si
 aspettano poche run all'interno di una colonna della 
 matrice $\PBWT$, per quanto già discusso nella sezione
-\ref{secpbwt}. Avendo poche run, ci si aspetta do avere anche ``pochi'' 1
+\ref{secpbwt}. Avendo poche run, ci si aspetta di avere anche pochi simboli
+$\sigma=1$ 
 all'interno di 
-$h_k$, di conseguenza si è optato per usare i bitvector sparsi per la
-memorizzazione in memoria di ogni $h_k$. Si ricorda che, secondo quanto
+$h_k$, ottimizzando al meglio l'uso dei bitvector sparsi.
+Si ricorda che, secondo quanto
 riportato per la libreria \textit{SDSL} \cite{sdsl}, tale variante richiede in
 memoria, indicando con $r$ il numero di run:
 \begin{equation}
@@ -450,7 +450,8 @@ Si noti che:
   \label{eq:bv5}
   \rank_{h_k}(|h_k|-1)+1=(\rank_{u_k}(|u_k|-1)+1)+(\rank_{v_k}(|v_k|-1)+1)
 \end{equation}
-Ovvero il numero di 1 presenti in $h_k$ è pari alla somma di quelli presenti in
+Ovvero il numero di simboli
+$\sigma=1$ presenti in $h_k$ è pari alla somma di quelli presenti in
 $u_k$ e $v_k$. Si noti che i vari $+1$ sono
 dovuti al fatto che la funzione 
 $\rank(i)$ esclude dal computo la posizione $i$ stessa e tutti e tre i
@@ -469,7 +470,7 @@ empiricamente, dalla poca quantità attesa di simboli $\sigma=1$.
   \[\rank_{h_5}(|h_5|-1)+1=4+1=5\]
   In merito alle run composte da simboli $\sigma=0$ si ha che:
   \[u_5=011000000000001\]
-  Avendo infatti che si segnalano:
+  Avendo:
   \begin{itemize}
     \item la prima run composta da due simboli $\sigma=0$
     \item la seconda run composta da un solo simbolo $\sigma=0$
@@ -477,18 +478,18 @@ empiricamente, dalla poca quantità attesa di simboli $\sigma=1$.
   \end{itemize}
   Parlando invece di $v_5$ si ha:
   \[v_5=10001\]
-  Avendo che:
+  Avendo:
   \begin{itemize}
     \item la prima run è composta da un solo simbolo $\sigma=1$
     \item la seconda run è composta da quattro $\sigma=1$
   \end{itemize}
-  Si conferma, inoltre, quanto detto nell'equazione \ref{eq:bv5}, avendo:
+  Si conferma, inoltre, quanto indicato nell'equazione \ref{eq:bv5}, avendo:
   \[\rank_{h_5}(|h_5|-1)+1=5 =
     (\rank_{u_5}(13)+1)+(\rank_{v_5}(4)+1)=(2+1)+(1+1)=5\] 
 \end{esempio}
 Lo pseudocodice relativo alla costruzione della componente \texttt{MAP-BV} per
 la colonna $k$-esima è disponile all'algoritmo \ref{algo:cosbv}. Anche in questo
-caso la costruzione avviene scorrendo la colonna $k$ permutata dal
+caso, la costruzione avviene scorrendo la colonna $k$, permutata dal
 prefix array $a_k$. \\ 
 Assumendo che la complessità in tempo delle costruzioni delle
 strutture a supporto per le funzioni $\rank$ e $\select$ dei tre
@@ -603,9 +604,9 @@ colonna, avviene in tempo:
 % \end{equation}
 \dc{Commentato nel \TeX $\,$ c'è la formula di Travis, in caso da adattare sui
   significati qui di u e v}
-Bisogna, in primis, spiegare come, dato un indice di aplotipo
+Bisogna, in primis, spiegare come, dato un indice di riga
 $i\in\{0,\ldots,M-1\}$ e una 
-colonna $k$, estrarre $u'_k[i]$ e $v'_k[i]$, ovvero come se si stesse usando la
+colonna $k$, computare $u'_k[i]$ e $v'_k[i]$, ovvero come se si stesse usando la
 $\PBWT$, a partire dagli attuali $u_k[i]$ e $v_k[i]$ (i due bitvector
 sparsi). A differenza della componente \texttt{MAP-INT}, risulta difficile
 formulare un'unica formula per il calcolo di tali valori. Si è quindi deciso di
@@ -618,9 +619,9 @@ in cui si trova l'indice $i$. Questo si ottiene direttamente sfruttando $h_k$:
   \label{eq:bv7}
   run = \rank_{h_k}(i)
 \end{equation}
-Una volta calcolato l'indice di run si hanno tre possibilità:
+Una volta calcolato l'indice di run, si hanno tre possibilità:
 \begin{enumerate}
-  \item si ha che $run=0$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$. 
+  \item si ha $run=0$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$. 
   In tal caso, semplicemente:
   \begin{equation}
     \label{eq:bv8}
@@ -630,7 +631,7 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
       (0,i)&\mbox{altrimenti}
     \end{cases}
   \end{equation}
-  \item si ha che $run=1$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$. In
+  \item si ha $run=1$ e una run di simboli $\sigma=b$, con $b\in\{0,1\}$. In
   tal caso, bisogna individuare l'indice di inizio della seconda
   run, sfruttando $h_k$:
   \begin{equation}
@@ -648,7 +649,7 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
       (i-beg,beg)&\mbox{altrimenti}
     \end{cases}
   \end{equation}
-  \item si ha che $run=j$, con $j\in\{2,r-1\}$. Anche in questo caso si procede
+  \item si ha $run=j$, con $j\in\{2,r-1\}$. Anche in questo caso si procede
   calcolando l'indice di inizio della run:
   \begin{equation}
     \label{eq:bv11}
@@ -669,17 +670,18 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
       \label{eq:bv13}
       pre_u=\select_{u_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
     \end{equation}
-    Analogamente si calcola l'indice della run con simboli simboli $\sigma=1$:
+    Analogamente si calcola l'indice della run precedente con simboli simboli
+    $\sigma=1$: 
     \begin{equation}
       \label{eq:bv14}
       pre_v=\select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)+1
     \end{equation}
     Si noti che si usa $\frac{run}{2}$ in quanto, essendo in una run di indice
-    pari si hanno precedentemente lo stesso numero di run per $\sigma=0$ e per
+    pari, si hanno precedentemente lo stesso numero di run per $\sigma=0$ e per
     $\sigma=1$ e quindi si considera lo stesso numero di run nei due
     bitvector sparsi $u_k$ e $v_k$.\\
     A questo punto, sempre per il ragionamento per cui solo uno tra $u$ e $v$
-    non è costante all'interno di una run si ha che o $pre_u$ o $pre_v$ è
+    non è costante all'interno di una run, si ha che o $pre_u$ o $pre_v$ è
     costante mentre l'altro valore deve essere calcolato considerando l'offset:
     \begin{equation}
       \label{eq:bv15}
@@ -701,10 +703,9 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
       run_v=\select_{v_k}\left(\left\lfloor\frac{run}{2}\right\rfloor\right)
     \end{equation}
     Mentre se la prima run non è di zeri si devono invertire i due valori. Si
-    sa 
-    quindi quali run considerare sui due bitvector sparsi $u_k$ e
-    $v_k$.\\ 
-    Posso quindi procedere come nel caso precedente, avendo:
+    sa, 
+    quindi, quali run considerare sui due bitvector sparsi $u_k$ e
+    $v_k$, potendo procedere come nel caso precedente:
     \begin{equation}
       \label{eq:bv18}
       pre_u=\select_{u_k}(run_u)+1
@@ -728,23 +729,23 @@ Una volta calcolato l'indice di run si hanno tre possibilità:
 \begin{esempio}
   Si prendano i dati e i risultati ottenuti all'esempio \ref{es:bv1}. Si
   vogliono calcolare $u[i]$ e $v[i]$ per $i=6$.\\
-  In primis si hanno:
+  In primis, si hanno:
   \[run=\rank_{h_5}(6)=3\]
   \[beg = \select_{h_5}(3)+1=3+1=4\]
   \[offset = i-beg=6-4=2\]
-  Quindi ci si trova nel terzo caso e, nel dettaglio, avendo una run di
-  indice dispari. Si calcolano quindi:
+  Quindi ci si trova nel terzo caso e, nel dettaglio, in una run di
+  indice dispari. Si calcolano:
   \[run_u=\select_{u_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)+1=
     \select_{u_5}(1)+1 =1+1=2\] 
   \[run_v=\select_{v_5}\left(\left\lfloor\frac{3}{2}\right\rfloor\right)=
     \select_{v_5}(1)=0\] 
-  Tali valori non andranno invertiti avendo $start^5=\top$.\\
-  Si calcolano quindi:
+  Tali valori non andranno invertiti avendo $start_5=\top$.\\
+  Si calcolano, quindi:
   \[pre_u=\select_{u_5}(2)+1=2+1=3\]
   \[pre_v=\select_{v_5}(0)+1=0+1=1\]
-  Avendo infatti, in totale, tre simboli $\sigma=0$ e un simbolo $\sigma=1$
+  Avendo, in totale, tre simboli $\sigma=0$ e un simbolo $\sigma=1$
   prima dell'indice 6.\\ 
-  Concludendo, avendo $start^5=\top$:
+  Concludendo, avendo $start_5=\top$:
   \[(u,v)=(pre_u, pre_v + offset)=(3,1+2)=(3,3)\]
 \end{esempio}
 Lo pseudocodice per il calcolo di $u_k[i]$ e $v_k[i]$ è disponibile
@@ -845,7 +846,7 @@ Facendo una prima stima della memoria occupata da questa componente si ha che,
 avendo $\rho$ numero medio di run per colonna, essa è:
 \begin{equation}
   \label{eq:mapintmem2}
-  \approx N\left(\frac{\rho\left(2+\log\frac{M}{\rho}\right)}{4}+21\right)\mbox{ byte} 
+  \approx N\left(\frac{\rho\left(2+\log\frac{M}{\rho}\right)}{4}+29\right)\mbox{ byte} 
 \end{equation}
 \dc{Ricontrollare conto}
 È possibile fare ora un piccolo confronto, ad alto livello, tra la memoria
@@ -863,7 +864,6 @@ compresso):
 Bisogna considerare come difficoltà aggiuntiva il fatto che $M,\,\rho\in
 \mathbb{N}$ e che entrambi i lati dell'equazione hanno valori nell'insieme dei
 naturali.\\
-
 Solo valutazioni sperimentali hanno mostrato come, con valori di $M$ e $\rho$
 relativi ai pannelli di aplotipi studiati, l'uso degli intvector compressi sia
 più vantaggioso in termini di memoria richiesta. Una stima derivata da tali
@@ -872,7 +872,7 @@ media del numero di run resti proporzionale a quanto visto con 4.908 sample
 (ovvero una media di 12 run come verrà
 analizzato nel Capitolo \ref{reschap}), l'uso dei
 bitvector sparso diventerebbe favorevole solo con pannelli con più di circa
-17.180 sample. 
+17.180 sample/aplotipi/righe. 
 \begin{figure}
   \centering
   \includegraphics[scale = 0.7]{img/bv_vs_iv.png}

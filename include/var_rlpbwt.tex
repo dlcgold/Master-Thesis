@@ -1,9 +1,10 @@
 \section{Perché la compressione run-length}
 Prima di proseguire con la spiegazione dettagliata delle varianti della
-$\RLPBWT$ è bene dare 
-una prima motivazione al perché si sia ritenuto utile sviluppare una variante
+$\RLPBWT$, è bene dare 
+un'ulteriore motivazione al perché si sia ritenuto utile sviluppare una variante
 run-length encoded della $\PBWT$.\\
-Citando direttamente il paper di Durbin \cite{pbwt}:
+Una motivazione la si ha citando direttamente il paper di Durbin sulla
+$\PBWT$ \cite{pbwt}: 
 \begin{center}
   \textit{Furthermore we can also expect the $y$ arrays to be strongly
     run-length compressible. This is because population genetic structure means
@@ -22,31 +23,33 @@ permutazione. Ne segue che, all'interno della matrice $\PBWT$, è molto
 probabile che si abbiano lunghe run di simboli $\sigma=0$ e di simboli
 $\sigma=1$.
 Si ottiene il medesimo risultato atteso avuto con
-la $\BWT$, avendo che caratteri uguali è molto probabile vengano posti in
-posizioni consecutive all'interno della trasformata stessa. Si hanno le
+la $\BWT$, dove si aveva che caratteri uguali era molto probabile fossero posti
+in posizioni consecutive all'interno della trasformata stessa. Si hanno, di
+conseguenza, le
 stesse premesse che hanno portato alla $\RLBWT$, considerando, inoltre,
-che, non si tratta solo di memorizzare la struttura con
+che non si tratta solo di memorizzare la struttura con
 compressione run-length ma di lavorare direttamente con la struttura dati
 compressa, risolvendo il problema del calcolo degli $\SMEM$ senza
 decomprimere la struttura dati. Ipotizzando che, per una certa colonna della
 matrice $\PBWT$, il numero di run sia molto minore della lunghezza della
 colonna stessa, si deduce facilmente che l'uso della compressione run-length
-possa comportare una riduzione significativa della memoria necessaria al calcolo
-degli $\SMEM$.
+possa comportare una riduzione significativa della memoria necessaria all'uso
+della trasformata.
 \section{Matching Statistics per la RLPBWT}
-Bisogna ora introdurre il 
+Bisogna, per prima cosa, introdurre il 
 concetto di \textbf{matching statistics} nel caso della $\PBWT$ (e quindi
 anche della sua variante run-length encoded).
 \begin{definizione}
-  Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$ siti,
+  Dato un pannello $X$, con $M$ individui aventi $N$ siti,
   e un aplotipo esterno/pattern $z$, tale che $|z|=N$, si definisce matching
   statistics di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, di lunghezza
   $N$, tale che (avendo che $x_i$ indica l'$i$-esima riga del pannello $X$): 
   \begin{itemize}
     \item $x_{\MS[i].\row}[i-\MS[i].\len+1,i]=z[i-\MS[i].\len+1,i]$, ovvero si
     ha che 
-    l'aplotipo query ha un match, terminante in colonna $i$, con la riga
-    $\MS[i].\row$  
+    l'aplotipo query ha un match, lungo $\MS[i].\len$, terminante in colonna
+    $i$, con la riga 
+    $\MS[i].\row$-esima del pannello
     \item $z[i-\MS[i].\len,i]$ non è un suffisso terminante in colonna $i$ di un
     qualsiasi sottoinsieme di righe di $X$. In altri termini, il match non deve
     essere ulteriormente estendibile a sinistra
@@ -58,8 +61,8 @@ Analogamente al caso della variante classica, si ha il seguente lemma.
   Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$
   siti, un aplotipo esterno/pattern $z$, tale che $|z|=N$, e il corrispondente
   array di matching statistics $\MS$ si ha che $z[i-l+1,i]$
-  presenta uno $\SMEM$ di lunghezza $l$ in con la riga $\MS[i].\row$ del pannello
-  $X$ sse: 
+  presenta uno $\SMEM$ di lunghezza $l$ con la riga $\MS[i].\row$-esima del
+  pannello $X$ sse: 
   \begin{equation}
     \label{eq:rlpbwtsmem}
     \MS[i].\len=l\land(i=N-1\lor \MS[i].\len\geq \MS[i+1].\len)
@@ -78,14 +81,14 @@ Si assuma di avere due indici $i$ e $j$, $0\leq i\leq j< N$, tali per cui
 $z[i,j]$ è un suffisso di uno tra $x_0[0,j]$, \ldots, $x_{M-1}[0,j]$. \\
 La fase di extend estende il match di $z[i,j]$ a $z[i,j+1]$ sse:
 \begin{itemize}
-  \item $j<M$
+  \item $j<N$
   \item $z[i,j+1]$ è un suffisso di uno tra $x_0[0,j+1]$, $\ldots$,
   $x_{M-1}[0,j+1]$ 
 \end{itemize}
-Invece, la fase di start cerca il più piccolo indice $i'$,
+La fase di start cerca il più piccolo indice $i'$,
 avendo $i\leq i'\leq j$, tale per cui $z[i',j]$ è un suffisso di uno tra
 $x_0[0,j]$, $\ldots$, $x_{M-1}[0,j]$.\\
-Si ha quindi il computo di ogni valore $\MS[i]$, $\forall i\in[0,N)$:
+Si ha quindi il computo di ogni coppia di valori $\MS[i]$, $\forall i\in[0,N)$:
 \begin{itemize}
   \item si assume inizialmente che $\MS[0].\len=0$, quando $i=0$
   \item si applica la fase di start per cercare il minimo indice
@@ -99,50 +102,51 @@ Si ha quindi il computo di ogni valore $\MS[i]$, $\forall i\in[0,N)$:
   \item avendo che $i'>i$, si può procedere induttivamente al calcolo dell'array
   $\MS$ 
 \end{itemize}
-Per convenzione, si ha che la riga da cui parte l'iterazione nella prima colonna
-è l'ultima. Tale scelta è, in ogni caso, arbitraria.
+Per convenzione, si ha che, nella prima colonna, l'iterazione parte dall'ultima
+riga. Tale scelta è, in ogni caso, arbitraria. 
 In modo
 analogo, qualora si abbia una colonna $k$ di un solo carattere, non
 corrispondente a quello della query, si sceglie l'ultima riga della
-colonna successiva. A partire da tale riga, si riprende il calcolo 
+colonna successiva, dalla quale si riprende il calcolo  
 dell'array delle matching statistics, dopo aver memorizzato $\MS[k].\row=M$
-(un valore sentinella non esistendo la riga $M$) e $\MS.\len[k]=0$.\\
+(un valore sentinella non esistendo la riga di indice $M$) e $\MS.\len[k]=0$.\\
 In altri termini, più ``pratici'', il calcolo dell'array $\MS$ avviene nel
 seguente modo:
 \begin{itemize}
   \item si parte da una riga arbitraria $i$ della prima colonna
-  \item se $x_i[0]=z[0]$ si procede salvando $\MS[0].\row=i$
+  \item se si ha $x_i[0]=z[0]$, si procede salvando $\MS[0].\row=i$
   \item qualora si abbia $x_i[0]\neq z[0]$, si seleziona o l'ultima riga della
   run precedente o la prima riga della run successiva a quella a cui appartiene
-  la riga $i$. Tale riga verrà salvata come $\MS[0].\row=j$
+  la riga $i$. Tale riga verrà salvata come $\MS[0].\row=j$ e da essa si
+  proseguirà l'esecuzione dell'algoritmo
   \item si effettua il mapping verso la colonna successiva, $k$,
   e, a seconda di avere o meno un match con $z[k]$, si procede come nei casi
   visti sopra 
 \end{itemize}
-Si noti che non si è parlato di come calcolare i vari $\MS[i].\len$, in
+Si noti che non si è parlato di come calcolare i valori $\MS[i].\len$, in
 quanto si hanno due soluzioni (approfondite in seguito), che
 rispecchiano quanto visto con 
 MONI \cite{moni} e PHONI \cite{phoni} per la $\RLBWT$: 
 \begin{enumerate}
-  \item si possono usare le threshold per capire che nuova riga
+  \item si possono usare le threshold, per capire quale nuova riga
   selezionare in 
-  caso di mismatch. In tal caso i valori $\MS[i].\len$ devono essere calcolati
-  successivamente al calcolo dei valori $\MS[i].\row$ tramite random
-    access al panel 
-  \item si possono usare le $\LCE$ query per capire quale nuova riga
-  selezionare in caso di mismatch. In tal caso il calcolo dei valori
+  caso di mismatch. In tal caso, i valori $\MS[i].\len$ devono essere calcolati
+  successivamente al calcolo dei valori $\MS[i].\row$, tramite random
+    access al panello
+  \item si possono usare le $\LCE$ query, per capire quale nuova riga
+  selezionare in caso di mismatch. In tal caso, il calcolo dei valori
   $\MS[i].\len$ avviene in contemporanea al calcolo dei valori $\MS[i].\row$
 \end{enumerate}
 \begin{esempio}
   \label{es:ms}
   Si riprenda, al fine di vedere un esempio di calcolo dell'array $\MS$,
-  l'esempio \ref{es:algo5}, con un pannello e i match con 
-  la query $z$:
+  l'esempio \ref{es:algo5}, con i seguenti $\SMEM$ tra la query $z$ e il
+  pannello $X$:
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.365]{img/pbwtmatch.pdf}
+    \includegraphics[scale = 0.345]{img/pbwtmatch.pdf}
   \end{figure}
-  In tal caso l'array $\MS$ sarebbe, avendo scelto come riga iniziale la 19:
+  In tal caso l'array $\MS$ sarebbe, iniziando il computo dalla riga 19:
   \begin{table}[H]
     \footnotesize
     \centering
@@ -164,28 +168,28 @@ MONI \cite{moni} e PHONI \cite{phoni} per la $\RLBWT$:
       & {\color{nordpurple}4}\\
     \end{tabular}
   \end{table}
-  Dove si possono riconoscere i vari $\SMEM$, la cui colonna di fine è
+  In $\MS$ si possono riconoscere i vari $\SMEM$, la cui colonna di fine è
   segnalata nello stesso colore con cui si rappresentano gli $\SMEM$ nel
-  pannello. Anche in questo caso i dettagli del calcolo 
-  verranno esplicitati successivamente. 
+  pannello. 
 \end{esempio}
 \section{Componenti per la RLPBWT}
-Questo progetto di tesi è stato è stato incentrato sullo sviluppo di
-varie implementazioni della $\RLPBWT$. Infatti, avendo a che fare con
+Dovendo utilizzare
 strutture dati fortemente dipendenti dal tipo di dato (in termini, ad esempio,
 di ``sparsità'' intrinseca del pannello) e dall'implementazione (soprattutto in
 termini di strutture dati succinte), sarebbe stato difficile limitarsi a stime
-teoriche che potevano non essere confermate in fase sperimentale. Una sola
-caratterizzazione asintotica avrebbe potuto comportare sottostime e
+teoriche che sarebbero potute essere non confermate in fase sperimentale. Una
+sola caratterizzazione asintotica avrebbe potuto comportare sottostime e
 sovrastime, sia in termini di tempo che di spazio. Quindi, si deciso di
 sviluppare diverse varianti della $\RLPBWT$.\\ 
 Al fine di una miglior trattazione di tali implementazioni, si è deciso di
 suddividere le stesse in componenti, le quali, adeguatamente
-assemblate, permetteranno il calcolo degli
-$\SMEM$. Tali componenti, che verranno dettagliate in seguito, sono:
+assemblate, permetteranno la costruzione di strutture dati composte atte al
+calcolo degli $\SMEM$. Tali componenti, che verranno dettagliate in seguito,
+sono: 
 \begin{itemize}
   \item le componenti per il mapping tra la colonna $k$-esima e la colonna
-  $k+1$, ovvero, riprendendo la notazione di Durbin, le strutture run-length
+  $k+1$ della matrice $\PBWT$, ovvero, riprendendo la notazione di Durbin, le
+  strutture run-length 
   encoded per gli array $c$, $u_k$ e $v_k$. Nel dettaglio, tale componente è
   implementata in due varianti:
   \begin{enumerate}
@@ -194,14 +198,14 @@ $\SMEM$. Tali componenti, che verranno dettagliate in seguito, sono:
   \end{enumerate}
   \item la componente per la memorizzazione delle threshold, anch'essa
   proporzionale al numero di run. Anche in questo caso si hanno due varianti,
-  corrispondenti, di fatto, alle due varianti della componente del mapping:
+  corrispondenti, di fatto, alle due varianti della componente per il mapping:
   \begin{enumerate}
     \item threshold con intvector (\texttt{THR-INT})
     \item threshold con bitvector sparsi (\texttt{THR-BV})
   \end{enumerate}
   \item la componente per la memorizzazione compatta della permutazione ad ogni
   colonna 
-  della matrice $\PBWT$, ovvero dei sample di prefix array
+  della matrice $\PBWT$, tramite i sample di prefix array
   (\texttt{PERM}) 
   \item la componente in grado di garantire random access al
   pannello. Si hanno due possibilità:

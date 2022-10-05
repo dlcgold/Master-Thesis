@@ -3,9 +3,9 @@ Come introdotto parlando delle matching statistics, qualora si abbia un
 cambio di riga da memorizzare, si seleziona sempre o quella relativa alla coda
 della run precedente o quella relativa alla testa della run successiva. Risulta
 quindi necessario, in colonna $k$, memorizzare i valori di $a_k$ all'inizio e
-alla fine di ogni run. Anche in questo caso si sono scelti i vettori di interi
-bit-compressed. Tali valori sono un sample dei valori che permettono
-le permutazioni che costruiscono la matrice $\PBWT$ e quindi tale
+alla fine di ogni run. Anche in questo caso si sono scelti gli intvector
+compressi. Tali valori sono un sample dei valori che permettono 
+le permutazioni che costruiscono la matrice $\PBWT$ e, quindi, tale
 componente prende il nome di \texttt{PERM}.\\
 All'algoritmo \ref{algo:buildperm} è possibile analizzare lo pseudocodice del
 metodo usato per calcolare tale componente per la colonna
@@ -47,6 +47,6 @@ descritte, ovvero:
   \label{algo:buildperm}
 \end{algorithm}
 \noindent
-In termini di memoria necessaria per questa componente si hanno le medesime
-considerazioni fatte nel caso della componente \texttt{MAP-INT}, con l'uso degli
+In termini di memoria necessaria per questa componente, si hanno le medesime
+considerazioni fatte nel caso della componente \texttt{MAP-INT}, per l'uso degli
 intvector compressi.
