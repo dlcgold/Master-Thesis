@@ -12,13 +12,13 @@ memoria che di complessità temporale. Tale struttura venne nominata
   $\SA_T[i]=j$ sse il suffisso di ordine $j$, ovvero $T[j,n-1]$, è
   l'$i$-esimo suffisso nell’ordinamento lessicografico dei suffissi di $T$. Ne
   segue che, presi $i,i'\in \mathbb{N}$
-  tali che $0\leq i < i' < n$ allora vale che, indicando con $\prec$
+  tali che $0\leq i < i' < n$ e indicando con $\prec$
   l'ordinamento lessicografico:
   \begin{equation}
     \label{eq:saord}
     T[\SA_T[i],n-1] \prec T[\SA_T[i'],n-1]
   \end{equation}
-  Il suffix array è quindi una permutazione dei numeri interi in
+  Il suffix array è, quindi, una permutazione dei numeri interi in
   $\{0,n-1\}$. 
 \end{definizione}
 \begin{esempio}
@@ -74,7 +74,7 @@ dati, detta \textbf{Longest Common Prefix} ($\LCP$).
   denotato con $\LCP_T$, come un array lungo $n+1$, contenente la
   lunghezza del prefisso comune tra ogni coppia di suffissi consecutivi
   nell'ordinamento lessicografico dei suffissi, ovvero l'ordinamento specificato
-  da $\SA_T$. Più formalmente
+  da $\SA_T$. Più formalmente,
   $\LCP_T$ è un array tale che, avendo $0\leq i\leq n$ e indicando con
   $\lcp(x,y)$ il più lungo prefisso comune tra le stringhe $x$ e $y$:
   \begin{equation}
@@ -88,7 +88,7 @@ dati, detta \textbf{Longest Common Prefix} ($\LCP$).
   \end{equation}
 \end{definizione}
 \begin{esempio}
-  Riprendendo l'esempio precedente si avrebbe quindi:
+  Riprendendo l'esempio precedente si avrebbe:
   \begin{table}[H]
     \centering
     \footnotesize
@@ -113,7 +113,7 @@ dati, detta \textbf{Longest Common Prefix} ($\LCP$).
 \end{esempio}
 Senza entrare in ulteriori dettagli relativi all'algoritmo di pattern matching
 tramite $\SA$ e $\LCP$, in quanto non centrali per il resto della
-trattazione, risulta comunque interessante riportare le complessità
+trattazione, risulta comunque interessante riportarne le complessità
 temporali. Si ha che, per l'algoritmo di query su $\SA$ senza l'uso
 dell'$\,\LCP$, si ha, per un testo lungo $n$ e un pattern lungo $m$:
 \begin{equation}
@@ -129,7 +129,7 @@ Per ulteriori approfondimenti in merito agli algoritmi di pattern matching
 basati su suffix array e ai relativi ``acceleratori'', si rimanda
 al testo di Gusfield \cite{gusfield1997}.
 \subsection{Inverse suffix array}
-Ai fini di poter comprendere future definizioni si presenta anche la
+Ai fini di poter comprendere future definizioni, si presenta anche la
 permutazione inversa dei valori del suffix array, detta
 \textbf{Inverse Suffix Array} ($\ISA$). Grazie a tale permutazione
 inversa, dato un indice di suffisso, è possibile sapere in quale posizione si
@@ -144,7 +144,7 @@ trovi tale suffisso nel \textit{suffix array}.
 \end{definizione}
 
 \begin{esempio}
-  Riprendendo l'esempio precedente si avrebbe quindi:
+  Riprendendo l'esempio precedente si avrebbe:
   \begin{table}[H]
     \centering
     \footnotesize
@@ -174,7 +174,6 @@ permette una rappresentazione succinta in memoria dell'$\,\LCP$ \cite{plcp2},
 permettendo di ottenere gli stessi risultati di quest'ultimo.
 % Un'altro vantaggio
 % è che la sua ricostruzione richiede un minor costo computazionale
-.
 \dc{L'intera sottosezione potrebbe essere quasi totalmente rimossa ma almeno la
   definizione serve per il calcolo di tutte le occorrenze di un MEM, come in
   PHONI} 
@@ -193,11 +192,8 @@ permettendo di ottenere gli stessi risultati di quest'ultimo.
   Si noti che i valori sono in ordine di posizione, ovvero l'ordine originale
   dato dagli indici dei suffissi, e non
   lessicografico. In altri termini, si ha una permutazione dei valori di $\LCP_T$
-  tale per cui \cite{plcp}:
-  \begin{equation}
-    \label{eq:plcpdef2}
-    \PLCP_T[\SA_T[p]] = \LCP_T[p],\,\,\,\forall\, p\in\{1,n-1\}
-  \end{equation}
+  tale per cui \cite{plcp}: $\PLCP_T[\SA_T[p]] = \LCP_T[p],\,\,\,\forall\,
+  p\in\{1,n-1\}$ 
 \end{definizione}
 \begin{esempio}
   Riprendendo l'esempio precedente si avrebbe quindi:
@@ -250,7 +246,7 @@ Grazie a tale lemma si può memorizzare l'$\,\PLCP$ sparso.
 L'ultimo concetto che si introduce sono le \textbf{funzioni}
 $\boldsymbol\varphi$ e $\mathbf{\boldsymbol\varphi^{-1}}$, usate per poter
 identificare i valori precedenti e successivi di 
-un dato valore in $\SA_T$. Essere sono utili al fine di poter sia ricostruire
+un dato valore in $\SA_T$. Esse sono utili al fine di poter sia ricostruire
 efficientemente il $\PLCP$ di un testo $T$ (per i dettagli si rimanda
 all'articolo di K\"{a}rkk\"{a}inen \cite{plcp}) che di permettere, come si vedrà
 più  avanti nella sezione \ref{secbwt}, il riconoscimento di tutte le occorrenze
@@ -277,9 +273,10 @@ di un \textbf{maximal exact match} ($\MEM$) in $T$ \cite{phoni}.
   \end{equation}
   Si noti che si ha il valore $\NULL$ quando, rispettivamente, si studia il
   primo e l'ultimo valore del \textit{suffix array} in quanto non hanno, sempre
-  rispettivamente, l'antecedente e il successore. Infatti, tali
-  funzioni restituiscono i due valori, se 
-  esistenti, di $\SA_T$ adiacenti ad un valore del suffix array dato.\\
+  rispettivamente, l'antecedente e il successore.\\
+  % Infatti, tali
+  % funzioni restituiscono i due valori, se 
+  % esistenti, di $\SA_T$ adiacenti ad un valore del suffix array dato.
   Analogamente, sempre coi medesimi vincoli, le due funzioni possono essere
   definite come \cite{plcp}: 
   \begin{equation}

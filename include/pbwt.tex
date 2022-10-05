@@ -2,7 +2,8 @@
 \label{secpbwt}
 Presentata nel 2014 da Richard Durbin \cite{pbwt}, la \textbf{Positional
   Burrows--Wheeler Transform} ($\PBWT$), traducibile con
-\textit{trasformata di Burrows--Wheeler posizionale}, è una struttura efficiente
+\textit{trasformata di Burrows--Wheeler posizionale}, è una struttura dati
+efficiente
 per la memorizzazione e l'interrogazione di pannelli di aplotipi.\\
 La costruzione di tali pannelli avviene tramite il riconoscimento delle
 variazioni di un singolo nucleotide tra le sequenze genomiche di diversi
@@ -29,7 +30,7 @@ invece, \textbf{genotipo}.
   \label{fig:haplo}
 \end{figure}
 Formalmente, si considera un pannello $X$ di $M$ aplotipi $x_i$, con
-$i=0,\ldots, M-1$, su $N$ siti, indicizzati tramite $k=0,\ldots, N-1$, tale per
+$i=0,\ldots, M-1$, con $N$ siti, indicizzati tramite $k=0,\ldots, N-1$, tale per
 cui tutti i siti sono considerati biallelici. 
 Da un punto di vista computazionale, quest'ultima
 assunzione comporta che il pannello $X$ è costruito sull'alfabeto ordinato
@@ -39,13 +40,13 @@ per un certo sito, con tale alfabeto. Ne segue che:
   \label{eq:pbwtdip}
   x_i[k]=\{0,1\}
 \end{equation}
-Prima di proseguire con la trattazione è bene fornire la descrizione di alcuni
+Prima di proseguire con la trattazione, è bene specificare alcuni
 formalismi utilizzati:
 \begin{itemize}
-  \item si denota, per una qualsiasi riga $x_i$, con $x_i[k_1,k_2)$ la
+  \item si denota con $x_i[k_1,k_2)$ la
   sottostringa di $x_i$ che inizia alla colonna $k_1$ e termina alla
-  colonna $k_2-1$
-  \item date due righe $x_i$ e $x_j$, si definisce un match tra le due
+  colonna $k_2-1$, per una qualsiasi riga $x_i\in X$
+  \item date due righe $x_i$ e $x_j$, si ha un match tra le due
   righe, iniziante
   alla colonna $k_1$ e terminante alla colonna $k_2-1$, sse:
   \begin{equation}
@@ -59,16 +60,17 @@ formalismi utilizzati:
     \label{eq:pbwtmem}
     (k_1=0\lor x_i[k_1-1]\neq x_j[k_1-1])\land (k_2=N\lor x_i[k_2]\neq x_j[k_2])
   \end{equation}
-  \item comparando una sequenza $z$ ad un pannello di aplotipi $X$, si definisce
-  set-maximal exact match ($\SMEM$) di $z$ contro $x_i\in X$ un match
-  localmente massimale, iniziante 
+  \item comparando una sequenza (ovvero un aplotipo esterno) $z$ a un pannello
+  di aplotipi $X$, si ha che un match
+  localmente massimale è un
+  set-maximal exact match ($\SMEM$) di $z$ contro $x_i\in X$, iniziante 
   alla colonna $k_1$ e terminante alla colonna $k_2-1$,
   sse non si ha alcun altro match localmente
   massimale di $z$ con un 
   altro $x_j$ che include ed estende l'intervallo $[k_1,k_2)$. La sequenza $z$
   può avere uno $\SMEM$, tra $k_1$ e $k_2-1$, con più di un aplotipo del
   pannello. Per praticità, si è introdotta la definizione di $\SMEM$ usando un
-  aplotipo esterno. Tale definizione può essere riferita anche a due righe
+  aplotipo esterno ma tale definizione può essere riferita anche a due righe
   interne al pannello $X$
 \end{itemize}
 Si noti che il match tra due sequenze nella $\PBWT$ è tale sse iniziano
@@ -77,56 +79,63 @@ da cui deriva il termine ``posizionale'' e che, di fatto, impedisce l'uso degli
 algoritmi tradizionali visti con la $\BWT$, è dato dal fatto che una
 colonna rappresenta un preciso sito di una variante genica. \\
 La costruzione di questa struttura dati si basa, ad ogni colonna $k$, sul
-riordinamento lessicografico delle sequenze di aplotipi basato sull'ordinamento
+riordinamento lessicografico delle sequenze di aplotipi, nel dettaglio
+sull'ordinamento 
 inverso dei prefissi terminanti in colonna $k-1$. I valori presenti in colonna
 $k$, dopo il riordinamento, altro non sono che i valori che andranno a popolare
 la cosiddetta matrice $\PBWT$, che rappresenta la vera e propria
 trasformata. Si noti che avere le sequenze 
-ordinate in base ai prefissi invertiti alla $k$-esima colonna permette di
+ordinate in base ai prefissi inversi alla $k$-esima colonna permette di
 identificare i match con maggior facilità in quanto, ad ogni colonna, aplotipi
-con suffisso comune (o prefisso comune in ordine inverso) saranno in posizioni
+con suffisso comune (o prefisso comune inverso) saranno ``virtualmente'' in
+posizioni 
 consecutive all'interno della trasformata.\\
 La computazione di tutti i riordinamenti non presenta difficoltà dal punto di
-vista computazionale in quanto, conoscendo l'ordinamento in colonna $k$, si può
+vista computazionale. Infatti, conoscendo l'ordinamento in colonna $k$, si può
 derivare facilmente l'ordinamento in colonna $k+1$, studiando solo i valori
 riordinati alla colonna precedente. Si ha infatti un ordinamento stabile ad ogni
 colonna. 
 \begin{definizione}
-  Dato un aplotipo $i$, appartenente al pannello $X$, e un indice di colonna
+  Dato un pannello $X$ e un indice di colonna
   $k$, si definisce il \textbf{prefix array} $a_k$ come una permutazione degli
-  indici $\{0,\ldots, M-1\}$ tale che $a_k[i]=j$ sse $x_j$ è l'$i$-esimo
+  indici $\{0,\ldots, M-1\}$ tale per cui $a_k[i]=j$ sse $x_j$ è l'$i$-esimo
   aplotipo di 
-  $X$ nell'ordinamento inverso dei prefissi ottenuto alla colonna $k$. Quindi,
-  $a_k[i]=m$, con $m<M$, altro non è che l'indice della sequenza $x_m$ del
-  pannello $X$ da cui deriva il prefisso $i$-esimo nell'ordine inverso
-  in colonna $k$.
+  $X$ nell'ordinamento inverso dei prefissi ottenuto alla colonna $k$.
+  % Quindi,
+  % $a_k[i]=m$, con $m<M$, altro non è che l'indice della sequenza $x_m$ del
+  % pannello $X$ da cui deriva il prefisso $i$-esimo nell'ordine inverso
+  % in colonna $k$.
 \end{definizione}
-Data questa definizione ne segue che la matrice $\PBWT$ si ottiene
-direttamente andando a vedere, per ogni colonna, gli indici del prefix
+Data questa definizione, segue che la matrice $\PBWT$ si ottiene
+direttamente usando, per ogni colonna, gli indici del prefix
   array e prendendo i valori del pannello $X$ secondo l'ordine espresso da
 esso.\\ 
-Per comodità di rappresentazione definiamo formalmente i valori della
- matrice $\PBWT$ con il seguente formalismo:
+Per comodità di rappresentazione, definiamo formalmente i valori della
+matrice $\PBWT$ con il seguente formalismo:
 \begin{equation}
   \label{eq:pbwty}
   y_i^k[j]=x_{a_k[i]}[j]
 \end{equation}
-avendo quindi che $y_i^k$ denota la sequenza $i$-esima secondo l'ordinamento
-ottenuto per la colonna $k$. Si può quindi accedere al valore $j$-esimo, ovvero
+Con tale notazione si ha che $y_i^k$ denota la sequenza $i$-esima secondo
+l'ordinamento 
+ottenuto per la colonna $k$. \\
+Si può quindi accedere al valore $j$-esimo, ovvero
 il valore in colonna $j$, di tale
 sequenza. Si può meglio spiegare perché risulti 
 semplice computare i vari prefix array. L'ordinamento degli elementi per
 $a_{k+1}$ si ottiene a partire 
-dall'ordinamento in $a_k$. Si considerano, infatti, i valori $y_i^k[k]$ e la
+dall'ordinamento in $a_k$, considerando i valori $y_i^k[k]$ e la
 precedenza del valore 0 sul valore 1 per riordinare in modo stabile tali
 valori.\\ 
 \dc{Un po' confusionario}
 Come anticipato, prefissi simili saranno consecutivi nei riordinamenti fino alla
 colonna $k$-esima. Quindi, risulta utile tenere traccia della posizione iniziale
-dei match tra prefissi vicini. 
+dei prefissi inversi comuni più lunghi tra prefissi adiacenti nei riordinamenti. 
 \begin{definizione}
   Si definisce \textbf{divergence array} l'array $d_k$, tale che $d_k[i]$ è
-  l'indice colonna iniziale del match massimale a sinistra terminante in $k$ tra
+  l'indice della colonna iniziale del match massimale a sinistra, terminante
+  a destra in colonna
+  $k-1$, tra 
   l'$i$-esimo aplotipo e il suo precedente nell'ordinamento ottenuto alla
   colonna $k$-esima. Formalmente, dato $i>0$, si definisce 
   $d_k[i]$ come il più piccolo $j$ tale che:
@@ -146,9 +155,9 @@ dei match tra prefissi vicini.
    d_k[0]=k
   \end{equation}
 \end{definizione}
-Si può quindi dimostrare che l'inizio di qualsiasi match massimale, terminante
+Si può dimostrare che l'inizio di qualsiasi match massimale, terminante
 in colonna $k$, tra qualsiasi $y_i^k$ e $y_j^k$, con $i<j$, è calcolabile
-facilmente avendo che è dato da:
+facilmente, essendo dato da:
 \begin{equation}
   \label{eq:pbwtint}
   \max_{i<m\leq j}d_k[m]
@@ -160,7 +169,7 @@ variante posizionale del Longest Common Prefix array.
   che, anziché 
   memorizzare l'indice d'inizio del match massimale a sinistra da due aplotipi
   consecutivi nell'ordinamento ottenuto alla colonna $k$-esima, tiene traccia
-  della lunghezza di tale match. Formalmente si ha, quindi, che:
+  della lunghezza di tale match. Formalmente si ha che:
   \begin{equation}
     \label{eq:pbwtlcp}
     l_k[i]=k-d_k[i]
@@ -170,13 +179,13 @@ variante posizionale del Longest Common Prefix array.
 Fatte queste premesse possiamo quindi fornire una definizione formale di
 $\PBWT$.
 \begin{definizione}
-  Dato un pannello di $M$ aplotipi con $N$
-  siti $X=\{x_1,x_2,\ldots,x_M\}$, si definisce $\PBWT$ di $X$ come una
+  Dato un pannello $X=\{x_0,x_1,\ldots,x_{M-1}\}$, di $M$ aplotipi con ciascuno
+  $N$ siti, si definisce $\PBWT$ di $X$ come una
   collezione di $N+1$ coppie di array $(a_k,d_k)$, con $0\leq k\leq N$.
 \end{definizione}
 La procedura per la costruzione di $a_{k+1}$ e $d_{k+1}$ a partire da $a_k$ e
-$d_k$ è disponibile all'algoritmo \ref{algo:durbin1}. Si può quindi notare come
-il costo della costruzione dei due insiemi di array sia:
+$d_k$ è disponibile all'algoritmo \ref{algo:durbin1}. Si noti che
+il costo della costruzione dei due insiemi di array è:
 \begin{equation}
   \label{eq:pbwtadtime}
   \mathcal{O}(NM)
@@ -212,17 +221,19 @@ il costo della costruzione dei due insiemi di array sia:
   partire da $a_{k}$ e $d_{k}$.}
   \label{algo:durbin1}
 \end{algorithm}
-Ai fini della trattazione dell'algoritmo di match con un'aplotipo esterno
-ricordiamo un'ulteriore definizione.
+Ai fini della trattazione dell'algoritmo di computo degli $\SMEM$ per
+un'aplotipo esterno,
+ricordiamo un'ulteriore definizione, analoga (e con lo stesso significato)
+a quanto visto con il suffix array e la sua permutazione inversa. 
 \begin{definizione}
   Si definisce $\alpha_k$ come l'inverso della permutazione data dal
-    prefix array $a_k$, avendo che:
+  prefix array $a_k$, avendo che:
   \[\alpha_k[i]=j \iff a_k[j]=i\]
 \end{definizione}
-Grazie a queste prime definizioni è possibile notare alcune prime forti
+Grazie a queste prime definizioni, è possibile denotare alcune prime forti
 correlazioni, fattore chiave nello sviluppo di questa tesi, che sussistono tra
 $\BWT$ e $\PBWT$ (e le rispettive varianti run-length
-  encoded. Nella seguente tabella si ricordano queste prime correlazioni:
+  encoded). Nella seguente tabella si ricordano queste correlazioni:
 \begin{table}[H]
   \centering
   \begin{tabular}{c|c}
@@ -275,10 +286,10 @@ $\BWT$ e $\PBWT$ (e le rispettive varianti run-length
   sottolineature):   
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.310]{img/matrix1.pdf}
+    \includegraphics[scale = 0.325]{img/matrix1.pdf}
   \end{figure}
   \noindent
-  Avendo, nel complesso:
+  Si ha, nel complesso:
   \[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
   \[\alpha_6=[2,12,13,14,16,17,18,19,6,3,4,7,8,9,0,1,5,15,10,11]\]
   \[d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]\]
@@ -314,32 +325,32 @@ $\BWT$ e $\PBWT$ (e le rispettive varianti run-length
   \end{tabular}
 \end{table}
 \end{esempio}
-\subsection{Set-maximal match con aplotipo esterno}
+\subsection{Set-maximal exact match con aplotipo esterno}
 Durbin, nel suo articolo, propone diversi algoritmi per l'uso effettivo della
 sua trasformata. Ad esempio, viene proposto un algoritmo per il calcolo
 di match interni ad $X$ più lunghi di una lunghezza minima $L$ e uno per la
-ricerca di tutti gli $\SMEM$ interni ad $X$ in tempo lineare.\\
-Di interesse per questa tesi è però il cosiddetto \textbf{algoritmo 5}, che
-si propone di trovare tutti gli $\SMEM$  tra il panello $X$ e un
+ricerca di tutti gli $\SMEM$ interni ad $X$, in tempo lineare.\\
+Di interesse per questa tesi è il cosiddetto \textbf{algoritmo 5}, usato
+per computare tutti gli $\SMEM$  tra il panello $X$ e un
 aplotipo esterno $z$, assumendo $|z|=N$. Quest'ultimo vincolo è dovuto al fatto
 che una colonna $k$ del
 pannello e una posizione $k$ della query rappresentano il medesimo sito.\\ 
 L'idea dietro l'algoritmo è quella di usare tre indici: $e_k$, $f_k$ e
 $g_k$. Nel dettaglio $e_k$ tiene traccia dell'inizio del più lungo match,
-terminante in colonna $k$, tra $z$ e un qualche $y_i^k$. L'intervallo
-$[f_k,g_k)\subseteq[0,\ldots,M)$ invece identifica il sotto-intervallo di
-$a_k$ contenente gli indici degli aplotipi appartenetenti a tale match. Si noti
-come si riprenda quindi l'idea, vista con la backward search per la
+terminante in colonna $k$, tra $z$ e un qualche $y_i^k$. Invece, l'intervallo
+$[f_k,g_k)\subseteq[0,\ldots,M)$ identifica il sotto-intervallo di
+$a_k$ contenente gli indici degli aplotipi che presentano tale match. Si noti
+come si riprendi l'idea, vista con la backward search per la
 $\BWT$, di studiare un intervallo $[f_k,g_k)$ su $\SA_T$ per identificare i
-match tra un pattern e un testo. In questo caso si ha però a che fare con una
-forward search.
+match tra un pattern e un testo. In questo caso, però, si ha a che fare con una
+``forward search''.
 \begin{definizione}
   Dato un pannello $X$, con $M$ aplotipi/righe e $N$ siti/colonne, e un aplotipo
   query $z$, tale che $|z|=N$, si definisce uno $\SMEM$ iniziante in colonna
   $e_k$ e terminante il colonna 
   $k$, tra 
   la query $z$ e tutte le righe del pannello indicizzate dai valori compresi
-  nell'intervallo $[f_k,g_k)$ in $a_k$ sse:
+  nell'intervallo $[f_k,g_k)$ in $a_k$, sse:
   \begin{equation}
     \label{eq:pbwtsmem}
     z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall\, i\mbox{
@@ -353,17 +364,19 @@ colonna $k$ alla colonna $k+1$. Si procede esattamente come visto per la
 backward search nella $\BWT$, selezionando, per calcolare $[f_{k+1},g_{k+1})$, il
 sottointervallo di $[f_k,g_k)$ in cui si hanno aplotipi che possono essere estesi
 a destra con il simbolo $z[k+1]$. L'idea è quella per cui, avendo
-$f_{k+1}<g_{k+1}$ allora sicuramente ho ancora delle righe che presentano un
+$f_{k+1}<g_{k+1}$, allora sicuramente si hanno ancora delle righe che presentano un
 match che parte da $e_{k+1}=e_{k}$ e termina in $k$ che può essere esteso in
 $k+1$. In caso contrario, avendo $f_{k+1}=g_{k+1}$, non si hanno match
-estendibili e quindi si può concludere che quelli terminanti in colonna $k$
-erano $\SMEM$. In questo secondo caso bisogna poi aggiornare $e_{k+1}$,
-ottenedo i relativi valori $f_{k+1}$ e $g_{k+1}$, al fine di trovare la nuova
+estendibili e si può concludere che quelli terminanti in colonna $k$
+erano effettivamente $\SMEM$. In questo secondo caso bisogna poi aggiornare
+$e_{k+1}$, 
+ottenendo i relativi nuovi valori $f_{k+1}$ e $g_{k+1}$, al fine di trovare la
+nuova 
 colonna da cui parte lo $\SMEM$ successivo e le righe del pannello per le quali
 si ha tale $\SMEM$. \\
-Bisogna, quindi, capire come funzioni la
-variante del backward-step introdotta per la $\BWT$. Nella $\PBWT$ si può
-parlare di forward-step. Tale funzione,
+Bisogna, a questo punto, capire come funzioni la
+variante del backward-step introdotta per la $\BWT$, avendo che nella $\PBWT$ si
+può parlare di forward-step/mapping. Tale funzione,
 guidata dal carattere corrente dell'aplotipo query, permette di ottenere
 $f_{k+1}$ e $g_{k+1}$ a partire da $f_k$ e $g_k$.\\ 
 Per effettuare il mapping abbiamo bisogno di tre componenti, che,
@@ -379,16 +392,14 @@ $\BWT$:
 \end{enumerate}
 Tali valori possono essere computati e memorizzati in fase di costruzione della
 $\PBWT$, come visibile direttamente nell'algoritmo \ref{algo:durbin1} per
-quanto riguarda $u$ e $v$. Per quanto riguarda $c$
-si ha che potrebbe essere banalmente calcolato anch'esso in fase di costruzione
-della $\PBWT$, tenendo ogni volta traccia del numero di 0 incontrati
-nella colonna $k$-esima o sfruttando direttamente l'array $u$.\\
+quanto riguarda $u$ e $v$ (per l'array $c$ basterebbe tenere traccia del numero
+di 0 incontrati nella colonna $k$-esima o sfruttare direttamente l'array $u$).\\
 Sfruttando i valori di questi tre array possiamo quindi effettuare lo
 step/mapping alla colonna successiva,
 definito, per comodità, da una funzione:
 \begin{equation}
   \label{eq:pbwtw1}
-  w_k:\{0,\ldots,M-1\}\times\Sigma\to \{0,\ldots,M-1\}
+  w_k:\{0,\ldots,M\}\times\Sigma\to \{0,\ldots,M\}
 \end{equation}
 tale per cui:
 \begin{equation}
@@ -401,18 +412,17 @@ tale per cui:
 \end{equation}
 Tale funzione è rappresentabile in pseudocodice come nell'algoritmo
 \ref{algo:pbwtlf}. \\
-Risulta interessante notare, come confermato anche dall'algoritmo di costruzione
-stesso, che si ha:
+Risulta interessante notare che:
 \begin{equation}
   \label{eq:pbwt3}
   a_{k+1}\left[w_k\left(i,y_i^k[k]\right)\right]=a_k[i]
 \end{equation}
-Avendo che tale mapping permette di ``seguire'' una determinata riga
-all'interno delle varie permutazioni dettate dai vari $a_k$.
+Quindi, tale mapping permette di ``seguire'' una determinata riga
+all'interno delle varie permutazioni dettate dai valori dei prefix array.
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
-    \Function{$w$}{$k,i,s, c_k, u_k, v_k$}
+    \Function{w}{$k,i,s, c_k, u_k, v_k$}
     \If{$s = 0$}
     \State \textbf{return} $u_k[i]$
     \Else
@@ -424,19 +434,19 @@ all'interno delle varie permutazioni dettate dai vari $a_k$.
   \label{algo:pbwtlf}
 \end{algorithm}
 \begin{esempio}
-  Vediamo un piccolo esempio chiarificatore, riprendendo l'esempio
+  Si riprende l'esempio
   \ref{es:pbwt1}, ricordando che:
   \[a_5=[14,15,17,0,4,5,6,7,9,10,16,8,11,12,13,18,19,1,2,3]\]
   \[\alpha_5=[3,17,18,19,4,5,6,7,11,8,9,12,13,14,0,1,10,2,15,16]\]
   \[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
   \[\alpha_6=[2,12,13,14,16,17,18,19,6,3,4,7,8,9,0,1,5,15,10,11]\]
-  Si ha, ad esempio, con $k=5$ e $i=2$, che:
+  Si ha, ad esempio con $k=5$ e $i=2$, che:
   \[a_{6}\left[w_5\left(2,y_2^5[5]\right)\right]=a_5[2]\]
   Avendo:
   \[w_5\left(2,y_2^5[5]\right)=w_5\left(2,1\right)=v_5[2]+c[5]=0+15=15\]
-  Si ha che:
+  Avendo anche che:
   \[a_{6}[15]=17=a_5[2]\]
-  Dimostrando come con tale funzione si possa, di fatto, seguire la riga 17,
+  Si conferma come con tale funzione si possa, di fatto, seguire la riga 17,
   capendo da quale riga della colonna permutata precedente arrivi.
 \end{esempio}
 \noindent
@@ -450,9 +460,9 @@ funzione $w_k$:
   \alpha_{k+1}[i]=w_k(\alpha_k[i],x_i[k])
 \end{equation}
 \begin{esempio}
-  Si riprendono i dati dell'esempio precedente e si vuole calcolare, sempre con
+  Si riprendono i dati dell'esempio precedente e si calcola, sempre con
   $k=5$ e $i=2$:
-  \[\alpha_{6}[2]=w_5(\alpha_5[2],x_2[5])=w_5(18,0)=13\]
+  \[\alpha_{6}[2]=13=w_5(\alpha_5[2],x_2[5])=w_5(18,0)=13\]
   Come volevasi dimostrare.
 \end{esempio}
 \dc{Capire se dire altro su $\W()$}
@@ -471,26 +481,28 @@ calcola:
   \label{eq:pbwtq6}
   g_{k+1}=w_k(g_k,z[k])
 \end{equation}
-Si hanno quindi, dopo il calcolo dei potenziali $f_{k+1}$ e $g_{k+1}$ due
+Si hanno quindi, dopo il calcolo dei potenziali $f_{k+1}$ e $g_{k+1}$, due
 possibili casi: 
 \begin{enumerate}
-  \item si ha che $f_{k+1}<g_{k+1}$. In questo caso si hanno ancora match che
-  partono da $e_k$ e terminano in $k$ che si estendono anche in $k+1$. In altri
+  \item si ha che $f_{k+1}<g_{k+1}$. In questo caso si hanno ancora match,
+  inizianti in $e_k$ e terminanti in $k$, che si estendono anche in $k+1$. In
+  altri 
   termini, si 
-  ha un sottointervallo non nullo di $[f_k, g_k)$ relativo a righe in tale
-  intervallo che 
+  ha un sottointervallo non nullo di $[f_k, g_k)$ relativo a righe che 
   presentano $z[k+1]$ come simbolo in colonna $k+1$. In tal caso, si
   prosegue con l'iterazione, avendo $e_{k+1}=e_k$
-  \item si ha che $f_{k+1}=g_{k+1}$. In questo caso non si hanno match che
-  partono da $e_k$ e terminano in $k$ che sono anche estendibili in
-  $k+1$. Bisogna quindi 
-  annotare i match terminanti in $k-1$, nell'intervallo $[f_k,g_k)$ su $a_k$,
+  \item si ha che $f_{k+1}=g_{k+1}$. In questo caso non si hanno match,
+  inizianti in $e_k$ e terminanti in $k$, che sono anche estendibili in
+  $k+1$. Bisogna, quindi, 
+  annotare i match terminanti in $k-1$, ovvero gli $\SMEM$ con le righe
+  indicizzate nell'intervallo
+  $[f_k,g_k)$ su $a_k$, 
   e poi ricalcolare i nuovi $e_{k+1}$, $f_{k+1}$ e $g_{k+1}$. Il punto
   fondamentale per poter calcolare i nuovi indici è 
-  che, virtualmente, l'aplotipo $z$ si trova, in colonna $k$, o subito prima o
-  subito dopo il l'insieme di aplotipi indicizzati da $[f_k,g_k)$ su $a_k$,
-  secondo 
-  l'ordinamento dato dalla medesima colonna. Di conseguenza si può inferire che,
+  che, virtualmente, l'aplotipo $z$ si trova, in colonna $k$ secondo il
+  riordinamento inverso, o subito prima o
+  subito dopo il l'insieme di aplotipi indicizzati da $[f_k,g_k)$ su $a_k$.
+  Di conseguenza si può inferire che,
   essendo $z$
   nell'ordinamento in $k$ o subito prima di $f_{k}$ o subito dopo $g_k$ ed
   avendo $f_{k+1}=g_{k+1}$: 
@@ -519,27 +531,27 @@ possibili casi:
     \label{eq:pbwtsmem4}
     y_{f_{k+1}-1}^{k+1}[e_{k+1}]=0\neq y_{f_{k+1}}^{k+1}[e_{k+1}]=1
   \end{equation}
-  Si ha quindi che:
+  Tali casi sono:
   \begin{enumerate}
-    \item se tale valore è 0 allora $z$ ha un match migliore
-    con $y_{f_{k+1}-1}^{k+1}$ rispetto che con $y_{f_{k+1}}^{k+1}$. Si aggiorna
-    quindi $e_{k+1}$, decrementandolo, fino a che si ha match tra $z[e_{k+1}-1]$
-    e $y_{f_{k+1}-1}^{k+1}[e_{k+1}-1]$. Infine si decrementa $f_{k+1}$ fino a
+    \item se tale valore è 0, allora, $z$ ha un match migliore
+    con $y_{f_{k+1}-1}^{k+1}$ rispetto che con $y_{f_{k+1}}^{k+1}$. Si aggiorna,
+    quindi, $e_{k+1}$, decrementandolo fino a che si ha match tra $z[e_{k+1}-1]$
+    e $y_{f_{k+1}-1}^{k+1}[e_{k+1}-1]$. Infine, si decrementa $f_{k+1}$ fino a
     che $d_{k+1}[f_{k+1}]\leq e_{k+1}$, trovando quelle righe per il quale il
-    divergence array non supera il valore di $e_{k+1}$. Si ottengono in
-    tal modo le sequenze, nel riordinamento in $k+1$, che hanno un match da
-    $e_{k+1}$ a $k+1$. Invece $g_{k+1}$ resta fisso, avendo che
+    divergence array non supera il valore di $e_{k+1}$. Si ottengono, in
+    tal modo, le sequenze, nel riordinamento in $k+1$, che hanno un match da
+    $e_{k+1}$ a $k+1$. Invece, $g_{k+1}$ resta fisso, avendo che
     $y_{g_{k+1}}^{k+1}$ presenta un
     mismatch in colonna $k+1$
-    \item se tale valore è 1 allora, per l'ordinamento, $z$ ha un match migliore
-    con $y_{f_{k+1}}^{k+1}$ rispetto che con $y_{f_{k+1}-1}^{k+1}$. Si aggiorna
-    quindi $e_{k+1}$, decrementandolo, fino a che si ha match tra $z[e_{k+1}-1]$
-    e $y_{f_{k+1}-1}^{k+1}[e_{k+1}-1]$. Infine si incrementa $g_{k+1}$ fino a
+    \item se tale valore è 1, allora, $z$ ha un match migliore
+    con $y_{f_{k+1}}^{k+1}$ rispetto che con $y_{f_{k+1}-1}^{k+1}$. Si aggiorna,
+    quindi, $e_{k+1}$, decrementandolo fino a che si ha match tra $z[e_{k+1}-1]$
+    e $y_{f_{k+1}-1}^{k+1}[e_{k+1}-1]$. Infine, si incrementa $g_{k+1}$ fino a
     che $d_{k+1}[g_{k+1}]\leq e_{k+1}$, per lo stesso ragionamento del caso
-    precedente. Si noti che si permette di ottenere $g_{k+1}=M$ avendo che tale
+    precedente. Si noti che si permette di ottenere $g_{k+1}=M$, avendo che tale
     valore risulta escluso in $[f_{k+1},g_{k+1})$. In tal modo si segnala che la
     riga indicizzata con $a_{k+1}[M-1]$, in colonna $k+1$, presenta un
-    match. Invece $f_{k+1}$ resta fisso, avendo che $y_{f_{k+1}}^{k+1}$ 
+    match. Invece, $f_{k+1}$ resta fisso, avendo che $y_{f_{k+1}}^{k+1}$ 
     presenta un mismatch in colonna $k+1$ 
   \end{enumerate}
 \end{enumerate}
@@ -552,65 +564,68 @@ si hanno:
 \begin{esempio}
   \label{es:algo5}
   Mostrare un esempio completo di esecuzione richiederebbe troppo spazio quindi
-  ci si limita a mostrare cosa succede nel caso in cui, ad un certo punto
-  dell'esecuzione si hanno $f_{k+1}=g_{k+1}$.\\
-  Si assuma il pannello e la  matrice $\PBWT$ visti all'esempio
-  \ref{es:pbwt1} con una query $z$. Nel complesso, si identificano i
+  ci si limita a mostrare cosa succeda nel caso in cui, ad un certo punto
+  dell'esecuzione, $f_{k+1}=g_{k+1}$.\\
+  Si assumano il pannello e la matrice $\PBWT$ visti all'esempio
+  \ref{es:pbwt1}, con una query $z$. Nel complesso, si identificano i
   seguenti match:
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.365]{img/pbwtmatch.pdf}
   \end{figure}
   Si assuma di essere in colonna $k=6$, avendo, dopo i calcoli fatti in colonna
-  $k=5$: 
-  \begin{itemize}
-    \item $f_6=6$
-    \item $g_6=10$
-    \item $e_6=0$
-  \end{itemize}
-  Avendo quindi che, a partire dalla colonne $0$ fino alla colonna $6-1=5$, si
-  hanno le righe nel range $[6,10)$ di $a_{6}$ che matchano con $z[0,5]$. Tali
+  $k=5$:
+  \[f_6=6,\quad\quad g_6=10,\quad\quad e_6=0\]
+  % \begin{itemize}
+  %   \item $f_6=6$
+  %   \item $g_6=10$
+  %   \item $e_6=0$
+  % \end{itemize}
+  Tali valori segnalano che, a partire dalla colonne $0$ fino alla colonna
+  $6-1=5$, si 
+  hanno le righe nel range $[6,10)$ di $a_{6}$ che presentano un match con
+  $z[0,5]$. Tali 
   righe sono, nel dettaglio, quelle indicizzate $\{8, 11, 12, 13\}$.\\
-  Bisogna quindi aggiornare $f_7$ e $g_7$. Si assuma che $z[6]=1$ e che:
+  Bisogna quindi computare $f_7$ e $g_7$. Si assuma che $z[6]=1$ e che:
   \[y^6=00000000000100000000,\,\,\,c[6]=19\]
   Si calcolano quindi:
   \[f_7=w_6(6,1)=v_6[6]+c[6]=0+19=19\]
   \[g_7=w_6(10,1)=v_6[10]+c[6]=0+19=19\]
-  Avendo quindi $f_7=g_7$ si procede, in primis, annotando i match terminanti in
+  Avendo $f_7=g_7$ si procede, in primis, annotando gli $\SMEM$ terminanti in
   $k=5$.\\
-  Seguendo l'algoritmo si ha quindi un primo aggiornamento di $e_{k+1}$, che
-  viene inizializzato a, avendo in memoria $d_7$: 
+  Seguendo l'algoritmo si ha un primo aggiornamento di $e_{k+1}$, che
+  viene, avendo in memoria $d_7$, posto pari a: 
   \[e_7=d_7[19]-1=7-1=6\]
   Questo viene fatto in quanto, come detto, l'aplotipo $z$ si trova o subito
-  prima del blocco di aplotipi $[f_k,g_k)$.\\
-  Essendo inoltre $z[e_7]=z[6]=1$ si procede aggiornando $g_7$ e tenendo fermo
-  $f_7$, avendo $z[6]=1$. Si procede quindi inizializzando il
-  nuovo $g_7$:
+  prima del blocco di aplotipi $[f_k,g_k)$ o subito dopo.\\
+  Essendo, inoltre, $z[e_7]=z[6]=1$, si procede aggiornando $g_7$ e tenendo fisso
+  $f_7$, avendo $z[6]=1$. Si procede computando $g_7$:
   \[g_7=f_7+1=20\]
-  ricordando che $g_k$ può ``superare'' le dimensioni del pannello essendo
+  Si ricordi che $g_k$ può ``superare'' le dimensioni del pannello, essendo
   escluso in $[f_k,g_k)$.\\
-  A questo punto si segue la linea specificata da $f_7$ in $a_7$ a ritroso,
+  A questo punto, si segue la riga specificata da $f_7$ in $a_7$ a ritroso,
   partendo da $e_7-1$, fino a che si hanno match con $z$, aggiornando così il
   valore di $e_7$.\\
   In questo caso non si hanno altre operazioni, in quanto $g_7=M$ ma, qualora
   non lo fosse stato, si sarebbe incrementato $g_7$ fino a che il corrispondente
   $d_7[g_7]$ sarebbe stato minore o uguale di $e_7$, identificando tutte le
-  nuove righe che hanno un match da con $z[e_7, 6]$.
+  nuove righe presentanti un match con $z[e_7, 6]$.
   \dc{Forse sono necessarie immagini?}
 \end{esempio}
-L'\textit{algoritmo 5}, consultabile all'algoritmo \ref{algo:dur5} secondo i
+L'\textit{algoritmo 5}, consultabile all'algoritmo \ref{algo:dur5}, secondo i
 calcoli di Durbin, ha complessità:
 \begin{equation}
   \label{eq:pbwtsmem5}
   \mathcal{O}(N+c)
 \end{equation}
-tale risultato è stimato tale in quanto si ritiene che il
-numero di accessi ai loop interni sia limitato dalla costante rappresentante il
-numero di match, $c$. Nonostante ciò tale complessità temporale è ancora in
+Tale risultato è così stimato in quanto si ritiene che il
+numero di accessi ai cicli \texttt{while} interni sia limitato dalla costante
+rappresentante il 
+numero di match, $c$. Nonostante ciò, tale complessità temporale è ancora in
 corso di studio in quanto si hanno in letteratura evidenze della sua non
 correttezza. Un esempio è il paper di Naseri \cite{dpbwt}, dove si afferma che
 l'intuizione per cui tale costante $c$ limiti superiormente gli accessi ai loop
-innestati sia falsa. Si noti che nell'articolo non viene però precisata una
+innestati sia falsa. Si noti che nell'articolo non viene precisata una
 nuova misura per la complessità dell'algoritmo ma solo che la stima di Durbin è
 empiricamente accettabile come \textit{caso medio}:
 \begin{equation}
@@ -668,7 +683,7 @@ algoritmo. Si ipotizzi di non ricalcolare, colonna per colonna, comportando
 un'incremento dal punto di vista temporale in caso di dover studiare più query
 $z$, tutti gli array  
 necessari a costruire la $\PBWT$ e a permettere di computare la funzione
-$\W(i,\sigma)$.\\
+$w(i,\sigma)$.\\
 Ricapitolando, per poter eseguire l'algoritmo 5, si necessita di avere in
 memoria, con \textit{random access}:
 \begin{itemize}
@@ -679,7 +694,7 @@ memoria, con \textit{random access}:
   di dimensione $2NM$ 
   \item il \textbf{vettore} $c$, di dimensione $N$
 \end{itemize}
-Possiamo quindi dire che si ha una complessità in memoria pari a:
+Quindi, si ha una complessità in spazio pari a:
 \begin{equation}
   \label{eq:pbwtsize}
   \mathcal{O}(NM)
@@ -702,7 +717,7 @@ $\PBWT$\footnote{\url{https://github.com/richarddurbin/pbwt}}. Infatti,
 monitorando  
 con \texttt{time} il picco di memoria durante l'esecuzione, si ha che esso
 corrisponde a 369GB, comprensivi anche di tutto ciò che è ``a
-contorno'' all'algoritmo stesso. I dati quindi sembrano confermare le stime di
+contorno'' all'algoritmo stesso. I dati, quindi, sembrano confermare le stime di
 Durbin, confermando l'alto uso di memoria richiesto dall'\textit{algoritmo
   5}. Questa è 
 stata la motivazione principale per cui si è sviluppata, in questa tesi
@@ -718,15 +733,15 @@ verranno approfonditi ma, soprattutto nell'ottica dei prospetti futuri, è bene
 citarne i principali.
 \subsubsection{PBWT multiallelica}
 La prima variante che si introduce è la \textbf{PBWT multiallelica} ($\MPBWT$),
-proposta da Naseri et al. nel 2019 \cite{mpbwt}. Questo 
-lavoro estende la $\PBWT$ di Durbin generalizzandola ad un alfabeto
+proposta da Naseri et al. \cite{mpbwt} nel 2019. Questo 
+lavoro estende la $\PBWT$ di Durbin, generalizzandola ad un alfabeto
 arbitrario. \\
 Dal punto di vista delle motivazioni biologiche, questa soluzione risulta
 fondamentale, oltre che per lo studio di specie multialleliche (soprattutto nel
 mondo vegetale), in quanto gli studi riportano come, nell'uomo, la presenza di
 siti triallelici sia sotto stimata. \\
-Da un punto di vista prettamente algoritmico si sono quindi estesi i concetti di
-$c$, $u_k$ e $v_k$ visti nella $\PBWT$ per ottenere un vero e proprio
+Da un punto di vista prettamente algoritmico, si sono generalizzati i concetti di
+$c$, $u_k$ e $v_k$ visti nella $\PBWT$, ottenendo un vero e proprio
 FM-index in grado di lavorare su alfabeto arbitrario $\Sigma$, con
 conseguente forte aumento dello spazio richiesto in memoria. Da un punto di
 vista della complessità temporale, invece, si ha che le le stime asintotiche
@@ -734,15 +749,17 @@ degli
 algoritmi devono tenere conto anche della grandezza dell'alfabeto stesso, avendo
 però che, essendo esso tendenzialmente di dimensioni ridotte, questo fatto non
 comporti particolari problematiche dal punto di vista dei tempi di
-calcolo. Infatti, le complessità temporali della $\MPBWT$ sono incrementate
-di un fattore $t$, con $t=\left|\Sigma\right|$, e se tale valore è assunto
-costante ad inizio computazione, avendo che difficilmente si ha $t>>2$, la
+calcolo. Infatti, le complessità temporali della $\MPBWT$ sono moltiplicate
+di un fattore $t=\left|\Sigma\right|$. Se tale valore è assunto
+costante ad inizio computazione, avendo che difficilmente $t>>2$, la
 complessità temporale non subisce variazioni considerevoli.
 \subsubsection{PBWT con struttura LEAP}
-Sempre nel 2019, Naseri et al.\cite{leap} proposero anche una variante della
+Sempre nel 2019, Naseri et al. \cite{leap} proposero anche una variante della
 $\PBWT$ 
 che permettesse il calcolo non solo degli $\SMEM$, come per l'algoritmo 5
-di Durbin, ma anche qualsiasi match di lunghezza maggiore uguale ad una
+di Durbin, ma anche qualsiasi match, tra un aplotipo esterno e un pannello, di
+lunghezza 
+maggiore uguale ad una 
 lunghezza arbitraria $L$. Tale algoritmo fu nominato
 \textit{PBWT-query}. Inoltre, nello 
 stesso articolo, proposero 
@@ -757,7 +774,7 @@ dell'algoritmo per la PBWT-query, ottenendo l'algoritmo detto
 \dc{Serve dire di più sulla struttura LEAP?}
 Da un punto di vista computazionale, si noti che la complessità in tempo
 dell'algoritmo 
-per la PBWT query, con match di lunghezza minima $L$ è:
+per la PBWT query, con match di lunghezza minima $L$, è:
 \begin{equation}
   \label{eq:leap1}
   \mathcal{O}(N+c(R-L+1))
@@ -767,16 +784,17 @@ Avendo:
   \item $R$ lunghezza media dei match
   \item $c$ numero totale dei match
 \end{itemize}
-In merito ai tempi dell'algoritmo L-PBWT-query si ha che, al
+In merito alla complessità in tempo dell'algoritmo L-PBWT-query si ha che, al
 costo di $8NM$ interi aggiuntivi in memoria, con $N$ e $M$ dimensioni del
-pannello è proporzionale a: 
+pannello, essa è proporzionale a: 
 \begin{equation}
   \label{eq:leap2}
   \mathcal{O}(N+c)
 \end{equation}
 \subsubsection{PBWT dinamica}
-Sanaullah et al., nel 2021, proposero la \textbf{Dynamic PBWT} ($\DPBWT$)
-\cite{dpbwt} col fine di superare le limitazioni imposte dalle strutture
+Sanaullah et al. \cite{dpbwt}, nel 2021, proposero la \textbf{Dynamic PBWT}
+($\DPBWT$), 
+ col fine di superare le limitazioni imposte dalle strutture
 statiche usate nella $\PBWT$ di Durbin. Si è quindi pensato di sostituire
 l'uso degli array, statici, con l'uso di linked list, ovvero strutture dati
 dinamiche.\\ 
@@ -785,7 +803,8 @@ efficiente della matrice $\PBWT$ all'aggiunta di un nuovo aplotipo nel
 pannello o alla rimozione di uno già presente nel pannello.\\
 Da un punto di vista computazionale, è interessante notare come le
 implementazioni degli algoritmi di Durbin presentino la medesima complessità
-asintotica. Infatti, ad esempio, la creazione della $\DPBWT$ richiede
+asintotica di quelli basati sull'uso di tali strutture dinamiche. Infatti, ad
+esempio, la creazione della $\DPBWT$ richiede 
 tempo:
 \begin{equation}
   \label{eq:dpbwt}
@@ -798,21 +817,21 @@ Invece, l'aggiunta e la rimozione di un aplotipo sono entrambe in tempo:
 \end{equation}
 \subsubsection{PBWT con wildcard}
 La tematica dei dati mancanti è una tematica aperta in
-bioinformatica. I sequenziatori infatti presentano un range d'errore
+bioinformatica. I sequenziatori, infatti, presentano un range d'errore
 dal 1\% al 15\%, si ha a volte un basso coverage (ovvero il numero di
 read che contengono la base sequenziata per un certo locus del genoma) e la fase
 di assemblaggio del genoma può comportare errori. Questo, in fase di produzione
 dei pannelli, implica che, in determinati casi, non si sappia quale sia l'allele
-corretto per un individuo riferendosi ad un sito. \\
-Nel 2020, Williams e Mumey \cite{williams} proposero quindi l'uso della
+corretto per un individuo, riferendosi ad un certo sito. \\
+Nel 2020, Williams e Mumey \cite{williams} proposero l'uso della
 $\PBWT$ \textbf{con 
-  wildcard} al fine di disegnare un algoritmo in grado di calcolare i match
-interni ad un pannello biallelico con dati mancanti, rappresentati come
-wildcard mediante il simbolo ``*'' (avendo quindi
+  wildcard} al fine di disegnare un algoritmo in grado di calcolare i cosiddetti
+\textit{blocchi} in un pannello biallelico con dati mancanti, rappresentati come
+wildcard mediante il simbolo ``*'' (avendo quindi, come alfabeto,
 $\Sigma=\{0,1,*\}$).\\ 
 In termini computazionali gli autori sono riusciti a formulare un algoritmo in
-grado tutti i match interni massimali al pannello in
-tempo, con $T$ numero di match: 
+grado tutti i $T$ blocchi nel pannello in
+tempo: 
 \begin{equation}
   \label{eq:pbwtwild}
   \mathcal{O}(NMT)
@@ -825,25 +844,26 @@ Per citare un uso della $\PBWT$, si può introdurre il concetto di
   imputation}, ovvero il processo con il quale si predicono genotipi non ancora
 osservati in un campione di individui, usando un pannello di aplotipi. Questo
 tipo di studio si basa sui dati prodotti dai \textbf{GWAS} (Genome-wide
-    association studies), studi il cui scopo è quello di di esaminare multipli
+    association study), studi il cui scopo è quello di esaminare multipli
 genomi alla ricerca di associazioni tra varianti genetiche e malattie (o
 outcome specifici delle stesse), identificando varianti genomiche che sono
 statisticamente associate al rischio per una malattia.\\ 
-A tal fine, nel 2020, Rubinacci et al. proposero \textbf{IMPUTE5}
-\cite{impute5}, un metodo basato sulla $\PBWT$ per la genotype
-  imputation, in grado di studiare pannelli di grandi dimensioni.
+A tal fine, nel 2020, Rubinacci et al. \cite{impute5} proposero
+\textbf{IMPUTE5}, un metodo basato sulla $\PBWT$ per la genotype 
+  imputation, in grado di studiare, in ottica GWAS, pannelli di grandi
+  dimensioni. 
 \dc{Aggiungere qualcosa?}
 \subsection{Una prima proposta run-length encoded}
 \label{subsectravis}
 A fine 2021, Gagie et al. \cite{tricks} hanno iniziato a teorizzare una variante
 run-length encoded della $\PBWT$, cercando di basarsi sui risultati
-già ottenuti sulla $\BWT$ con la $\RLBWT$.\\
+già ottenuti sulla $\BWT$ con la $\RLBWT$.
 Pensando alla costruzione della $\PBWT$, con $M$ individui e $N$ siti, si
 ha che ogni colonna della 
 matrice $\PBWT$ è ottenuta tramite la permutazione data dal prefix
   array. Denotiamo tale permutazione, alla colonna $k$, con $\pi_k$, $\forall\,
 1\leq k<N$. 
-Ipotizziamo ora di voler studiare la riga $i$-esima del pannello originale. Si
+Ipotizziamo di voler studiare la riga $i$-esima del pannello originale. Si
 ha che, al variare della colonna $k$ sulla matrice $\PBWT$, la posizione
 della riga $i$ è ricostruibile applicando le varie permutazioni:
 \begin{equation}
@@ -851,13 +871,14 @@ della riga $i$ è ricostruibile applicando le varie permutazioni:
   i, \pi_1(i), \pi_2(\pi_1(i)),\ldots,
   \pi_{N-1}(\cdots(\pi_2(\pi_1(i)))\cdots)
 \end{equation}
-Il punto fondamentale si ritrova nel fatto che l'autore asserisce:
+Il punto fondamentale, relativo al run-length encoding, si ritrova nel fatto che
+l'autore asserisce: 
 \begin{center}
   \textit{Notice $\pi_k$ can be stored in space proportional to the number of
     runs in the $k$th column of the $\PBWT\,\ldots$} 
 \end{center}
 Nell'articolo si propone una struttura dati formata da $N$ ``tabelle''
-dove, la $j$-esima riga della $k$ tabella contiene: 
+dove la $j$-esima riga della $k$ tabella contiene: 
 \begin{itemize}
   \item l'indice $p$ di inizio della $j$-esima run nella colonna $k$ della
    matrice $\PBWT$
@@ -872,14 +893,14 @@ dove, la $j$-esima riga della $k$ tabella contiene:
   \end{equation}
   \item l'indice della run contenente il simbolo $\pi_k(p)$ nella colonna $k+1$
   della matrice $\PBWT$
-  \item un booleano per capire se la prima run è composta da simboli $\sigma=0$
-  o $\sigma =1$. Si noti che tale valore non è esplicitato nel'articolo ma
-  risulta necessario
+  \item un booleano che specifica se la prima run è composta da simboli
+  $\sigma=0$. Si noti che tale valore non è esplicitato nel'articolo ma
+  risulta necessario per ottenere il simbolo corrispondente ad una qualsiasi run
 \end{itemize}
 Il paper presenta anche il metodo per l'estrazione della $i$-esima
 riga. Inizialmente, si cerca della prima ``tabella'' la riga relativa alla run,
 con indice di testa $p$, contenente l'indice $i$. Si noti che la prima
-``tabella'', relativa alla colonna $k=0$ non presenta permutazioni e quindi  
+``tabella'', relativa alla colonna $k=1$, non presenta permutazioni e quindi  
 l'indice $i$ del pannello è anche l'indice $i$ della matrice $\PBWT$.
 Si può calcolare, quindi, la permutazione per l'indice $i$ (alla prima
 operazione si avrà $k=1$):
@@ -888,16 +909,17 @@ operazione si avrà $k=1$):
   \pi_k(i)=\pi_k(p)+i-p
 \end{equation}
 Si identifica, poi, la riga relativa alla run contenente il simbolo $\pi_k(p)$
-nella ``tabella'' successiva e si scansionano le righe di tale tabella a
-partire da quella appena identificata fino a trovare la run che contiene
+nella ``tabella'' successiva e si scansionano le righe di tale tabella, a
+partire da quella appena identificata, fino a trovare la run che contiene
 $\pi_k(i)$ (alla prima
 operazione si avrà $k=1$). Infine, si estrae il simbolo relativo a tale run.
-Ripetendo la procedura, per ogni colonna $k$, dal computo della permutazione, si
+Ripetendo la procedura per ogni colonna $k$, a partire dal computo della
+permutazione, si 
 può calcolare la riga $i$-esima del pannello.\\
 Inoltre,
 vengono proposti ulteriori ottimizzazioni, basate sul metodo detto
 \textit{fractional cascading}. Con tale rappresentazione, si riesce a ridurre il
-numero di run che devono essere scansionate nel passaggio 3, al costo di una
+numero di run che devono essere scansionate, al costo di una
 maggior richiesta di spazio. Infatti, aumentando il numero totale di
 righe in tutte le tabelle di un fattore al più $\left(1+\frac{1}{d}\right)$, è
 possibile garantire che si avranno al più $d$ iterazioni, in ogni tabella, per
@@ -905,10 +927,10 @@ ottenere l'estrazione del simbolo desiderato.
 Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
 \begin{esempio}
    Supponendo di voler ricostruire la riga $i=9$, si assuma la seguente matrice
-   $\PBWT$, avendo che in rosso sono segnati i simboli appartenenti alla riga 9: 
+   $\PBWT$, avendo in rosso i simboli appartenenti alla riga 9: 
    \begin{table}[H]
      \centering
-     \footnotesize
+     \scriptsize
      \begin{tabular}{c|ccccccccccccccc}
        X & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 \\
        \hline
@@ -946,7 +968,7 @@ Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
      \end{tabular}
    \end{table}
    \noindent
-   Si costruiscono quindi le seguenti tabelle \cite{tricks}:
+   Si costruiscono le seguenti tabelle \cite{tricks}:
    \begin{figure}[H]
      \centering
      %\includegraphics[scale=0.3]{img/trick.jpg}
@@ -1003,7 +1025,8 @@ Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
   Nelle tabelle, in rosso, si hanno le varie $\pi_k(i)$ calcolate nel processo,
   ottenute, 
   se necessario, iterando a partire dalle $\pi_k(p)$, segnalate in azzurro. \\
-  Si hanno infatti i seguenti calcoli, ovvero i vari $\pi_j(i)=\pi_j(p)+i-p$ 
+  Numericamente si hanno i seguenti calcoli, ovvero i vari
+  $\pi_j(i)=\pi_j(p)+i-p$
   relativi alle permutazioni in colonna $k$, per l'estrazione della riga $9$:
   \begin{multicols}{2}
     \begin{itemize}
@@ -1021,8 +1044,8 @@ Per ulteriori dettagli si rimanda al paper di riferimento \cite{tricks}.
       % \item $\pi_{12}(3)=16+3-3=16$        
     \end{itemize}
   \end{multicols}
-  Sfruttando quindi il valore booleano (non rappresentato nelle tabelle ma
-  necessario in memoria) che ci dice con che simbolo inizia una colonna
+  Sfruttando il valore booleano (non rappresentato nelle tabelle) che indica con
+  che simbolo inizi una colonna 
   della matrice $\PBWT$ e
   sapendo che, 
   essendo un pannello binario, si alternano run con simboli $\sigma=0$ e

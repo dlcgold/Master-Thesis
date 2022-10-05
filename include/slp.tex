@@ -1,6 +1,6 @@
 \section{Straight-Line Program}
 \label{slpsec}
-In ambito bioinformatico una delle principali problematiche è la
+In ambito bioinformatico, una delle principali problematiche è la
 gestione di testi molto estesi. Si pensi, ad esempio, al caso umano, dove il
 primo cromosoma, il più lungo, conta circa $247.249.719$
 \textit{bps} (paia di basi), nonostante, è bene segnalare, l'uomo
@@ -8,7 +8,7 @@ non sia affatto l'essere vivente con il genoma più esteso. Fatta questa breve
 premessa, è facile comprendere l'importanza degli algoritmi e delle strutture
 dati per la compressione di testi.\\
 Per questa tesi si è quindi pensato all'uso dei cosiddetti \textbf{Straight-Line
-  Programs} ($\SLP$). In termini 
+  Program} ($\SLP$). In termini 
 generici, un $\SLP$ è una \textit{grammatica context-free} che 
 genera una e una sola parola \cite{slpsurvey}. Si parla, quindi, di
 \textit{grammar-based compression}.
@@ -91,7 +91,7 @@ proposero un articolo, a cui si rimanda per approfondimenti, in merito a
 miglioramenti prestazionali per il random access all'$\,\SLP$,
 anche tramite l'uso dei bitvector sparsi.\\
 Si stima che il tempo necessario al random access su un testo $T$, compresso
-tramite $\SLP$ e lungo $n$, sia in tempo: 
+tramite $\SLP$ e lungo $n$, sia: 
 \begin{equation}
   \label{eq:slptime}
   \mathcal{O}\left(\log n\right)
@@ -100,10 +100,10 @@ L'uso di tale variante degli \textit{SLP} è stato cruciale, come si vedrà più
 avanti in questa tesi, per la costruzione della versione run-length encoded sia
 della $\BWT$ che della $\PBWT$.
 \subsection{Longest Common Extension}
-Oltre a permettere \textit{random access} alla testo compresso, 
+Oltre a permettere \textit{random access} al testo compresso, 
 l'uso degli $\SLP$ permette di effettuare 
 un'altra operazione in modo efficiente, ovvero il calcolo delle \textbf{Longest
-  Common Extension} ($\LCE$) \textbf{queries}.
+  Common Extension} ($\LCE$) \textbf{query}.
 \begin{definizione}
   Dato un testo $T$, tale che $|T|=n$, il risultato della $\LCE$ query tra
   due posizioni $i$ e $j$, tali che $0\leq i,j<n$, corrisponde al più lungo

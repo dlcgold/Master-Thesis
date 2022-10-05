@@ -332,7 +332,7 @@ con le varianti. Si specifica che, con il termine
 aplotipo, si intende l'insieme di alleli, ovvero di varianti, che, a meno di
 mutazioni, un organismo eredita da ogni genitore.\\
 In questo contesto trova spazio uno dei problemi fondamentali della
-bioinformatica, ovvero quello del pattern matching. Inizialmente tale concetto
+bioinformatica, ovvero quello del pattern matching. Inizialmente, tale concetto
 era relativo allo studio di un piccolo pattern all'interno di un testo di
 grandi dimensioni, ovvero il genoma di riferimento. Ora, con l'introduzione 
 del pangenoma, tale problema si è adattato alle nuove strutture
@@ -356,8 +356,8 @@ Parte delle strutture dati e degli algoritmi presentati in questa tesi sono
 inseriti in un articolo, dal titolo \textit{Compressed data structures for
   population-scale positional Burrows--Wheeler transforms} \cite{rlpbwt}. Al
 momento della 
-stesura di questa tesi in fase di review per il giornale \textit{Briefings in
-Bioinformatics} (\textit{Oxford Academic Press}).
+stesura di questa tesi, tale articolo è in fase di review per il giornale
+\textit{Genome Research} (\textit{Cold Spring Harbor Laboratory Press}).
 \subsection*{Struttura della tesi}
 Nel Capitolo \ref{prechap} si introdurranno i concetti di base, di ambito
 computazionale e bioinformatico, necessari a
@@ -369,8 +369,9 @@ alla produzione delle strutture dati per la $\RLPBWT$ e al calcolo degli
 $\SMEM$. Nel Capitolo 
 \ref{reschap} si discuteranno i risultati ottenuti durante la
 sperimentazione sui dati reali della \textit{phase 3} del \textbf{1000 Genome
-  Project}, progetto, che ha avuto inizio nel 2008, il quale ha visto lo sforzo
-della comunità scientifica internazionale per catalogazione delle variazioni
+  Project} \cite{1kgp}, progetto, che ha avuto inizio nel 2008, il quale ha
+visto lo sforzo 
+della comunità scientifica internazionale per la catalogazione delle variazioni
 geniche umane. Infine, nel Capitolo \ref{conchap}, si trarranno le conclusioni 
 di questo progetto di tesi discutendone, infine, i prospetti futuri.
 \dc{L'intera introduzione va estesa}
@@ -386,10 +387,10 @@ Si introdurranno i concetti di:
   \item trasformata di Burrows--Wheeler e la sua variante run-length encoded
   \item trasformata di Burrows--Wheeler posizionale
 \end{itemize}
-L'unione di tutte queste strutture e di queste tecniche ha permesso la creazione
-della $\RLPBWT$.\\
+% L'unione di tutte queste strutture e di queste tecniche ha permesso la creazione
+% della $\RLPBWT$.\\
 \noindent
-\textit{A livello di notazione, si specifica inoltre che, con la notazione
+\textit{A livello di notazione, si specifica che, con
   $T[i,j]$ si intende la sottostringa del testo/sequenza/riga/colonna $T$,
   iniziante all'indice $i$ e terminante all'indice $j$ incluso. Qualora si
   avesse $j>i$ si identifica la sottostringa nulla $\varepsilon$.}
