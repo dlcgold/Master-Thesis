@@ -9,7 +9,14 @@
 \usepackage{relsize}
 \usepackage{microtype}
 \usepackage{typearea}
-
+\newtheorem{teorema}{Teorema}
+\newtheorem{definizione}{Definizione}
+\newtheorem{esempio}{Esempio}
+\newtheorem{corollario}{Corollario}
+\newtheorem{lemma}{Lemma}
+\newtheorem{osservazione}{Osservazione}
+\newtheorem{nota}{Nota}
+\newtheorem{esercizio}{Esercizio}
 \hypersetup{
   pdftitle = {Algoritmi per la trasformata di Burrows--Wheeler posizionale con
     compressione run-length}, 
@@ -278,8 +285,70 @@ Si hanno quindi:
 Le ultime due soluzioni computano esattamente quali righe presentano uno SMEM.\\
 È superfluo notare come le prime due soluzioni non siano effettivamente
 utilizzabili ma sono state citate in quanto punto iniziale di questa tesi e dei
-primi studi sull'uso del run-length.
+primi studi sull'uso del run-length.\\
+\textbf{magari qui si può dire di più sulla pic}
 \subsection*{Slide 13}
+In questa slide possiamo visualizzare un semplice esempio di matching statistics
+con la PBWT. Che sono così definite:
+\begin{definizione}
+  Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$ siti,
+  e un aplotipo esterno/pattern $z$, tale che $|z|=N$, si definisce matching
+  statistics di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, di lunghezza
+  $N$, tale che (avendo che $x_i$ indica l'$i$-esima riga del pannello $X$): 
+  \begin{itemize}
+    \item $x_{\MS[i].\row}[i-\MS[i].\len+1,i]=z[i-\MS[i].\len+1,i]$, ovvero si
+    ha che 
+    l'aplotipo query ha un match, terminante in colonna $i$, con la riga
+    $\MS[i].\row$  
+    \item $z[i-\MS[i].\len,i]$ non è un suffisso terminante in colonna $i$ di un
+    qualsiasi sottoinsieme di righe di $X$. In altri termini, il match non deve
+    essere ulteriormente estendibile a sinistra
+  \end{itemize}
+\end{definizione}
+E ne segue il seguente lemma:
+\begin{lemma}
+  Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$
+  siti, un aplotipo esterno/pattern $z$, tale che $|z|=N$, e il corrispondente
+  array di matching statistics $\MS$ si ha che $z[i-l+1,i]$
+  presenta uno $\SMEM$ di lunghezza $l$ in con la riga $\MS[i].\row$ del
+  pannello $X$ sse: 
+  \[\MS[i].\len=l\land(i=N-1\lor \MS[i].\len\geq \MS[i+1].\len)\]
+\end{lemma}
+Ad esempio, con $k=5$, abbiamo $\row=13$ e $\len=6$, infatti con la riga 6 si ha
+un suffisso comune lungo 6, terminante in $k=5$, con la riga 13.
+\subsection*{Slide 14}
+Possiamo qui vedere, ad alto livello, come funzioni la struttura per il calcolo
+delle funzioni $\varphi$ che permettono, dato un valore di prefix array e una
+colonna, di computare il valore di prefix array precedente e quello
+successivo. Il computo si basa sull'uso dei prefix array sample ed eventualmente
+dell'ultimo prefix array considerando quando due linee consecutive si separano
+durante le permutazioni. Quando si separano sono sicuramente una fine di run e
+una testa di run e quindi si può sapere che fino a quella colonna sono
+consecutive. Si tiene traccia quindi tramite bitvector di dove una riga sia
+testa o coda di run e tramite intvector compresso dell'indice della riga sopra e
+sotto. L'ultimo prefix array serve per quelle righe che non si ``spezzano'' mai.
+In tal modo, come visibile nell'esempio per $k=0$ (dove si cerca chi sia sotto
+$m$ e chi sopra $j$), si può computare con la
+funzione rank a che colonna sia lo spazio e quindi accedere agli intvector per
+computare l'indice di prefix array.\\
+Quindi si circa in su e in giù a partire dallo SMEM di MS fino a che si ha il
+medesimo SMEM (avendo che sono tutti consecutivi nel riordinamento in una certa
+colonna)
+\subsection*{Slide 15}
+La sperimentazione, orchestrata tramite \texttt{snakemake}, è stata
+effettuata su una macchina con processore 
+Intel Xeon E5-2640 V4 ($2,40$GHz), $756$GB di RAM, $768$GB di swap e
+sistema operativo Ubuntu 20.04.4 LTS.\\
+Si sono confrontate l'implementazione in \Cplusplus $\,\,$della $\RLPBWT$ e
+l'implementazione in C ufficiale della $\PBWT$.\\
+Si segnala che la RLPBWT supporta lo studio multithread di stringhe ma è stato
+usato un singolo thread per questi test a fini di avere risultati più
+comparabili.\\
+Vediamo qui le caratteristiche dei pannelli usati, relativi alla phase 3 del
+1000 Genome Project. Si nota come il numero di run sia molto inferiore
+all'altezza del pannello, fattore che conferma l'utilità del run-length
+encoding.
+\subsection*{Slide 16}
 
 \end{document}
 
