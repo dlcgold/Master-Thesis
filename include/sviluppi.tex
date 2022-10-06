@@ -44,10 +44,11 @@ potrebbero memorizzare:
   non potendo sfruttare l'alternanza di simboli vista nel caso binario
   \item una rivisitazione delle strutture necessarie al mapping, tenendo in
   memoria vettori di bitvector sparsi o di intvector compressi, al fine di poter
-  computare la funzione $\W(i,\sigma)$ anche nel caso multiallelico. Si segnala
+  computare la funzione $w(i,\sigma)$ anche nel caso multiallelico. Si segnala
   che si attende un inversione di 
   tendenza in termini di memoria, avendo che, in tal caso, l'uso di intvector
-  compressi potrebbe rivelarsi meno efficiente dell'uso dei bitvector sparsi 
+  compressi potrebbe rivelarsi meno efficiente dell'uso dei bitvector sparsi,
+  anche con pochi sample
   \item un riadattamento del calcolo dell'array delle matching statistics 
 \end{itemize}
 In merito allo spazio richiesto e ai tempi di calcolo bisognerà considerare la
@@ -75,13 +76,13 @@ gestire le wildcard anche all'interno delle query stesse.\\
 Sempre in via ipotetica, l'uso di algoritmi parametrici (ma anche
 di algoritmi approssimati), adattati al
 funzionamento della $\RLPBWT$, potrebbero portare a soluzioni interessanti
-per la gestione di pannelli reali.
+per la gestione di pannelli reali non preprocessati.
 \paragraph{K-SMEM.}
 Come anticipato, oltre che variare le caratteristiche del pannello in analisi,
 si possono studiare anche algoritmi per risolvere nuovi task con la
 $\RLPBWT$.\\ 
 Di recente, Gagie \cite{kmems} ha proposto un articolo in cui dimostra come
-la $\RLBWT$ implementata in MONI \cite{moni} sia già predisposta al
+la $\RLBWT$, implementata in MONI \cite{moni}, sia già predisposta al
 calcolo dei $\KMEM$, ovvero $\MEM$, tra sottostringhe di un
 pattern e un testo, che occorrono esattamente $k$ volte nel testo stesso.\\
 In merito alla $\RLPBWT$, si potrebbe adattare l'idea di Gagie al calcolo
@@ -96,11 +97,11 @@ comuni nei GWAS, in merito alla presenza di sottostringhe di un
 aplotipo esterno all'interno di un pannello di aplotipi.\\
 \\
 \\
-\textit{La tematica della \emph{pangenomica} è praticamente nuova e il numero di
+\textit{La tematica della \emph{pangenomica} è innovativa e il numero di
 problemi aperti è incredibilmente grande. I dati aumentano sempre di più e gli
 studi informatici devono evolversi per ``stare al passo'' con questa mole
 d'informazioni. Gli \emph{sviluppi futuri} sono, da diversi punti di vista,
-anche imprevedibili. Risulta quindi difficile elencare in modo completo le
+anche imprevedibili. Risulta quindi difficile elencare, in modo completo, le
 possibilità future dietro questa branca della bioinformatica e dell'algoritmica
 sperimentale.}
 \dc{Frase conclusiva da modificare fortemente}

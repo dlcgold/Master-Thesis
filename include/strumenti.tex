@@ -1,6 +1,6 @@
 \paragraph{RLPBWT.}
 In merito alle varianti della $\RLPBWT$, sono state testate le otto
-varianti discusse nel capitolo \ref{metchap}:
+strutture dati composte discusse nel capitolo \ref{metchap}:
 \begin{enumerate}
   \item la struttura dati composta \texttt{MAP-INT + LCP} e la struttura dati
   composta \texttt{MAP-BV + LCP}. Si ricorda che tali soluzioni non supportano
@@ -40,7 +40,8 @@ quest'ultima\footnote{\url{https://github.com/richarddurbin/pbwt}}. Tale
 implementazione è scritta in 
 linguaggio C. L'implementazione
 fornisce tre algoritmi per il calcolo degli $\SMEM$, avendo $N$ siti, $M$ sample
-e $Q$ query:
+e $Q$ query, per i quali si riportano le complessità asintotiche specificate
+nei commenti del codice: 
 \begin{enumerate}
   \item \texttt{matchNaive}, ovvero un'implementazione na\"{i}ve del calcolo
   degli $\SMEM$ che non sfrutta la $\PBWT$. Questo algoritmo non è
@@ -49,7 +50,7 @@ e $Q$ query:
   $\mathcal{O}(NM)$
   \item \texttt{matchIndexed}, ovvero l'algoritmo 5 del paper originale
   \cite{pbwt}. La complessità in tempo di tale 
-  soluzione è stimata essere $\mathcal{O}(NQ)$ dopo una fase di preprocessing
+  soluzione è stimata essere $\mathcal{O}(NQ)$, dopo una fase di preprocessing
   con complessità $\mathcal{O}(NM)$. La complessità in spazio è stimata essere
   $\mathcal{O}(NM)$, ricordando che, in pratica, essa corrisponda a $13NM$
   byte in memoria
@@ -126,7 +127,8 @@ quindi, si riportano il numero di siti di ogni cromosoma, il
 numero medio di run per colonna, il numero 
 massimo di run in una colonna e il totale delle run. Si segnala, inoltre,
 come la
-mediana abbia valore 3 per tutti e tre i pannelli. I valori quantitativi sono
+mediana del numero di run per colonna abbia valore 3 per tutti e tre i pannelli.
+I valori quantitativi sono 
 stati calcolati a partire dai pannelli con un numero di sample pari a 4.908 in
 quanto, si anticipa, 100 righe sono state utilizzate come query nelle successive
 fasi della sperimentazione.
@@ -148,13 +150,13 @@ fasi della sperimentazione.
 Si conferma il risultato atteso, in merito alla sparsità del dato e al
 conseguente basso numero medio di run per colonna, risultato che è a favore, in
 termini di 
-complessità in spazio, della $\RLPBWT$ in quanto tutte le componenti sono
+complessità in spazio, della $\RLPBWT$, in quanto tutte le componenti sono
 proporzionali al numero di run (ad eccezione della componente \texttt{RLCP}). In
 figura 
 \ref{fig:boxplot} si riportano i risultati statistici, sotto forma di
 boxplot, relativi alla distribuzione delle run nei cinque pannelli
 studiati. Il forte numero di outlier è dovuto al fatto che media e sopratutto
-mediana del numero di run per colonna risultano essere molto piccoli rispetto al
+mediana del numero di run per colonna risultino essere molto piccoli rispetto al
 numero massimo di run riscontrabili in una colonna.
 \begin{figure}
   \centering
@@ -175,16 +177,17 @@ bioinformatica per creare analisi dati scalabili e riproducibili. Nel
 dettaglio la pipeline comprende, come visualizzabile in figura \ref{fig:snake},
 avendo in input una lista di pannelli con associato il numero di query:
 \begin{itemize}
-  \item scaricamento dei tool e delle dipendenze per la $\PBWT$ di
+  \item lo scaricamento dei tool e delle dipendenze per la $\PBWT$ di
   Durbin e la $\RLPBWT$ proposta in questa tesi
-  \item produzione dell'input per la $\PBWT$ e della $\RLPBWT$ per
-  ogni quantità di query richiesta
-  \item produzione delle strutture dati
-  \item esecuzione degli algoritmi per il calcolo degli $\SMEM$
+  \item la produzione dell'input per la $\PBWT$ e della $\RLPBWT$ per
+  la quantità di query richiesta
+  \item la produzione delle strutture dati
+  \item l'esecuzione degli algoritmi per il calcolo degli $\SMEM$
   % \item produzione di vari grafici relativi sia ai tempi di esecuzione che alla
   % memoria richiesta
 \end{itemize}
-Al fine di ottenere risultati non banali, si è deciso di estrarre un numero di
+Al fine di ottenere risultati non banali, si è deciso di estrarre dai pannelli
+un numero di
 righe pari al numero di 
 query richieste, righe che, a loro volta, andranno a formare il pannello di
 query.\\
