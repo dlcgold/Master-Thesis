@@ -1,4 +1,4 @@
-% \documentclass[handout]{beamer}
+%\documentclass[handout]{beamer}
 \documentclass[]{beamer}
 %\documentclass[draft]{beamer}
 
@@ -174,12 +174,12 @@
 \pgfdeclareimage[height=0.5cm]{university-logo}{img/logo_unimib.pdf}
 \logo{\pgfuseimage{university-logo}}
 
-\AtBeginSection[]
-{
-  \begin{frame}<beamer>{Outline}
-    \tableofcontents[currentsection, currentsubsection]
-  \end{frame}
-}
+% \AtBeginSection[]
+% {
+%   \begin{frame}<beamer>{Outline}
+%     \tableofcontents[currentsection, currentsubsection]
+%   \end{frame}
+% }
 
 
 % If you wish to uncover everything in a step-wise fashion, uncomment
@@ -198,77 +198,148 @@
   \setcounter{tocdepth}{1}
   \tableofcontents
 \end{frame}
-\section{Introduzione}
+\section{Introduzione e scopo della tesi}
 \subsection{Pangenoma e aplotipi}
 \begin{frame}{Un punto di vista per il pangenoma}
-  \begin{block}{}
-    \small{
-    Negli ultimi anni si è assistito a un cambio di paradigma nel campo della
-    \textit{bioinformatica}, ovvero il passaggio dallo studio della sequenza
-    lineare di 
-    un singolo genoma a quello di un insieme di genomi, provenienti da un gran
-    numero di individui, al fine di poter considerare anche le varianti geniche.
-    Questo nuovo concetto è stato introdotto da Tettelin, nel 2005, con il
-    termine di \textbf{pangenoma}.}
-  \end{block}
-  \begin{block}{}
-    \small{
-    Uno degli approcci più usati per rappresentare il \textbf{pangenoma}
-    è attraverso un pannello di aplotipi, ovvero, da un punto di vista
-    computazionale, una matrice di M righe, corrispondenti agli individui, e N
-    colonne, corrispondenti ai siti con le varianti. }
-  \end{block}
-  \begin{block}{}
-    \small{
-    Un \textbf{aplotipo} è  l'insieme di alleli, ovvero di
-    varianti che, a meno di mutazioni, un organismo eredita da ogni genitore. }
-  \end{block}
+  % \begin{block}{}
+  %   \small{
+  %   Negli ultimi anni si è assistito a un cambio di paradigma nel campo della
+  %   \textit{bioinformatica}, ovvero il passaggio dallo studio della sequenza
+  %   lineare di 
+  %   un singolo genoma a quello di un insieme di genomi, provenienti da un gran
+  %   numero di individui, al fine di poter considerare anche le varianti geniche.
+  %   Questo nuovo concetto è stato introdotto da Tettelin, nel 2005, con il
+  %   termine di \textbf{pangenoma}.}
+  % \end{block}
+  % \begin{block}{}
+  %   \small{
+  %   Uno degli approcci più usati per rappresentare il \textbf{pangenoma}
+  %   è attraverso un pannello di aplotipi, ovvero, da un punto di vista
+  %   computazionale, una matrice di M righe, corrispondenti agli individui, e N
+  %   colonne, corrispondenti ai siti con le varianti. }
+  % \end{block}
+  % \begin{block}{}
+  %   \small{
+  %   Un \textbf{aplotipo} è  l'insieme di alleli, ovvero di
+  %   varianti che, a meno di mutazioni, un organismo eredita da ogni genitore. }
+  % \end{block}
+  \only<1>{
+    \begin{block}{Il pangenoma}
+      \begin{itemize}
+        \item studio di un insieme di genomi provenienti da diversi individui
+        \item Studio delle varianti geniche
+      \end{itemize}
+    \end{block}
+    \begin{block}{}
+      \begin{itemize}
+        \item unica sequenze per multiple sequenze lineari
+        \item grafo del pangenoma
+        \item \underline{\textbf{pannello di aplotipi}}
+      \end{itemize}
+    \end{block}
+    \begin{block}{}
+      Un \textbf{aplotipo} è  l'insieme di alleli, ovvero di
+      varianti che, a meno di mutazioni, un organismo eredita da ogni genitore.
+    \end{block}
+  }\only<2>{
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.8\textwidth]{img/full.pdf}
+    \end{figure}
+  }
+\end{frame}
+\begin{frame}{Trasformata di Burrows--Wheeler posizionale}
+  \only<1>{
+    \begin{block}{$\PBWT$ - {\footnotesize{\textit{Durbin, Bioinformatics,
+              2014}}}} 
+      Dato pannello di $M$ aplotipi, lunghi $N$ siti (biallelici:
+      $\Sigma=\{0,1\}$), si definisce 
+      $\PBWT$ del 
+      pannello una collezione di $N+1$ coppie di array $(a_k,d_k)$, $0\leq k\leq
+      N$, dove:
+      \begin{itemize}
+        \item $a_k$ è il \textbf{prefix array} della colonna $k$
+        \item $d_k$ è il \textbf{divergence array} della colonna $k$
+      \end{itemize}
+      Il pannello, riordinato in ogni colonna $k$ con $a_k$, è detto:
+      \underline{matrice $\PBWT$}. 
+    \end{block}
+    \begin{block}{Run-length encoding}
+      Il run-length encoding consiste nel memorizzare le \textit{run}, ovvero
+      sequenze massimali di caratteri uguali, come coppie: \\
+      \vspace{-0.3cm}
+      \begin{center}
+        \texttt{(carattere, lunghezza della run)}\\
+        \texttt{000000} $\implies$ \texttt{(0,6)}
+      \end{center}
+    \end{block}
+  }\only<2>{
+    \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.255]{img/matrix1.pdf}
+    \end{figure}
+    \vspace{-0.5cm}
+    \begin{center}
+      {\footnotesize{
+        $a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]$\\
+        $d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]$
+      }}
+    \end{center}
+  }\only<3>{
+    \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.255]{img/pbwtmatch.pdf}
+  \end{figure}
+  }
 \end{frame}
 \begin{frame}{Scopo della tesi}
-  \begin{alertblock}{}
-    Lo scopo di questa tesi, svolta in collaborazione con il laboratorio BIAS e
-    con diversi ricercatori internazionali (University of Florida, Dalhousie
-    University e Tokyo Medical and Dental University), è stato quello di creare
-    una variante \textbf{run-length encoded} della \textbf{trasformata di
-      Burrows--Wheeler posizionale} che permettesse, in modo efficiente dal
-    punto di vista della memoria richiesta, il calcolo dei
-    \textbf{set-maximal exact matches} di un aplotipo esterno contro un pannello
-    biallelico di aplotipi.
-  \end{alertblock}
   \begin{block}{}
-    Ideare una struttura dati efficiente in spazio permetterà, nel breve futuro,
-    di gestire i sempre più grandi dati provenienti dal sequenziamento
-   comportando più precisi studi di imputazione coi GWAS etc$\ldots$
-  \end{block}
-\end{frame}
-\section{Preliminari}
-\begin{frame}{Alcuni concetti teorici}
-  \begin{block}{}
-    \small{
+    Calcolo degli $\SMEM$ con aplotipo esterno per Durbin:
     \begin{itemize}
-      \item bitvector, bitvector sparsi e intvector compressi
-      \item straight-line program ($\SLP$) e longest common extension ($\LCE$)
-      query 
-      \item trasformata di Burrows--Wheeler ($\BWT$), (inverse) suffix array
-      ($\IISA$), (permuted) longest common prefix ($\PPLCP$), FM-index,
-      $\LF$-mapping, funzione $\varphi$, maximal exact matches ($\MEM$) e
-      backward-search 
-      \item trasformata di Burrows--Wheeler run-length encoded ($\RLBWT$),
-      r-index, Toehold lemma e matching statistics ($\MS$)
-      \item $\BWT$ posizionale ($\PBWT$) e set-maximal
-      exact match ($\SMEM$)
-    \end{itemize}}
+      \item tempo: $\mathcal{O}(NM)$ + Avg.$\mathcal{O}(N+c)$
+      \item spazio: $\mathcal{O}(NM)\implies$ 13NM byte
+    \end{itemize}
   \end{block}
   \begin{block}{}
-    \small{
-    La $\BWT$ ($\PBWT$) tendono ad avere caratteri uguali in posizioni
-    consecutive all'interno della sua sequenza (ogni sua colonna). Si usa il
-    run-length encoding che consiste nel memorizzare le cosiddette run, ovvero
-    sequenze massimali di caratteri uguali, mediante coppie \texttt{(carattere,
-    lunghezza della run)}, ad esempio la stringa \texttt{aaaaaa} sarebbe memorizzata come
-    \texttt{(a,6)}. }
+     La $\PBWT$ tendo ad avere simboli uguali in posizioni
+    consecutive all'interno di ogni sua colonna, a causa del riordinamento e
+    della natura biologica del dato. 
   \end{block}
+  \begin{alertblock}{}
+    Lo scopo di questa tesi è stato quello di creare
+    una variante run-length encoded della $\PBWT$ ($\RLPBWT$) che permettesse,
+    in modo efficiente dal 
+    punto di vista della memoria richiesta, il calcolo degli $\SMEM$ con
+    aplotipo esterno. 
+  \end{alertblock}
 \end{frame}
+% \begin{frame}{Alcuni concetti teorici}
+%   \begin{block}{}
+%     \small{
+%     \begin{itemize}
+%       \item bitvector, bitvector sparsi e intvector compressi
+%       \item straight-line program ($\SLP$) e longest common extension ($\LCE$)
+%       query 
+%       \item trasformata di Burrows--Wheeler ($\BWT$), (inverse) suffix array
+%       ($\IISA$), (permuted) longest common prefix ($\PPLCP$), FM-index,
+%       $\LF$-mapping, funzione $\varphi$, maximal exact matches ($\MEM$) e
+%       backward-search 
+%       \item trasformata di Burrows--Wheeler run-length encoded ($\RLBWT$),
+%       r-index, Toehold lemma e matching statistics ($\MS$)
+%       \item $\BWT$ posizionale ($\PBWT$) e set-maximal
+%       exact match ($\SMEM$)
+%     \end{itemize}}
+%   \end{block}
+%   \begin{block}{}
+%     \small{
+%     La $\BWT$ ($\PBWT$) tendono ad avere caratteri uguali in posizioni
+%     consecutive all'interno della sua sequenza (ogni sua colonna). Si usa il
+%     run-length encoding che consiste nel memorizzare le cosiddette run, ovvero
+%     sequenze massimali di caratteri uguali, mediante coppie \texttt{(carattere,
+%     lunghezza della run)}, ad esempio la stringa \texttt{aaaaaa} sarebbe memorizzata come
+%     \texttt{(a,6)}. }
+%   \end{block}
+% \end{frame}
 % \subsection{Bitvector e straight-line program}
 % \begin{frame}[fragile]{BV e SLP}
 %   \only<1,2>{
@@ -382,153 +453,146 @@
 %     \[MS[i].len=l\land MS[i-1].len\leq MS[i].len\]
 %   \end{block}
 % \end{frame}
-\subsection{Run-length BWT, MONI e PHONI}
-\begin{frame}{MONI e PHONI}
-  \begin{block}{MONI}
-    \small
-    Rossi et al., nel 2021, sfruttarono le conoscenze relative
-    alla $\RLBWT$ e all'r-index 
-    per ideare \textbf{MONI}. In questa soluzione si ha la costruzione, in due
-    sweep, tramite l'uso delle threshold (\textit{algoritmo di
-      Bannai}), dell'array delle matching statistics, da cui si computano i
-    maximal exact match. 
-  \end{block}
-  \begin{alertblock}{}
-    \footnotesize{\textit{\textbf{Rossi et al.:}
-        MONI: A pangenomic index for finding maximal exact matches, 2021}}
-  \end{alertblock}
-  % \pause
-  % \begin{block}{LCE}
-  %   \small
-  %   Dato un testo $T$, tale che $|T|=n$, il risultato della \textbf{LCE query}
-  %   tra 
-  %   due posizioni $i$ e $j$, tali che $0\leq i,j<n$, corrisponde al più lungo
-  %   prefisso comune tra le sotto-stringhe che hanno come indice di partenza
-  %   $i$ e 
-  %   $j$, avendo quindi il più lungo prefisso comune tra $T[i,n-1]$ e
-  %   $T[j,n-1]$. 
-  % \end{block}
-  \begin{block}{PHONI}
-    \small
-    Nel 2021, Boucher, Gagie, Rossi et al. proposero un ulteriore miglioramento di
-    quanto fatto in MONI, con \textbf{PHONI}, usando le
-    $\LCE$ query 
-    al posto delle threshold, ottenendo un algoritmo ``online''.
-  \end{block}
-  \begin{alertblock}{}
-    \footnotesize{\textit{\textbf{Boucher et al.:}
-        PHONI: Streamed matching statistics with multi-genome references, 2021}}
-  \end{alertblock}
-\end{frame}
-\subsection{Trasformata di Burrows-Wheeler posizionale}
-\begin{frame}{PBWT}
-  % \only<1,2>{
-  % \begin{block}{Prefix array}
-  %   Dato un aplotipo $i$, appartenente al pannello $X$, e un indice di colonna
-  %   $k$, si definisce il \textbf{prefix array} $a_k$ come una permutazione
-  %   degli indici $0,\ldots, M-1$ tale che $a_k[i]=j$ sse $x_j$ è l'$i$-esimo
-  %   aplotipo di $X$ nell'ordinamento inverso dei prefissi ottenuto alla
-  %   colonna $k$. Quindi $a_k[i]=m$, con $m<M$, altro non è che l'indice della
-  %   sequenza $x_m$ del pannello $X$ da cui deriva il prefisso $i$-esimo
-  %   nell'ordine inverso in colonna $k$.
-  % \end{block}
-  % \pause
-  % \begin{block}{Divergence array}
-  %   Si definisce \textbf{divergence array} l'array $d_k$ tale che $d_k[i]$ è
-  %   l'indice colonna iniziale del match massimale a sinistra terminante in $k$
-  %   tra 
-  %   l'$i$-esimo aplotipo e il suo precedente nell'ordinamento ottenuto alla
-  %   colonna $k$-esima. Formalmente, dato $i>0$, si definisce 
-  %   $d_k[i]$ come il più piccolo $j$ tale che $y_i^k[j,k)=y_{i-1}^k[j,k)$.
-  %   Ne segue che $y_i^k[k-1]\neq y_{i-1}^k[k-1] \implies d_k[i]=k$ (per
-  %   definizione $d_k[0]=k$).
-  % \end{block}
-  % }\only<3>{
-  \begin{figure}[H]
-    \centering
-    \includegraphics[scale = 0.205]{img/matrix1.pdf}
-  \end{figure}
-  \vspace{-0.2cm}
-  {\scriptsize{
-      $a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]$\\
-      $d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]$
-    }}
-  % {\footnotesize{\[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
-  % \[d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]\]}}
-  \vspace{-0.1cm}
-  \begin{alertblock}{}
-    \footnotesize{\textit{\textbf{Durbin:}
-        Efficient haplotype matching and storage using the positional
-        Burrows--Wheeler transform (PBWT), 2014}}
-  \end{alertblock}
-\end{frame}
-\subsection{Set-maximal exact match con la PBWT}
-\begin{frame}{Set-maximal exact match}
-  \begin{block}{}
-    \small{Calcolo $\SMEM$ via \textbf{algoritmo 5 di
-        Durbin} in tempo $\mathcal{O}(NM)$ + Avg.$\mathcal{O}(N+c)$,
-      richiedendo 13NM byte}
-  \end{block}
-  \begin{figure}[H]
-    \centering
-    \includegraphics[scale = 0.205]{img/pbwtmatch.pdf}
-  \end{figure}
+% \subsection{Run-length BWT, MONI e PHONI}
+% \begin{frame}{MONI e PHONI}
+%   \begin{block}{MONI}
+%     \small
+%     Rossi et al., nel 2021, sfruttarono le conoscenze relative
+%     alla $\RLBWT$ e all'r-index 
+%     per ideare \textbf{MONI}. In questa soluzione si ha la costruzione, in due
+%     sweep, tramite l'uso delle threshold (\textit{algoritmo di
+%       Bannai}), dell'array delle matching statistics, da cui si computano i
+%     maximal exact match. 
+%   \end{block}
+%   \begin{alertblock}{}
+%     \footnotesize{\textit{\textbf{Rossi et al.:}
+%         MONI: A pangenomic index for finding maximal exact matches, 2021}}
+%   \end{alertblock}
+%   % \pause
+%   % \begin{block}{LCE}
+%   %   \small
+%   %   Dato un testo $T$, tale che $|T|=n$, il risultato della \textbf{LCE query}
+%   %   tra 
+%   %   due posizioni $i$ e $j$, tali che $0\leq i,j<n$, corrisponde al più lungo
+%   %   prefisso comune tra le sotto-stringhe che hanno come indice di partenza
+%   %   $i$ e 
+%   %   $j$, avendo quindi il più lungo prefisso comune tra $T[i,n-1]$ e
+%   %   $T[j,n-1]$. 
+%   % \end{block}
+%   \begin{block}{PHONI}
+%     \small
+%     Nel 2021, Boucher, Gagie, Rossi et al. proposero un ulteriore miglioramento di
+%     quanto fatto in MONI, con \textbf{PHONI}, usando le
+%     $\LCE$ query 
+%     al posto delle threshold, ottenendo un algoritmo ``online''.
+%   \end{block}
+%   \begin{alertblock}{}
+%     \footnotesize{\textit{\textbf{Boucher et al.:}
+%         PHONI: Streamed matching statistics with multi-genome references, 2021}}
+%   \end{alertblock}
+% \end{frame}
+% \subsection{Trasformata di Burrows-Wheeler posizionale}
+% \begin{frame}{PBWT}
+%   % \only<1,2>{
+%   % \begin{block}{Prefix array}
+%   %   Dato un aplotipo $i$, appartenente al pannello $X$, e un indice di colonna
+%   %   $k$, si definisce il \textbf{prefix array} $a_k$ come una permutazione
+%   %   degli indici $0,\ldots, M-1$ tale che $a_k[i]=j$ sse $x_j$ è l'$i$-esimo
+%   %   aplotipo di $X$ nell'ordinamento inverso dei prefissi ottenuto alla
+%   %   colonna $k$. Quindi $a_k[i]=m$, con $m<M$, altro non è che l'indice della
+%   %   sequenza $x_m$ del pannello $X$ da cui deriva il prefisso $i$-esimo
+%   %   nell'ordine inverso in colonna $k$.
+%   % \end{block}
+%   % \pause
+%   % \begin{block}{Divergence array}
+%   %   Si definisce \textbf{divergence array} l'array $d_k$ tale che $d_k[i]$ è
+%   %   l'indice colonna iniziale del match massimale a sinistra terminante in $k$
+%   %   tra 
+%   %   l'$i$-esimo aplotipo e il suo precedente nell'ordinamento ottenuto alla
+%   %   colonna $k$-esima. Formalmente, dato $i>0$, si definisce 
+%   %   $d_k[i]$ come il più piccolo $j$ tale che $y_i^k[j,k)=y_{i-1}^k[j,k)$.
+%   %   Ne segue che $y_i^k[k-1]\neq y_{i-1}^k[k-1] \implies d_k[i]=k$ (per
+%   %   definizione $d_k[0]=k$).
+%   % \end{block}
+%   % }\only<3>{
+%   \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale = 0.205]{img/matrix1.pdf}
+%   \end{figure}
+%   \vspace{-0.2cm}
+%   {\scriptsize{
+%       $a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]$\\
+%       $d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]$
+%     }}
+%   % {\footnotesize{\[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
+%   % \[d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]\]}}
+%   \vspace{-0.1cm}
+%   \begin{alertblock}{}
+%     \footnotesize{\textit{\textbf{Durbin:}
+%         Efficient haplotype matching and storage using the positional
+%         Burrows--Wheeler transform (PBWT), 2014}}
+%   \end{alertblock}
+% \end{frame}
+% \subsection{Set-maximal exact match con la PBWT}
+% \begin{frame}{Set-maximal exact match}
+%   \begin{block}{}
+%     \small{Calcolo $\SMEM$ via \textbf{algoritmo 5 di
+%         Durbin} in tempo $\mathcal{O}(NM)$ + Avg.$\mathcal{O}(N+c)$,
+%       richiedendo 13NM byte}
+%   \end{block}
+%   \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale = 0.205]{img/pbwtmatch.pdf}
+%   \end{figure}
   
-  % Dato un pannello $X$, con $M$ aplotipi/righe e $N$ siti/colonne, e un
-  % aplotipo 
-  % query $z$, tale che $|z|=N$, si definisce un \textbf{Set-Maximal Exact
-  % Match}  
-  % ($\SMEM$), iniziante in colonna $e_k$ e terminante il colonna
-  % $k$, tra 
-  % la query $z$ e le righe del pannello indicizzate dai valori compresi
-  % nell'intervallo $[f_k,g_k)$ in $a_k$ sse:
-  % \[z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall\, i\mbox{
-  %   t.c. }f_k\leq i < g_k\]
-  % Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle righe per le quali si ha
-  % tale $\SMEM$.
-\end{frame}
-\section{Metodo}
+%   % Dato un pannello $X$, con $M$ aplotipi/righe e $N$ siti/colonne, e un
+%   % aplotipo 
+%   % query $z$, tale che $|z|=N$, si definisce un \textbf{Set-Maximal Exact
+%   % Match}  
+%   % ($\SMEM$), iniziante in colonna $e_k$ e terminante il colonna
+%   % $k$, tra 
+%   % la query $z$ e le righe del pannello indicizzate dai valori compresi
+%   % nell'intervallo $[f_k,g_k)$ in $a_k$ sse:
+%   % \[z[e_k,k)=y_i^k[e_k,k)\land z[e_k-1]\neq y_i^k[e_k-1], \forall\, i\mbox{
+%   %   t.c. }f_k\leq i < g_k\]
+%   % Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle righe per le quali si ha
+%   % tale $\SMEM$.
+% \end{frame}
+\section{Contributo della tesi}
 \subsection{Componenti per la RLPBWT}
 \begin{frame}{Le componenti}
   \begin{block}{Componenti innovative derivate dallo studio della $\RLBWT$ in
       ottica $\PBWT$} 
     \begin{itemize}
-      \item componenti per il mapping tra una colonna e la successiva nella
-      $\PBWT$, tramite bitvector sparsi (\texttt{MAP-BV}) o intvector compressi
-      (\texttt{MAP-INT})
-      \item componenti per le threshold (\texttt{THR-BV}/\texttt{THR-INT})
-      \item componente per i prefix array sample (\texttt{PERM})
-      \item componenti per il random access, tramite pannello di bitvector
-      (\texttt{RA-BV}) tramite $\SLP$ (\texttt{RA-SLP})
-      \item componente per le $\LCE$ query con $\SLP$ (\texttt{LCE})
-      \item componente per il calcolo delle funzioni $\varphi$ e $\varphi^{-1}$
-      (\texttt{PHI})
-      \item componente per il reverse longest common prefix (\texttt{RLCP})
-    \end{itemize}
-  \end{block}
-\end{frame}
-\begin{frame}{Alcune complessità}
-  \begin{block}{Complessità in tempo, pannelli $N\times M$, con $\rho$ numero di
-    run in una colonna}
-    \begin{itemize}
-      \item funzione $\rank$ con bitvector sparsi:
-      $\mathcal{O}\left(\log\left(\frac{M}{\rho}\right)\right)$
-      \item funzione $\select$ con bitvector sparsi: $\mathcal{O}\left(1\right)$
-      \item equivalente della funzione $\rank$ con intvector compressi:
-      $\mathcal{O}\left(\log\left(\rho\right)\right)$
-      \item equivalente della funzione $\select$ con intvector compressi:
-      $\mathcal{O}\left(1\right)$ 
-      \item random access con \texttt{RA-BV}: $\mathcal{O}(1)$
-      \item random access con \texttt{RA-SLP} e calcolo $\LCE$ query:
-      $\mathcal{O} (\log(NM))$
+      \item mapping tra una colonna e la successiva nella
+      $\PBWT$ e threshold:
+      \begin{itemize}
+        \item bitvector sparsi, con $\rank$ in
+        $\mathcal{O}\left(\log\left(\frac{M}{\rho}\right)\right)$:
+        \underline{\texttt{MAP-BV}} e \underline{\texttt{THR-BV}}
+        \item intvector compressi, con $\rank$ in
+        $\mathcal{O}\left(\log\left(\rho\right)\right)$:
+        \underline{\texttt{MAP-INT}} e  \underline{\texttt{THR-INT}}
+      \end{itemize}
+      \item random access:
+      \begin{itemize}
+        \item bitvector, in $\mathcal{O}(1)$: \underline{\texttt{RA-BV}}
+        \item $\SLP$, in $\mathcal{O} (\log(NM))$: \underline{\texttt{RA-SLP}}
+      \end{itemize}
+      \item $\LCE$ query con $\SLP$, in $\mathcal{O} (\log(NM))$:
+      \underline{\texttt{LCE}}
+      \item prefix array sample: \underline{\texttt{PERM}}  
+      \item struttura per le funzioni $\varphi$ e $\varphi^{-1}$:
+      \underline{\texttt{PHI}} 
+      \item reverse longest common prefix: \underline{\texttt{RLCP}}
     \end{itemize}
   \end{block}
 \end{frame}
 \begin{frame}{Qualche confronto in spazio}
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.49\textwidth]{img/bv_vs_iv.pdf}
-    \includegraphics[width=0.49\textwidth]{img/slp_vs_macs_log.pdf}
+    \hspace{-0.2cm}\includegraphics[width=0.8\textwidth]{img/bv_vs_iv.pdf}
+    %\includegraphics[width=0.49\textwidth]{img/slp_vs_macs_log.pdf}
 
   \end{figure}
 \end{frame}
@@ -574,8 +638,12 @@
   \pause
   \begin{block}{Due macro alternative per il calcolo dell'array $\MS$}
     \begin{enumerate}
-      \item usare le threshold e il random access al pannello (come in MONI)
-      \item usare le $\LCE$ query (come in PHONI)
+      \item usare le threshold e il random access al pannello (ispirandosi a
+      MONI - {\footnotesize{\textit{Rossi et al., Journal of Computational Biology,
+          2022}}})  
+      \item usare le $\LCE$ query (ispirandosi a
+      PHONI - {\footnotesize{\textit{Boucher et al., Data Compression Conference
+          (DCC), 2021}}})  
     \end{enumerate}
   \end{block}
 \end{frame}
@@ -656,7 +724,7 @@
 \begin{frame}{Costo in memoria delle componenti}
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{img/comp_mem.pdf}
+    \includegraphics[width=0.8\textwidth]{img/comp_mem2.pdf}
   \end{figure}
 \end{frame}
 \subsection{Risultati del calcolo degli SMEM}
@@ -699,14 +767,18 @@
     \end{multicols}
   \end{block}
 \end{frame}
-\subsection{Pubblicazione}
-\begin{frame}{Futura pubblicazione}
-  \begin{block}{\small{Preprint disponibile su bioRxiv, paper in fase di
-        review per Genome Research}}
+\begin{frame}{}
+  \begin{block}{Ulteriori dettagli}
     \footnotesize{\textit{\textbf{Bonizzoni, Boucher, Cozzi, Gagie, Kashgouli,
           K\"{o}ppl e Rossi:} \\Compressed data structures for population-scale
-        positional Burrows--Wheeler transforms, 2022}}
+        positional Burrows--Wheeler transforms}, {\footnotesize{bioRxiv
+          (preprint), 2022}}} 
   \end{block}
+  \begin{alertblock}{}
+    \begin{center}
+       {\Large{Grazie per l'attenzione}}
+    \end{center}
+  \end{alertblock}
   \vspace{-0.2cm}
   \begin{figure}[H]
     \centering
@@ -730,28 +802,28 @@
 %   \bibliographystyle{unsrt}
 %   \bibliography{slides}
 % \end{frame}
-\begin{frame}{}
-  \setbeamercolor{palette primary}{bg=nord3,fg=white}
+% \begin{frame}{}
+%   \setbeamercolor{palette primary}{bg=nord3,fg=white}
   
-  \title[] {Grazie per l'attenzione}
+%   \title[] {Grazie per l'attenzione}
 
-  % \subtitle
-  % {Presentation Subtitle} % (optional)
+%   % \subtitle
+%   % {Presentation Subtitle} % (optional)
 
-  \author[1]{\Large{Davide Cozzi}}
+%   \author[1]{\Large{Davide Cozzi}}
 
 
-  \institute[] {\large{\textbf{{\color{nord2}Relatore:}}
-      \textit{Prof.ssa~Raffaella 
-        Rizzi}\quad 
-      \textbf{\color{nord2}{Correlatore:}} \textit{Dr.~Yuri Pirola}}\\
-    \vspace{4mm}
-    \small{\textit{Dipartimento di Informatica, Sistemistica e Comunicazione
-        (DISCo)\\
-        Università degli Studi di Milano Bicocca}}}
+%   \institute[] {\large{\textbf{{\color{nord2}Relatore:}}
+%       \textit{Prof.ssa~Raffaella 
+%         Rizzi}\quad 
+%       \textbf{\color{nord2}{Correlatore:}} \textit{Dr.~Yuri Pirola}}\\
+%     \vspace{4mm}
+%     \small{\textit{Dipartimento di Informatica, Sistemistica e Comunicazione
+%         (DISCo)\\
+%         Università degli Studi di Milano Bicocca}}}
 
-  \maketitle
-\end{frame}
+%   \maketitle
+% \end{frame}
 
 \end{document}
 
