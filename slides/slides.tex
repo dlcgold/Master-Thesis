@@ -244,7 +244,7 @@
   }\only<2>{
     \begin{figure}[H]
       \centering
-      \includegraphics[width=0.8\textwidth]{img/full.pdf}
+      \includegraphics[width=0.85\textwidth]{img/full.pdf}
     \end{figure}
   }
 \end{frame}
@@ -285,12 +285,13 @@
         $d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]$
       }}
     \end{center}
-  }\only<3>{
-    \begin{figure}[H]
-    \centering
-    \includegraphics[scale = 0.255]{img/pbwtmatch.pdf}
-  \end{figure}
   }
+  % \only<3>{
+  %   \begin{figure}[H]
+  %   \centering
+  %   \includegraphics[scale = 0.255]{img/pbwtmatch.pdf}
+  % \end{figure}
+  % }
 \end{frame}
 \begin{frame}{Scopo della tesi}
   \begin{block}{}
@@ -596,13 +597,7 @@
 
   \end{figure}
 \end{frame}
-\subsection{Strutture dati per la RLPBWT}
-\begin{frame}{Componenti e strutture dati, una panoramica}
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{img/ds.pdf}
-  \end{figure}
-\end{frame}
+\subsection{Strutture dati per la RLPBWT e calcolo degli SMEM}
 % \begin{frame}{Le strutture dati}
 %   \begin{block}{Strutture per il calcolo degli $\SMEM$ tramite $\RLCP$, non in
 %       grado di calcolare quali righe presentino uno $\SMEM$ ma solo quante.}
@@ -623,7 +618,6 @@
 %     \end{itemize}
 %   \end{block}
 % \end{frame}
-\subsection{Algoritmi di calcolo degli SMEM con la RLPBWT}
 \begin{frame}{Calcolo degli $\SMEM$}
   \begin{block}{Due macro soluzioni}
     \begin{enumerate}
@@ -639,13 +633,19 @@
   \begin{block}{Due macro alternative per il calcolo dell'array $\MS$}
     \begin{enumerate}
       \item usare le threshold e il random access al pannello (ispirandosi a
-      MONI - {\footnotesize{\textit{Rossi et al., Journal of Computational Biology,
-          2022}}})  
+      MONI - {\footnotesize{\textit{Rossi et al., Journal of Computational
+            Biology, 2022}}})  
       \item usare le $\LCE$ query (ispirandosi a
       PHONI - {\footnotesize{\textit{Boucher et al., Data Compression Conference
           (DCC), 2021}}})  
     \end{enumerate}
   \end{block}
+\end{frame}
+\begin{frame}{Componenti e strutture dati, una panoramica}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/ds.pdf}
+  \end{figure}
 \end{frame}
 \begin{frame}{Matching statistics}
   \vspace{-0.35cm}
@@ -674,14 +674,15 @@
 \begin{frame}{Struttura per le funzioni $\varphi$ e $\varphi^{-1}$}
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.6]{img/phi.pdf}   
+    \includegraphics[scale = 0.8]{img/phi.pdf}   
   \end{figure}
-  {\footnotesize{\[\varPhi_j=[0,0,0,1,0, \ldots],\quad
-        \varPhi^{-1}_m=[0,0,0,1,0,\ldots],\quad
-        \varPhi_{supp}=[i,\ldots],\quad
-        \varPhi^{-1}_{supp}=[n,\ldots]\]}}
-  \[\varPhi_{supp}^j[\rank^\varphi_j(0)]=\varPhi_{supp}^j[0]=i,\quad
-    \varPhi^{-1\,\,m}_{supp}[\rank^{\varphi^{-1}}_m(0)]=\varPhi^{-1\,\,m}_{supp}[0]=n\] 
+  % {\footnotesize{\[\varPhi_j=[0,0,0,1,0, \ldots],\quad
+  %       \varPhi^{-1}_m=[0,0,0,1,0,\ldots],\quad
+  %       \varPhi_{supp}=[i,\ldots],\quad
+  %       \varPhi^{-1}_{supp}=[n,\ldots]\]}}
+  % \[\varPhi_{supp}^j[\rank^\varphi_j(0)]=\varPhi_{supp}^j[0]=i,\quad
+  %   \varPhi^{-1\,\,m}_{supp}[\rank^{\varphi^{-1}}_m(0)]=\varPhi^{-1\,\,m}_{supp}[0]=n\]
+  
 \end{frame}
 \section{Risultati sperimentali}
 \subsection{Setup sperimentale}
@@ -776,13 +777,13 @@
   \end{block}
   \begin{alertblock}{}
     \begin{center}
-       {\Large{Grazie per l'attenzione}}
+       {\LARGE{Grazie per l'attenzione}}
     \end{center}
   \end{alertblock}
   \vspace{-0.2cm}
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.6]{img/logo-bias-mini.png}
+    \includegraphics[scale = 0.5]{img/logo-bias-mini.png}
   \end{figure}
   \vspace{-0.3cm}
   \begin{figure}[H]
@@ -791,10 +792,10 @@
     % \includegraphics[scale = 0.4]{img/ufl.png}
     % \includegraphics[scale = 0.25]{img/dal.png}
     % \includegraphics[scale = 0.15]{img/tmdu.jpg}
-    \includegraphics[width = 0.2\textwidth]{img/logo_unimib.pdf}~
-    \includegraphics[width = 0.19\textwidth]{img/ufl.png}~
-    \includegraphics[width = 0.2\textwidth]{img/dal.png}~
-    \includegraphics[width = 0.2\textwidth]{img/tmdu.jpg}
+    \includegraphics[width = 0.16\textwidth]{img/logo_unimib.pdf}$\quad\quad$
+    \includegraphics[width = 0.15\textwidth]{img/ufl.png}$\quad\quad$
+    \includegraphics[width = 0.16\textwidth]{img/dal.png}$\quad\quad$
+    \includegraphics[width = 0.16\textwidth]{img/tmdu.jpg}
   \end{figure}
 \end{frame}
 % \section{Bibliografia}
