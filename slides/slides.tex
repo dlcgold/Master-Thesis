@@ -295,17 +295,21 @@
 \end{frame}
 \begin{frame}{Scopo della tesi}
   \begin{block}{}
+    Complessità temporale del calcolo degli $\SMEM$ con un algoritmo na\"{i}ve:
+    $\mathcal{O}(N^2M)$
+  \end{block}
+  \begin{block}{}
     Calcolo degli $\SMEM$ con aplotipo esterno per Durbin:
     \begin{itemize}
       \item tempo: $\mathcal{O}(NM)$ + Avg.$\mathcal{O}(N+c)$
       \item spazio: $\mathcal{O}(NM)\implies$ 13NM byte
     \end{itemize}
   \end{block}
-  \begin{block}{}
-     La $\PBWT$ tendo ad avere simboli uguali in posizioni
-    consecutive all'interno di ogni sua colonna, a causa del riordinamento e
-    della natura biologica del dato. 
-  \end{block}
+  % \begin{block}{}
+  %    La $\PBWT$ tendo ad avere simboli uguali in posizioni
+  %   consecutive all'interno di ogni sua colonna, a causa del riordinamento e
+  %   della natura biologica del dato. 
+  % \end{block}
   \begin{alertblock}{}
     Lo scopo di questa tesi è stato quello di creare
     una variante run-length encoded della $\PBWT$ ($\RLPBWT$) che permettesse,
@@ -741,7 +745,7 @@
     \includegraphics[width=0.9\textwidth]{img/exe_time_single_paper.pdf}
   \end{figure}
 \end{frame}
-\section{Conclusioni}
+\section{Conclusioni e sviluppi futuri}
 \subsection{Conclusioni e sviluppi futuri}
 \begin{frame}{Considerazioni e sviluppi futuri}
   \begin{block}{Alcune considerazioni}
