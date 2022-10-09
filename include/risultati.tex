@@ -676,7 +676,10 @@ computare quali righe presentino un certo $\SMEM$. I risultati
 quantitativi sono consultabili in tabella \ref{tab:exetimesingle}. Anche in
 questo caso, 
 si conferma molto di quanto ipotizzato e discusso nel Capitolo
-\ref{metchap} e nella sezione precedente. Caso a parte
+\ref{metchap} e nella sezione precedente. Nel caso dell'algoritmo
+\texttt{matchIndexed}, non misurando le istruzioni per computare 
+tutti gli array necessari, si hanno tempi di calcolo degli $\SMEM$ migliori di
+quanto visto sull'esecuzione completa. Caso a parte
 è dato dall'algoritmo \texttt{matchDynamic}, che risulta avere le performance
 peggiori, impiegando fino a cento volte il tempo dell'algoritmo 5 di
 Durbin, ovvero l'algoritmo \texttt{matchIndexed}. Infatti, per natura stessa
