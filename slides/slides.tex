@@ -589,7 +589,7 @@
       \item prefix array sample: \underline{\texttt{PERM}}  
       \item struttura per le funzioni $\varphi$ e $\varphi^{-1}$:
       \underline{\texttt{PHI}} 
-      \item reverse longest common prefix: \underline{\texttt{RLCP}}
+      %\item reverse longest common prefix: \underline{\texttt{RLCP}}
     \end{itemize}
   \end{block}
 \end{frame}
@@ -623,32 +623,39 @@
 %   \end{block}
 % \end{frame}
 \begin{frame}{Calcolo degli $\SMEM$}
-  \begin{block}{Due macro soluzioni}
-    \begin{enumerate}
-      \item usare l'$\,\RLCP$, adattando l'algoritmo 5 di Durbin. Tale soluzione
-      non permette di sapere quali righe del pannello in input presentino uno
-      $\SMEM$ fino ad una certa colonna ma solo quante
-      \item usare l'array $\MS$. Tale soluzione
-      permette di riconoscere ogni riga del pannello in input che presenti uno
-      $\SMEM$ fino ad una certa colonna
-    \end{enumerate}    
+  \begin{block}{Matching statistics per la $\PBWT$}
+    {\small{
+        Dato un pannello $X=\{x_0,\ldots,x_{M-1}\}$, $x_i=N$,
+        e un aplotipo esterno/pattern $z$, tale che $|z|=N$, si definisce
+        \textbf{matching
+        statistic}s di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, 
+        $|\MS|=N$, tale che:   
+        \begin{itemize}
+          \item $x_{\MS[i].\row}[i-\MS[i].\len+1,i]=z[i-\MS[i].\len+1,i]$, ovvero si
+          ha che 
+          l'aplotipo query ha un match, lungo $\MS[i].\len$, terminante in colonna
+          $i$, con la riga 
+          $\MS[i].\row$-esima del pannello
+          \item $z[i-\MS[i].\len,i]$ non è un suffisso terminante in colonna $i$
+          di un qualsiasi sottoinsieme di righe di $X$
+        \end{itemize}
+      }}
   \end{block}
   \pause
-  \begin{block}{Due macro alternative per il calcolo dell'array $\MS$}
-    \begin{enumerate}
-      \item usare le threshold e il random access al pannello (ispirandosi a
-      MONI - {\footnotesize{\textit{Rossi et al., Journal of Computational
-            Biology, 2022}}})  
-      \item usare le $\LCE$ query (ispirandosi a
-      PHONI - {\footnotesize{\textit{Boucher et al., Data Compression Conference
-          (DCC), 2021}}})  
-    \end{enumerate}
+  \begin{block}{$\SMEM$ da $\MS$}
+    {\small{
+        Dato un array di matching statistics $\MS$ si ha che $z[i-l+1,i]$
+        presenta uno $\SMEM$ di lunghezza $l$ con la riga $\MS[i].\row$-esima
+        del 
+        pannello $X$ sse: 
+        $\MS[i].\len=l\land(i=N-1\lor \MS[i].\len\geq \MS[i+1].\len)$
+      }}
   \end{block}
 \end{frame}
 \begin{frame}{Componenti e strutture dati, una panoramica}
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{img/ds.pdf}
+    \includegraphics[width=0.8\textwidth]{img/ds2.pdf}
   \end{figure}
 \end{frame}
 \begin{frame}{Matching statistics}
@@ -706,43 +713,42 @@
     \begin{table}
       \footnotesize
       \centering
-      \begin{tabular}{c||c|c|c|c}
-        \textbf{Chr} & \textbf{\#Siti} & \textbf{\#Run totale}
-        & \textbf{Max run} & \textbf{Media run} \\ 
+      \begin{tabular}{c||c|c}
+        \textbf{Chr} & \textbf{\#Siti} & \textbf{Media run} \\ 
         \hline
-        \texttt{chr22} & 1.055.454 & 14.772.105 & 2.450 & 14\\
-        \texttt{chr20} & 1.739.315 & 19.966.504 & 2.176 & 11\\
-        \texttt{chr18} & 2.171.378 & 24.288.263 & 2.365 & 11\\
-        \texttt{chr16} & 2.596.072 & 31.187.856 & 2.330 & 12\\
-        \texttt{chr1} & 6.196.151 & 69.671.952 & 2.721 & 11\\
+        \texttt{chr22} & 1.055.454 & 14\\
+        \texttt{chr20} & 1.739.315 & 11\\
+        \texttt{chr18} & 2.171.378 & 11\\
+        \texttt{chr16} & 2.596.072 & 12\\
+        \texttt{chr1} & 6.196.151 & 11\\
       \end{tabular}
     \end{table}
   \end{block}
 \end{frame}
 \subsection{Risultati della costruzione delle strutture}
-\begin{frame}{Performance costruzione strutture dati}
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{img/make_time_mem_paper2.pdf}
-  \end{figure}
-\end{frame}
 \begin{frame}{Costo in memoria delle componenti}
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{img/comp_mem22.pdf}
   \end{figure}
 \end{frame}
+\begin{frame}{Performance costruzione strutture dati}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{img/make_time_mem_paper2.pdf}
+  \end{figure}
+\end{frame}
 \subsection{Risultati del calcolo degli SMEM}
 \begin{frame}{Performance calcolo degli $\SMEM$ con 100 query}
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{img/exe_time_mem_paper2.pdf}
+    \includegraphics[width=0.99\textwidth]{img/exe_time_mem_paper2.pdf}
   \end{figure}
 \end{frame}
 \begin{frame}{Performance calcolo degli $\SMEM$ per singole query}
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{img/exe_time_single_paper2.pdf}
+    \includegraphics[width=0.99\textwidth]{img/exe_time_single_paper2.pdf}
   \end{figure}
 \end{frame}
 \section{Conclusioni e sviluppi futuri}
