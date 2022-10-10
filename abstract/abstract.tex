@@ -141,20 +141,22 @@ aplotipo
 esterno e un pannello di aplotipi, in una delle 
 strutture dati più utilizzata per la rappresentazione del pangenoma: la
 \textit{trasformata di Burrows--Wheeler 
-  Posizionale} ($\PBWT$). Il progetto di tesi, svolto in collaborazione con
-Prof.~Gagie (Dalhousie University) e Prof.~Boucher 
-(University of Florida), ha quindi permesso lo sviluppo di una variante
+  posizionale} ($\PBWT$). Il progetto di tesi, svolto in collaborazione con
+Prof.~Gagie (Dalhousie University) e Prof.ssa~Boucher 
+(University of Florida), ha permesso lo sviluppo di una variante
 \textbf{run-length encoded} della $\PBWT$, detta $\RLPBWT$, che
-risolve questo problema riducendo la memoria impiegata rispetto
+risolve il problema del calcolo degli $\SMEM$  tra un
+pannello di aplotipi e un aplotipo esterno, riducendo la memoria impiegata
+rispetto 
 alla soluzione attualmente allo stato dell'arte.
 
 \subsection*{Stato dell'arte}
 Gli algoritmi più efficienti per risolvere il problema del pattern matching tra
 un pattern e un testo 
-sono attualmente basati sulla \textit{Trasformata di Burrows--Wheeler} ($\BWT$),
+sono attualmente basati sulla \textit{trasformata di Burrows--Wheeler} ($\BWT$),
 a sua 
-volta strettamente legata ad altre due strutture dati: il Suffix Array ($\SA$) e
-il Longest Common Prefix ($\LCP$). 
+volta strettamente legata ad altre due strutture dati: il suffix array ($\SA$) e
+il longest common prefix ($\LCP$). 
 % Infatti, è stato dimostrato che la BWT è fortemente legata a due strutture dati
 % fondamentali per il pattern matching: 
 % il Suffix Array (SA), cioè la lista delle posizioni di partenza di
@@ -165,7 +167,7 @@ il Longest Common Prefix ($\LCP$).
 Invece, allo scopo di risolvere il problema del calcolo degli $\SMEM$ tra un
 pannello di aplotipi e un aplotipo esterno,
 Durbin, nel 2014, propose una struttura dati ispirata alla $\BWT$, detta
-\textit{Trasformata di Burrows--Wheeler Posizionale} ($\PBWT$). Tale trasformata
+\textit{trasformata di Burrows--Wheeler posizionale} ($\PBWT$). Tale trasformata
 viene costruita a partire da un pannello di aplotipi, rappresentato, riferendosi
 al solo caso bi-allelico, tramite una matrice binaria.
 La $\PBWT$ permette di calcolare gli $\SMEM$ tra
@@ -181,10 +183,11 @@ $\SMEM$,
 dove anche le posizioni di inizio e fine sono rispettate.
 Tale vincolo, da cui deriva il termine
 ``posizionale'', non è soddisfacibile dalla $\BWT$ ed è dovuto al fatto che ogni 
-colonna (o indice della query) rappresenta un preciso sito per una specifica
+colonna (o indice dell'aplotipo esterno) rappresenta un preciso sito per una
+specifica 
 variante genica. Il tradeoff di questo algoritmo è la richiesta in termini di
-spazio ($13NM$ 
-byte). Superare questo limite è l'obiettivo principale di
+spazio: $13NM$ 
+byte. Superare questo limite è l'obiettivo principale di
 questo progetto di tesi.
 Il funzionamento della $\PBWT$ prevede la costruzione di due insiemi di
 array, tramite 
@@ -210,8 +213,9 @@ detto matrice $\PBWT$.
 Un altro obiettivo raggiunto negli ultimi anni è stato quello di studiare la
 costruzione di un'unica $\BWT$ partendo da multipli genomi.
 A tal fine, si è sfruttata una caratteristica della $\BWT$, ovvero la
-tendenza a produrre una sequenza formata da run, ovvero caratteri uguali in
-posizioni consecutive. La causa di tale fenomeno si ritrova nelle ripetizioni di
+tendenza a produrre una sequenza formata da run, ovvero sequenze massimali
+di caratteri uguali consecutivi. La causa di tale fenomeno si ritrova nelle
+ripetizioni di 
 determinate sottostringhe nel testo, ripetizioni che sono frequenti se si
 studiano diverse sequenze genomiche concatenate.
 % Partendo da molte sequenze genomiche concatenate si
@@ -223,7 +227,7 @@ studiano diverse sequenze genomiche concatenate.
 %
 In letteratura è stata quindi proposta la \textit{trasformata di
   Burrows--Wheeler 
-  Run-Length encoded} ($\RLBWT$), dove ogni run viene memorizzata in modo
+  run-length encoded} ($\RLBWT$), dove ogni run viene memorizzata in modo
 efficiente 
 come coppia \texttt{(carattere, lunghezza della run)}. Ad esempio, la stringa
 \texttt{aaaaaa} sarebbe memorizzata come \texttt{(a,6)}.
@@ -234,7 +238,7 @@ sul numero di run della corrispondente $\BWT$.
 L'r-index include la
 $\RLBWT$ e un suffix array sample, ovvero i valori di $\SA$ all’inizio e alla
 fine di ogni run. 
-Tali articoli hanno portato alla produzione di due tool, \textit{MONI} e 
+Tali studi hanno portato alla produzione di due tool, \textit{MONI} e 
 \textit{PHONI}, alle cui tecniche è fortemente ispirata questa tesi. Queste due
 soluzioni hanno entrambe l'obiettivo di 
 calcolare i maximal exact match ($\MEM$) tra un testo e un pattern, ovvero
@@ -243,18 +247,21 @@ sono anche sottostringhe del testo, avendo che tale match non può essere esteso
 in entrambe le direzioni, senza introdurre un mismatch. 
 
 Il calcolo dei $\MEM$ è direttamente
-correlato alla costruzione dell'array delle \textit{Matching Statistics}
+correlato alla costruzione dell'array delle \textit{matching statistics}
 ($\MS$). Tale array, lungo quanto il pattern e formato da coppie (posizione
-$\pos$, lunghezza $\len$), annota la lunghezza
-$\len$ di un match, anche non massimale, con una sottostringa nel testo, avente
-indice iniziale $\pos$, per ogni posizione del pattern.
+$\pos$, lunghezza $\len$), annota, per ogni posizione $i$ del pattern, la
+lunghezza $\len$ di un match, anche non massimale e iniziante in posizione $i$
+sul pattern, con la sottostringa nel testo avente 
+indice iniziale $\pos$.
 Estraendo da tali match i $\MEM$, si possono ottenere
 tutte le altre occorrenze del medesimo $\MEM$ nel testo. 
-In MONI, per il calcolo delle $\MS$, è stato
+In MONI, per il calcolo delle $\MS$ in due passaggi sul pattern, è stato
 usato il concetto di \textit{threshold}, definito come
 il primo valore minimo dell'array $\LCP$ tra due run consecutive dello stesso
-carattere. Un ulteriore miglioramento si è registrato in PHONI con
-l'uso delle $\LCE$ query per il calcolo dell'array $\MS$. Infatti, tramite tale
+carattere. In PHONI, tramite
+l'uso delle $\LCE$ query per il calcolo dell'array $\MS$, si è ridotto il
+calcolo delle $\MS$
+in un singolo passaggio sul pattern. Infatti, tramite tale
 query, dati due indici del testo $i$ e $j$, si restituisce il più lungo
 prefisso comune tra i suffissi $i$-esimo e $j$-esimo del testo.
 
@@ -332,7 +339,7 @@ vettori binari efficientemente. Infatti, tali strutture permettono due
 operazioni, dette $\rank$ e $\select$, in tempo costante. La prima conteggia il 
 numero di simboli $\sigma=1$ fino ad una certa posizione mentre la seconda
 restituisce l'indice sul bitvector dell'$i$-esimo simbolo $\sigma=1$. 
-Quindi, le strutture necessarie all'indicizzazione delle run e al cosiddetto
+Le strutture necessarie all'indicizzazione delle run e al cosiddetto
 mapping, ovvero il ``seguire'' una riga dalla sua posizione permutata in una
 certa colonna alla posizione permutata nella colonna successiva,
 sono state implementate, anche, tramite bitvector sparsi (componente
@@ -346,14 +353,19 @@ Al fine di avvicinarsi alle idee proposte in MONI e PHONI, è
 stato necessario uno studio teorico preliminare per ridefinire: matching
 statistics (e conseguente calcolo degli $\SMEM$), threshold e $\LCE$ query. In
 particolare, grazie agli  
-ultimi due concetti, si è potuto evitare di memorizzare il divergence array.
+ultimi due concetti, si è potuto evitare di memorizzare l'insieme dei divergence
+array. 
 Le matching statistics sono definite tramite un array,
-lungo quanto il pattern e formato da coppie (riga $\row$, lunghezza $\len$),
-che, per ogni colonna, tiene traccia del suffisso comune che non sia estendibile
-a sinistra, terminante in quella colonna e lungo $\len$, tra la riga $\row$ del
+lungo quanto l'aplotipo esterno e formato da coppie (riga $\row$, lunghezza
+$\len$), 
+che, per ogni posizione, tiene traccia del suffisso comune che non sia
+estendibile 
+a sinistra, terminante in quella colonna/posizione e lungo $\len$, tra la riga
+$\row$ del 
 pannello e l'aplotipo query. Calcolato tale
-array, è possibile estrarre uno $\SMEM$ tra la query e
-la riga $\row$, terminante in colonna $k$. Infine, è possibile estendere tale
+array, è possibile estrarre uno $\SMEM$ tra l'aplotipo esterno e
+la riga $\row$, terminante in posizione/colonna $k$. Infine, è possibile
+estendere tale 
 risultato, tramite una struttura dati a 
 supporto (componente \texttt{PHI}),  
 a tutte le altre righe del pannello che presentano il medesimo $\SMEM$.
@@ -362,7 +374,7 @@ threshold. Ragionando sulla matrice $\PBWT$, una threshold è definita
 come l'indice del primo massimo valore del divergence array all'interno di una
 run (comprendendo anche la testa, qualora esistente, della run successiva,
 essendo 
-il suo valore del divergence array calcolato anche tramite la coda della run
+il suo valore del divergence array calcolato tramite la coda della run
 corrente). L'insieme delle threshold, per una certa colonna, è stato memorizzato
 come bitvector sparso (componente \texttt{THR-BV}) oppure, come per il mapping,
 tramite un intvector compresso (componente \texttt{THR-INT}). Inoltre, si è
@@ -371,9 +383,9 @@ sample di prefix array a inizio e fine di ogni run (componente \texttt{PERM}).
 
 Grazie all'uso delle threshold, si è potuto sviluppare un algoritmo
 efficiente, dal punto di vista della memoria richiesta, per il calcolo delle
-matching statistics in due ``sweep'' sul pattern, calcolandone prima le
-posizioni e poi, tramite random access al pannello, anche le
-lunghezze. Tale soluzione richiede in memoria l'intero pannello, per il quale
+matching statistics in due ``sweep'' sull'aplotipo esterno, calcolandone prima
+i valori $\row$ e poi, tramite random access al pannello, i valori $\len$. Tale
+soluzione richiede in memoria l'intero pannello, per il quale 
 si è scelto di usare uno Straight-Line Program ($\SLP$), ovvero una grammatica
 context-free che genera una e una sola parola, molto compressa in memoria, sulla
 quale è possibile effettuare random access (in tempo, da un punto di vista
@@ -382,33 +394,31 @@ aplotipi e $N$ siti).
 Ad esempio, un pannello $4.908 \times 6.196.151$ richiede, in forma non
 compressa, circa 28GB di memoria, mentre l'$\,\SLP$ 
 richiede 
-solamente in 0,2GB (garantendo random access). Per riferimento, comprimere il
+solamente 0,2GB (garantendo random access). Per riferimento, comprimere il
 pannello con una tecnica 
 standard (GZip) richiede 0,5GB. Oltre all'uso dell'$\,\SLP$ (componente
 \texttt{RA-SLP}), si è anche proposto l'uso di un insieme di bitvector per la
 memorizzazione 
 del pannello (componente \texttt{RA-BV}), richiedendo maggior spazio in memoria
-(3,6GB) ma minor tempo d'interrogazione, garantendo random access in tempo
+(3,6GB nell'esempio precedente) ma minor tempo d'interrogazione ma garantendo
+random access in tempo 
 costante.  
 
-Inoltre, è possibile risparmiare ulteriore spazio eliminando
+È possibile risparmiare ulteriore spazio eliminando
 l'uso delle threshold e usando, per il calcolo delle matching
 statistics, le $\LCE$ query (componente \texttt{LCE}). Esse sono
 ridefinite, per la $\RLPBWT$, come il suffisso comune più lungo tra due righe
 del pannello, eventualmente 
-fissando il termine a una colonna precisata. Il loro calcolo è permesso
-in modo efficiente dall'uso dell'$\,\SLP$, avendo la complessità in tempo
-limitata superiormente da quella del random access (ovvero $\mathcal{O}(\log
-(NM))$). Calcolando la 
-lunghezza di tale suffisso comune, è possibile computare le
-lunghezze delle matching statistics contemporaneamente al calcolo delle
-righe. Quindi, si è ottenuto il calcolo completo di tale array in
-un singolo ``sweep'' sul pattern e, avendo che il calcolo degli $\SMEM$ viene
-fatto 
-contemporaneamente al calcolo delle lunghezze, si è ridotto lo spazio
-necessario. Infatti, sono sufficienti la 
-coppia (riga $\row$, lunghezza $\len$) corrente e quella precedente dell'array
-delle matching statistics per calcolare gli $\SMEM$.
+fissando il termine a una colonna precisata, e il loro calcolo è permesso
+in modo efficiente dall'uso dell'$\,\SLP$ (in tempo $\mathcal{O}(\log
+(NM))$). Calcolando la  
+lunghezza di tale suffisso comune, è possibile computare i valori $\len$ delle
+matching statistics contemporaneamente al calcolo dei valori $\row$, ottenendo
+il calcolo completo di tale array (e degli $\SMEM$) in  
+un singolo ``sweep'' sull'aplotipo esterno. Inoltre, sono sufficienti la 
+coppia ($\row$,$\len$) corrente e quella precedente dell'array
+delle matching statistics per calcolare gli $\SMEM$, riducendo ulteriormente lo
+spazio richiesto.
 
 \subsection*{Risultati sperimentali}
 L'obiettivo della fase sperimentale è stato quello di confrontarsi con
@@ -461,10 +471,10 @@ quantità di memoria necessaria a risolvere il problema del calcolo degli $\SMEM
 tra un pannello di aplotipi e un aplotipo esterno.  
 
 Seppur questa tesi abbia raggiunto l'obiettivo prefissato, il lavoro può essere
-ulteriormente esteso in diverse direzioni, come ad esempio sviluppando
-un'ulteriore ottimizzazione delle strutture, sia in termini 
+ulteriormente esteso in diverse direzioni, ad esempio ottimizzando le strutture,
+sia in termini  
 di gestione del mapping che, eventualmente, di gestione di più query
-contemporaneamente. In merito a quest'ultimo sviluppo, si segnala che Durbin
+contemporaneamente. In merito, si segnala che Durbin
 ha proposto anche un algoritmo per il calcolo degli $\SMEM$ tra un pannello di
 aplotipi e uno di query. Questo algoritmo è basato sulla creazione ``virtuale''
 di un unico pannello, su cui 
@@ -478,14 +488,14 @@ algoritmo diventa inefficiente, rispetto alle altre soluzioni proposte, al
 diminuire del numero di query. 
 
 Inoltre, sono possibili diverse generalizzazioni rispetto alle caratteristiche
-del pannello, come ad esempio pannelli multiallelici o con dati mancanti, che
-sono comuni in dati reali. In particolare, la gestione 
+del pannello, considerando, ad esempio, pannelli multiallelici o con dati
+mancanti (casi comuni in dati reali). In particolare, la gestione 
 di dati 
 mancati, molto rilevante a causa della non perfezione delle tecnologie di
 sequenziamento, risulta essere un problema aperto in bioinformatica. Quindi,
 sarà richiesto lo sviluppo di nuove metodologie, basate, ad esempio,
 su algoritmi parametrici o algoritmi approssimati, per la risoluzione del
-problema del calcolo degli $\SMEM$ su pannelli di questo tipo.
+problema del calcolo degli $\SMEM$ su tali pannelli.
 % Per quanto i pannelli di aplotipi prodotti dal sequencing del
 % genoma umano raramente presentino siti multi-allelici, si ha una 
 % presenza stimata, al momento, di circa il 2\% di siti tri-allelici, avendo che
