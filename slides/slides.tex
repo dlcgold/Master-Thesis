@@ -16,9 +16,11 @@
 \usepackage[T1]{fontenc}
 \usepackage{float}
 \usepackage{multicol}
+\usepackage{appendixnumberbeamer}
 \usepackage{pgfplots}
 \usepackage{graphicx}
 \usepackage{algorithm}
+\usepackage[export]{adjustbox}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,chains,backgrounds,arrows,chains,fit,snakes,
@@ -200,7 +202,7 @@
 \end{frame}
 \section{Introduzione e scopo della tesi}
 \subsection{Pangenoma e aplotipi}
-\begin{frame}{Un punto di vista per il pangenoma}
+\begin{frame}{Il pangenoma}
   % \begin{block}{}
   %   \small{
   %   Negli ultimi anni si è assistito a un cambio di paradigma nel campo della
@@ -224,15 +226,15 @@
   %   varianti che, a meno di mutazioni, un organismo eredita da ogni genitore. }
   % \end{block}
   \only<1>{
-    \begin{block}{Il pangenoma}
+    \begin{block}{Un cambio di paradigma}
       \begin{itemize}
-        \item studio di un insieme di genomi provenienti da diversi individui
-        \item Studio delle varianti geniche
+        \item singolo genoma $\implies$ insieme di genomi
+        \item studio delle varianti geniche tra genomi di diversi
+        individui 
       \end{itemize}
     \end{block}
-    \begin{block}{}
+    \begin{block}{Rappresentazioni del pangenoma}
       \begin{itemize}
-        \item unica sequenze per multiple sequenze lineari
         \item grafo del pangenoma
         \item \underline{\textbf{pannello di aplotipi}}
       \end{itemize}
@@ -242,6 +244,7 @@
       varianti che, a meno di mutazioni, un organismo eredita da ogni genitore.
     \end{block}
   }\only<2>{
+    \vspace{-2mm}
     \begin{figure}[H]
       \centering
       \includegraphics[width=0.85\textwidth]{img/full.pdf}
@@ -264,27 +267,24 @@
       Il pannello, riordinato in ogni colonna $k$ con $a_k$, è detto:
       \underline{matrice $\PBWT$}. 
     \end{block}
-    \begin{block}{Run-length encoding}
-      Il run-length encoding consiste nel memorizzare le \textit{run}, ovvero
-      sequenze massimali di caratteri uguali, come coppie: \\
-      \vspace{-0.3cm}
-      \begin{center}
-        \texttt{(carattere, lunghezza della run)}\\
-        \texttt{000000} $\implies$ \texttt{(0,6)}
-      \end{center}
+    \begin{block}{}
+      Aplotipi simili, riordinati consecutivamente alla colonna $k$, è molto
+      probabile presentino il medesimo carattere in colonna $k+1$.
     \end{block}
+    % \begin{block}{Run-length encoding}
+    %   Il run-length encoding consiste nel memorizzare le \textit{run}, ovvero
+    %   sequenze massimali di caratteri uguali, come coppie: \\
+    %   \vspace{-0.3cm}
+    %   \begin{center}
+    %     \texttt{(carattere, lunghezza della run)}\\
+    %     \texttt{000000} $\implies$ \texttt{(0,6)}
+    %   \end{center}
+    % \end{block}
   }\only<2>{
     \begin{figure}[H]
       \centering
-      \includegraphics[scale = 0.255]{img/matrix1.pdf}
+      \includegraphics[scale = 0.8]{img/matrix2.pdf}
     \end{figure}
-    \vspace{-0.5cm}
-    \begin{center}
-      {\footnotesize{
-        $a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]$\\
-        $d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]$
-      }}
-    \end{center}
   }
   % \only<3>{
   %   \begin{figure}[H]
@@ -294,15 +294,22 @@
   % }
 \end{frame}
 \begin{frame}{Scopo della tesi}
+   \begin{alertblock}{}
+    Lo scopo di questa tesi è stato quello di creare
+    una variante run-length encoded della $\PBWT$ ($\RLPBWT$) che permettesse,
+    in modo efficiente dal 
+    punto di vista della memoria richiesta, il calcolo degli $\SMEM$ con
+    aplotipo esterno. 
+  \end{alertblock}
   \begin{block}{}
-    Complessità temporale del calcolo degli $\SMEM$ con un algoritmo na\"{i}ve:
+    Complessità calcolo degli $\SMEM$ con un algoritmo na\"{i}ve:
     $\mathcal{O}(N^2M)$
   \end{block}
   \begin{block}{}
     Calcolo degli $\SMEM$ con aplotipo esterno per Durbin:
     \begin{itemize}
-      \item tempo: $\mathcal{O}(NM)$ + Avg.$\mathcal{O}(N+c)$
-      \item spazio: $\mathcal{O}(NM)\implies$ 13NM byte
+      \item tempo: $\mathcal{O}(NM)$ + Avg. $\mathcal{O}(N+c)$
+      \item spazio: $\mathcal{O}(NM)\implies$ \underline{\textbf{13NM byte}}
     \end{itemize}
   \end{block}
   % \begin{block}{}
@@ -310,13 +317,7 @@
   %   consecutive all'interno di ogni sua colonna, a causa del riordinamento e
   %   della natura biologica del dato. 
   % \end{block}
-  \begin{alertblock}{}
-    Lo scopo di questa tesi è stato quello di creare
-    una variante run-length encoded della $\PBWT$ ($\RLPBWT$) che permettesse,
-    in modo efficiente dal 
-    punto di vista della memoria richiesta, il calcolo degli $\SMEM$ con
-    aplotipo esterno. 
-  \end{alertblock}
+ 
 \end{frame}
 % \begin{frame}{Alcuni concetti teorici}
 %   \begin{block}{}
@@ -563,42 +564,49 @@
 %   % Si noti che $g_k=M$ sse $y_{M-1}^k$ appartiene alle righe per le quali si ha
 %   % tale $\SMEM$.
 % \end{frame}
-\section{Contributo della tesi}
-\subsection{Componenti per la RLPBWT}
-\begin{frame}{Le componenti}
-  \begin{block}{Componenti innovative derivate dallo studio della $\RLBWT$ in
-      ottica $\PBWT$} 
-    \begin{itemize}
-      \item mapping tra una colonna e la successiva nella
-      $\PBWT$ e threshold:
-      \begin{itemize}
-        \item bitvector sparsi, con $\rank$ in
-        $\mathcal{O}\left(\log\left(\frac{M}{\rho}\right)\right)$:
-        \underline{\texttt{MAP-BV}} e \underline{\texttt{THR-BV}}
-        \item intvector compressi, con $\rank$ in
-        $\mathcal{O}\left(\log\left(\rho\right)\right)$:
-        \underline{\texttt{MAP-INT}} e  \underline{\texttt{THR-INT}}
-      \end{itemize}
-      \item random access:
-      \begin{itemize}
-        \item bitvector, in $\mathcal{O}(1)$: \underline{\texttt{RA-BV}}
-        \item $\SLP$, in $\mathcal{O} (\log(NM))$: \underline{\texttt{RA-SLP}}
-      \end{itemize}
-      \item $\LCE$ query con $\SLP$, in $\mathcal{O} (\log(NM))$:
-      \underline{\texttt{LCE}}
-      \item prefix array sample: \underline{\texttt{PERM}}  
-      \item struttura per le funzioni $\varphi$ e $\varphi^{-1}$:
-      \underline{\texttt{PHI}} 
-      %\item reverse longest common prefix: \underline{\texttt{RLCP}}
-    \end{itemize}
+\section{Run-length encoded PBWT}
+\subsection{Strutture dati composte per la RLPBWT}
+\begin{frame}{Sottostrutture per la RLPBWT}
+  \begin{block}{}
+    \small{Sottostrutture per ottenere strutture dati composte per la $\RLPBWT$}
   \end{block}
+  \vspace{-2mm}
+  % \begin{block}{Sottostrutture per ottenere strutture dati composte per
+  %     la $\RLPBWT$} 
+  %   \begin{itemize}
+  %     \item mapping tra una colonna e la successiva nella
+  %     $\PBWT$ e threshold:
+  %     \begin{itemize}
+  %       \item bitvector sparsi, con $\rank$ in
+  %       $\mathcal{O}\left(\log\left(\frac{M}{\rho}\right)\right)$:
+  %       \underline{\texttt{MAP-BV}} e \underline{\texttt{THR-BV}}
+  %       \item intvector compressi, con $\rank$ in
+  %       $\mathcal{O}\left(\log\left(\rho\right)\right)$:
+  %       \underline{\texttt{MAP-INT}} e  \underline{\texttt{THR-INT}}
+  %     \end{itemize}
+  %     \item random access:
+  %     \begin{itemize}
+  %       \item bitvector, in $\mathcal{O}(1)$: \underline{\texttt{RA-BV}}
+  %       \item $\SLP$, in $\mathcal{O} (\log(NM))$: \underline{\texttt{RA-SLP}}
+  %     \end{itemize}
+  %     \item $\LCE$ query con $\SLP$, in $\mathcal{O} (\log(NM))$:
+  %     \underline{\texttt{LCE}}
+  %     \item prefix array sample: \underline{\texttt{PERM}}  
+  %     \item struttura per le funzioni $\varphi$ e $\varphi^{-1}$:
+  %     \underline{\texttt{PHI}} 
+  %     %\item reverse longest common prefix: \underline{\texttt{RLCP}}
+  %   \end{itemize}
+  % \end{block}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{img/ds2.pdf}
+  \end{figure}
 \end{frame}
 \begin{frame}{Qualche confronto in spazio}
   \begin{figure}[H]
     \centering
-    \hspace{-0.2cm}\includegraphics[width=0.8\textwidth]{img/bv_vs_iv.pdf}
+    \hspace{-0.2cm}\includegraphics[width=0.8\textwidth]{img/bv_vs_iv2.pdf}
     %\includegraphics[width=0.49\textwidth]{img/slp_vs_macs_log.pdf}
-
   \end{figure}
 \end{frame}
 \subsection{Strutture dati per la RLPBWT e calcolo degli SMEM}
@@ -652,17 +660,18 @@
       }}
   \end{block}
 \end{frame}
-\begin{frame}{Componenti e strutture dati, una panoramica}
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{img/ds2.pdf}
-  \end{figure}
-\end{frame}
+% \begin{frame}{Componenti e strutture dati, una panoramica}
+%   \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.7\textwidth]{img/ds2.pdf}
+%   \end{figure}
+% \end{frame}
 \begin{frame}{Matching statistics}
-  \vspace{-0.35cm}
+  \vspace{-0.3cm}
  \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.205]{img/pbwtmatch.pdf}
+    \includegraphics[scale = 0.21, valign=t]{img/pbwtmatch.pdf}
+    \includegraphics[scale = 0.38, valign=t]{img/mini_ms.pdf}
   \end{figure}
   \vspace{-0.5cm}
   \begin{table}[H]
@@ -685,7 +694,8 @@
 \begin{frame}{Struttura per le funzioni $\varphi$ e $\varphi^{-1}$}
   \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.8]{img/phi.pdf}   
+    \includegraphics[scale = 0.8, valign=t]{img/phi.pdf}
+    \includegraphics[scale = 0.55, valign=t]{img/mini_phi.pdf}
   \end{figure}
   % {\footnotesize{\[\varPhi_j=[0,0,0,1,0, \ldots],\quad
   %       \varPhi^{-1}_m=[0,0,0,1,0,\ldots],\quad
@@ -697,45 +707,42 @@
 \end{frame}
 \section{Risultati sperimentali}
 \subsection{Setup sperimentale}
-\begin{frame}{Sperimentazione e dati}
-   \begin{block}{Implementazione e sperimentazione}
-    \small
-    La sperimentazione, orchestrata tramite \texttt{snakemake}, è stata
-    effettuata su una macchina con processore 
-    Intel Xeon E5-2640 V4 ($2,40$GHz), $756$GB di RAM, $768$GB di swap e
-    sistema operativo Ubuntu 20.04.4 LTS.\\
-    Si sono confrontate l'implementazione in \Cplusplus $\,\,$della $\RLPBWT$ e
-    l'implementazione in C ufficiale della $\PBWT$.
+\begin{frame}{Dati di input}
+  %  \begin{block}{Implementazione e sperimentazione}
+  %   \small
+  %   La sperimentazione, orchestrata tramite \texttt{snakemake}, è stata
+  %   effettuata su una macchina con processore 
+  %   Intel Xeon E5-2640 V4 ($2,40$GHz), $756$GB di RAM, $768$GB di swap e
+  %   sistema operativo Ubuntu 20.04.4 LTS.\\
+  %   Si sono confrontate l'implementazione in \Cplusplus $\,\,$della $\RLPBWT$ e
+  %   l'implementazione in C ufficiale della $\PBWT$.
+  % \end{block}
+  \begin{block}{}
+    \begin{itemize}
+      \item dati reali relativi alla phase 3 del \textbf{1000 Genome Project}
+      \item numero variabile di siti
+      \item numero costante di aplotipi: 5908
+      \item estrazione di 100 query $\implies$ pannelli con 4908 aplotipi
+    \end{itemize}
   \end{block}
-  \begin{block}{Pannelli del 1000 Genome Project con 4908 sample,
-        avendone 
-      estratti 100 come query.} 
-    \begin{table}
-      \footnotesize
-      \centering
-      \begin{tabular}{c||c|c}
-        \textbf{Chr} & \textbf{\#Siti} & \textbf{Media run} \\ 
-        \hline
-        \texttt{chr22} & 1.055.454 & 14\\
-        \texttt{chr20} & 1.739.315 & 11\\
-        \texttt{chr18} & 2.171.378 & 11\\
-        \texttt{chr16} & 2.596.072 & 12\\
-        \texttt{chr1} & 6.196.151 & 11\\
-      \end{tabular}
-    \end{table}
-  \end{block}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c||c|c}
+      \textbf{Chr} & \textbf{\#Siti} & \textbf{Media run} \\ 
+      \hline
+      \texttt{chr22} & 1.055.454 & 14\\
+      \texttt{chr20} & 1.739.315 & 11\\
+      \texttt{chr18} & 2.171.378 & 11\\
+      \texttt{chr16} & 2.596.072 & 12\\
+      \texttt{chr1} & 6.196.151 & 11\\
+    \end{tabular}
+  \end{table}
 \end{frame}
 \subsection{Risultati della costruzione delle strutture}
 \begin{frame}{Costo in memoria delle componenti}
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{img/comp_mem22.pdf}
-  \end{figure}
-\end{frame}
-\begin{frame}{Performance costruzione strutture dati}
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.99\textwidth]{img/make_time_mem_paper2.pdf}
   \end{figure}
 \end{frame}
 \subsection{Risultati del calcolo degli SMEM}
@@ -745,12 +752,7 @@
     \includegraphics[width=0.99\textwidth]{img/exe_time_mem_paper2.pdf}
   \end{figure}
 \end{frame}
-% \begin{frame}{Performance calcolo degli $\SMEM$ per singole query}
-%   \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.99\textwidth]{img/exe_time_single_paper2.pdf}
-%   \end{figure}
-% \end{frame}
+
 \section{Conclusioni e sviluppi futuri}
 \subsection{Conclusioni e sviluppi futuri}
 \begin{frame}{Considerazioni e sviluppi futuri}
@@ -785,57 +787,66 @@
         positional Burrows--Wheeler transforms}, {\footnotesize{bioRxiv
           (preprint), 2022}}} 
   \end{block}
+  \begin{block}{}
+    Il lavoro verrà presentato l'11 Novembre al \textit{17th Workshop on
+      Compression, Text, and Algorithms (WCTA)} 
+  \end{block}
   \begin{alertblock}{}
     \begin{center}
        {\LARGE{Grazie per l'attenzione}}
     \end{center}
   \end{alertblock}
   \vspace{-0.2cm}
-  \begin{figure}[H]
-    \centering
-    \includegraphics[scale = 0.5]{img/logo-bias-mini.png}
-  \end{figure}
-  \vspace{-0.3cm}
+  % \begin{figure}[H]
+  %   \centering
+  %   \includegraphics[scale = 0.5]{img/logo-bias-mini.png}
+  % \end{figure}
+  % \vspace{-0.3cm}
   \begin{figure}[H]
     \centering
     % \includegraphics[scale = 1]{img/logo_unimib.pdf}
     % \includegraphics[scale = 0.4]{img/ufl.png}
     % \includegraphics[scale = 0.25]{img/dal.png}
     % \includegraphics[scale = 0.15]{img/tmdu.jpg}
-    \includegraphics[width = 0.16\textwidth]{img/logo_unimib.pdf}$\quad\quad$
+    \includegraphics[width = 0.16\textwidth]{img/bias_gh.png}$\quad\quad$
     \includegraphics[width = 0.15\textwidth]{img/ufl.png}$\quad\quad$
     \includegraphics[width = 0.16\textwidth]{img/dal.png}$\quad\quad$
     \includegraphics[width = 0.16\textwidth]{img/tmdu.jpg}
   \end{figure}
 \end{frame}
-% \section{Bibliografia}
-% \begin{frame}[allowframebreaks]{Bibliografia} 
-%   \bibliographystyle{unsrt}
-%   \bibliography{slides}
-% \end{frame}
-% \begin{frame}{}
-%   \setbeamercolor{palette primary}{bg=nord3,fg=white}
+\appendix
+\begin{frame}[plain]{}
   
-%   \title[] {Grazie per l'attenzione}
+\end{frame}
+\subsection{Slide supplementari}
+\begin{frame}[plain]{Performance costruzione strutture dati}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{img/make_time_mem_paper2.pdf}
+  \end{figure}
+\end{frame}
+\begin{frame}[plain]{Performance calcolo degli $\SMEM$ con 100 query}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{img/exe_time_mem_paper.pdf}
+  \end{figure}
+\end{frame}
+\begin{frame}[plain]{Performance calcolo degli $\SMEM$ per singole query}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{img/exe_time_single_paper2.pdf}
+  \end{figure}
+\end{frame}
+\begin{frame}[plain]{Performance calcolo degli $\SMEM$ per singole query}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{img/exe_time_single_paper.pdf}
+  \end{figure}
+\end{frame}
 
-%   % \subtitle
-%   % {Presentation Subtitle} % (optional)
-
-%   \author[1]{\Large{Davide Cozzi}}
-
-
-%   \institute[] {\large{\textbf{{\color{nord2}Relatore:}}
-%       \textit{Prof.ssa~Raffaella 
-%         Rizzi}\quad 
-%       \textbf{\color{nord2}{Correlatore:}} \textit{Dr.~Yuri Pirola}}\\
-%     \vspace{4mm}
-%     \small{\textit{Dipartimento di Informatica, Sistemistica e Comunicazione
-%         (DISCo)\\
-%         Università degli Studi di Milano Bicocca}}}
-
-%   \maketitle
-% \end{frame}
 
 \end{document}
 
 
+
+% LocalWords:  sottostrutture
