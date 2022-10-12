@@ -153,7 +153,7 @@
   }
   
 \title[Algoritmi per la $\RLPBWT$] {Algoritmi per la trasformata di
-  Burrows-Wheeler posizionale con compressione run-length}
+  Burrows--Wheeler posizionale con compressione run-length}
 
 % \subtitle
 % {Presentation Subtitle} % (optional)
@@ -264,13 +264,18 @@
         \item $a_k$ è il \textbf{prefix array} della colonna $k$
         \item $d_k$ è il \textbf{divergence array} della colonna $k$
       \end{itemize}
-      Il pannello, riordinato in ogni colonna $k$ con $a_k$, è detto:
-      \underline{matrice $\PBWT$}. 
     \end{block}
     \begin{block}{}
-      Aplotipi simili, riordinati consecutivamente alla colonna $k$, è molto
-      probabile presentino il medesimo carattere in colonna $k+1$.
+      \begin{itemize}
+        \item la $\PBWT$ è basata sul riordinamento co-lessicografico ad ogni
+        colonna
+        \item il pannello, riordinato in ogni colonna $k$ con $a_k$, è detto
+        \underline{matrice $\PBWT$}
+        \item aplotipi simili, riordinati consecutivamente alla colonna $k$, è
+        molto probabile presentino il medesimo carattere in colonna $k+1$
+      \end{itemize}
     \end{block}
+  
     % \begin{block}{Run-length encoding}
     %   Il run-length encoding consiste nel memorizzare le \textit{run}, ovvero
     %   sequenze massimali di caratteri uguali, come coppie: \\
@@ -565,12 +570,8 @@
 %   % tale $\SMEM$.
 % \end{frame}
 \section{Run-length encoded PBWT}
-\subsection{Strutture dati composte per la RLPBWT}
-\begin{frame}{Sottostrutture per la RLPBWT}
-  \begin{block}{}
-    \small{Sottostrutture per ottenere strutture dati composte per la $\RLPBWT$}
-  \end{block}
-  \vspace{-2mm}
+\subsection{Strutture per la RLPBWT}
+\begin{frame}{Sottostrutture e strutture dati composte per la $\RLPBWT$}
   % \begin{block}{Sottostrutture per ottenere strutture dati composte per
   %     la $\RLPBWT$} 
   %   \begin{itemize}
@@ -599,7 +600,7 @@
   % \end{block}
   \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{img/ds2.pdf}
+    \includegraphics[width=0.75\textwidth]{img/ds2.pdf}
   \end{figure}
 \end{frame}
 \begin{frame}{Qualche confronto in spazio}
@@ -634,14 +635,14 @@
   \begin{block}{Matching statistics per la $\PBWT$}
     {\small{
         Dato un pannello $X=\{x_0,\ldots,x_{M-1}\}$, $x_i=N$,
-        e un aplotipo esterno/pattern $z$, tale che $|z|=N$, si definisce
+        e un aplotipo esterno $z$, tale che $|z|=N$, si definisce
         \textbf{matching
-        statistic}s di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, 
+        statistics} di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, 
         $|\MS|=N$, tale che:   
         \begin{itemize}
           \item $x_{\MS[i].\row}[i-\MS[i].\len+1,i]=z[i-\MS[i].\len+1,i]$, ovvero si
           ha che 
-          l'aplotipo query ha un match, lungo $\MS[i].\len$, terminante in colonna
+          l'aplotipo esterno ha un match, lungo $\MS[i].\len$, terminante in colonna
           $i$, con la riga 
           $\MS[i].\row$-esima del pannello
           \item $z[i-\MS[i].\len,i]$ non è un suffisso terminante in colonna $i$
@@ -717,11 +718,11 @@
   %   Si sono confrontate l'implementazione in \Cplusplus $\,\,$della $\RLPBWT$ e
   %   l'implementazione in C ufficiale della $\PBWT$.
   % \end{block}
-  \begin{block}{}
+  \begin{block}{Pannelli di varianti reali}
     \begin{itemize}
       \item dati reali relativi alla phase 3 del \textbf{1000 Genome Project}
       \item numero variabile di siti
-      \item numero costante di aplotipi: 5908
+      \item numero costante di aplotipi: 5008
       \item estrazione di 100 query $\implies$ pannelli con 4908 aplotipi
     \end{itemize}
   \end{block}
@@ -783,13 +784,13 @@
 \begin{frame}{}
   \begin{block}{Ulteriori dettagli}
     \footnotesize{\textit{\textbf{Bonizzoni, Boucher, Cozzi, Gagie, Kashgouli,
-          K\"{o}ppl e Rossi:} \\Compressed data structures for population-scale
-        positional Burrows--Wheeler transforms}, {\footnotesize{bioRxiv
-          (preprint), 2022}}} 
+          K\"{o}ppl e Rossi:} \\\underline{Compressed data structures for
+          population-scale positional Burrows--Wheeler transforms}},
+      \textit{bioRxiv, 2022}} 
   \end{block}
   \begin{block}{}
-    Il lavoro verrà presentato l'11 Novembre al \textit{17th Workshop on
-      Compression, Text, and Algorithms (WCTA)} 
+    \footnotesize{\textit{\underline{17th Workshop on Compression, Text and
+          Algorithms (WCTA)}, 11 Novembre 2022}}  
   \end{block}
   \begin{alertblock}{}
     \begin{center}
@@ -808,10 +809,10 @@
     % \includegraphics[scale = 0.4]{img/ufl.png}
     % \includegraphics[scale = 0.25]{img/dal.png}
     % \includegraphics[scale = 0.15]{img/tmdu.jpg}
-    \includegraphics[width = 0.16\textwidth]{img/bias_gh.png}$\quad\quad$
-    \includegraphics[width = 0.15\textwidth]{img/ufl.png}$\quad\quad$
-    \includegraphics[width = 0.16\textwidth]{img/dal.png}$\quad\quad$
-    \includegraphics[width = 0.16\textwidth]{img/tmdu.jpg}
+    \includegraphics[width = 0.18\textwidth]{img/bias_gh.png}$\quad\quad$
+    \includegraphics[width = 0.17\textwidth]{img/ufl.png}$\quad\quad$
+    \includegraphics[width = 0.18\textwidth]{img/dal.png}$\quad\quad$
+    \includegraphics[width = 0.18\textwidth]{img/tmdu.jpg}
   \end{figure}
 \end{frame}
 \appendix

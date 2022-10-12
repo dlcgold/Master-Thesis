@@ -121,7 +121,7 @@ A questo scopo, uno degli approcci più usati per rappresentare il pangenoma è
 attraverso un 
 pannello di aplotipi, ovvero, da un punto di vista computazionale, una matrice
 di $M$ 
-righe, corrispondenti agli individui, e $N$ colonne, corrispondenti ai siti con
+righe, corrispondenti agli individui/aplotipi, e $N$ colonne, corrispondenti ai siti con
 le varianti. Si specifica che, con il termine
 aplotipo, si intende l'insieme di alleli, ovvero di varianti, che, a meno di
 mutazioni, un organismo eredita da ogni genitore.
@@ -131,8 +131,8 @@ bioinformatica, ovvero quello del pattern matching. Inizialmente, tale problema
 era relativo alla ricerca di una stringa (pattern) all'interno di un testo di
 grandi dimensioni, cioè il genoma di riferimento.
 Ora, con l'introduzione del pangenoma, il problema deve essere risolto sulle
-nuove strutture 
-di rappresentazione dello stesso.
+nuove strutture dati per la 
+ rappresentazione dello stesso.
 
 Lo scopo di questa tesi è progettare strutture dati e algoritmi efficienti per
 risolvere il problema del pattern 
@@ -169,7 +169,7 @@ pannello di aplotipi e un aplotipo esterno,
 Durbin, nel 2014, propose una struttura dati ispirata alla $\BWT$, detta
 \textit{trasformata di Burrows--Wheeler posizionale} ($\PBWT$). Tale trasformata
 viene costruita a partire da un pannello di aplotipi, rappresentato, riferendosi
-al solo caso bi-allelico, tramite una matrice binaria.
+al solo caso biallelico, tramite una matrice binaria.
 La $\PBWT$ permette di calcolare gli $\SMEM$ tra
 un aplotipo esterno e il pannello in tempo $Avg.\,\,\,\mathcal{O}(N+c)$ (dove 
 $c$ è il numero complessivo di $\SMEM$), mentre 
@@ -400,7 +400,7 @@ standard (GZip) richiede 0,5GB. Oltre all'uso dell'$\,\SLP$ (componente
 \texttt{RA-SLP}), si è anche proposto l'uso di un insieme di bitvector per la
 memorizzazione 
 del pannello (componente \texttt{RA-BV}), richiedendo maggior spazio in memoria
-(3,6GB nell'esempio precedente) ma minor tempo d'interrogazione ma garantendo
+(3,6GB nell'esempio precedente) ma minor tempo d'interrogazione, garantendo
 random access in tempo 
 costante.  
 
@@ -439,7 +439,7 @@ geniche
 umane. Tali pannelli sono relativi ai cromosomi 22, 20, 18, 16 e 1
 (in ordine crescente di siti). Tutti i pannelli presentano 5.008 sample.
 Per questa sintesi, si è scelto di riportare alcuni risultati relativi al
-pannello del cromosoma 1, uno dei più grandi avendo dimensioni $4.908 \times
+pannello del cromosoma 1, uno dei più grandi avendo dimensioni $5.008 \times
 6.196.151$, che è stato 
 interrogato con $100$ query (estratte dal pannello originale), al 
 fine di ridurre la fluttuazione statistica dei risultati.
@@ -462,7 +462,7 @@ per la variante della $\RLPBWT$ presa in esame, il picco
 registrato è stato di appena 4GB, 
 ottenendo una riduzione di memoria di quasi il 99\%. Tale riduzione renderebbe
 possibile l'esecuzione del calcolo anche su un comune portatile, assumendo di
-aver a disposizione l'$\,\SLP$ . 
+avere a disposizione l'$\,\SLP$ . 
 \subsection*{Conclusioni e sviluppi futuri}
 In conclusione, le strutture dati composte per la $\RLPBWT$, basate sul calcolo
 dell'array delle matching statistics, sono state tutte in
@@ -478,7 +478,7 @@ contemporaneamente. In merito, si segnala che Durbin
 ha proposto anche un algoritmo per il calcolo degli $\SMEM$ tra un pannello di
 aplotipi e uno di query. Questo algoritmo è basato sulla creazione ``virtuale''
 di un unico pannello, su cui 
-costruire la $\PBWT$, e sul calcolo dei match interni al pannello stesso. Tale
+costruire la $\PBWT$, e sul calcolo degli $\SMEM$ interni al pannello stesso. Tale
 implementazione, nel setup di test 
 descritto nella sezione precedente (che comporta il perfetto input per
 tale soluzione), risulta essere molto performante sia in
