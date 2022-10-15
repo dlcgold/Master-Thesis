@@ -55,8 +55,8 @@ lessicografico inverso.
   \[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
   \[\alpha_6=[2,12,13,14,16,17,18,19,6,3,4,7,8,9,0,1,5,15,10,11]\]
   Si fissa quindi $p=3$ e si ottengono:
-  \[\varphi(3)=a_6[\alpha_6[3]-1]=a_6[14-1]=a_6[13]=2\]
-  \[\varphi^{-1}(3)=a_6[\alpha_6[3]+1]=a_6[14+1]=a_6[15]=17\]
+  \[\varphi_6(3)=a_6[\alpha_6[3]-1]=a_6[14-1]=a_6[13]=2\]
+  \[\varphi^{-1}_6(3)=a_6[\alpha_6[3]+1]=a_6[14+1]=a_6[15]=17\]
 \end{esempio}
 Avendo, quindi, $\MS[i].\row=p$ e $\MS[i].\len=l$ basta iterare le righe a
 partire da 
@@ -86,6 +86,11 @@ sotto forma di $\SLP$, si ha complessità in tempo:
   \label{eq:phiaccbv2}
   \mathcal{O}(\nu\log (NM))
 \end{equation}
+Entrambe le stime assumono, solo per il momento, che sia possibile calcolare il
+valore delle funzioni $\varphi$ e $\varphi^{-1}$ in tempo $\mathcal{O}(1)$,
+avendo in 
+memoria l'insieme dei prefix array (e l'insieme delle permutazioni inverse dei
+prefix array) con random access in tempo costante.\\
 \dc{Stime molto per eccesso, con RA-BV si scala su $l$ di fatto}
 \begin{algorithm}
   \small
@@ -272,6 +277,14 @@ sulla riga $p$ di $\varPhi^{-1}$, avendo che:
     \varPhi^{-1\,\,p}_{supp}[\rank^{\varphi^{-1}}_p(k)]&\mbox{altrimenti }
   \end{cases}
 \]
+In termini di complessità, si ha che tale calcolo è limitato dalla complessità
+della funzione $\rank$, avendo che il numero $m$ di simboli $\sigma=1$ in ogni
+bitvector, lungo $N$, equivale al numero di volte in cui la corrispondente riga
+è testa/coda di una run: 
+\begin{equation}
+  \label{eq:queryphi}
+  \mathcal{O}\left(\log\frac{N}{m}\right)
+\end{equation}
 \dc{Serve altro?}
 \begin{esempio}
   Si supponga di avere la seguente situazione nella matrice $\PBWT$:
@@ -279,7 +292,8 @@ sulla riga $p$ di $\varPhi^{-1}$, avendo che:
     \centering
     \includegraphics[scale = 0.8]{img/phi.pdf}   
   \end{figure}
-  Dove si noti che, a parità di colore, si ha lo stesso simbolo tra due indici
+  \noindent
+  Dove, a parità di colore, si ha lo stesso simbolo tra due indici
   consecutivi. \\
   In colonna $k$, che per praticità assumiamo essere $k=0$, si vorrebbe avere
   informazione in merito a $\varphi_k(j)$ e $\varphi^{-1}_k(m)$. \\

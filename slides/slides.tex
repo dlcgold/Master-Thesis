@@ -820,6 +820,21 @@
   
 \end{frame}
 \subsection{Slide supplementari}
+\begin{frame}[plain]{Mapping e threshold}
+  \begin{block}{Colonna matrice $\PBWT$}
+    \[y^5=00101111000000000000\]
+  \end{block}
+  \begin{block}{intvector compressi}
+    \[p_5=[0,2,3,4,8]\]
+    \[uv_5=[0,2,1,3,5],\quad c[5]=15,\quad start_5=\top\]
+    \[t_5=[0,3,3,4,11]\]
+  \end{block}
+  \begin{block}{bitvector sparsi}
+    \[h_5=01110001000000000001\]
+    \[u_5=011000000000001,\quad v_5=10001,\quad c[5]=15,\quad start_5=\top\]
+    \[t_5=10111000000100000000\]
+  \end{block}
+\end{frame}
 \begin{frame}[plain]{Performance costruzione strutture dati}
   \begin{figure}[H]
     \centering
@@ -844,7 +859,20 @@
     \includegraphics[width=0.99\textwidth]{img/exe_time_single_paper.pdf}
   \end{figure}
 \end{frame}
-
+\begin{frame}{Struttura per le funzioni $\varphi$ e $\varphi^{-1}$}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.65, valign=t]{img/phi.pdf}
+    \includegraphics[scale = 0.4, valign=t]{img/mini_phi.pdf}
+  \end{figure}
+  {\footnotesize{\[\varPhi_j=[0,0,0,1,0, \ldots],\quad
+        \varPhi^{-1}_m=[0,0,0,1,0,\ldots],\quad
+        \varPhi_{supp}=[i,\ldots],\quad
+        \varPhi^{-1}_{supp}=[n,\ldots]\]}}
+  \[\varPhi_{supp}^j[\rank^\varphi_j(0)]=\varPhi_{supp}^j[0]=i,\quad
+    \varPhi^{-1\,\,m}_{supp}[\rank^{\varphi^{-1}}_m(0)]=\varPhi^{-1\,\,m}_{supp}[0]=n\]
+  
+\end{frame}
 
 \end{document}
 

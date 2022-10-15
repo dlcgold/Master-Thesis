@@ -136,24 +136,20 @@ dei prefissi inversi comuni più lunghi tra prefissi adiacenti nei riordinamenti
   l'indice della colonna iniziale del match massimale a sinistra, terminante
   a destra in colonna
   $k-1$, tra 
-  l'$i$-esimo aplotipo e il suo precedente nell'ordinamento ottenuto alla
+  l'$i$-esimo aplotipo e il suo precedente nell'ordinamento ottenuto per la
   colonna $k$-esima. Formalmente, dato $i>0$, si definisce 
   $d_k[i]$ come il più piccolo $j$ tale che:
   \begin{equation}
     \label{eq:pbwtdiv}
     y_i^k[j,k)=y_{i-1}^k[j,k)
   \end{equation}
-  Ne segue che
+  Ne segue che:
   \begin{equation}
     \label{eq:pbwtdiv2}
     y_i^k[k-1]\neq y_{i-1}^k[k-1] \implies d_k[i]=k
   \end{equation}
   Per definizione, non avendo una riga precedente con cui effettuare il
-  confronto: 
-  \begin{equation}
-    \label{eq:pbwtdiv3}
-   d_k[0]=k
-  \end{equation}
+  confronto, si ha che $d_k[0]=k$.
 \end{definizione}
 Si può dimostrare che l'inizio di qualsiasi match massimale, terminante
 in colonna $k$, tra qualsiasi $y_i^k$ e $y_j^k$, con $i<j$, è calcolabile
@@ -229,21 +225,25 @@ a quanto visto con il suffix array e la sua permutazione inversa.
   Si definisce $\alpha_k$ come l'inverso della permutazione data dal
   prefix array $a_k$, avendo che:
   \[\alpha_k[i]=j \iff a_k[j]=i\]
-\end{definizione}
-Grazie a queste prime definizioni, è possibile denotare alcune prime forti
-correlazioni, fattore chiave nello sviluppo di questa tesi, che sussistono tra
-$\BWT$ e $\PBWT$ (e le rispettive varianti run-length
-  encoded). Nella seguente tabella si ricordano queste correlazioni:
-\begin{table}[H]
-  \centering
-  \begin{tabular}{c|c}
-    $\BWT$ & $\PBWT$\\
-    \hline
-    $\SA_T$ & $a_k$\\
-    $\ISA_T$ & $\alpha_k$\\
-    $\LCP_T$ & $d_k$ o $l_k$\\            
-  \end{tabular}
-\end{table}
+  \end{definizione}
+  Grazie a queste prime definizioni, è possibile denotare alcune prime forti
+  correlazioni (tabella \ref{tab:pbwtbwt}), fattore chiave nello sviluppo di questa tesi, che sussistono tra
+  $\BWT$ e $\PBWT$ (e le rispettive varianti run-length
+  encoded).
+  \begin{table}
+    \centering
+    \caption{Tabella di confronto tra le strutture dati relative alla $\BWT$ e
+      alla $\PBWT$.}
+    \label{tab:pbwtbwt}
+    \begin{tabular}{c|c}
+      $\BWT$ & $\PBWT$\\
+      \hline
+      $\SA_T$ & $a_k$\\
+      $\ISA_T$ & $\alpha_k$\\
+      $\LCP_T$ & $d_k$ o $l_k$\\            
+    \end{tabular}
+    
+  \end{table}
 \newpage
 \begin{esempio}
   \label{es:pbwt1}

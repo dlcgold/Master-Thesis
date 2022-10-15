@@ -170,7 +170,8 @@ numero massimo di run riscontrabili in una colonna.
 \subsection{Riproducibilità degli esperimenti}
 Al fine di rendere riproducibili gli esperimenti, si è costruita una pipeline
 per l'esecuzione dei vari algoritmi e l'estrazione dei dati quantitativi
-relativi alle performance.\\
+relativi alle
+performance\footnote{\url{https://github.com/dlcgold/rlpbwt-test}}.\\
 L'intera pipeline è stata gestita tramite Snakemake \cite{snakemake}
 (un workflow management system), che è uno strumento molto usato in
 bioinformatica per creare analisi dati scalabili e riproducibili. Nel
@@ -194,8 +195,12 @@ query.\\
 \dc{la pic va aggiornata e va aggiunto link github dopo sistemazione pipeline}
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{img/rules.pdf}
-  \caption{Regole usate in Snakemake per la sperimentazione.}
+  \includegraphics[width=\textwidth]{img/final_dag_r.pdf}
+  \caption{Regole usate in Snakemake per la sperimentazione. Si hanno
+  il download  dei vari software, la compilazione degli stessi, la produzione
+  delle strutture dati,
+  il calcolo degli $\SMEM$, l'estrazione dei risultati
+  quantitativi e la produzione dei file CSV finali.}
   \label{fig:snake}
 \end{figure}
 \newline
