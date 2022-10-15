@@ -307,7 +307,7 @@
   \cleardoublepage
 }
 \chapter{Introduzione}
-Negli ultimi anni si è assistito ad un cambio di paradigma nel campo della
+Negli ultimi anni si è assistito a un cambio di paradigma nel campo della
 bioinformatica, ovvero il passaggio dallo studio della sequenza lineare di un
 singolo genoma a quello di un insieme di genomi, provenienti da un gran numero
 di individui, al fine di poter considerare anche le varianti
@@ -318,7 +318,7 @@ campo della biologia che in quello della medicina personalizzata, grazie al
 fatto che, con il pangenoma, si migliora la precisione della rappresentazione di
 multipli genomi e delle loro differenze. \\
 Il genoma umano di riferimento (GRCh38.p14) è composto da circa
-3.1 miliardi di basi, con più di 88 milioni 
+3.1 miliardi di basi, con più di 88 milioni di
 varianti tra i genomi sequenziati, secondo i risultati ottenuti nel 1000 Genome
 Project \cite{tutorial}. Considerando come la quantità dei dati di
 sequenziamento sia destinata 
@@ -343,39 +343,41 @@ matching, inteso come ricerca dei \textbf{set-maximal exact match}
   ($\SMEM$) tra un aplotipo 
 esterno e un pannello di aplotipi, in una delle 
 strutture dati più utilizzata: la \textbf{trasformata di Burrows--Wheeler
-  Posizionale} ($\PBWT$) \cite{pbwt}. Il progetto di tesi, svolto in
-collaborazione con il 
-prof. Gagie (Dalhousie University) e la prof.ssa Boucher 
-(University of Florida), tra gli autori dei principali risultati ottenuti per la
-\textbf{trasformata di Burrows--Wheeler run-length encoded} ($\RLBWT$)
-\cite{rlbwt} 
-\cite{gagie2020} \cite{moni} \cite{phoni}, ha quindi permesso lo sviluppo di
+  Posizionale} ($\PBWT$) \cite{pbwt}. Il progetto di tesi ha quindi permesso lo
+sviluppo di 
 diverse strutture dati composte per la variante 
 \textbf{run-length encoded} della \textbf{PBWT} ($\RLPBWT$),
-efficienti dal punto di vista delle memoria utilizzata.\\
+efficienti dal punto di vista della memoria utilizzata.
+Tale progetto è stato svolto in
+collaborazione con due tra gli autori dei principali risultati ottenuti per la
+\textbf{trasformata di Burrows--Wheeler run-length encoded} ($\RLBWT$)
+\cite{rlbwt} 
+\cite{gagie2020} \cite{moni} \cite{phoni}: il 
+prof. Gagie (Dalhousie University) e la prof.ssa Boucher 
+(University of Florida).\\
 Parte delle strutture dati e degli algoritmi presentati in questa tesi sono
 inseriti in un articolo, dal titolo \textit{Compressed data structures for
-  population-scale positional Burrows--Wheeler transforms} \cite{rlpbwt}. Al
+  population-scale positional Burrows--Wheeler transforms} \cite{rlpbwt}.
+Al
 momento della 
-stesura di questa tesi, tale articolo è in fase di review per il giornale
+stesura di questa tesi, tale articolo è in fase di review per la rivista
 \textit{Genome Research} (\textit{Cold Spring Harbor Laboratory Press}).
 \subsection*{Struttura della tesi}
-Nel Capitolo \ref{prechap} si introdurranno i concetti di base, di ambito
+Nel Capitolo \ref{prechap}, si introdurranno i concetti di base, di ambito
 computazionale e bioinformatico, necessari a
-comprendere questa tesi. Nel Capitolo \ref{metchap} verranno discussi i
+comprendere questa tesi. Nel Capitolo \ref{metchap}, verranno discussi i
 contributi di questa tesi, descrivendo le soluzioni algoritmiche e le
 metodologie utilizzate per raggiungere gli obiettivi prefissati. Nel dettaglio
 verranno presentate varie strutture dati che saranno le componenti necessarie
-alla produzione delle strutture dati per la $\RLPBWT$ e al calcolo degli
-$\SMEM$. Nel Capitolo 
-\ref{reschap} si discuteranno i risultati ottenuti durante la
+alla produzione delle strutture dati composte per la $\RLPBWT$ e al calcolo
+degli $\SMEM$. Nel Capitolo 
+\ref{reschap}, si discuteranno i risultati ottenuti durante la
 sperimentazione sui dati reali della \textit{phase 3} del \textbf{1000 Genome
-  Project} \cite{1kgp}, progetto, che ha avuto inizio nel 2008, il quale ha
+  Project} \cite{1kgp}, progetto, iniziato nel 2008, che ha
 visto lo sforzo 
 della comunità scientifica internazionale per la catalogazione delle varianti
 geniche umane. Infine, nel Capitolo \ref{conchap}, si trarranno le conclusioni 
-di questo progetto di tesi discutendone, infine, i prospetti futuri.
-\dc{L'intera introduzione va estesa}
+di questo progetto di tesi, discutendone gli sviluppi futuri.
 \chapter{Preliminari}
 \label{prechap}
 In questo capitolo verranno specificati tutti i concetti fondamentali, allo

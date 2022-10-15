@@ -13,16 +13,17 @@ posizione specifica, viene
 detto allele. La combinazione di tutte le varianti alleliche,
 ereditate, a meno di mutazioni, da ogni genitore, forma l'\textbf{aplotipo} di
 un certo individuo. Come visibile in figura \ref{fig:haplo} \cite{haplo}, la 
-costruzione parte dai
-vari sequenziamenti (nell'immagine relativi a diversi cromosomi ma il
-procedimento è uguale partendo da diversi individui) da cui si identificano le
-varianti alleliche. Da queste ultime si costruiscono gli aplotipi, da cui si
-estraggono i cosiddetti tag SNP, ovvero le possibili alternative per
+costruzione parte da diversi sequenziamenti (nell'immagine relativi a diversi
+cromosomi ma il
+procedimento è uguale partendo da diversi individui) grazie a cui si
+identificano le 
+varianti alleliche. Da queste ultime si costruiscono gli aplotipi, utilizzati
+per estrarre i cosiddetti tag SNP, ovvero le possibili alternative per
 una certa variante allelica. Questi ultimi, normalmente rappresentati per
 l'uomo da due caratteri vista la sua natura diploide, formano,
 l'alfabeto del pannello. 
-L’informazione combinata di tutti gli aplotipi in un individuo è detta,
-invece, \textbf{genotipo}.
+L’informazione combinata di tutti gli aplotipi in un individuo è detta
+\textbf{genotipo}.
 \begin{figure}
   \centering
   \includegraphics[scale = 0.25]{img/haplo.jpg}
@@ -70,11 +71,11 @@ formalismi utilizzati:
   altro $x_j$ che include ed estende l'intervallo $[k_1,k_2)$. La sequenza $z$
   può avere uno $\SMEM$, tra $k_1$ e $k_2-1$, con più di un aplotipo del
   pannello. Per praticità, si è introdotta la definizione di $\SMEM$ usando un
-  aplotipo esterno ma tale definizione può essere riferita anche a due righe
+  aplotipo esterno, ma tale definizione può essere riferita anche a due righe
   interne al pannello $X$
 \end{itemize}
-Si noti che il match tra due sequenze nella $\PBWT$ è tale sse iniziano
-entrambi nella stessa colonna e terminano nella stessa colonna. Questo vincolo,
+Si noti che il match tra due sequenze nella $\PBWT$ è tale sse entrambi iniziano
+e terminano nella stessa colonna. Questo vincolo,
 da cui deriva il termine ``posizionale'' e che, di fatto, impedisce l'uso degli
 algoritmi tradizionali visti con la $\BWT$, è dato dal fatto che una
 colonna rappresenta un preciso sito di una variante genica. \\
@@ -227,7 +228,8 @@ a quanto visto con il suffix array e la sua permutazione inversa.
   \[\alpha_k[i]=j \iff a_k[j]=i\]
   \end{definizione}
   Grazie a queste prime definizioni, è possibile denotare alcune prime forti
-  correlazioni (tabella \ref{tab:pbwtbwt}), fattore chiave nello sviluppo di questa tesi, che sussistono tra
+  correlazioni (tabella \ref{tab:pbwtbwt}), fattore chiave nello sviluppo di
+  questa tesi, che sussistono tra 
   $\BWT$ e $\PBWT$ (e le rispettive varianti run-length
   encoded).
   \begin{table}

@@ -9,7 +9,8 @@ memoria che di complessità temporale. Tale struttura venne nominata
   simbolo lessicograficamente minore nell'alfabeto di studio), tale che $|T|=n$,
   si definisce suffix 
     array di $T$, denotato con $\SA_T$, un array di interi lungo $n$, tale che
-  $\SA_T[i]=j$ sse il suffisso di ordine $j$, ovvero $T[j,n-1]$, è
+  $\SA_T[i]=j$ se e solo se (sse) il suffisso di ordine $j$, ovvero $T[j,n-1]$,
+  è 
   l'$i$-esimo suffisso nell’ordinamento lessicografico dei suffissi di $T$. Ne
   segue che, presi $i,i'\in \mathbb{N}$
   tali che $0\leq i < i' < n$ e indicando con $\prec$
@@ -18,13 +19,13 @@ memoria che di complessità temporale. Tale struttura venne nominata
     \label{eq:saord}
     T[\SA_T[i],n-1] \prec T[\SA_T[i'],n-1]
   \end{equation}
-  Il suffix array è, quindi, una permutazione dei numeri interi in
+  Il suffix array è, quindi, una permutazione dei valori in
   $\{0,n-1\}$. 
 \end{definizione}
 \begin{esempio}
-  Si prenda la stringa:
+  Data la stringa:
   \[s=\mbox{mississippi\$},\,\,|s|=12\]
-  Si producono quindi i seguenti suffissi e il loro riordinamento:
+  Si producono i seguenti suffissi e il loro riordinamento:
   \begin{table}[H]
     \footnotesize
     \centering
@@ -88,7 +89,7 @@ dati, detta \textbf{Longest Common Prefix} ($\LCP$).
   \end{equation}
 \end{definizione}
 \begin{esempio}
-  Riprendendo l'esempio precedente si avrebbe:
+  Riprendendo l'esempio precedente si ha:
   \begin{table}[H]
     \centering
     \footnotesize
@@ -115,17 +116,17 @@ Senza entrare in ulteriori dettagli relativi all'algoritmo di pattern matching
 tramite $\SA$ e $\LCP$, in quanto non centrali per il resto della
 trattazione, risulta comunque interessante riportarne le complessità
 temporali. Si ha che, per l'algoritmo di query su $\SA$ senza l'uso
-dell'$\,\LCP$, si ha, per un testo lungo $n$ e un pattern lungo $m$:
+dell'$\,\LCP$, per un testo lungo $n$ e un pattern lungo $m$:
 \begin{equation}
   \label{eq:satime}
   \mathcal{O}(m\log n)
 \end{equation}
-Con l'uso dell'$\,\LCP$, si riduce a:
+Con l'uso dell'$\,\LCP$, la complessità temporale si riduce a:
 \begin{equation}
   \label{eq:salcptime}
   \mathcal{O}(m+\log n)
 \end{equation}
-Per ulteriori approfondimenti in merito agli algoritmi di pattern matching
+Per ulteriori approfondimenti, in merito agli algoritmi di pattern matching
 basati su suffix array e ai relativi ``acceleratori'', si rimanda
 al testo di Gusfield \cite{gusfield1997}.
 \subsection{Inverse suffix array}
@@ -144,7 +145,7 @@ trovi tale suffisso nel \textit{suffix array}.
 \end{definizione}
 
 \begin{esempio}
-  Riprendendo l'esempio precedente si avrebbe:
+  Riprendendo l'esempio precedente si ha:
   \begin{table}[H]
     \centering
     \footnotesize
@@ -170,13 +171,10 @@ trovi tale suffisso nel \textit{suffix array}.
 Un'altra permutazione che bisogna introdurre è il \textbf{permuted
   longest common prefix} ($\PLCP$) \textbf{array} \cite{plcp}.
 Tale permutazione
-permette una rappresentazione succinta in memoria dell'$\,\LCP$ \cite{plcp2},
+consente una rappresentazione succinta in memoria dell'$\,\LCP$ \cite{plcp2},
 permettendo di ottenere gli stessi risultati di quest'ultimo.
 % Un'altro vantaggio
 % è che la sua ricostruzione richiede un minor costo computazionale
-\dc{L'intera sottosezione potrebbe essere quasi totalmente rimossa ma almeno la
-  definizione serve per il calcolo di tutte le occorrenze di un MEM, come in
-  PHONI} 
 \begin{definizione}
   Si definisce il permuted longest common prefix, denotato con
   $\PLCP_T$, costruito a partire da un testo $T$ di lunghezza $n$, come un
@@ -196,7 +194,7 @@ permettendo di ottenere gli stessi risultati di quest'ultimo.
   p\in\{1,n-1\}$ 
 \end{definizione}
 \begin{esempio}
-  Riprendendo l'esempio precedente si avrebbe quindi:
+  Riprendendo l'esempio precedente si ha:
   \begin{table}[H]
     \centering
     \footnotesize
@@ -229,6 +227,7 @@ seguente lemma \cite{plcp3}.
     \PLCP_T[i]\geq \PLCP_T[i-1]-1,\,\,\forall\, i\in\{1,n-1\}
   \end{equation}
 \end{lemma}
+\noindent
 Grazie a tale lemma si può memorizzare l'$\,\PLCP$ sparso.
 \begin{definizione}
   Dato un intero
@@ -241,20 +240,19 @@ Grazie a tale lemma si può memorizzare l'$\,\PLCP$ sparso.
     \PLCP_q[i]=\PLCP_T[iq]
   \end{equation}
 \end{definizione}
-\dc{Capire se serve variante sparsa e se serve esempio}
 \subsection{Funzione phi}
 L'ultimo concetto che si introduce sono le \textbf{funzioni}
 $\boldsymbol\varphi$ e $\mathbf{\boldsymbol\varphi^{-1}}$, usate per poter
 identificare i valori precedenti e successivi di 
-un dato valore in $\SA_T$. Esse sono utili al fine di poter sia ricostruire
+un dato valore in $\SA_T$. Esse sono utili per ricostruire
 efficientemente il $\PLCP$ di un testo $T$ (per i dettagli si rimanda
-all'articolo di K\"{a}rkk\"{a}inen \cite{plcp}) che di permettere, come si vedrà
-più  avanti nella sezione \ref{secbwt}, il riconoscimento di tutte le occorrenze
+all'articolo di K\"{a}rkk\"{a}inen \cite{plcp}) e per permettere, come si vedrà
+più avanti nella sezione \ref{secbwt}, il riconoscimento di tutte le occorrenze
 di un \textbf{maximal exact match} ($\MEM$) in $T$ \cite{phoni}.
 \begin{definizione}
-  Dato un testo $T$ di lunghezza $n$ si definiscono le funzioni, che di fatto
-  sono permutazioni dei valori di $\SA_T$, $\varphi$ e
-  $\varphi^{-1}$ come \cite{phoni}: 
+  Dato un testo $T$ di lunghezza $n$ si definiscono le funzioni $\varphi$ e
+  $\varphi^{-1}$, che di fatto
+  sono permutazioni dei valori di $\SA_T$, come \cite{phoni}: 
   \begin{equation}
     \label{eq:phidef1}
     \varphi(p)=
@@ -271,13 +269,13 @@ di un \textbf{maximal exact match} ($\MEM$) in $T$ \cite{phoni}.
       \SA_T[\ISA_T[p]+1]&\mbox{altrimenti}
     \end{cases},\,\,\forall\, p\in\{0,n-1\}
   \end{equation}
-  Si noti che si ha il valore $\NULL$ quando, rispettivamente, si studia il
-  primo e l'ultimo valore del \textit{suffix array} in quanto non hanno, sempre
+  Si noti che si ha il valore $\NULL$ quando si studia il
+  primo e l'ultimo valore del \textit{suffix array} in quanto non hanno,
   rispettivamente, l'antecedente e il successore.\\
   % Infatti, tali
   % funzioni restituiscono i due valori, se 
   % esistenti, di $\SA_T$ adiacenti ad un valore del suffix array dato.
-  Analogamente, sempre coi medesimi vincoli, le due funzioni possono essere
+  Analogamente, coi medesimi vincoli, le due funzioni possono essere
   definite come \cite{plcp}: 
   \begin{equation}
     \label{eq:phidef2}
@@ -290,7 +288,7 @@ di un \textbf{maximal exact match} ($\MEM$) in $T$ \cite{phoni}.
 
 \end{definizione}
 \begin{esempio}
-   Riprendendo l'esempio precedente si avrebbe quindi:
+   Riprendendo l'esempio precedente si ha:
    % \begin{table}[H]
    %   \centering
    %   \footnotesize
@@ -335,6 +333,6 @@ di un \textbf{maximal exact match} ($\MEM$) in $T$ \cite{phoni}.
        11 & 2 & 0 & $\NULL$ & 10 & ssissippi\$\\
      \end{tabular}
    \end{table}
-  Infatti, ad esempio, il valore $9$ in $\SA_T$ è preceduto dal valore
+   Ad esempio, il valore $9$ in $\SA_T$ è preceduto dal valore
   $\varphi(9)=0$ ed è seguito dal valore $\varphi^{-1}(9)=8$.
 \end{esempio}

@@ -2,24 +2,24 @@
 \label{secbwt}
 Introdotta nel 1994 da Burrows e Wheeler con lo scopo di comprimere testi, la
 \textbf{Burrows-Wheeler Transform} ($\BWT$) \cite{bwt} è divenuta ormai uno
-standard nel 
-campo dell'algoritmica su stringhe e della bioinformatica,
-grazie ai suoi molteplici vantaggi sia dal punto di vista della complessità
+standard nell'algoritmica su stringhe e nella bioinformatica,
+grazie ai suoi molteplici vantaggi, sia dal punto di vista della complessità
 temporale che da quello dell'efficienza in memoria.\\
-Nel dettaglio, la $\BWT$ è una trasformata reversibile che
+La $\BWT$ è una trasformata reversibile che
 permette una compressione lossless, quindi senza perdita
 d'informazione. Tale trasformazione viene costruita a partire dal riordinamento
 dei caratteri del testo in input, riordinando lessicograficamente le cosiddette
-\textit{rotazioni} del testo. Interessante è la proprietà per cui caratteri
+\textit{rotazioni} del testo. La proprietà per cui caratteri
 uguali tendono ad essere posti consecutivamente all'interno della stringa
-prodotta dalla trasformata. Questa proprietà è causata dalle ripetizioni di
+prodotta dalla trasformata è causata dalle ripetizioni di
 sottostringhe all'interno del testo stesso.
 \begin{definizione}
-  Dato un testo $T$ \$-terminato, tale che $|T|=n$, si definisce la
-  Burrows--Wheeler Transform di $T$, denotata con
+  Dato un testo $T$ \$-terminato, tale che $|T|=n$, si definisce la trasformata
+  di
+  Burrows--Wheeler di $T$, denotata con
   $\BWT_T$, come un array di caratteri lungo $n$ dove l'elemento $i$-esimo è il
   carattere che precede l'$i$-esimo suffisso di $T$ nel riordinamento
-  lessicografico. Più formalmente si ha che:
+  lessicografico. Più formalmente, si ha che:
   \begin{equation}
     \label{eq:bwt1}
     \BWT_T[i]=
@@ -33,7 +33,7 @@ In termini operativi, la $\BWT$ di un testo è calcolabile riordinando
 lessicograficamente tutte le possibili rotazioni del testo $T$.
 \begin{definizione}
   Si definisce rotazione $i$-esima di
-  un testo $T$ lungo $n$, denotata con $\ROT_T(i)$, come la stringa ottenuta
+  un testo $T$ lungo $n$, denotata con $\ROT_T(i)$, la stringa ottenuta
   dalla concatenazione 
   del suffisso $i$-esimo con la restante porzione del testo. Più formalmente, si
   ha che, denotando con $X\cdot Y$ la concatenazione tra
@@ -44,18 +44,18 @@ lessicograficamente tutte le possibili rotazioni del testo $T$.
   \end{equation}
 \end{definizione}
 Data questa definizione, quindi, la $\BWT$ del testo $T$ risulta essere
-l'ultima colonna della matrice, detta \textbf{Burrows--Wheeler Matrix} ($\BWM$),
+l'ultima colonna della matrice, detta \textbf{Burrows--Wheeler matrix} ($\BWM$),
 che si ottiene riordinando tutte le  
 rotazioni di $T$, che altro non sono che i suffissi già riordinati per
 il calcolo di $\SA_T$ a cui viene concatenata la parte restante del
 testo.\\
 Un altro array spesso utilizzato insieme alla $\BWT$ è il cosiddetto
-array $\F$, lungo $|T|$, che è l'array formato
-dalla prima colonna della $\BWM$. In pratica l'array $\F_T$ è l'array formato
+array $\F$, lungo $|T|$ e formato dalla prima colonna della $\BWM$. In pratica,
+l'array $\F_T$ è formato
 dal riordinamento  
 lessicografico dei caratteri del testo $T$.
 \begin{esempio}
-  Si prenda la stringa:
+  Data la stringa:
   \[s=\mbox{mississippi\$},\,\,|s|=12\]
   Si produce la $\BWM_T$, da cui si estraggono $\F_T$ e $\BWT_T$:
   \begin{table}[H]
@@ -81,44 +81,43 @@ lessicografico dei caratteri del testo $T$.
   \end{table}
 \end{esempio}
 L'importanza di questa trasformata è dovuta al fatto che sia
-reversibile, implicando quindi che, a partire da $\BWT_T$, sia possibile
+reversibile, implicando che, a partire da $\BWT_T$, sia possibile
 ricostruire $T$. Questo è possibile grazie ad una proprietà intrinseca della
-trasformata che viene riassunta nel concetto di \textbf{LF-mapping}.
+trasformata, riassunta nel concetto di \textbf{LF-mapping}.
 \begin{definizione}
   Dato un testo $T$, tale che $|T|=n$, data la sua $\BWT_T$ e il suo array
-  $\F_T$ 
+  $\F_T$,
   si definisce LF-mapping come la proprietà per la quale l'$i$-esima
   occorrenza di un carattere $\sigma$ in $\BWT_T$ corrisponde all'$i$-esima
   occorrenza dello stesso carattere in $\F_T$.
 \end{definizione}
 Grazie a questa definizione è possibile partire dall'ultimo carattere del testo,
-ovvero $\sigma=\$$, e ricostruire l'intero testo a ritroso. Si vede quindi un
-breve esempio. 
+ovvero $\sigma=\$$, e ricostruire l'intero testo a ritroso. 
 \begin{esempio}
   Si riprende l'esempio precedente, avendo:
   \[\BWT_T=\mbox{ipssm\$pissii}\mbox{ e }\F_T=\mbox{\$iiiimppssss}\]
-  E avendo i seguenti caratteri associati dall'LF-mapping:
+  Si hanno i seguenti caratteri associati dall'LF-mapping:
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.33]{img/lf2.pdf}
   \end{figure}
   Si comincia dal simbolo '\$' in $\BWT_T$, che è l'ultimo carattere di $T$. Si
   ha che esso corrisponde al primo e unico simbolo '\$' in $\F_T$, all'indice
-  $0$. Tale simbolo, per l'ovvia proprietà delle rotazioni è preceduto dal
+  $0$. Tale simbolo, per l'ovvia proprietà delle rotazioni, è preceduto dal
   simbolo $\BWT_T[0]=\mbox{'i'}$ in $T$. Quindi $\mbox{'i'}$ precederà '\$' in
   $T$:
   \[T=\ldots\mbox{i\$}\]
-  Si sa inoltre che
+  Inoltre, si ha che
   tale $\mbox{'i'}$ è il primo $\mbox{'i'}$ in $\BWT_T$. Si cerca quindi il
   primo simbolo $\mbox{'i'}$ anche in $\F_T$,
-  sapendo che sono lo stesso simbolo nel testo. A questo punto il simbolo allo
-  stesso indice di tale $\mbox{'i'}$ nella $\BWT_T$, ovvero il simbolo
+  sapendo che sono lo stesso simbolo nel testo. A questo punto, il carattere
+  allo
+  stesso indice di tale $\mbox{'i'}$ nella $\BWT_T$, ovvero
   $\mbox{'p'}$, sarà il simbolo che precede $\mbox{'i'}$ nel testo:
   \[T=\ldots\mbox{pi\$}\]
-  Proseguendo a ritroso si ricostruisce l'intero testo:
+  Proseguendo a ritroso, si ricostruisce l'intero testo:
   \[T=\mbox{mississippi\$}\]
 \end{esempio}
-\dc{Questo esempio serve davvero?}
 \subsubsection{FM-index}
 Tramite l'uso dell'LF-mapping è possibile risolvere il problema di
 ricerca di un pattern all'interno del testo, tramite l'algoritmo nominato
@@ -127,42 +126,41 @@ destra a sinistra e
 salvare, di volta in volta, un intervallo sul suffix array. Nel
 dettaglio, ipotizzando di essere in posizione $i$ del pattern, tale
 intervallo è relativo a quei suffissi che hanno come prefisso il suffisso
-$i$-esimo del pattern. Tale intervallo viene esteso usando il carattere
-$P[i-1]$ selezionando il nuovo intervallo sul suffix array. Tale
-aggiornamento è detto \textit{backward step} e consiste nell'aggiornare
+$i$-esimo del pattern e viene esteso usando il carattere
+$P[i-1]$, selezionando il nuovo intervallo sul suffix array. Esso è detto
+\textit{backward step} e consiste nell'aggiornare
 l'intervallo sul suffix array a quei suffissi del testo che, estesi a sinistra
 col carattere $(i-1)$-esimo del pattern, presentano un match con $P[i-1,
 |P|-1]$.\\   
-Usando la $\BWT$ è possibile usare due funzioni, dette $\C$ e $\Occ$, per
+Con la $\BWT$, è possibile usare due funzioni, dette $\C$ e $\Occ$, per
 computare la backward search.
 \begin{definizione}
   Dato un testo \$-terminato $T$, lungo $n$ e costruito su alfabeto $\Sigma$, si
-  definisce la funzione $\C$, come una funzione:
+  definisce $\C$ come una funzione:
   \begin{equation}
     \label{eq:bwt4}
     \C:\Sigma\cup \$\to \mathbb{N}
   \end{equation}
-  Dato un carattere $\sigma\in\Sigma$, $\C(\sigma)$ restituisce il
+  Dato un simbolo $\sigma\in\Sigma$, $\C(\sigma)$ restituisce il
   numero di 
   occorrenze dei caratteri lessicograficamente più piccoli di $\sigma$ in $T$.
 \end{definizione}
 \begin{definizione}
   Dato un testo \$-terminato $T$, lungo $n$ e costruito su alfabeto $\Sigma$, e
-  la sua $BWT_T$, si definisce la funzione $\Occ$, come una funzione:
+  la sua $BWT_T$, si definisce $\Occ$ come una funzione:
   \begin{equation}
     \label{eq:bwt5}
     \Occ:\Sigma\cup \$\times \{0,n\}\to \mathbb{N}
   \end{equation}
-  Dato un carattere $\sigma\in\Sigma$ e una posizione $i$ della
+  Dato un simbolo $\sigma\in\Sigma$ e una posizione $i$ della
   $BWT_T$, $\Occ(\sigma,i)$ restituisce il numero di occorrenze del carattere
   $\sigma$ nei primi $i$ elementi di $\BWT_T$.
 \end{definizione}
 Questa coppia di funzioni prende il nome di \textbf{FM-index} \cite{fm}, il
 quale è definito essere un self index in quanto è possibile tenere in
-memoria solo tale indice per ottenere i risultati medesimi della $\BWT_T$,
-ricordando anche che da essa si può ricostruire il testo $T$.
+memoria solo tale indice per ottenere i risultati medesimi della $\BWT_T$.
 \begin{esempio}
-  Si prenda il seguente testo e la corrispondente $\BWT_T$:
+  Dato il seguente testo e la corrispondente $\BWT_T$:
   \[T=\mbox{mississippi\$},\,\,|s|=12\]
   \[\BWT_T=\mbox{ipssm\$pissii}\]
   \newpage
@@ -210,17 +208,16 @@ Ritornando il nuovo intervallo $[f, g)\gets [f', g')$ sse $f'< g'$.
 Si segnala che tali variabili sono inizializzate con $f=0$ e $g=n$.\\
 Tale calcolo si basa sull'LF-mapping. Infatti, partendo da un
 intervallo su $\SA_T$ (che è anche un intervallo su $\BWT_T$), si identificano
-quali suffissi sono preceduti dal simbolo del pattern voluto. Tale simbolo, se
+i suffissi che sono preceduti dal simbolo del pattern voluto. Tale simbolo, se
 il 
 pattern ha un'occorrenza fino al carattere in analisi, sarà presente in
 sottointervallo di $[f,g)$ sulla $\BWT_T$. Una volta identificati tali caratteri
 su $\BWT_T$ si usano $\C(\sigma)$ e $\Occ(\sigma, i)$ per trovare tali
 caratteri su $\F_T$, calcolando il nuovo intervallo $[f,g)$.
-\dc{capire se dire meglio}
 \begin{esempio}
-  Si assuma il pattern $P=\mbox{iss}$ da voler ricercare nel testo
+  Si assume il pattern $P=\mbox{iss}$ da voler ricercare nel testo
   $T=\mbox{mississippi\$}$. 
-  Si ha, in termini di inizializzazione che $f=0$, $g=12$,
+  Si ha, in termini di inizializzazione, che $f=0$, $g=12$ e
   $\sigma=P[|P|-1]=P[2]=s$. Si calcolano i nuovi $f'$ e $g'$:
   \[f'=\C(s)+\Occ(s, 0)=8+0=8\]
   \[g'=\C(s)+\Occ(s, 12)=8+4=12\]
@@ -234,8 +231,8 @@ caratteri su $\F_T$, calcolando il nuovo intervallo $[f,g)$.
   Un ulteriore aggiornamento, col carattere $\sigma=P[0]=i$, comporta:
   \[f'=\C(i)+\Occ(i, 10)=1+2=3\]
   \[g'=\C(i)+\Occ(i, 12)=1+4=5\]
-  Avendo l'intervallo finale su $\SA_T$ del match, ovvero: $[3,5)$.\\
-  Seguendo l'intero ragionamento sul \textit{suffix array} si avrebbe:
+  Avendo l'intervallo finale su $\SA_T$ del match: $[3,5)$.\\
+  Seguendo l'intero ragionamento sul \textit{suffix array}, si ha:
   \begin{table}[H]
     \centering
     \scriptsize
@@ -325,22 +322,21 @@ caratteri su $\F_T$, calcolando il nuovo intervallo $[f,g)$.
       11 & 2 & s & ssissippi\$mi & i\\
     \end{tabular}
   \end{table}
-  Avendo quindi che le occorrenze del pattern $P=\mbox{iss}$ iniziano alle
+  Si ottiene che le occorrenze del pattern $P=\mbox{iss}$ iniziano alle
   posizioni $\SA_T[3]=4$ e $\SA_T[4]=1$ del testo.
 \end{esempio}
 \section{Trasformata di Burrows--Wheeler run-length encoded}
 Come già introdotto, la $\BWT$ tende ad avere caratteri uguali in
 posizioni consecutive all'interno della sua sequenza. Si è quindi 
-pensato, fin da subito, ad un modo efficiente per memorizzare in modo compresso
+pensato a una tecnica efficiente per memorizzare in modo compresso
 testi mediante l'uso del run-length encoding. \\
 Tale tecnica consiste nel
 memorizzare le cosiddette \textit{run}, ovvero sequenze massimali di caratteri
 uguali, mediante coppie \texttt{(carattere, lunghezza della run)}.
 \begin{esempio}
-  Vediamo un breve esempio.\\
-  Si ipotizzi di avere la seguente stringa:
+  data la seguente stringa:
   \[s=\mbox{aaaacctgggggg}\]
-  La sua memorizzazione run-length sarebbe:
+  La sua memorizzazione run-length encoded è:
   \[\{(a,4),(c,2),(t,1),(g,6)\}\]
 \end{esempio}
 \subsection{RLBWT e r-index}
@@ -363,8 +359,8 @@ un'unica $\BWT$ a partire dalla concatenazione di multipli
 genomi. Infatti, tale
 concatenazione conterrà, per ovvie ragioni biologiche, diverse regioni genomiche
 ripetute. \\
-Una strategia per la memorizzazione in modo compatto la $\RLBWT$ è quella
-di memorizzare: 
+Una strategia per memorizzare in modo compatto la $\RLBWT$ è quella
+di salvare: 
 \begin{itemize}
   \item una stringa $c$, tale che $|c|=r$, contenente un solo carattere per ogni
   run della $\BWT_T$
@@ -372,7 +368,7 @@ di memorizzare:
   $\BWT_T[i]$ è il primo carattere, detto anche testa, di una run 
 \end{itemize}
 \begin{esempio}
-  Si prenda ad esempio la seguente $\BWT_T$:
+  Data la seguente $\BWT_T$:
   \[\BWT_T=acggtcccaa\]
   Si hanno:
   \[c=acgtca\quad \quad bv=1110110010\]
@@ -415,13 +411,14 @@ fondamentale in questo ambito.
     \mathcal{O}(m\log\log n)
   \end{equation}
 \end{teorema}
-Questo risultato dimostra come identificare \underline{un} $\SA$ sample
+Questo risultato dimostra come identificare un solo $\SA$ sample
 nell'intervallo 
 contenente il pattern $P$. Il limite è dato dal fatto che non si supporta la
 localizzazione di tutte le $k$ occorrenze degli $\SA$ sample in
 quell'intervallo.\\
 Nel 2020 Gagie et al \cite{gagie2020}, combinando la $\RLBWT$, il
-Toehold lemma e la già introdottta funzione $\varphi$, trovarono una soluzione a
+Toehold lemma e la già introdottta funzione $\varphi$, hanno trovato una
+soluzione a
 questo problema, permettendo di avere le \textit{locate 
   query} in spazio $\mathcal{O}(r)$.
 Tale risultato si riassume nel seguente teorema.
@@ -434,7 +431,7 @@ Tale risultato si riassume nel seguente teorema.
     \mathcal{O}((m+k)\log\log n)
   \end{equation}
 \end{teorema}
-Nel dettaglio, i risultati di Gagie portarono a ridefinire l'r-index
+Nel dettaglio, i risultati di Gagie hanno portato a ridefinire l'r-index
 tramite l'uso dei valori del $\SA$ all'inizio e alla fine di ogni run come
 $\SA$ sample. Si è quindi ottenuto che i $\SA$ sample possono
 essere memorizzati in spazio proporzionale al numero di run, 
@@ -444,7 +441,7 @@ ai
 paper di Kuhnle et al. \cite{kuhnle}, di Mun et al. \cite{mun} e di Boucher et
 al. \cite{boucher}. 
 \subsection{Match massimali con RLBWT}
-Dopo aver introdotto l'r-index, bisogna brevemente come avvenga il
+Dopo aver introdotto l'r-index, bisogna descrivere come avvenga il
 calcolo dei cosiddetti \textbf{Maximal Exact Match} ($\MEM$), ovvero match
 esatti, tra un pattern e un testo, che non 
 possono essere estesi in alcuna direzione, essendo quindi massimali.
@@ -460,15 +457,15 @@ possono essere estesi in alcuna direzione, essendo quindi massimali.
     destra) 
   \end{itemize}
 \end{definizione}
-L'importanza nel calcolo dei match massimali esatti si ritrova nel loro uso nei
+L'importanza del calcolo dei match massimali esatti si ritrova nel loro uso nei
 metodi di allineamento basati sul \textit{paradigma seed-and-extend}.
-Tale paradigma, sfruttato in algoritmi di allineamento come BLAST
-\cite{blast}, uno degli allineatori più usati al mondo, si basa sul trovare
+Tale paradigma si basa sul trovare
 $\MEM$ di piccola lunghezza, detti seed, per poi continuare
 l'allineamento tramite algoritmi più sofisticati, spesso basati sulla
-programmazione dinamica. \\
-Nel 2020, Bannai et al. \cite{bannai} mostrarono come il calcolo dei
-$\MEM$ fosse equivalente al calcolo delle \textbf{Matching Statistics} ($\MS$), 
+programmazione dinamica, ed è sfruttato in algoritmi di allineamento come BLAST
+\cite{blast}, uno degli allineatori più usati al mondo. \\
+Nel 2020, Bannai et al. \cite{bannai} hanno mostrato come il calcolo dei
+$\MEM$ sia equivalente al calcolo delle \textbf{Matching Statistics} ($\MS$), 
 un concetto teorico molto usato in
 bioinformatica. 
 \begin{definizione}
@@ -485,11 +482,11 @@ bioinformatica.
   \end{itemize}
 \end{definizione}
 \noindent
-Informalmente, per ogni posizione $i$ del pattern, le
+Per ogni posizione $i$ del pattern, le
 matching statistics riportano la lunghezza e 
 una posizione di inizio sul testo della più lunga sottostringa comune tra il
 testo e $P[i, |P|-1]$. \\
-Una volta calcolato l'array $\MS$ si ha il seguente lemma.
+Si ha il seguente lemma.
 \begin{lemma}
   \label{lemma:mem}
   Dato un testo $T$, un pattern $P$ lungo $m$ e il
@@ -503,17 +500,16 @@ Una volta calcolato l'array $\MS$ si ha il seguente lemma.
     \label{eq:rlbwt6}
     \MS[i].\len=l\land \MS[i-1].\len\leq \MS[i].\len
   \end{equation}
-  Inoltre, qualora si avesse $i=0$, si ha che $P[0,l-1]$ è un $\MEM$ 
-  ''banale'', di lunghezza $1$, in $T$ sse:
+  Inoltre, qualora si avesse $i=0$, si ha che $P[0,l-1]$ è un $\MEM$,
+  di lunghezza $1$, in $T$ sse:
   \begin{equation}
     \label{eq:rlbwt7}
     \MS[0].\len=1\land \MS[0].\len\geq \MS[1].\len
   \end{equation}
-  \dc{Secondo caso da verificare}
 \end{lemma}
 Per costruire l'array delle matching statistics l'approccio na\"{i}ve è quello di
 sfruttare 
-interamente l'array $\LCP$ ma, sempre nell'articolo di Bannai et
+interamente l'array $\LCP$ ma, nell'articolo di Bannai et
 al. \cite{bannai}, si è presentato una semplice concetto in grado di
 ottimizzare il processo, quello delle \textbf{threshold}. Questa piccola
 struttura dati memorizza il primo valore minimo dell'array $\LCP$  tra due run
@@ -528,12 +524,12 @@ consecutive del medesimo simbolo nella $\BWT$.
     }\LCP_T[j+1,k] 
   \end{equation}
 \end{definizione}
-Rossi et al., nel 2021, sfruttarono tutte le conoscenze relative
+Rossi et al., nel 2021, hanno sfruttato tutte le conoscenze relative
 alla $\RLBWT$, all'r-index e alle matching statistics
 per ideare \textbf{MONI:\textit{ A Pangenomics Index for Finding MEMs}}
-\cite{moni}. In questa soluzione si ha la costruzione, in due
-sweep sul pattern $P$ (lungo $m$)
-dell'array $\MS$, tramite l'\textbf{algoritmo di Bannai}. Infatti, si ha: 
+\cite{moni}. In questa soluzione si ha la costruzione dell'array $\MS$, in due
+sweep sul pattern $P$ (lungo $m$), tramite l'\textbf{algoritmo di Bannai}.
+Infatti, si ha: 
 \begin{itemize}
   \item un primo sweep che computa i valori $\MS[i].\pos$,
   $\forall i\in\{0,m-1\}$
@@ -545,8 +541,8 @@ dell'array $\MS$, tramite l'\textbf{algoritmo di Bannai}. Infatti, si ha:
 \end{itemize}
 Nel dettaglio, per computare i valori $\MS[i].\pos$, $\forall i\in\{0,m-1\}$,
  si procede scorrendo il
-pattern $P$, lungo $m$, da destra a sinistra. Brevemente i passi dell'algoritmo
-sono i seguenti: 
+pattern $P$, lungo $m$, da destra a sinistra. Brevemente, i passi dell'algoritmo
+sono: 
 \begin{enumerate}
   \item si inizia cercando l'ultima occorrenza, di indice $q$, di $P[m-1]$,
   in $\BWT_T$, memorizzata in modo
@@ -560,25 +556,25 @@ sono i seguenti:
     memorizzato
     $\MS[i].\pos = \SA_T[q]$
     \item se $\BWT_T[q]\neq P[i-1]$ si deve selezionare un nuovo $q$ tale per cui
-    $\BWT_T[q]=P[i-1]$. Questo può essere o l'indice della coda della run
+    $\BWT_T[q]=P[i-1]$. Questo può essere l'indice della coda della run
     precedente di simboli $P[i-1]$ o la testa della run successiva di simboli
-    $P[i-1]$. Qualora non si debba scegliere, ovvero la run attuale non è
+    $P[i-1]$. Qualora la run attuale non sia
     preceduta/succeduta da una run di simboli $P[i-1]$, si sceglie,
     rispettivamente, la testa della run successiva o la coda della run
     precedente di simboli $P[i-1]$. Altrimenti si usa la threshold relativa al
     carattere $P[i-1]$, la cui posizione viene denotata $t$. Avendo
     $q<t$, si procede scegliendo la coda della run precedente mentre, avendo
     $q\geq t$, si seleziona la testa della run successiva. La scelta basata
-    sulla posizione della threshold è dettata dal fatto che, in tal modo, si
-    seleziona, di volta in volta, il suffisso più lungo che presenta un match
-    con il suffisso, esteso a sinistra con $P[i-1]$, del pattern. Questo è
+    sulla posizione della threshold è dettata dal fatto che si
+    seleziona il suffisso più lungo che presenta un match
+    con il suffisso corrente del pattern, esteso a sinistra con $P[i-1]$.
+    Questo è
     garantito dal riordinamento lessicografico che costruisce $\BWT_T$. 
     Una volta
     scelto il nuovo $q$ si procede con il mapping come in 2, dopo aver 
     memorizzato $\MS[i].\pos = \SA_T[q]$
-    \dc{ridire meglio e dimostrare}
   \end{itemize}
-  \item si itera fino ad esaurimento del pattern
+  \item si itera fino a esaurimento del pattern
 \end{enumerate}
 Lo pseudocodice è visualizzabile all'algoritmo \ref{algo:bannai}.\\
 Questa pubblicazione è stata uno dei punti di partenza per
@@ -611,8 +607,8 @@ di MONI \cite{moni}.
     \State $\MS[i].\pos \gets pos$
     \State $q\gets \LF(q),\,\,pos\gets pos-1$
     \EndFor
-    \Comment calcolo $\MS[i].\len$
     \For {\textit{every} $i\in[0,m-1]$}
+    \Comment calcolo $\MS[i].\len$
     \State $\MS[i].\len\gets \MS[i-1].\len-1$
     \While {$P[i+\MS[i].\len]=T[\MS[i].\pos+MS[i].\len]$}
     \State  $\MS[i].\len\gets \MS[i].\len+1$
@@ -629,34 +625,34 @@ di MONI \cite{moni}.
   calcolo dell'LF-mapping.}
   \label{algo:bannai}
 \end{algorithm}
-\dc{Sistemare pseudo Bannai}
 Una corretta stima della complessità temporale risulta difficile in quanto 
 dipendente dalla struttura con cui si memorizza il testo $T$ sul quale fare 
-random access. Nell'articolo si riporta che, per un testo $T$ lungo
+random access. Nell'articolo si riporta che i valori
+$\MS[i].\pos$, $\forall i\in\{0,m-1\}$, sono calcolabili in tempo 
+$\mathcal{O}(m\log\log n)$, per un testo $T$ lungo
  $n$ e un pattern $P$ lungo $m$, assumendo che si possa accedere
 alla posizione delle threshold in tempo $\mathcal{O}(\log\log n)$ e che 
-i backward-step siano effettuabili in tempo $\mathcal{O}(\log\log n)$, i valori
-$\MS[i].\pos$, $\forall i\in\{0,m-1\}$, sono calcolabili in tempo 
-$\mathcal{O}(m\log\log n)$.
-Analogamente, assumendo di avere random access su $T$ in tempo in tempo 
-$\mathcal{O}(\log\log n)$ (tramite, secondo l'articolo, una struttura compatta
+i backward-step siano effettuabili in tempo $\mathcal{O}(\log\log n)$.
+Analogamente, ipotizzando di avere random access su $T$ in tempo 
+$\mathcal{O}(\log\log n)$ (tramite una struttura compatta
 basata sul Tabix index \cite{tabix}), i valori
-$\MS[i].\len$, $\forall i\in\{0,m-1\}$ sono calcolabili in tempo 
-$\mathcal{O}(m\log\log n)$. Tali stime sono, in ogni caso, fortemente teoriche e
+$\MS[i].\len$, $\forall i\in\{0,m-1\}$, sono calcolabili in tempo 
+$\mathcal{O}(m\log\log n)$. Tali stime sono fortemente teoriche e
 si rimanda all'articolo per ulteriori dettagli.
 \subsection{Uso delle LCE query}
-Nel 2021, Boucher, Gagie, Rossi et al. proposero un ulteriore miglioramento di
+Nel 2021, Boucher, Gagie, Rossi et al. hanno proposto un ulteriore
+miglioramento di
 quanto fatto in MONI, con \textbf{PHONI: \textit{Streamed Matching
     Statistics with Multi-Genome References}} \cite{phoni}.\\
-In questo progetto non solo si sostituì l'uso delle thresholds con
-l'uso delle $\LCE$ query, riducendo l'algoritmo ad un solo sweep
+In questo progetto, non solo si è sostituito l'uso delle thresholds con
+l'uso delle $\LCE$ query, riducendo l'algoritmo a un solo sweep
 sull'array delle matching statistics (permettendo un uso ``online''
 dell'algoritmo), ma si 
-esplicitò anche l'uso delle funzioni $\varphi$ e
+è esplicitato anche l'utilizzo delle funzioni $\varphi$ e
 $\varphi^{-1}$ e di $\PLCP_T$ per il riconoscimento di tutte le
-occorrenze di ogni $\MEM$ tra un pattern e un testo, nel modo 
+occorrenze di ogni $\MEM$ tra un pattern e un testo, come
 riportato all'algoritmo \ref{algo:expand} \cite{phoni}.\\
-A tal fine, si sfrutta infatti il seguente teorema \cite{gagie2020}.
+A tal fine, si sfrutta il seguente teorema \cite{gagie2020}.
 \begin{teorema}
   Dato un testo $T$, tale che $|T|=n$, si può memorizzare $T$ in
   $\mathcal{O}(r)$, con $r$ numero di run, tale che, dato un indice
@@ -667,24 +663,26 @@ A tal fine, si sfrutta infatti il seguente teorema \cite{gagie2020}.
     \mathcal{O}(\log\log n)
   \end{equation}
 \end{teorema}
-Si è quindi potuto migliorare e semplificare l'algoritmo di Bannai
+Si è potuto migliorare e semplificare l'algoritmo di Bannai
 usato in MONI. Sfruttando le
-$\LCE$ query, avendo il testo $T$ in memoria sotto forma di $\SLP$,
+$\LCE$ query e avendo il testo $T$ in memoria sotto forma di $\SLP$,
 è possibile computare contemporaneamente sia i valori
 $\MS[i].\pos$ che i valori $\MS[i].\len$. Infatti, a differenza di quanto visto
-in MONI, dovendo scegliere una nuova posizione dopo un mismatch, 
-si usa il 
-risultato delle $\LCE$ query. In tal modo, in contemporanea,
+in MONI, si usa il 
+risultato delle $\LCE$ query per scegliere una nuova posizione dopo un mismatch.
+In tal modo,
 si possono computare i valori 
-$\MS[i].\len$, $\forall \in \{0,m-1\}$. Sfruttando, infatti, $\MS[i+1].\len$ e
+$\MS[i].\len$, $\forall \in \{0,m-1\}$ contemporaneamente. Sfruttando,
+$\MS[i+1].\len$ e
 la lunghezza del risultati 
 della $\LCE$ query è possibile tenere conto di eventuali overlap tra i
-match e computare correttamente $\MS[i].\len$. Alternativamente, qualora si possa
+match e computare $\MS[i].\len$. Alternativamente, per
 proseguire avendo un match tra  
 $\BWT_T[q]$ e $P[i-1]$, il calcolo $\MS[i].\len$ avviene a partire da
-$\MS[i+1].\len$, incrementandolo di uno avendo aggiunto un carattere a sinistra.
+$\MS[i+1].\len$, incrementandolo di uno, grazie all'aggiunta del carattere a
+sinistra. 
 Inoltre, come nel caso dell'algoritmo
-di Bannai, si ha il computo dei $\MEM$ in contemporanea al computo dei valori 
+di Bannai, si ha il computo dei $\MEM$ in contemporanea a quello dei valori 
 $\MS[i].\len$.
 Il riconoscimento della run a cui appartiene un certo indice e degli indici
 delle teste delle run avviene tramite l'uso di bitvector. Infatti,
@@ -703,8 +701,7 @@ riporta il calcolo completo dell'array delle matching statistics presente in
 PHONI, la cui 
 complessità temporale è stimata in $\mathcal{O}(m\log\log n)$.
 Anche in questo caso, la stima asintotica è difficile da caratterizzare in modo 
-corretto ed è fortemente dipendente dalle strutture dati in uso, ad esempio 
-per il calcolo delle $\LCE$ query.
+corretto ed è fortemente dipendente dalle strutture dati in uso.
 Per ulteriori approfondimenti si rimanda al paper di riferimento
 \cite{phoni}.
 \begin{algorithm}
@@ -775,8 +772,8 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   \[T=\mbox{mississippi\$ e }P=\mbox{miss}\]
   Si vuole studiare il calcolo dell'array delle matching statistics sia con
   MONI che con PHONI. Si assume che $|T|=n$ e $|P|=m$.\\
-  Si hanno, avendo in ultima colonna i cinque bitvector relativi alle
-  threshold di ogni simbolo:
+  Avendo in ultima colonna i cinque bitvector relativi alle
+  threshold di ogni simbolo, si hanno:
   \begin{table}[H]
     \centering
     \footnotesize
@@ -798,26 +795,25 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
       11 & 2 & s & ssissippi\$mi & i & 0 & 0 & 0 & 0 & 0 & 00000\\
     \end{tabular}
   \end{table}
-  \dc{verificare bene threshold}
   \noindent
   Si inizia con l'algoritmo visto in \textit{MONI}.\\
-  Si ha che $P[m-1]=\mbox{'s'}$, ne segue, seguendo la stessa notazione vista
-  sopra e cercando l'ultima occorrenza di $\mbox{'s'}$ in $\BWT_T$, che $q=9$. Si
+  Dato $P[m-1]=\mbox{'s'}$, ne segue che $q=9$, utilizzando la notazione
+  precedente e cercando l'ultima occorrenza di $\mbox{'s'}$ in $\BWT_T$. Si
   procede quindi con l'LF-mapping, avendo che $\LF(9)=11$. A questo punto
-  si ha il valore di $\MS[m-1].pos$:
+  si calcola il valore di $\MS[m-1].pos$:
   \[\MS.\pos = ???\SA_T[11]=???2\]
   Si ha poi che $\BWT_T[11]=\mbox{'i'}\neq P[m-2]=\mbox{'s'}$. Non avendo alcuna
   run di simboli $\mbox{'s'}$ sotto l'attuale run di simboli $\mbox{'i'}$, si
   procede aggiornando $q$ con l'indice della coda della precedente run di
-  simboli $\mbox{'s'}$, ovvero $q=9$. Si procede con
-  l'LF-mapping, avendo $\LF(9)=11$, e si aggiorna l'array $\MS.\pos$:
+  simboli $\mbox{'s'}$, ovvero $q=9$, avendo $\LF(9)=11$, e si aggiorna
+  l'array $\MS.\pos$:
   \[\MS.\pos = ??\SA_T[11]2=??22\]
-  Si ha, a questo punto, che $\BWT_T[11]=\mbox{'i'}= P[m-3]=\mbox{'i'}$. Si
-  procede con l'LF-mapping, ottenendo $\LF(11)=4$ e aggiornando $\MS$:
+  Si ha, a questo punto, che $\BWT_T[11]=\mbox{'i'}= P[m-3]=\mbox{'i'}$,
+  ottenendo $\LF(11)=4$ e aggiornando $\MS$:
   \[\MS.\pos = ?\SA_T[4]22=?122\]
   Infine, avendo $\BWT_T[4]=\mbox{'i'}\neq P[m-4]=\mbox{'m'}$, si conclude il
   calcolo dell'array $\MS$ con l'ultimo l'LF-mapping, $\LF(4)=5$,
-  avendo quindi:
+  ottenendo:
   \[\MS.\pos = \SA_T[5]122=0122\]
   A questo punto, tramite random access al testo, si calcolano i valori
   $\MS.\len$. Partendo da sinistra, si calcola per primo $\MS[i].\len$, con
@@ -844,7 +840,7 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   Si passa ora al calcolo tramite PHONI.\\
   Si inizia avendo $q=\select_{P[m-1]}(1)=\select_{'s'}(1)=2$, ovvero ponendo $q$
   pari all'indice della prima occorrenza di $P[m-1]$ in $\BWT_T$. Seguendo
-  l'algoritmo si ottiene, essendo $\SA_T[2]=7$:
+  l'algoritmo si ottiene, dato che $\SA_T[2]=7$:
   \begin{table}[H]
     \centering
     \begin{tabular}{c||c|c|c|c}
@@ -858,8 +854,8 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
       $\len$ & ? & ? & ? & 1\\
     \end{tabular}
   \end{table}
-  Si procede con l'LF-mapping, avendo $\LF(2)=8$. Si ha che
-  $\BWT_T[8]=P[m-2]$ e quindi, essendo $\SA_T[8]=6$ si ottiene:
+  Si procede con l'LF-mapping: $\LF(2)=8$. Si ha che
+  $\BWT_T[8]=P[m-2]$ e quindi, essendo $\SA_T[8]=6$, si ottiene:
   \begin{table}[H]
     \centering
     \begin{tabular}{c||c|c|c|c}
@@ -873,7 +869,7 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
       $\len$& ? & ? & 2 & 1\\
     \end{tabular}
   \end{table}
-  Anche in questo caso, essendo $\LF(8)=10$ ed essendo $\BWT_T[10]=P[m-3]$, si
+  Anche in questo caso, essendo $\LF(8)=10$ e $\BWT_T[10]=P[m-3]$, si
   aggiornano senza ulteriori passaggi i valori dell'array delle matching
   statistics: 
   \begin{table}[H]
@@ -896,7 +892,7 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   Innanzitutto, bisogna capire
   quanti caratteri $P[m-4]=\mbox{'m'}$ si hanno prima di $q=3$. Si ha che
   $\rank_{'m'}(3)=0$. A questo punto si selezionano, tramite $\select_{'m'}$,
-  l'indice della
+  gli indici della
   coda della run precedente di caratteri $\mbox{'m'}$ (che in questo caso non
   esiste e gli si assegna, per comodità, il valore 0) e della testa della run
   successiva:
@@ -925,4 +921,3 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   Infine, sempre per il lemma \ref{lemma:mem}, si ha che $P[0,4-1]=P[0,3]$ è
   un $\MEM$ di $P$ in $T$. 
 \end{esempio}
-\dc{Esempio da sistemare}
