@@ -7,18 +7,18 @@ Parlando di strutture per il random access, una differenza sostanziale tra
 l'uso di un vettore di bitvector, \texttt{RA-BV}, e quello
 dell'$\,\SLP$, \texttt{RA-SLP}, è data dai tempi di accesso ai singoli
 elementi. Infatti, parlando di \texttt{RA-BV}, si ha accesso in tempo costante
-ad un qualsiasi elemento del pannello mentre, nel caso di \texttt{RA-SLP}, si ha
-che l'accesso ad ogni elemento è in tempo:
+a un qualsiasi elemento del pannello mentre, nel caso di \texttt{RA-SLP}, si ha
+che l'accesso a ogni elemento è in tempo:
 \begin{equation}
   \label{eq:timera}
   \mathcal{O}(\log (NM))
 \end{equation}
-La seconda differenza, già ampiamente introdotta e di fatto scontata, è data
+La seconda differenza è data
 dalla dimensione delle due strutture dati, avendo che \texttt{RA-BV} memorizza
-$\sim NM$ bit, dove il $\sim$ è dato dai costi in memoria aggiuntivi dati
-dall'avere un vettore che memorizza i bitvector. Parlando invece di
+$\sim NM$ bit, dove il $\sim$ è dato dai costi in memoria aggiuntivi dovuti
+al vettore che memorizza i bitvector. Parlando invece di
 \texttt{RA-SLP}, non si può avere una stima a priori dello spazio necessario ma,
-come si vedrà nel capitolo \ref{reschap}, i risultati quantitativi daranno prova
+come si vedrà nel Capitolo \ref{reschap}, i risultati quantitativi daranno prova
 della capacità di compressione di tale grammatica.\\
 Parlando della componente \texttt{RA-SLP} e della componente
 \texttt{LCE}, bisogna descrivere la metodologia con cui 
@@ -30,20 +30,21 @@ permettere la costruzione efficiente della $\PBWT$, e conseguentemente
 della $\RLPBWT$, il pannello in input risulta essere trasposto, avendo che
 ogni record consecutivo nel file contiene una colonna del pannello e non una
 riga dello stesso. Bisogna
-quindi trasporre tale pannello in input. Bisogna ricordare che sull'$\,\SLP$
+quindi trasporre tale pannello in input. Si anticipa che sull'$\,\SLP$
 si avrà  
-necessità di effettuare $\LCE$ query che, si anticipa, devono essere fatte tra
+necessità di effettuare $\LCE$ query che devono essere fatte tra
 due righe da destra a sinistra (a differenza 
-di quanto visto nel caso standard dove si confrontavano prefissi comuni a
-partire da due posizioni del testo). Per
+di quanto visto nel caso standard dove si confrontavano, da sinistra a destra,
+prefissi comuni a partire da due posizioni del testo). Per
 rendere possibile questa operazione, il pannello deve essere sia 
-salvato come un'unica riga, per ottenerne l'$\,\SLP$, che essere letto da destra
-a sinistra per costruire la sequenza, per permettere le $\LCE$ query. Si
+salvato come un'unica stringa, in modo da ottenerne l'$\,\SLP$, che essere letto
+da destra 
+a sinistra per permettere le $\LCE$ query. Si
 procede, quindi, concatenando 
 ogni riga, selezionandole consecutivamente e leggendone i singoli elementi da
 destra a sinistra.
 \begin{esempio}
-  Si assuma di avere il seguente pannello trasposto nel file in input.
+  Dato il seguente pannello trasposto nel file in input:
   \[
     X=\left[
       \begin{matrix}
@@ -54,7 +55,7 @@ destra a sinistra.
       \end{matrix}
     \right]
   \]
-  Si ha che le righe sono i siti e le colonne i sample. Per ottenere
+  si ha che le righe sono i siti e le colonne i sample. Per ottenere
   l'$\,\SLP$ bisogna trasporre la matrice:
   \[
     X^T=\left[
@@ -67,11 +68,11 @@ destra a sinistra.
       \end{matrix}
     \right]
   \]
-  A questo punto bisogna considerare l'ordine in cui si vorranno effettuare le
+  A questo punto bisogna considerare l'ordine in cui si vogliono effettuare le
   $\LCE$ query.
   Ad esempio, prendendo la seconda e la terza riga, facendo partire il confronto
-  dall'ultima colonna, avremmo una $\LCE$ query lunga 3, terminante nella prima
-  colonna, esclusa: 
+  dall'ultima colonna, si ha una $\LCE$ query lunga 3, terminante nella prima
+  colonna esclusa: 
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.38]{img/slppanel.pdf}
@@ -81,12 +82,10 @@ destra a sinistra.
   query fatta sopra:
   \[0010\,\,{\color{nordgreen}011}{\color{nordred}0}\,\,
     {\color{nordgreen}011}{\color{nordred}1} \,\,1100\,\,0110\]
-  \textit{Si noti che, qui, si sono segnalate le varie righe con uno spazio ma
-    solo per praticità ``visiva''.}
 \end{esempio}
 In merito al random access, considerando tale memorizzazione monodimensionale e
 invertita, si ha, per accedere alla colonna $k$ della riga $i$-esima del
-pannello: 
+pannello (con $N$ colonne): 
 \begin{equation}
   \label{eq:raslpform}
   x_i[k] = \SLP[N(i+1)-k-1]

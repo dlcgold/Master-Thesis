@@ -1,8 +1,7 @@
 \subsection{Calcolo degli SMEM con matching statistics}
-L'obbiettivo maggiore di questa tesi era quello di applicare i metodi e gli
+L'obiettivo principale di questa tesi è quello di applicare i metodi e gli
 algoritmi già 
-studiati per la $\RLBWT$, riferendosi al calcolo dei $\MEM$ a partire
-dall'array delle matching statistics, alla $\RLPBWT$.\\
+studiati per la $\RLBWT$ alla $\RLPBWT$.\\
 Nelle sei strutture dati dedicate al calcolo degli $\SMEM$ tramite matching
 statistics, si riconoscono le due modalità già descritte con MONI \cite{moni} e
 PHONI \cite{phoni}:
@@ -14,6 +13,8 @@ PHONI \cite{phoni}:
   sia per scegliere le righe da memorizzare in $\MS[i].\row$ che per calcolare,
   in contemporanea, i valori $\MS[i].\len$ 
 \end{enumerate}
+Grazie a queste due strategie, si possono computare tutti gli $\SMEM$ senza
+tenere in memoria il divergence array.
 \subsubsection{Calcolo dell'array delle matching statistics tramite threshold}
 Questa prima soluzione, necessitando sia della componente
 \texttt{THR-INT}/\texttt{THR-BV} che della componente
@@ -27,13 +28,11 @@ composte:
 \end{itemize}
 Tra queste soluzioni, le uniche differenze si riscontrano nei tempi d'esecuzione
 e nella memoria richiesta.\\
-\dc{Cercare di capire se e come legare a R-index}
 % Si noti che unendo la componente \texttt{PERM} alla componente
 % \texttt{THR-INT}/\texttt{THR-BV} si ottiene una variante dell'\textbf{R-index}
 % visto per la \textit{RLBWT}.\\
-Si presenta ora il funzionamento dell'algoritmo.
 Si supponga di aver computato l'array delle matching statistics fino alla
-colonna $k-1$, avendo che si sta processando la colonna corrente $k$.
+colonna $k-1$ e di processare la colonna corrente $k$.
 Sia $i$ la riga della matrice $\PBWT$ che ha un match con il più lungo
 suffisso di $z[0,k-1]$ che è suffisso di almeno uno tra $x_0[0,k-1]$, $\ldots$,
 $x_{M-1}[0,k-1]$. Sia $p$ la corrispondente riga, sul pannello in input $X$,
@@ -41,20 +40,19 @@ della riga
 $i$ sulla matrice $\PBWT$. Tale valore è ottenibile tramite il prefix array,
 avendo $p=a_k[i]$. Si ha, 
 denotando con
-$\lcs(A,B)$ il più lungo suffisso comune tra le stringhe $A$ e $B$, in
-termini formali, che:
+$\lcs(A,B)$ il più lungo suffisso comune tra le stringhe $A$ e $B$, che:
 \begin{equation}
   \label{eq:thr1}
   |\lcs(z[0,k-1], x_{p}[0,k-1])|\geq |\lcs(z[0,k-1],
   x_{a_k[j]}[0,k-1])|,\,\,\forall\, 
   j\in[0,M-1] 
 \end{equation}
-Fatta questa premessa, qualora si avesse $y_i^k[k]=z[k]$, ovvero un match tra il
+Qualora si abbia $y_i^k[k]=z[k]$, ovvero un match tra il
 $k$-esimo carattere della query e il carattere in riga $i$ della matrice
 $\PBWT$, si 
-avrebbe semplicemente che $\MS[k].\row=a_k[i]=p$ e $\MS[k].\len =
+avrebbe che $\MS[k].\row=a_k[i]=p$ e $\MS[k].\len =
 \MS[k-1].\len+1$, in 
-quanto si starebbe seguendo la medesima riga dello step precedente del calcolo
+quanto si seguirebbe la medesima riga dello step precedente del calcolo
 delle matching statistics.\\
 In caso contrario, si avrebbe 
 $y_i^k[k]\neq z[k]$, ovvero un mismatch tra il $k$-esimo carattere
@@ -62,14 +60,15 @@ della query è il carattere in riga $i$ della matrice $\PBWT$. Bisogna,
 quindi, scegliere un nuovo indice $i'$ nella matrice $\PBWT$,
 corrispondente all'indice $p'$ nella pannello in input, che, a sua volta,
 corrisponde alla riga 
-con il più lungo suffisso possibile con la query, che sia estendibile anche in
+con il suffisso più lungo possibile comune con la query, che sia estendibile
+anche in 
 colonna $k$. Sia $y_{[s,e]}^k[k]$ l'intervallo corrispondente alla run che
 contiene l'indice $i$, nella matrice $\PBWT$. Il più lungo suffisso
 di $z[0,k]$, che è suffisso di almeno uno tra $x_0[0,k]$, $\ldots$,
-$x_{M-1}[0,k]$, corrisponde o alla fine della run precedente di simboli
+$x_{M-1}[0,k]$, corrisponde alla fine della run precedente di simboli
 $\sigma=z[k]$ o all'inizio della run successiva di simboli
-$\sigma=z[k]$, nella colonna $k$ della matrice $\PBWT$. Formalmente,
-tale suffisso corrisponde ad uno tra $X_{a_k[s-1]}[0,k]$, se $s>0$, o
+$\sigma=z[k]$, nella colonna $k$. Formalmente,
+tale suffisso corrisponde a uno tra $X_{a_k[s-1]}[0,k]$, se $s>0$, e
 $X_{a_k[e+1]}[0,k]$, se 
 $e<M-1$. L'uso delle threshold permette di capire quale tra le righe $a_k[s-1]$
 e $a_k[e+1]$ del pannello in input, se esistenti, abbia il più lungo suffisso
@@ -77,7 +76,7 @@ comune con $z[0,k]$. \\
 Sia $t$ l'indice della threshold nella run corrente. Si hanno due casi
 possibili:
 \begin{enumerate}
-  \item $i<t$, allora, per definizione di threshold:
+  \item $i<t$, allora, per la definizione di threshold:
   \begin{equation}
     \label{eq:thrra2}
     |\lcs(z[0,k], x_{a_{k}[s-1]}[0,k])|\geq |\lcs(z[0,k], x_{a_{k}[e+1]}[0,k])|
@@ -95,16 +94,16 @@ possibili:
 Si ricorda il caso in cui la threshold sia posta a fine run, nel caso
 della componente \texttt{THR-BV}. In tale situazione, bisognerebbe scegliere la
 testa della run successiva, qualora l'indice $i$ 
-si trovi esattamente a fine run. Invece, qualora la
-threshold sia a fine run a causa del fatto che il minimo $\RLCP$
-si trovi nella testa della run successiva, bisognerebbe scegliere la coda della
-run 
-precedente. L'unico modo per disambiguare è effettuare random
-access al pannello o calcolare una $\LCE$ query, per vedere quale sia la
-soluzione migliore, ovvero quale tra la coda della run precedente e la testa
-della run successiva sia relativa alla riga del pannello originale con un
+si trovi esattamente a fine run. Invece, bisognerebbe scegliere la coda della
+run precedente qualora la
+threshold sia a fine run, a causa del fatto che il minimo $\RLCP$
+si trovi nella testa della run successiva.
+L'unico modo per disambiguare è effettuare random
+access al pannello o calcolare una $\LCE$ query, per vedere quale, tra la coda
+della run precedente e la testa
+della run successiva, sia relativa alla riga del pannello originale con un
 suffisso comune alla query più lungo.\\
-Una volta computato tutti i valori $\MS[i].\row$, per calcolare i valori
+Una volta computati tutti i valori $\MS[i].\row$, per calcolare i valori
 $\MS[i].\len$,
 si scorre da sinistra a destra calcolando la lunghezza del match fino alla
 colonna $i$, facendo random
@@ -116,9 +115,9 @@ Si hanno tre casi possibili:
   \item $\MS[i].\row=M$. In tal caso, avendo segnalata l'inesistenza di un
   match terminante in colonna $i$, si ha che $\MS[i].\len=0$
   \item $\MS[i].\row=\MS[i-1].\row$, avendo $i\neq 0$ e $\MS[i-1].\len\neq 0$.
-  In tal caso
-  si sta seguendo la medesima riga seguita in colonna $i-1$ e quindi,
-  banalmente, $\MS[i].\len=\MS[i-1].\len+1$, dovendo conteggiare il carattere
+  In tal caso,
+  si sta seguendo la medesima riga ottenuta in colonna $i-1$ e quindi
+  $\MS[i].\len=\MS[i-1].\len+1$, dovendo conteggiare il carattere
   della colonna corrente
   \item in qualsiasi altro caso bisogna confrontare, a partire dalla colonna
   $i$, la query 
@@ -128,9 +127,9 @@ Si hanno tre casi possibili:
 \end{enumerate}
 \begin{esempio}
   \label{es:thr}
-  Si vede, quindi, un esempio di funzionamento delle threshold per la scelta
-  della riga da memorizzare in $\MS[i].\row$, dopo un mismatch.\\
-  Si prenda pannello visto all'esempio \ref{es:pbwt1} e si effettui la
+  Si vede un esempio di funzionamento delle threshold per la scelta
+  della riga da memorizzare in $\MS[i].\row$ dopo un mismatch.\\
+  Si prende il pannello visto all'esempio \ref{es:pbwt1} e si effettua la
   permutazione secondo $a_2$:
   \begin{table}[H]
     \centering
@@ -162,8 +161,8 @@ Si hanno tre casi possibili:
     \end{tabular}
   \end{table}
   \noindent
-  Si prenda la seconda run, di simboli $\sigma=1$, indicizzata tra 17 e 18. \\
-  Si supponga che, tramite il mapping, si sia arrivati alla riga 17 ma che si
+  Si prende la seconda run, di simboli $\sigma=1$, indicizzata tra 17 e 18. \\
+  Si suppone che, tramite il mapping, si sia arrivati alla riga 17 ma che si
   abbia $z[2]=0$. La scelta è, quindi, tra la coda della run precedente, avendo
   che $a_2[16]=16$ o la testa della run successiva, avendo che $a_2[19]=17$. Si
   può notare come il minimo $\RLCP$ si trovi, per la 
@@ -172,14 +171,13 @@ Si hanno tre casi possibili:
   17, è quindi sopra la threshold.
   Questo significa che il suffisso comune più lungo
   con la query si ha 
-  con la riga 16 del pannello, per definizione di threshold, avendo che questa
-  sarà memorizzata nell'array $\MS$, avendo $\MS[2].\row=16$.\\
-  Successivamente, o sfruttando $\MS[1].\len$ o tramite random access al testo,
+  con la riga 16 del pannello, per la definizione di threshold, avendo che
+  questa sarà memorizzata nell'array $\MS$ ($\MS[2].\row=16$).\\
+  Successivamente,  sfruttando $\MS[1].\len$ o tramite random access al testo,
   confrontando la riga 
-  $x_{16}$ e la query $z$, fino alla colonna $k=2$, si potrà calcolare che
+  $x_{16}$ e la query $z$ fino alla colonna $k=2$, si può calcolare che
   $\MS[2].\len=3$. 
 \end{esempio}
-\dc{SISTEMARE ESEMPIO}
 In fase di costruzione delle lunghezze, è possibile anche riportare gli
 $\SMEM$, terminanti in colonna $i$, qualora:
 \begin{itemize}
@@ -194,13 +192,13 @@ L'algoritmo per il il calcolo degli $\SMEM$ tramite threshold è visualizzabile
 all'algoritmo \ref{algo:matchthr}. All'algoritmo \ref{algo:updatems}
 si riporta il metodo di $\UP$ delle informazioni, nel passaggio dalla
 colonna 
-$k$ alla colonna $k+1$, di complessità pari a quelle per effettuare il
+$k$ alla colonna $k+1$, di complessità pari a quella per effettuare il
 mapping. Si noti che è 
 possibile usare la funzione $\W$, 
 spiegata in precedenza, in quanto, avendo per costruzione
-$y^k_{curr\_index}[k]=z[k]$, nel momento dell'applicazione della funzione, si ha
+$y^k_{curr\_index}[k]=z[k]$, si ha
 che la funzione segue esattamente una certa riga da una colonna alla
-successiva, nella matrice $\PBWT$. \\
+successiva nella matrice $\PBWT$. \\
 Anche in questo caso, la stima delle
 complessità non è di facile ottenimento. Dividendo nelle varie parti
 l'algoritmo, si ha che:
@@ -212,7 +210,7 @@ l'algoritmo, si ha che:
   è variabile a seconda della componente usata per il random access (e 
   dell'eventuale componente \texttt{LCE}) e risulta trascurabile vista la bassa
   frequenza d'uso, in termini probabilistici. Si ha, quindi, che, con $\rho$
-  numero medio di run per colonna, usando \texttt{MAP-INT}, si ha tempo
+  numero medio di run per colonna, usando \texttt{MAP-INT}, il tempo è
   proporzionale a:
   \begin{equation}
     \label{eq:msthr1int}
@@ -229,15 +227,16 @@ l'algoritmo, si ha che:
   stimare, in termini di complessità asintotica. Questa difficoltà è dovuta dal
   fatto che gli accessi al pannello vengono fatti solo quando $\MS.\row[i]\neq
   \MS.\row[i-1]$.
-  Ipotizzando un caso peggiore dove si necessità di accedere al pannello in ogni
-  colonna, si ha, nel caso della componente \texttt{RA-BV}, che il calcolo
+  Ipotizzando un caso peggiore dove si ha necessità di accedere al pannello in
+  ogni 
+  colonna, nel caso della componente \texttt{RA-BV}, il calcolo
   complessivo delle lunghezza è proporzionale a:
   \begin{equation}
     \label{eq:msthr2bv}
     \mathcal{O}(N^2)
   \end{equation}
   Mentre, con l'uso della componente \texttt{RA-SLP}, la complessità in tempo
-  sarebbe proporzionale a: 
+  è proporzionale a: 
   \begin{equation}
     \label{eq:msthr2slp}
     \mathcal{O}\left(N^2\log (NM)\right)
@@ -257,20 +256,21 @@ l'algoritmo, si ha che:
   %   \mathcal{O}\left(N\gamma\log (NM)\right)
   % \end{equation}
 \end{itemize}
-Tali stime teoriche sono, in ogni caso, fortemente approssimative.
-\dc{Tutti questi tempi sono abbastanza a caso per ora.}
-Facendo una stima complessiva si può ipotizzare come la struttura \texttt{MAP-BV
+Tali complessità teoriche sono fortemente sovrastimate. \\
+Facendo una stima complessiva, si può ipotizzare come la struttura
+\texttt{MAP-BV 
 + THR-BV + RA-SLP + PERM + PHI}, a causa della maggior lentezza in fase di
 mapping e di accesso al pannello per il calcolo delle lunghezze, sia quella con
-prestazioni peggiori mentre, per il ragionamento inverso, la struttura
-\texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI} sia quella con le migliori
-performance, dal punto di vista del tempo macchina.\\
-In termini di memoria, invece,  la struttura
+prestazioni peggiori in tempo. Mentre, per il ragionamento inverso, la
+struttura 
+\texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI} si ritiene sia quella con le
+migliori performance, dal punto di vista del tempo macchina.\\
+In termini di memoria la struttura
 \texttt{MAP-INT + THR-INT + RA-SLP + PERM + PHI} risulta essere la più
-vantaggiosa mentre la struttura
+vantaggiosa mentre quella
 \texttt{MAP-BV + THR-BV + RA-BV + PERM + PHI} la peggiore, per le stime sulle
-singole componenti, viste
-nelle sezioni precedenti. 
+singole componenti (usando i bitvector sparsi per mapping/threshold e non
+usando l'$\,\SLP$ per il random access). 
 \begin{algorithm}
   \scriptsize
   \begin{algorithmic}[1]
@@ -393,17 +393,14 @@ nelle sezioni precedenti.
   \texttt{MAP-BV}.} 
   \label{algo:updatems}
 \end{algorithm}
-\dc{Magari mettere complessità finali}
 \subsubsection{Calcolo dell'array delle matching statistics tramite LCE query}
-Come anticipato, grazie all'uso delle $\LCE$ query, è possibile calcolare
+Grazie all'uso delle $\LCE$ query, è possibile calcolare
 l'array 
-delle matching statistics in un solo scorrimento, da sinistra a
-destra, sull'aplotipo query. Infatti, è possibile usare le $\LCE$ query per
-calcolare non solo quale 
-nuova 
-sequenza scegliere in caso di mismatch, in una certa colonna, con l'aplotipo
-query, come 
-si faceva con l'uso delle threshold, ma anche di computare la lunghezza
+delle matching statistics in un solo scorrimento da sinistra a
+destra sull'aplotipo query. Infatti, è possibile usare le $\LCE$ query per
+calcolare non solo quale nuova 
+riga scegliere in caso di mismatch con l'aplotipo
+query ma anche di computare la lunghezza
 del suffisso comune tra essa e l'aplotipo query. In tal modo, si calcolano nello
 stesso momento sia i valori di $\MS[i].\row$ che di $\MS[i].\len$ (e di
 conseguenza anche gli $\SMEM$).\\
@@ -415,33 +412,31 @@ Tale soluzione è quindi relativa alle seguenti strutture dati composte:
 Con la notazione $\lce(k, x, y)$,
 si indica il calcolo della $\LCE$ query, terminante in colonna $k-1$ (quindi
 escludendo la colonna 
-$k$-esima), tra le righe di indice $x$ e
+$k$-esima), tra le righe del pannello di indice $x$ e
 indice $y$.\\ 
-Si illustra ora come computare l'array delle matching statistics tramite le
-$\LCE$ query. Anche
-in questo caso, per convenzione, si inizia la computazione dall'ultima 
+Per convenzione, si inizia la computazione dall'ultima 
 riga della prima colonna.
-Si assuma di avere calcolato l'array $\MS$, per una query $z$ rispetto al
+Si supponga di avere calcolato l'array $\MS$, per una query $z$ rispetto al
 pannello $X$, fino alla
 colonna $k-1$. Sia $i$ 
 l'indice di riga sulla matrice $\PBWT$ al quale si è arrivati mediante il
 mapping, avendo che tale riga corrisponde a quella, in $X$, che ha il più lungo
 suffisso 
 comune con 
-$z[0,k-1]$. Si assuma che l'indice $i$ appartenga alla run $r$, di simboli
-$\sigma$, con testa di indice $s$ e coda di indice $e$. Si hanno diversi casi:
+$z[0,k-1]$. Assumendo che l'indice $i$ appartenga alla run $r$, di simboli
+$\sigma$, con testa di indice $s$ e coda di indice $e$, si hanno diversi casi:
 \begin{enumerate}
   \item $z[k]=y_i^k[k]=\sigma$, quindi la riga $i$ può essere usata per
   estendere il 
-  match, avendo che $\MS[k].\row=\MS[k-1].\row$ e $\MS[k].\len=\MS[k-1].\len+1$,
-  e per 
-  proseguire col mapping in colonna $k+1$
+  match e per 
+  proseguire col mapping in colonna $k+1$, avendo che
+  $\MS[k].\row=\MS[k-1].\row$ e $\MS[k].\len=\MS[k-1].\len+1$
   \item $z[k]\neq y_i^k[k]=\sigma$ e si ha una sola run in colonna $k$, avendo
   che 
   non si possono avere match in quella colonna. Per convenzione, si
-  ha che $\MS[k].\row = M$ e $\MS[k].\len=0$. Infine, si ricomincia, in
+  memorizzano $\MS[k].\row = M$ e $\MS[k].\len=0$ e si ricomincia, in
   colonna 
-  $k+1$, dall'ultima posizione. Tale indice corrisponde, nel pannello originale,
+  $k+1$, dall'ultima posizione, che corrisponde, nel pannello originale,
   alla riga specificata dal valore del prefix array sample della coda
   dell'ultima run 
   \item $z[k]\neq y_i^k[k]=\sigma$ ma si hanno anche altre run, dovendo quindi
@@ -450,21 +445,20 @@ $\sigma$, con testa di indice $s$ e coda di indice $e$. Si hanno diversi casi:
   anche suffisso di $x_0[0,k],\ldots, x_{M-1}[0,k]$, è uno tra:
   \begin{itemize}
     \item $x_{a_k[s-1]}$, se $s\neq 0$, ovvero la riga del pannello
-    corrispondente alla coda della run precedente alla run corrente, nella
-    matrice $\PBWT$, se esistente
+    che corrisponde alla coda della run precedente a quella corrente
     \item $x_{a_k[e+1]}$, se $e\neq M-1$, ovvero la riga del pannello
-    corrispondente alla testa della run successiva alla run corrente, nella
-    matrice $\PBWT$, se esistente
+    che corrisponde alla testa della run successiva a quella corrente
   \end{itemize}
-  Anche in questo caso, questo fatto è dovuto all'ordinamento lessicografico
+  Questo fatto è dovuto all'ordinamento lessicografico
   inverso, che si ha per la costruzione della $\PBWT$.
   Avendo quindi i prefix array sample, che ci dicono a quale riga nel
   pannello corrispondano tali valori, e conoscendo $\MS[k-1].\row$, è possibile
   calcolare $\lce(k,\MS[k-1].\row, a_k[s-1])$ e $\lce(k,\MS[k-1].\row,
   a_k[e+1])$. Si sceglie il suffisso comune più lungo tra le due, ovvero il più
-  lungo risultato tra le due funzioni $\lce$, e si sceglie la riga
-  corrispondente per proseguire. Si ha quindi o $\MS[k].\row=a_k[s-1]$ o
-  $\MS[k].\row=a_k[e+1]$. In merito al campo $\len$, assumendo che la lunghezza
+  lungo risultato tra le due funzioni $\lce$, e la riga
+  corrispondente per proseguire. Si ha quindi $\MS[k].\row=a_k[s-1]$ o
+  $\MS[k].\row=a_k[e+1]$ (in memoria nella componente \texttt{PERM}). In merito
+  al campo $\len$, assumendo che la lunghezza 
   maggiore delle due $\LCE$ query sia $l$, si ha che:
   \begin{equation}
     \label{eq:mslce1}
@@ -473,21 +467,20 @@ $\sigma$, con testa di indice $s$ e coda di indice $e$. Si hanno diversi casi:
   Questa assegnazione si ha in quanto la $\LCE$ query potrebbe restituire un
   valore più lungo dell'effettivo 
   match con la query $z$. Si sceglie, di conseguenza, il minimo tra le due
-  lunghezze, per considerare l'overlap, 
+  lunghezze per considerare l'overlap, 
   ottenendo l'effettiva lunghezza del suffisso comune tra $z$ e la nuova riga
   scelta, fino alla colonna $k-1$, incrementandolo di uno per conteggiare il
   match ottenuto in colonna $k$ 
 \end{enumerate}
-\dc{Sistemare esempio.}
 \begin{esempio}
   Si riprende l'esempio \ref{es:thr}, visto per il calcolo di $\MS[i].\row$,
   dopo un mismatch, tramite threshold. \\
-  Senza usare le threshold, nella medesima situazione si dovrebbero
-  calcolare, avendo che $\MS[1].\row=19$ e $\MS[1].\len =2$:
+  Senza usare le threshold, si dovrebbero
+  calcolare, avendo $\MS[1].\row=19$ e $\MS[1].\len =2$:
   \[\lce(2, x_{19}, x_{16}) = \mbox{"01"} \implies|\lce(2, x_{19}, x_{16})|=2\]
   \[\lce(2, x_{19}, x_{17}) = \mbox{"1"} \implies|\lce(2, x_{19}, x_{17})|=1\]
   Come verificabile dal pannello presente all'esempio \ref{es:pbwt1}.\\
-  Si ha quindi che $\MS[2].\row=16$. Inoltre, sempre per quanto detto sopra:
+  Si ha quindi che $\MS[2].\row=16$ e che:
   \[\MS[2].\len=\min(\MS[1].\len, 2)+1=2+1=3\]
 \end{esempio}
 \noindent
@@ -496,9 +489,9 @@ Con questa soluzione, il cui pseudocodice è consultabile all'algoritmo
 \begin{itemize}
   \item non si necessita di tenere in memoria le informazioni per le
   threshold
-  \item si permette il calcolo dell'array $\MS$ in una singola scansione della
+  \item è possibile il calcolo dell'array $\MS$ in una singola scansione della
   query
-  \item non si necessita di memorizzare l'intero array $\MS$ ma solamente
+  \item non si necessita di memorizzare l'intero array $\MS$, ma solamente
   quattro variabili relative alla coppia
   $(\row,\len)$ corrente e a quella precedente. Infatti, per computare i valori
   in 
@@ -508,13 +501,12 @@ Con questa soluzione, il cui pseudocodice è consultabile all'algoritmo
     lettura si è lasciato, nello pseudocodice, l'uso dell'intero array $\MS$}
 \end{itemize}
 Dal punto di vista della complessità temporale, per il calcolo dell'array $\MS$
-tramite $\LCE$ query,
-si hanno solo due casistiche 
-possibili, al variare della componente di mapping. 
+tramite $\LCE$ query, si hanno variazioni solo in base alla componente per il
+mapping.  
 Nel caso della componente \texttt{MAP-INT}, avendo $\rho$ numero medio di run
-per colonna, si 
-ha un tempo proporzionale, dovendo iterare la query, fare il mapping e usare la
-componente \texttt{LCE}, a: 
+per colonna, dovendo iterare la query, fare il mapping e usare la
+componente \texttt{LCE}, si 
+ha un tempo proporzionale a: 
 \begin{equation}
   \label{eq:mslce22}
   \mathcal{O}(N(\log \rho+\log (NM)))
@@ -531,18 +523,17 @@ $\SMEM$, bisogna considerare quando analizzato per la componente
 Si deduce come la struttura composta \texttt{MAP-INT + LCE + PERM + PHI}
 sia, a 
 livello di tempo macchina, la soluzione più vantaggiosa usando la componente
-\texttt{LCE}. Tale soluzione risulta essere, sempre nel contesto delle strutture
-basate 
-sulla componente \texttt{LCE}, anche la miglior soluzione in
-termini di memoria.\\
-Si vedrà, sperimentalmente, nel capitolo \ref{reschap}, il
-confronto con le altre strutture dati. Una prima intuizione in merito è quella
-che, usando le $\LCE$ query, si avranno sicuramente, a parità di componenti per
+\texttt{LCE}. Tale soluzione risulta essere anche la migliore in
+termini di memoria, per quanto discusso in merito a intvector compressi e
+bitvector sparsi nella sezione \ref{sec:comp}.\\ 
+Si vedrà, sperimentalmente, nel Capitolo \ref{reschap}, il
+confronto con le altre strutture dati. Una prima intuizione è quella
+che, usando le $\LCE$ query, si hanno sicuramente, a parità di componenti per
 il mapping, tempi peggiori rispetto
 all'uso della componente \texttt{RA-BV}, come mostrato dalle complessità
-temporali. Un confronto con le strutture basate su \texttt{RA-SLP} risulta.
-invece, più complesso da analizzare, limitandosi alle stime asintotiche, avendo
-quindi forte necessità di un'analisi più sperimentale.
+temporali. Un confronto con le strutture basate su \texttt{RA-SLP} risulta
+più complesso da analizzare, limitandosi alle stime asintotiche e
+quindi è necessaria un'analisi sperimentale.
 \begin{algorithm}
   \footnotesize
   \begin{algorithmic}[1]
@@ -664,6 +655,4 @@ quindi forte necessità di un'analisi più sperimentale.
   \texttt{LCE}, \texttt{PERM} e \texttt{PHI}.}}
   \label{algo:matchlce}
 \end{algorithm}
-\dc{Sistemare pseudocodice per non avere salvato intero $MS$}
-\dc{Uniformare gli pseudocodici}
 % LocalWords:  pseudocodice

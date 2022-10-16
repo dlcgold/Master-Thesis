@@ -1,18 +1,17 @@
 \subsection{Componente per le threshold}
 Come discusso con MONI per la $\RLBWT$, l'uso delle threshold è 
-uno dei due modi per computare l'array delle matching statistics. 
+uno dei due modi per computare i campi $\len$ dell'array delle matching
+statistics.  
 \begin{definizione}
   Data la colonna $k$-esima della matrice $\PBWT$, $y^k$, memorizzata
   tramite compressione run-length e data la run $j$-esima, indicizzata
-  da $i$ a $i'$, si definisce threshold come l'indice del minimo valore
-  dell'$\,\RLCP$,
+  da $i$ a $i'$, si definisce threshold l'indice del primo minimo valore
+  dell'$\,\RLCP$ (o l'indice del primo massimo valore del divergence array),
   compreso negli indici della run, considerando anche l'eventuale 
   $\RLCP_k[i'+1]$, qualora $i'\neq M-1$. Si noti che quest'ultimo valore, se
   esistente, deve essere considerato in quanto calcolato prendendo in
   considerazione $y^k_{i'}$ (valore appartenente alla run in analisi) e
-  $y^k_{i'+1}$. \\
-  Qualora si abbiano più valori minimi uguali in $\RLCP_k$ si seleziona il
-  primo, per convenzione.
+  $y^k_{i'+1}$. 
 \end{definizione}
 Da un punto di vista implementativo, come anticipato, si hanno due soluzioni,
 una basata su intvector compressi e una basata su bitvector sparsi. In
@@ -27,7 +26,7 @@ $t_k[i]=j$ sse $j$ è l'indice della threshold dell'$i$-esima run.\\
 Lo pseudocodice per la costruzione della componente
 \texttt{THR-INT} della colonna $k$ è consultabile all'algoritmo
 \ref{algo:thrint} 
-e, dovendo scorrere la colonna permutata dal prefix array $a_k$ e dovendo
+e, dovendo scorrere la colonna permutata dal prefix array $a_k$ e
 accedere ai valori di $l_k$, tale operazione ha complessità in tempo
 proporzionale a:
 \begin{equation}
@@ -72,18 +71,18 @@ Qualora il minimo $\RLCP$ si trovi nell'indice della testa della run
 successiva, la posizione della threshold verrà memorizzata all'indice
 della coda della run corrente. Purtroppo questa è una situazione di ambiguità.
 Infatti, come si vedrà poi durante lo studio dell'algoritmo di calcolo delle
-matching statistics tramite threshold, il fatto che una threshold posta a fine
-run corrisponda effettivamente ad un minimo $\RLCP$ in quella posizione o a
-quella successiva comporta differenze dal punto di vista del calcolo dell'array
+matching statistics tramite threshold, il fatto che una threshold, posta a fine
+run corrisponda effettivamente a un minimo $\RLCP$ in quella posizione o in
+quella successiva, comporta differenze dal punto di vista del calcolo dell'array
 $\MS$. 
-Purtroppo, non è possibile salvare la threshold direttamente nella testa della
+Non è possibile salvare la threshold direttamente nella testa della
 run successiva in quanto questa potrebbe essere anche la posizione della
 threshold della run successiva. Avere due threshold sovrapposte impedirebbe di
 capire a quale run appartiene una certa threshold, tramite la funzione
-$\rank$. \\
+$\rank$ sul corrispondente bitvector sparso. \\
 Lo pseudocodice per la costruzione della componente
 \texttt{THR-BV} della colonna $k$ è consultabile all'algoritmo \ref{algo:thrbv}
-e, dovendo scorrere la colonna permutata dal prefix array $a_k$ e dovendo
+e, dovendo scorrere la colonna permutata dal prefix array $a_k$ e
 accedere ai valori di $l_k$, tale operazione ha complessità in tempo
 proporzionale a:
 \begin{equation}
@@ -92,7 +91,8 @@ proporzionale a:
 \end{equation}
 \noindent
 In merito al confronto tra \texttt{THR-INT} e \texttt{THR-BV}, in termini di uso
-di memoria, valgono le stesse considerazioni fatte per le componenti di mapping.
+di memoria, valgono le stesse considerazioni fatte per la componente per il
+mapping. 
 \begin{algorithm}
   \begin{algorithmic}
     \Function{Build\_thr\_bv}{$col,\,\,pref,\,\,div$}

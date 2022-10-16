@@ -3,7 +3,7 @@ Assemblando le componenti descritte nella sezione precedente, si ottengono otto
 varianti della $\RLPBWT$:
 \begin{itemize}
   \item due strutture dati composte unicamente dalle componenti dedicate al
-  mapping e dall'intero $\RLCP$. Tali strutture sono nominate:
+  mapping e dall'intero $\RLCP$, dette:
   \begin{enumerate}
     \item[1] \texttt{MAP-INT + RLCP}
     \item[2] \texttt{MAP-BV + RLCP}
@@ -15,17 +15,16 @@ varianti della $\RLPBWT$:
   una re-implementazione 
   dell'algoritmo 5 di Durbin
   \item quattro strutture composte per il calcolo degli $\SMEM$ tramite la
-  computazione, 
-  in due passaggi, dell'array delle matching statistics, in modo analogo
+  computazione 
+  in due passaggi dell'array delle matching statistics, in modo analogo
   a quanto introdotto in MONI \cite{moni} per la $\RLBWT$, tramite
-  threshold e random access al pannello. In merito a quest'ultimo, come
-  anticipato, si ha che può essere memorizzato come vettore di
-  bitvector o come 
-  $\SLP$. L'algoritmo  
-  necessita, inoltre, sia della componente atta al mapping che di quella
+  threshold e random access al pannello. Quest'ultimo può essere memorizzato
+  come vettore di bitvector o come 
+  $\SLP$ e l'algoritmo  
+  necessita sia della componente atta al mapping che di quella
   relativa ai prefix array sample. Infine, per estendere il
-  riconoscimento a tutte le righe che presentano un medesimo $\SMEM$ fino ad una
-  certa colonna, si necessita della struttura che permette di calcolare le
+  riconoscimento a tutte le righe che presentano un medesimo $\SMEM$ fino a una
+  certa colonna, è necessaria la struttura che permette di calcolare le
   funzioni $\varphi$ e $\varphi^{-1}$. Tali strutture sono nominate:
   \begin{enumerate}
     \item[3] \texttt{MAP-INT + THR-INT + RA-BV + PERM + PHI}
@@ -34,8 +33,8 @@ varianti della $\RLPBWT$:
     \item[6] \texttt{MAP-BV + THR-BV + RA-SLP + PERM + PHI}
   \end{enumerate}
   \item due strutture composte per il calcolo degli $\SMEM$ tramite la
-  computazione, 
-  in un singolo passaggio, dell'array delle matching statistics, in modo
+  computazione 
+  in un singolo passaggio dell'array delle matching statistics, in modo
   analogo a quanto introdotto in PHONI \cite{phoni} per la $\RLBWT$, tramite
   l'uso delle $\LCE$ query. Queste ultime sostituiscono l'uso delle
   threshold e del random access al pannello. Tali strutture
@@ -55,25 +54,22 @@ Una visualizzazione grafica di quanto descritto è rappresentata alla figura
   \label{fig:compon}
 \end{figure}
 \subsection{Calcolo degli SMEM con RLCP}
-Questa prima soluzione per il calcolo degli $\SMEM$ con un aplotipo esterno è
+La prima soluzione per il calcolo degli $\SMEM$ con un aplotipo esterno è
 quella che può essere effettuata tramite le strutture dati composte:
 \begin{itemize}
   \item \texttt{MAP-INT + RLCP}
   \item \texttt{MAP-BV + RLCP}
 \end{itemize}
-I due algoritmi riprendono  quanto discusso per l'algoritmo 5
-di Durbin. Tali algoritmi non sfruttano l'uso delle matching statistics e sono
+I due algoritmi riprendono quanto discusso per l'algoritmo 5
+di Durbin, non sfruttano l'uso delle matching statistics e sono
 limitati dal non 
-poter calcolare quali righe presentano un solo $\SMEM$, calcolando solo quante
+poter calcolare quali righe presentano uno $\SMEM$, ma solo quante
 siano. Il secondo limite è dato dal fatto che necessitano di avere interamente
 in memoria l'$\,\RLCP$ array, una
 struttura non run-length encoded.\\
-Il metodo procede, quindi, con l'aggiornamento dei tre indici $e_k$, $f_k$ e
+Il metodo procede con l'aggiornamento dei tre indici $e_k$, $f_k$ e
 $g_k$, avendo che gli ultimi due possono assumere qualsiasi valore in
-$\{0,\ldots, M\}$,
-come con la $\PBWT$. Avendo memorizzato solo informazioni
-relative alle run bisogna, ogni volta, ricondurre gli indici di riga alla
-run a cui appartengono.
+$\{0,\ldots, M\}$, come con la $\PBWT$.
 % Si ricordano quindi i tempi di tale operazione, avendo $r$ numero
 % di run per la colonna $k$:
 % \begin{itemize}
@@ -88,39 +84,41 @@ run a cui appartengono.
 %     \mathcal{O}\left(\log\frac{M}{r}\right)
 %   \end{equation}
 % \end{itemize}
-Inoltre Durbin sfruttava il random access al pannello in input, avendolo in
-memoria insieme al prefix array e al divergence array, al fine di aggiornare il
-valore di $e_k$. In entrambe le struttura dati run-length encoded, però,
-non si ha in memoria né il prefix array né il pannello ma solo solo la
+Inoltre, Durbin sfrutta il random access al pannello in input, avendolo in
+memoria insieme al prefix array e al divergence array, per aggiornare il
+valore di $e_k$. In entrambe le strutture dati run-length encoded
+non si ha in memoria né il prefix array né il pannello, ma solo la
 rappresentazione compatta della matrice $\PBWT$. Quindi, si è dovuto
-pensare ad un metodo che ricomponga una data riga $x_j$ del pannello $X$ a
-partire da un elemento, indicizzato con $a_{k+1}[i]=j$, con $0\leq i<M$, alla
-colonna $k+1$, della 
-matrice $\PBWT$. Questo risultato si può ottenere muovendosi da destra a
+pensare a un metodo che ricomponga una data riga $x_j$ del pannello $X$ a
+partire da un elemento, indicizzato alla
+colonna $k+1$ della matrice $\PBWT$, con $a_{k+1}[i]=j$ e $0\leq i<M$.
+Questo risultato si può ottenere muovendosi da destra a
 sinistra, seguendo in modo 
 inverso la permutazione che produce il prefix array. In altri termini,
 tale metodo permette un mapping inverso, che segue una riga del
-pannello originale nella matrice $\PBWT$, a ritroso.\\ 
+pannello originale nella matrice $\PBWT$ a ritroso.\\ 
 Per ottenere l'indice alla colonna $k$-esima della matrice $\PBWT$, da cui
 proviene la riga $j$, indicizzata all'indice $i$ in
-colonna $k+1$ della matrice $\PBWT$, si inizia analizzando il valore
+colonna $k+1$, si inizia analizzando il valore
 $c[k]$. Infatti, se $i<c[k]$, 
 allora sicuramente, in colonna $k$, $i$ è un indice di riga corrispondente a
+un simbolo
 $\sigma=0$, ricordando come la costruzione della colonna $k+1$
-nella matrice $\PBWT$ si abbia grazie ad ordinamento stabile. In caso contrario,
-$i$ corrisponde ad un elemento $\sigma=1$ in colonna $k$ della matrice $\PBWT$.
+nella matrice $\PBWT$ si abbia grazie a un ordinamento stabile.
+In caso contrario,
+$i$ corrisponde a un simbolo $\sigma=1$ in colonna $k$.
 Si sfruttano 
-così o l'array $p_k$ o le funzioni 
+così l'array $p_k$ o le funzioni 
 $\rank_{h_k}$ e $\select_{h_k}$ per risalire all'indice in colonna $k$,
 calcolando 
 prima l'indice di run e l'eventuale offset, per il quale il mapping porta
-all'indice $i'$ in colonna $k+1$, e seguire, virtualmente, la riga $x_j$ del
-pannello originale. 
+all'indice $i'$ in colonna $k+1$, e poi seguendo, virtualmente, la riga $x_j$
+del pannello originale. 
 Per quanto riguarda la struttura composta \texttt{MAP-INT + RLCP}, si ha lo
 pseudocodice per il 
-mapping inverso consultabile all'algoritmo \ref{algo:lfrev} mentre, per quanto
-riguarda la struttura composta \texttt{MAP-BV + RLCP}, si ha l'algoritmo
-\ref{algo:lfrevbv}. Parlando in termini di complessità in tempo si ha che,
+mapping inverso consultabile all'algoritmo \ref{algo:lfrev} mentre, per
+la struttura composta \texttt{MAP-BV + RLCP}, si ha l'algoritmo
+\ref{algo:lfrevbv}. Parlando in termini di complessità in tempo,
 usando la componente \texttt{MAP-INT}, si ha, con $r$ numero di run alla
 colonna $k$, un caso peggiore proporzionale a:
 \begin{equation}
@@ -132,7 +130,6 @@ Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
   \label{eq:revbv}
   \mathcal{O}\left(\log\frac{M}{r}\right)
 \end{equation}
-\dc{Approfondire?}
 \begin{algorithm}
   \begin{algorithmic}[1]
     \Function{reverse\_map}{$k, \,\,i$}
@@ -233,19 +230,21 @@ Nel caso, invece, in cui si usa la componente \texttt{MAP-BV}, si ha:
   \caption{Algoritmo per il mapping inverso con la \texttt{MAP-BV + RLCP}.}
   \label{algo:lfrevbv}
 \end{algorithm}
-Si ha, di conseguenza, un riadattamento dell'algoritmo di Durbin all'uso delle
+\noindent
+Si ha un riadattamento dell'algoritmo di Durbin all'uso delle
 run, 
 ottenendo, ad ogni step, i medesimi valori per $e_k$, $f_k$ e $g_k$. Le uniche
 differenze sono:
 \begin{itemize}
-  \item il calcolo del mapping necessità dell'estrazione dei valori $u$ e $v$,
-  tenendo conto esplicito degli offset nel caso della \texttt{MAP-INT + RLCP}
+  \item il calcolo del mapping necessita dell'estrazione dei valori $u$ e $v$,
+  tenendo esplicitamente conto degli offset nel caso della \texttt{MAP-INT +
+    RLCP} 
   \item non si ha random access al pannello quindi bisogna procedere,
-  ogni volta, con il'inverso del mapping e il calcolo del simbolo a partire
-  dall'indice della run
+  ogni volta, con l'inverso del mapping e il calcolo del simbolo corrispondente
+  alla run 
   \item non si ha il prefix array in memoria, quindi non è possibile
-  sapere quali siano le righe per le quali si ha uno $\SMEM$ fino alla colonna
-  $k$ ma è possibile conoscere solo quante siano, ovvero $g_k-f_k$
+  sapere quali siano le righe per cui si ha uno $\SMEM$ fino alla colonna
+  $k$, ma è possibile conoscere solo quante siano: $g_k-f_k$
 \end{itemize}
 Anche in questo caso, lo pseudocodice è consultabile all'algoritmo
 \ref{algo:matchlcp}. Calcolare la complessità di tale algoritmo non è semplice,
@@ -255,23 +254,22 @@ comunque, intuire come i vari cicli interni siano limitati superiormente dalla
 larghezza del pannello e dai tempi di mapping. Questo si può stimare in quanto
 le occorrenze dei cicli interni sono proporzionali al numero di $\SMEM$ e al
 numero 
-di step all'indietro necessari a computare il nuovo intervallo. Tale numero di
-step scala sul numero di caratteri in overlap tra due $\SMEM$
-consecutivi. Fatta questa premessa, si può stimare che il calcolo degli $\SMEM$
-con
+di step all'indietro necessari a computare la nuova tripla $e_k$, $f_k$ e
+$g_k$. Tale numero di 
+step scala sulla cardinalità dei caratteri in overlap tra due $\SMEM$
+consecutivi. Fatta questa premessa, si può stimare che il calcolo dei $c$
+$\SMEM$ con
 la struttura \texttt{MAP-INT + RLCP} è proporzionale, con $\rho$ numero medio di
 run per una colonna, a:
 \begin{equation}
   \label{eq:lcpmatchint}
-  \mathcal{O}(N\log \rho)
+  \mathcal{O}(N\log \rho+c)
 \end{equation}
 Nel caso, invece, della struttura \texttt{MAP-BV + RLCP} si ha:
 \begin{equation}
   \label{eq:lcpmatchbv}
-  \mathcal{O}\left(N\log\frac{M}{\rho}\right)
+  \mathcal{O}\left(N\log\frac{M}{\rho}+c\right)
 \end{equation}
-\dc{APPROFONDIRE SPIEGAZIONE ALGORITMI}
-
 \begin{algorithm}
   \footnotesize
   \begin{algorithmic}[1]

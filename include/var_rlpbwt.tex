@@ -1,5 +1,5 @@
 \section{Perché la compressione run-length}
-Prima di proseguire con la spiegazione dettagliata delle varianti della
+Prima di proseguire con la spiegazione delle varianti della
 $\RLPBWT$, è bene dare 
 un'ulteriore motivazione al perché si sia ritenuto utile sviluppare una variante
 run-length encoded della $\PBWT$.\\
@@ -15,32 +15,29 @@ $\PBWT$ \cite{pbwt}:
     identical values in the $y$ array. So the $\PBWT$ can easily be stored in
     smaller space than the original data.} 
 \end{center}
-Quindi, il risultato atteso è quello per cui aplotipi simili, che, ad ogni step,
-saranno consecutivi nel riordinamento inverso, è molto probabile presentino lo
-stesso 
-allele nella colonna di cui si sta calcolando la
-permutazione. Ne segue che, all'interno della matrice $\PBWT$, è molto
-probabile che si abbiano lunghe run di simboli $\sigma=0$ e di simboli
+Quindi, il risultato atteso è quello per cui aplotipi simili, consecutivi nel
+riordinamento inverso (che è fino alla colonna $k-1$), è
+molto probabile presentino lo stesso 
+allele nella colonna $k$. Ne segue che, all'interno della matrice $\PBWT$,
+si hanno lunghe run di simboli $\sigma=0$ e di simboli
 $\sigma=1$.
-Si ottiene il medesimo risultato atteso avuto con
-la $\BWT$, dove si aveva che caratteri uguali era molto probabile fossero posti
-in posizioni consecutive all'interno della trasformata stessa. Si hanno, di
-conseguenza, le
-stesse premesse che hanno portato alla $\RLBWT$, considerando, inoltre,
+Si ottiene il medesimo risultato avuto con
+la $\BWT$, dove caratteri uguali è molto probabile siano posti
+in posizioni consecutive all'interno della trasformata stessa. Si hanno le
+medesime premesse che hanno portato alla $\RLBWT$, considerando, inoltre,
 che non si tratta solo di memorizzare la struttura con
-compressione run-length ma di lavorare direttamente con la struttura dati
+compressione run-length, ma di lavorare direttamente con la struttura dati
 compressa, risolvendo il problema del calcolo degli $\SMEM$ senza
 decomprimere la struttura dati. Ipotizzando che, per una certa colonna della
 matrice $\PBWT$, il numero di run sia molto minore della lunghezza della
-colonna stessa, si deduce facilmente che l'uso della compressione run-length
-possa comportare una riduzione significativa della memoria necessaria all'uso
-della trasformata.
+colonna stessa, si deduce che l'uso della compressione run-length
+possa comportare una riduzione significativa della memoria necessaria.
 \section{Matching Statistics per la RLPBWT}
-Bisogna, per prima cosa, introdurre il 
+Bisogna introdurre il 
 concetto di \textbf{matching statistics} nel caso della $\PBWT$ (e quindi
 anche della sua variante run-length encoded).
 \begin{definizione}
-  Dato un pannello $X$, con $M$ individui aventi $N$ siti,
+  Dato un pannello $X$, con $M$ individui/righe aventi $N$ siti/colonne,
   e un aplotipo esterno/pattern $z$, tale che $|z|=N$, si definisce matching
   statistics di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, di lunghezza
   $N$, tale che (avendo che $x_i$ indica l'$i$-esima riga del pannello $X$): 
@@ -58,8 +55,9 @@ anche della sua variante run-length encoded).
 \noindent
 Analogamente al caso della variante classica, si ha il seguente lemma.
 \begin{lemma}
-  Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui e $N$
-  siti, un aplotipo esterno/pattern $z$, tale che $|z|=N$, e il corrispondente
+  Dato un pannello $X$, di dimensioni $M\times N$, con $M$ individui/righe e $N$
+  siti/colonne, un aplotipo esterno/pattern $z$, tale che $|z|=N$, e il
+  corrispondente 
   array di matching statistics $\MS$ si ha che $z[i-l+1,i]$
   presenta uno $\SMEM$ di lunghezza $l$ con la riga $\MS[i].\row$-esima del
   pannello $X$ sse: 
@@ -77,9 +75,9 @@ Il calcolo dell'array $\MS$ di $z$ rispetto al pannello $X$ si basa su due fasi:
   \item la fase di \textbf{start}
   \item la fase di \textbf{extend}
 \end{enumerate}
-Si assuma di avere due indici $i$ e $j$, $0\leq i\leq j< N$, tali per cui
-$z[i,j]$ è un suffisso di uno tra $x_0[0,j]$, \ldots, $x_{M-1}[0,j]$. \\
-La fase di extend estende il match di $z[i,j]$ a $z[i,j+1]$ sse:
+Dati due indici $i$ e $j$, $0\leq i\leq j< N$, tali per cui
+$z[i,j]$ è un suffisso di uno tra $x_0[0,j]$, \ldots, $x_{M-1}[0,j]$,
+la fase di extend estende il match di $z[i,j]$ a $z[i,j+1]$ sse:
 \begin{itemize}
   \item $j<N$
   \item $z[i,j+1]$ è un suffisso di uno tra $x_0[0,j+1]$, $\ldots$,
@@ -103,50 +101,50 @@ Si ha quindi il computo di ogni coppia di valori $\MS[i]$, $\forall i\in[0,N)$:
   $\MS$ 
 \end{itemize}
 Per convenzione, si ha che, nella prima colonna, l'iterazione parte dall'ultima
-riga. Tale scelta è, in ogni caso, arbitraria. 
-In modo
-analogo, qualora si abbia una colonna $k$ di un solo carattere, non
+riga. 
+In modo analogo, qualora si abbia una colonna $k$ di un solo carattere, non
 corrispondente a quello della query, si sceglie l'ultima riga della
 colonna successiva, dalla quale si riprende il calcolo  
 dell'array delle matching statistics, dopo aver memorizzato $\MS[k].\row=M$
 (un valore sentinella non esistendo la riga di indice $M$) e $\MS.\len[k]=0$.\\
-In altri termini, più ``pratici'', il calcolo dell'array $\MS$ avviene nel
+In termini più ``pratici'', il calcolo dell'array $\MS$ avviene nel
 seguente modo:
 \begin{itemize}
   \item si parte da una riga arbitraria $i$ della prima colonna
   \item se si ha $x_i[0]=z[0]$, si procede salvando $\MS[0].\row=i$
-  \item qualora si abbia $x_i[0]\neq z[0]$, si seleziona o l'ultima riga della
+  \item mentre se si ha $x_i[0]\neq z[0]$, si seleziona l'ultima riga della
   run precedente o la prima riga della run successiva a quella a cui appartiene
   la riga $i$. Tale riga verrà salvata come $\MS[0].\row=j$ e da essa si
   proseguirà l'esecuzione dell'algoritmo
   \item si effettua il mapping verso la colonna successiva, $k$,
   e, a seconda di avere o meno un match con $z[k]$, si procede come nei casi
-  visti sopra 
+  precedenti
 \end{itemize}
-Si noti che non si è parlato di come calcolare i valori $\MS[i].\len$, in
-quanto si hanno due soluzioni (approfondite in seguito), che
+Per calcolare i valori $\MS[i].\len$,  si hanno due soluzioni (approfondite in
+seguito), che 
 rispecchiano quanto visto con 
 MONI \cite{moni} e PHONI \cite{phoni} per la $\RLBWT$: 
 \begin{enumerate}
-  \item si possono usare le threshold, per capire quale nuova riga
+  \item si possono usare le threshold (definite in seguito), per capire quale
+  nuova riga 
   selezionare in 
   caso di mismatch. In tal caso, i valori $\MS[i].\len$ devono essere calcolati
-  successivamente al calcolo dei valori $\MS[i].\row$, tramite random
-    access al panello
+  successivamente a quelli $\MS[i].\row$, tramite random
+  access al panello
   \item si possono usare le $\LCE$ query, per capire quale nuova riga
   selezionare in caso di mismatch. In tal caso, il calcolo dei valori
-  $\MS[i].\len$ avviene in contemporanea al calcolo dei valori $\MS[i].\row$
+  $\MS[i].\len$ avviene in contemporanea a quelli $\MS[i].\row$
 \end{enumerate}
 \begin{esempio}
   \label{es:ms}
-  Si riprenda, al fine di vedere un esempio di calcolo dell'array $\MS$,
-  l'esempio \ref{es:algo5}, con i seguenti $\SMEM$ tra la query $z$ e il
-  pannello $X$:
+  Per vedere un esempio di calcolo dell'array $\MS$,
+  si riprende l'esempio \ref{es:algo5}, con i seguenti $\SMEM$ tra la query $z$
+  e il pannello $X$:
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.345]{img/pbwtmatch.pdf}
   \end{figure}
-  In tal caso l'array $\MS$ sarebbe, iniziando il computo dalla riga 19:
+  In tal caso l'array $\MS$ è, iniziando il computo dalla riga 19:
   \begin{table}[H]
     \footnotesize
     \centering
@@ -168,8 +166,9 @@ MONI \cite{moni} e PHONI \cite{phoni} per la $\RLBWT$:
       & {\color{nordpurple}4}\\
     \end{tabular}
   \end{table}
+  \noindent
   In $\MS$ si possono riconoscere i vari $\SMEM$, la cui colonna di fine è
-  segnalata nello stesso colore con cui si rappresentano gli $\SMEM$ nel
+  segnalata con lo stesso colore con cui si rappresentano gli $\SMEM$ nel
   pannello. 
 \end{esempio}
 \section{Componenti per la RLPBWT}
@@ -178,33 +177,33 @@ Dovendo utilizzare
 strutture dati fortemente dipendenti dal tipo di dato (in termini, ad esempio,
 di ``sparsità'' intrinseca del pannello) e dall'implementazione (soprattutto in
 termini di strutture dati succinte), sarebbe stato difficile limitarsi a stime
-teoriche che sarebbero potute essere non confermate in fase sperimentale. Una
+teoriche che si sarebbero potute smentire in fase sperimentale. Una
 sola caratterizzazione asintotica avrebbe potuto comportare sottostime e
-sovrastime, sia in termini di tempo che di spazio. Quindi, si deciso di
-sviluppare diverse varianti della $\RLPBWT$.\\ 
-Al fine di una miglior trattazione di tali implementazioni, si è deciso di
-suddividere le stesse in componenti, le quali, adeguatamente
+sovrastime, sia in termini di tempo che di spazio. Quindi, si è deciso di
+sviluppare diverse varianti della $\RLPBWT$.\\
+Si è deciso di
+suddividere le stesse in componenti che, adeguatamente
 assemblate, permetteranno la costruzione di strutture dati composte atte al
 calcolo degli $\SMEM$. Tali componenti, che verranno dettagliate in seguito,
 sono: 
 \begin{itemize}
-  \item le componenti per il mapping tra la colonna $k$-esima e la colonna
+  \item la componente per il mapping tra la colonna $k$-esima e la colonna
   $k+1$ della matrice $\PBWT$, ovvero, riprendendo la notazione di Durbin, le
   strutture run-length 
-  encoded per gli array $c$, $u_k$ e $v_k$. Nel dettaglio, tale componente è
-  implementata in due varianti:
+  encoded per gli array $c$, $u_k$ e $v_k$. Nel dettaglio, si hanno due
+  varianti: 
   \begin{enumerate}
-    \item mapping tramite intvector (\texttt{MAP-INT})
+    \item mapping tramite intvector compressi (\texttt{MAP-INT})
     \item mapping tramite bitvector sparsi (\texttt{MAP-BV})
   \end{enumerate}
-  \item la componente per la memorizzazione delle threshold, anch'essa
-  proporzionale al numero di run. Anche in questo caso si hanno due varianti,
-  corrispondenti, di fatto, alle due varianti della componente per il mapping:
+  \item la componente per la memorizzazione delle threshold, 
+  proporzionali al numero di run. Anche in questo caso si hanno due varianti,
+  corrispondenti alle due varianti per il mapping:
   \begin{enumerate}
-    \item threshold con intvector (\texttt{THR-INT})
+    \item threshold con intvector compressi (\texttt{THR-INT})
     \item threshold con bitvector sparsi (\texttt{THR-BV})
   \end{enumerate}
-  \item la componente per la memorizzazione compatta della permutazione ad ogni
+  \item la componente per la memorizzazione compatta della permutazione a ogni
   colonna 
   della matrice $\PBWT$, tramite i sample di prefix array
   (\texttt{PERM}) 
@@ -214,7 +213,7 @@ sono:
     \item random access con bitvector (\texttt{RA-BV})
     \item random access con SLP (\texttt{RA-SLP})
   \end{enumerate}
-  \item la componente per le longest common extension query
+  \item la componente per le $\LCE$ query
   (\texttt{LCE}) 
   \item la componente per l'intero reverse longest common prefix array
   (\texttt{RLCP}), già descritto nella sezione \ref{secpbwt}

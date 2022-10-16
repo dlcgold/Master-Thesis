@@ -1,20 +1,19 @@
-\subsection{Componente per la struttura Phi}
+\subsection{Componente per la struttura phi}
 \label{secphi}
-L'ottenimento dell'array matching statistics permette di sapere solo
+L'ottenimento dell'array delle matching statistics permette di sapere solo
 l'indice di una della righe del pannello per le quali si ha uno $\SMEM$ con
 l'aplotipo query. Analogamente a quanto discusso in PHONI \cite{phoni},
 anche per la $\RLPBWT$ si è pensato a due funzioni, $\varphi$ e
 $\varphi^{-1}$, per il riconoscimento di tutte le
-righe del pannello per le quali si ha il medesimo $\SMEM$. La componente che
+righe del pannello per cui si ha il medesimo $\SMEM$. La componente che
 permette il calcolo 
-di tali funzioni è la componente denotata \texttt{PHI} e si dovrà considerare
-l'assenza in memoria dei valori degli array $\RLCP$.\\
-L'intuizione alla base del ragionamento è molto semplice. Nell'ordinamento alla
+di tali funzioni è la componente denotata \texttt{PHI}.\\
+Nell'ordinamento alla
 colonna $k$-esima, dato da $a_k$, tutte le righe, per le quali si ha un certo
 $\SMEM$, sono poste consecutivamente, a causa dell'ordinamento
 lessicografico inverso.
 \begin{definizione}
-  Dati un pannello $X$, di dimensioni $N\times M$, e una colonna $k$, avendo
+  Dati un pannello $X$, di dimensioni $M\times N$, e una colonna $k$, avendo
   prefix array $a_k$ e permutazione inversa del prefix array $\alpha_k$, si
   definiscono formalmente: 
   \[\varphi_k(p)=
@@ -43,31 +42,31 @@ lessicografico inverso.
     \end{cases},\forall j\in\{0,M-1\}
   \]
   Quindi, dato un elemento di $a_k$, le due funzioni restituiscono il valore
-  antecedente ad esso, se esistente, e il valore successivo ad esso, se
-  esistente, nel prefix array. In caso di inesistenza di tale valore,
-  rispettivamente ad inizio
+  antecedente e il valore successivo a esso, se
+  esistenti nel prefix array. In caso di inesistenza di tali valori,
+  rispettivamente a inizio
   e fine del prefix array, si
   restituisce $\NULL$.
 \end{definizione}
-\dc{VERIFICARE DEFINIZIONE IN QUANTO ``NUOVA''}
 \begin{esempio}
-  Si ipotizzi di avere, come per l'esempio \ref{es:pbwt1}:
+  Si ipotizza di avere, come per l'esempio \ref{es:pbwt1}:
   \[a_6=[14,15,0,9,10,16,8,11,12,13,18,19,1,2,3,17,4,5,6,7]\]
   \[\alpha_6=[2,12,13,14,16,17,18,19,6,3,4,7,8,9,0,1,5,15,10,11]\]
-  Si fissa quindi $p=3$ e si ottengono:
+  Si fissa $p=3$, ottenendo:
   \[\varphi_6(3)=a_6[\alpha_6[3]-1]=a_6[14-1]=a_6[13]=2\]
   \[\varphi^{-1}_6(3)=a_6[\alpha_6[3]+1]=a_6[14+1]=a_6[15]=17\]
 \end{esempio}
-Avendo, quindi, $\MS[i].\row=p$ e $\MS[i].\len=l$ basta iterare le righe a
+Avendo $\MS[i].\row=p$ e $\MS[i].\len=l$, è sufficiente iterare, in entrambe le
+direzioni, le righe a
 partire da 
-$p$ in $a_i$, righe che denotiamo con l'indice $q$, fino a che si ha 
-$\LCE_k(x_p, x_q)\geq l$. Ovviamente bisogna iterare in entrambe le
-direzioni. Tutte le righe $x_q$ che soddisfano tale condizione presentano uno
+$p$ in $a_i$, che denotiamo con l'indice $q$, fino a che si ha 
+$\LCE_k(x_p, x_q)\geq l$.
+Tutte le righe $x_q$ che soddisfano tale condizione presentano uno
 $\SMEM$ di lunghezza $l$ con 
 l'aplotipo query. L'algoritmo \ref{algo:phiext} rappresenta quanto
 appena descritto, avendo che la funzione $\lceb$ limita il calcolo
 della 
-$\LCE$ alla lunghezza desiderata $l$, escludendo computazioni inutili oltre tale
+$\LCE$ alla lunghezza desiderata $l$, escludendo computazioni oltre tale
 lunghezza. Tale funzione è riproducile, per mezzo di iterazioni, anche sulla
 componente \texttt{RA-BV}. La complessità temporale di questo algoritmo
 varia a seconda della componente per il random access (e della conseguente
@@ -91,7 +90,16 @@ valore delle funzioni $\varphi$ e $\varphi^{-1}$ in tempo $\mathcal{O}(1)$,
 avendo in 
 memoria l'insieme dei prefix array (e l'insieme delle permutazioni inverse dei
 prefix array) con random access in tempo costante.\\
-\dc{Stime molto per eccesso, con RA-BV si scala su $l$ di fatto}
+\noindent
+Con la $\RLPBWT$,
+si hanno in memoria solo i prefix array sample e nessuna informazione in merito
+alla permutazione inversa del 
+prefix array. Non si ha in memoria nemmeno l'$\,\RLCP$, che, in via teorica,
+come per la $\BWT$, potrebbe rendere più efficiente il computo delle funzioni
+$\varphi$ 
+e $\varphi^{-1}$. Quindi, si è pensato a una struttura dati, basata
+su bitvector sparsi e intvector compressi, che permetta il calcolo
+delle due funzioni senza mantenere informazioni complete in memoria. 
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
@@ -124,28 +132,19 @@ prefix array) con random access in tempo costante.\\
   componente \texttt{PHI}.}}
   \label{algo:phiext}
 \end{algorithm}
-\noindent
-Si è presentata la definizione formale delle due funzioni ma, con la $\RLPBWT$,
-si hanno in memoria solo i prefix array sample  e nessuna informazione in merito
-alla permutazione inversa del 
-prefix array. Non si ha in memoria nemmeno il $\RLCP$, che, in via teorica, come
-per la $\BWT$, potrebbe rendere efficiente il computo delle funzioni $\varphi$
-e $\varphi^{-1}$. Quindi, si è pensato ad una struttura dati, basata
-anch'essa su bitvector sparsi e intvector compressi, che permettesse il calcolo
-delle due funzioni senza mantenere informazioni complete in memoria. 
 \subsubsection{Costruzione della struttura di supporto}
-L'idea, per la costruzione della struttura a supporto delle
-funzioni $\varphi$ e $\varphi^{-1}$, si
+L'idea per la costruzione della struttura a supporto delle
+funzioni $\varphi$ e $\varphi^{-1}$ si
 basa sul fatto che, data una colonna $k$ e dati due valori consecutivi $p$ e $q$
 in $a_k$ (avendo $a_k[i]=p$ e $a_k[i+1]=q$), essi rimarranno consecutivi anche
 in $a_{k+o}$ (prefix array dell'arbitraria colonna $k+o$), fino a che
 che $x_{p}[k+o]\neq x_{q}[k+o]$, ovvero fino a che, in colonna $k+o$, tali righe
 corrisponderanno a due simboli diversi, consecutivi nella matrice
-$\PBWT$. Cruciale è che, in quella colonna, 
+$\PBWT$. In quella colonna, 
 $p$ sarà memorizzato come prefix array sample della fine della run $r$
 mentre $q$ come prefix array sample dell'inizio della run $r+1$. Grazie
 a questa informazione, si può costruire una struttura che, data una colonna
-arbitraria e un arbitrario valore di prefix array, permetta di
+e valore di prefix array arbitrari, permetta di
 computare $\varphi$ e $\varphi^{-1}$.\\
 Tale struttura dati è composta da:
 \begin{itemize}
@@ -161,27 +160,28 @@ Tale struttura dati è composta da:
   del vettore $\varPhi$, che memorizza, per ogni simbolo $\sigma=1$ di tale
   vettore, il 
   prefix array sample della coda della run precedente o l'altezza
-  del pannello, $M$, qualora non si abbia alcuna run precedente
+  del pannello $M$ qualora non si abbia alcuna run precedente
   \item un vettore di intvector compressi, denotato $\varPhi^{-1}_{supp}$,
   a supporto del vettore $\varPhi^{-1}$, che memorizza, per ogni simbolo
   $\sigma=1$
   di tale vettore,
   il prefix array sample della testa della run successiva o l'altezza
-  del pannello, $M$, qualora non si abbia alcuna run successiva
+  del pannello $M$ qualora non si abbia alcuna run successiva
 \end{itemize}
-Si ha che la lunghezza della riga $i$-esima di $\varPhi_{supp}$ è
+Si ha che la lunghezza della riga $i$-esima di
+$\varPhi_{supp}$ (di $M$ righe totali) è 
 uguale al numero di simboli $\sigma=1$ presenti nella riga $i$-esima di
 $\varPhi$. Analogamente 
-si ha per $\varPhi^{-1}_{supp}$. In entrambi i casi, inoltre, si hanno $M$
-righe. Queste osservazioni si ripercuotono sul costo in memoria della componente
-\texttt{PHI}, avendo che può essere stimata coi costi in memoria dei bitvector
+si ha per $\varPhi^{-1}_{supp}$.
+Queste osservazioni si ripercuotono sul costo in memoria della componente
+\texttt{PHI}, avendo che può essere stimata con quelli dei bitvector
 sparsi e degli intvector compressi, come fatto per le precedenti componenti. Si
-noti, però, che in questo caso i bitvector sparsi sono ulteriormente
+noti che in questo caso i bitvector sparsi sono ulteriormente
 ottimizzati,
 avendo un rapporto davvero basso di simboli $\sigma=1$ sul totale di
-simboli $N$ (e non $M$
+simboli $N$ (non $M$
 come negli altri casi, segnalando che, in pannelli reali, $N>>M$).\\ 
-Al fine della costruzione, bisogna sfruttare $a_{N-1}$ per poter
+Bisogna anche sfruttare $a_{N-1}$ per poter
 identificare quelle coppie di valori consecutivi non presenti nei vari
 prefix array sample, in modo che sia possibile effettuare le query per
 qualsiasi valore di prefix array in input.\\
@@ -202,7 +202,6 @@ di run per colonna, si ha che la complessità nel caso medio è:
   \label{eq:phicos2}
   \varTheta(N\rho)
 \end{equation}
-\dc{CAPIRE SE COMMENTARE ULTERIORMENTE LA COSTRUZIONE}
 \begin{algorithm}
   \footnotesize
   \begin{algorithmic}[1]
@@ -277,43 +276,40 @@ sulla riga $p$ di $\varPhi^{-1}$, avendo che:
     \varPhi^{-1\,\,p}_{supp}[\rank^{\varphi^{-1}}_p(k)]&\mbox{altrimenti }
   \end{cases}
 \]
-In termini di complessità, si ha che tale calcolo è limitato dalla complessità
+In termini di complessità, si ha che tale calcolo è limitato da quella 
 della funzione $\rank$, avendo che il numero $m$ di simboli $\sigma=1$ in ogni
-bitvector, lungo $N$, equivale al numero di volte in cui la corrispondente riga
+bitvector (lungo $N$) equivale al numero di volte in cui la corrispondente riga
 è testa/coda di una run: 
 \begin{equation}
   \label{eq:queryphi}
   \mathcal{O}\left(\log\frac{N}{m}\right)
 \end{equation}
-\dc{Serve altro?}
 \begin{esempio}
-  Si supponga di avere la seguente situazione nella matrice $\PBWT$:
+  Sia dato il seguente caso nella matrice $\PBWT$:
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.8]{img/phi.pdf}   
   \end{figure}
   \noindent
-  Dove, a parità di colore, si ha lo stesso simbolo tra due indici
+  dove, a parità di colore, si ha lo stesso simbolo tra due indici
   consecutivi. \\
-  In colonna $k$, che per praticità assumiamo essere $k=0$, si vorrebbe avere
-  informazione in merito a $\varphi_k(j)$ e $\varphi^{-1}_k(m)$. \\
+  In colonna $k$, che assumiamo essere $k=0$, si vogliono calcolare
+  $\varphi_k(j)$ e $\varphi^{-1}_k(m)$. \\
   Si nota che, per definizione della struttura dati, si ha (limitandoci alle
   colonne della figura):
   \[\varPhi_j=[0,0,0,1,0, \ldots]\]
   \[\varPhi^{-1}_m=[0,0,0,1,0,\ldots]\]
-  In quanto, in entrambi i casi, rispettivamente per la riga $j$ e per la riga
-  $m$, 
+  questo in quanto, 
   in colonna $k+3$, si ha che $j$ è il valore del prefix array di una testa di
   run 
-  mentre $m$ di una coda di run. In colonna $k+3$ si conoscono anche,
-  rispettivamente, $i$, valore del prefix array della coda della run precedente
+  mentre $m$ di una coda di run. Nella stessa colonna si conoscono anche
+  $i$, valore del prefix array della coda della run precedente
   a quella di $j$, e $n$, valore del prefix array della testa della run
-  successiva quella di $m$. Si ottengono quindi:
+  successiva quella di $m$. Si ottengono:
   \[\varPhi_{supp}=[i,\ldots]\]
   \[\varPhi^{-1}_{supp}=[n,\ldots]\]
-  Si vogliono quindi calcolare $\varphi_0(j)$ e  $\varphi^{-1}_0(m)$. Si ha:
+  Per calcolare $\varphi_0(j)$ e  $\varphi^{-1}_0(m)$, si ha:
   \[\varPhi_{supp}^j[\rank^\varphi_j(0)]=\varPhi_{supp}^j[0]=i\]
   \[\varPhi^{-1\,\,m}_{supp}[\rank^{\varphi^{-1}}_m(0)]=\varPhi^{-1\,\,m}_{supp}[0]=n\]
-  Si noti che uguali risultati si avrebbero per $k+1$, $k+2$ e $k+3$.
+  Si nota che uguali risultati si avrebbero per $k+1$, $k+2$ e $k+3$.
 \end{esempio}
-\dc{SISTEMARE UN PO' TUTTO}

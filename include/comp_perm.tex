@@ -1,6 +1,6 @@
 \subsection{Componente per i prefix array sample}
 Come introdotto parlando delle matching statistics, qualora si abbia un
-cambio di riga da memorizzare, si seleziona sempre o quella relativa alla coda
+cambio di riga da memorizzare, si seleziona sempre quella relativa alla coda
 della run precedente o quella relativa alla testa della run successiva. Risulta
 quindi necessario, in colonna $k$, memorizzare i valori di $a_k$ all'inizio e
 alla fine di ogni run. Anche in questo caso si sono scelti gli intvector
@@ -15,9 +15,13 @@ $k$-esima. L'algoritmo, dovendo iterare l'intera colonna della \textit{matrice
   \label{eq:timeperm}
   \mathcal{O}(M)
 \end{equation}
-La costruzione può essere fatta in contemporanea a quelle delle componenti gia
+La costruzione può essere fatta in contemporanea a quelle delle componenti già
 descritte, ovvero: 
-\texttt{MAP-INT}/\texttt{MAP-BV} e \texttt{THR-INT}/\texttt{THR-BV}.
+\texttt{MAP-INT}/\texttt{MAP-BV} e \texttt{THR-INT}/\texttt{THR-BV}.\\
+\noindent
+In termini di memoria necessaria per questa componente, si hanno le medesime
+considerazioni fatte nel caso della componente \texttt{MAP-INT}, per l'uso degli
+intvector compressi.
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
@@ -46,7 +50,3 @@ descritte, ovvero:
   \texttt{PERM} per la colonna $k$.}}}
   \label{algo:buildperm}
 \end{algorithm}
-\noindent
-In termini di memoria necessaria per questa componente, si hanno le medesime
-considerazioni fatte nel caso della componente \texttt{MAP-INT}, per l'uso degli
-intvector compressi.
