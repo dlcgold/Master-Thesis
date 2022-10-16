@@ -685,14 +685,15 @@ Inoltre, come nel caso dell'algoritmo
 di Bannai, si ha il computo dei $\MEM$ in contemporanea a quello dei valori 
 $\MS[i].\len$.
 Il riconoscimento della run a cui appartiene un certo indice e degli indici
-delle teste delle run avviene tramite l'uso di bitvector. Infatti,
+delle teste delle run avviene tramite l'uso di bitvector, che tengono traccia le
+teste di run per ogni simbolo dell'alfabeto. Infatti,
 $\forall\, \sigma \in \Sigma$, con $\Sigma$ alfabeto in uso, si ha un
 bitvector (sparso) $B_{\sigma}$, lungo $n$ (ovvero quanto il testo), tale che:
 \begin{equation}
   \label{eq:rlbwt10}
   B_{\sigma}[i]=
   \begin{cases}
-    1&\mbox{se } \BWT_T[i]=\sigma\\
+    1&\mbox{se } \BWT_T[i]=\sigma\land \BWT_T[i]\neq\BWT_T[i-1]\\
     0&\mbox{altrimenti}
   \end{cases}
 \end{equation}
@@ -768,11 +769,10 @@ Per ulteriori approfondimenti si rimanda al paper di riferimento
   \label{algo:phonims}
 \end{algorithm}
 \begin{esempio}
-  Dato il seguente testo $T$ e il seguente pattern $P$:
-  \[T=\mbox{mississippi\$ e }P=\mbox{miss}\]
-  Si vuole studiare il calcolo dell'array delle matching statistics sia con
-  MONI che con PHONI. Si assume che $|T|=n$ e $|P|=m$.\\
-  Avendo in ultima colonna i cinque bitvector relativi alle
+  Dati il testo $T=\mbox{mississippi\$}$ e il pattern $P=\mbox{miss}$,
+  si vuole studiare il calcolo dell'array delle matching statistics sia con
+  MONI che con PHONI. Si assume che $|T|=n$ e $|P|=m$.
+  Avendo, in aggiunta in ultima colonna, i cinque bitvector relativi alle
   threshold di ogni simbolo, si hanno:
   \begin{table}[H]
     \centering

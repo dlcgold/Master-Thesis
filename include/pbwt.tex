@@ -76,24 +76,24 @@ formalismi utilizzati:
 \end{itemize}
 Si noti che il match tra due sequenze nella $\PBWT$ è tale sse entrambi iniziano
 e terminano nella stessa colonna. Questo vincolo,
-da cui deriva il termine ``posizionale'' e che, di fatto, impedisce l'uso degli
+da cui deriva il termine ``posizionale'' e che impedisce l'uso degli
 algoritmi tradizionali visti con la $\BWT$, è dato dal fatto che una
 colonna rappresenta un preciso sito di una variante genica. \\
-La costruzione di questa struttura dati si basa, ad ogni colonna $k$, sul
+La costruzione di questa struttura dati si basa, a ogni colonna $k$, sul
 riordinamento lessicografico delle sequenze di aplotipi, nel dettaglio
 sull'ordinamento 
 inverso dei prefissi terminanti in colonna $k-1$. I valori presenti in colonna
-$k$, dopo il riordinamento, altro non sono che i valori che andranno a popolare
+$k$, dopo il riordinamento, sono quelli che andranno a popolare
 la cosiddetta matrice $\PBWT$, che rappresenta la vera e propria
 trasformata. Si noti che avere le sequenze 
 ordinate in base ai prefissi inversi alla $k$-esima colonna permette di
-identificare i match con maggior facilità in quanto, ad ogni colonna, aplotipi
+identificare i match con maggior facilità in quanto aplotipi
 con suffisso comune (o prefisso comune inverso) saranno ``virtualmente'' in
 posizioni 
-consecutive all'interno della trasformata.\\
-La computazione di tutti i riordinamenti non presenta difficoltà dal punto di
+consecutive a ogni riordinamento della trasformata.\\
+Il calcolo di tutti i riordinamenti non presenta difficoltà dal punto di
 vista computazionale. Infatti, conoscendo l'ordinamento in colonna $k$, si può
-derivare facilmente l'ordinamento in colonna $k+1$, studiando solo i valori
+derivare facilmente quello in colonna $k+1$, studiando solo i valori
 riordinati alla colonna precedente. Si ha infatti un ordinamento stabile ad ogni
 colonna. 
 \begin{definizione}
@@ -107,28 +107,26 @@ colonna.
   % pannello $X$ da cui deriva il prefisso $i$-esimo nell'ordine inverso
   % in colonna $k$.
 \end{definizione}
-Data questa definizione, segue che la matrice $\PBWT$ si ottiene
+Data questa definizione, si ha che la matrice $\PBWT$ si ottiene
 direttamente usando, per ogni colonna, gli indici del prefix
   array e prendendo i valori del pannello $X$ secondo l'ordine espresso da
 esso.\\ 
-Per comodità di rappresentazione, definiamo formalmente i valori della
+Per comodità di rappresentazione, definiamo i valori della
 matrice $\PBWT$ con il seguente formalismo:
 \begin{equation}
   \label{eq:pbwty}
   y_i^k[j]=x_{a_k[i]}[j]
 \end{equation}
-Con tale notazione si ha che $y_i^k$ denota la sequenza $i$-esima secondo
-l'ordinamento 
-ottenuto per la colonna $k$. \\
+Con tale notazione, si ha che $y_i^k$ denota la sequenza/riga $i$-esima secondo
+l'ordinamento necessario ad ottenere la colonna $k$ della matrice $\PBWT$. \\
 Si può quindi accedere al valore $j$-esimo, ovvero
 il valore in colonna $j$, di tale
-sequenza. Si può meglio spiegare perché risulti 
-semplice computare i vari prefix array. L'ordinamento degli elementi per
+sequenza. L'ordinamento degli elementi per
 $a_{k+1}$ si ottiene a partire 
-dall'ordinamento in $a_k$, considerando i valori $y_i^k[k]$ e la
+dall'ordinamento in $a_k$, considerando i valori $y_i^k[k]$, $\forall
+i\in\{0,M-1\}$, e la 
 precedenza del valore 0 sul valore 1 per riordinare in modo stabile tali
 valori.\\ 
-\dc{Un po' confusionario}
 Come anticipato, prefissi simili saranno consecutivi nei riordinamenti fino alla
 colonna $k$-esima. Quindi, risulta utile tenere traccia della posizione iniziale
 dei prefissi inversi comuni più lunghi tra prefissi adiacenti nei riordinamenti. 
@@ -152,15 +150,15 @@ dei prefissi inversi comuni più lunghi tra prefissi adiacenti nei riordinamenti
   Per definizione, non avendo una riga precedente con cui effettuare il
   confronto, si ha che $d_k[0]=k$.
 \end{definizione}
-Si può dimostrare che l'inizio di qualsiasi match massimale, terminante
-in colonna $k$, tra qualsiasi $y_i^k$ e $y_j^k$, con $i<j$, è calcolabile
-facilmente, essendo dato da:
+Si noti che, per le proprietà del divergence array, l'inizio di qualsiasi match
+massimale, terminante 
+in colonna $k$, tra qualsiasi $y_i^k$ e $y_j^k$, con $i<j$, è dato da:
 \begin{equation}
   \label{eq:pbwtint}
   \max_{i<m\leq j}d_k[m]
 \end{equation}
-Si noti che al posto del divergence array si può usare anche una
-variante posizionale del Longest Common Prefix array.
+Al posto del divergence array si può usare anche una
+variante ``posizionale'' del Longest Common Prefix array.
 \begin{definizione}
   Si definisce Reverse Longest Common Prefix ($\,\RLCP$) l'array $l_k$
   che, anziché 
@@ -187,7 +185,34 @@ il costo della costruzione dei due insiemi di array è:
   \label{eq:pbwtadtime}
   \mathcal{O}(NM)
 \end{equation}
-\dc{Serve altro? Serve spiegare i dettagli dell'algoritmo?}
+Ai fini della trattazione dell'algoritmo di computo degli $\SMEM$ per
+un aplotipo esterno,
+ricordiamo un'ulteriore definizione, analoga
+a quanto visto con il suffix array e la sua permutazione inversa. 
+\begin{definizione}
+  Si definisce $\alpha_k$ come l'inverso della permutazione data dal
+  prefix array $a_k$, avendo che:
+  \[\alpha_k[i]=j \iff a_k[j]=i\]
+\end{definizione}
+Grazie a queste prime definizioni, è possibile denotare alcune forti
+correlazioni, esplicitate in tabella \ref{tab:pbwtbwt}, che sussistono tra 
+$\BWT$ e $\PBWT$ (e le rispettive varianti run-length
+encoded), fattori chiave nello sviluppo di
+questa tesi.
+\begin{table}
+  \centering
+  \caption{Tabella di confronto tra le strutture dati relative alla $\BWT$ e
+    alla $\PBWT$.}
+  \label{tab:pbwtbwt}
+  \begin{tabular}{c|c}
+    $\BWT$ & $\PBWT$\\
+    \hline
+    $\SA_T$ & $a_k$\\
+    $\ISA_T$ & $\alpha_k$\\
+    $\LCP_T$ & $d_k$ o $l_k$\\            
+  \end{tabular}
+  
+\end{table}
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
@@ -218,38 +243,10 @@ il costo della costruzione dei due insiemi di array è:
   partire da $a_{k}$ e $d_{k}$.}
   \label{algo:durbin1}
 \end{algorithm}
-Ai fini della trattazione dell'algoritmo di computo degli $\SMEM$ per
-un'aplotipo esterno,
-ricordiamo un'ulteriore definizione, analoga (e con lo stesso significato)
-a quanto visto con il suffix array e la sua permutazione inversa. 
-\begin{definizione}
-  Si definisce $\alpha_k$ come l'inverso della permutazione data dal
-  prefix array $a_k$, avendo che:
-  \[\alpha_k[i]=j \iff a_k[j]=i\]
-  \end{definizione}
-  Grazie a queste prime definizioni, è possibile denotare alcune prime forti
-  correlazioni (tabella \ref{tab:pbwtbwt}), fattore chiave nello sviluppo di
-  questa tesi, che sussistono tra 
-  $\BWT$ e $\PBWT$ (e le rispettive varianti run-length
-  encoded).
-  \begin{table}
-    \centering
-    \caption{Tabella di confronto tra le strutture dati relative alla $\BWT$ e
-      alla $\PBWT$.}
-    \label{tab:pbwtbwt}
-    \begin{tabular}{c|c}
-      $\BWT$ & $\PBWT$\\
-      \hline
-      $\SA_T$ & $a_k$\\
-      $\ISA_T$ & $\alpha_k$\\
-      $\LCP_T$ & $d_k$ o $l_k$\\            
-    \end{tabular}
-    
-  \end{table}
 \newpage
 \begin{esempio}
   \label{es:pbwt1}
-  Si assuma il seguente pannello $X$ e di voler calcolare $y^6$:
+  Dato il seguente pannello $X$ si vuole calcolare $y^6$:
   \begin{table}[H]
     \centering
     \scriptsize
@@ -280,12 +277,11 @@ a quanto visto con il suffix array e la sua permutazione inversa.
     \end{tabular}
   \end{table}
   Si inizia riordinando il pannello con l'ordine inverso alla
-  quinta colonna, avendo che $y^6$ altro non è che la sesta colonna del pannello
-  così riordinato. Ne segue che $a_6$ è la colonna degli indici, che è stata
-  ottenuta con la permutazione data dall'ordinamento, e $d_6$ la
-  colonna iniziale in cui terminano i match tra righe consecutive nel
-  riordinamento le sottolineature (evidenziati nell'immagine seguente dalle
-  sottolineature):   
+  quinta colonna, avendo che $y^6$ è la sesta colonna del pannello
+  così riordinato. Ne segue che, secondo il riordinamento mostrato nel seguente
+  pannello, $a_6$ è la 
+  colonna degli indici, già riordinati, mentre $d_6$ è specificato
+  tramite le righe in verde:   
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.325]{img/matrix1.pdf}
@@ -296,12 +292,12 @@ a quanto visto con il suffix array e la sua permutazione inversa.
   \[\alpha_6=[2,12,13,14,16,17,18,19,6,3,4,7,8,9,0,1,5,15,10,11]\]
   \[d_6=[6,0,4,2,0,0,5,0,0,0,3,0,4,0,0,6,4,0,0,0]\]
   \[l_6=[0,6,2,4,6,6,1,6,6,6,3,6,2,6,6,0,2,6,6,6]\]
-  Con il calcolo di tutti gli $a_k$ si otterrebbe la seguente matrice $\PBWT$:
+  Permutando $X$ con tutti gli $a_k$, si ottiene la seguente matrice $\PBWT$:
   \begin{table}[H]
   \centering
   \scriptsize
   \begin{tabular}{c|ccccccccccccccc}
-    X & 00 & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 & 13
+    \tiny{$\PBWT$} & 00 & 01 & 02 & 03 & 04 & 05 & 06 & 07 & 08 & 09 & 10 & 11 & 12 & 13
     & 14 \\
     \hline
     00 & 1 & 1 & 0 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
