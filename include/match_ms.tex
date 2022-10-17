@@ -240,7 +240,7 @@ l'algoritmo, si ha che:
   \begin{equation}
     \label{eq:msthr2slp}
     \mathcal{O}\left(N^2\log (NM)\right)
-  \end{equation}
+  \end{equation} 
   In aggiunta bisogna considerare i costi della componente \texttt{PHI} per il
   computo di tutti gli $\SMEM$.
   % Per semplicità denotiamo con $\gamma$ il numero di accessi al
@@ -256,7 +256,8 @@ l'algoritmo, si ha che:
   %   \mathcal{O}\left(N\gamma\log (NM)\right)
   % \end{equation}
 \end{itemize}
-Tali complessità teoriche sono fortemente sovrastimate. \\
+Tali complessità teoriche sono fortemente sovrastimate ($N^2$ è, di fatto, un
+$NL$, con $L$ lunghezza media degli $\SMEM$ e, tendenzialmente, $L<<N$). \\
 Facendo una stima complessiva, si può ipotizzare come la struttura
 \texttt{MAP-BV 
 + THR-BV + RA-SLP + PERM + PHI}, a causa della maggior lentezza in fase di

@@ -1,5 +1,5 @@
 \section{Sviluppi futuri}
-Ovviamente, questa prima implementazione completa della $\RLPBWT$,
+Questa prima implementazione completa della $\RLPBWT$,
 declinata nelle possibili strutture composte, non è da
 considerarsi come un punto di arrivo. Come accaduto per la $\PBWT$,
 infatti, si potranno sviluppare nuove strutture dati basate su di essa per la
@@ -9,30 +9,25 @@ già anticipati nella sezione \ref{secpbwt}:
   \item lo studio di pannelli multiallelici, ovvero costruiti su un alfabeto
   $\Sigma$ arbitrario e non limitato ai simboli $\sigma=0$ e $\sigma=1$
   \item lo studio di pannelli con dati mancanti, ovvero pannelli costruiti
-  da dati reali che possono contenere siti, per certi
-  individui, per i quali non si ha certezza in merito all'allele
+  da dati reali che possono contenere siti per cui non si ha certezza
+  dell'allele  
 \end{itemize}
-Inoltre, allo stato attuale, la struttura dati è stata sviluppata per permettere
-unicamente il calcolo degli $\SMEM$ con un aplotipo esterno. Anche in
-questo caso, quindi, si potrebbe avere lo sviluppo di nuovi algoritmi che
-rispondano a task diversi, come, ad esempio, il calcolo degli $\SMEM$ interni al
-panello, il 
-calcolo dei cosiddetti \textit{blocchi}, o anche il calcolo di tutti i match con
-un aplotipo 
-esterno di lunghezza maggiore a una fissata o che includano un numero stabilito
-di sequenze di aplotipi nel panello.
-\dc{Serve definire i blocchi?}
+Inoltre la struttura dati è stata sviluppata per permettere
+unicamente il calcolo degli $\SMEM$ con un aplotipo esterno, ma
+si potrebbero sviluppare nuovi algoritmi che
+rispondano a task diversi, come il calcolo degli $\SMEM$ interni al
+panello, il calcolo di tutti i match con
+un aplotipo esterno di lunghezza maggiore di una fissata o il calcolo degli
+$\SMEM$ con numero stabilito di aplotipi nel panello.
 \paragraph{RLPBWT multiallelica.}
-Per quanto i pannelli di aplotipi, prodotti dal sequencing del genoma umano.
-raramente presentino siti multiallelici, si ha una presenza stimata, al momento,
+Per quanto i pannelli di aplotipi prodotti dal sequencing del genoma umano
+raramente presentino siti multiallelici, si ha una presenza stimata
 di circa il 2\% di siti triallelici \cite{tri}. Inoltre, all'aumentare della
 disponibilità di dati genomici, si ha in letteratura la propensione a credere
-che tale percentuale di siti sia non solo sottostimata (evidenziando che sia
-stimato 
-circa un terzo dei reali siti triallelici) ma anche destinata a
+che tale percentuale di siti sia non solo sottostimata (si suppone sia
+stimato circa un terzo dei reali siti triallelici), ma anche destinata a
 crescere in modo non lineare rispetto al numero di individui sequenziati
-\cite{tri2}. Inoltre, molte specie, soprattutto vegetali, sono già riconosciute
-essere poliploidi. Una struttura dati efficiente in memoria, in grado di
+\cite{tri2}. Quindi, una struttura dati efficiente in memoria, in grado di
 gestire pannelli costruiti su un alfabeto arbitrario, risulterà necessaria nel
 breve futuro.\\
 Ipotizzando un possibile funzionamento della $\RLPBWT$
@@ -40,18 +35,19 @@ multiallelica ($\MRLPBWT$), si può pensare ad una soluzione molto
 simile a quanto visto per la $\RLBWT$. Infatti, per ogni colonna, si
 potrebbero memorizzare:
 \begin{itemize}
-  \item una stringa che memorizzi quale simbolo corrisponda ad una certa run,
+  \item una stringa che tenga traccia di quale simbolo corrisponda a una certa
+  run, 
   non potendo sfruttare l'alternanza di simboli vista nel caso binario
   \item una rivisitazione delle strutture necessarie al mapping, tenendo in
-  memoria vettori di bitvector sparsi o di intvector compressi, al fine di poter
-  computare la funzione $w(i,\sigma)$ anche nel caso multiallelico. Si segnala
-  che si attende un inversione di 
-  tendenza in termini di memoria, avendo che, in tal caso, l'uso di intvector
+  memoria vettori di bitvector sparsi o di intvector compressi, per poter
+  computare la funzione $w(i,\sigma)$ anche nel caso multiallelico. Si ipotizza
+  un'inversione di 
+  tendenza in termini di memoria, dato che l'uso di intvector
   compressi potrebbe rivelarsi meno efficiente dell'uso dei bitvector sparsi,
   anche con pochi sample
   \item un riadattamento del calcolo dell'array delle matching statistics 
 \end{itemize}
-In merito allo spazio richiesto e ai tempi di calcolo bisognerà considerare la
+In merito allo spazio richiesto e ai tempi di calcolo, bisognerà considerare la
 grandezza dell'alfabeto su cui è costruito il pannello, che ci si aspetta,
 fortunatamente, 
 inferiore a $10$ nella maggioranza dei casi di studio biologico.\\
@@ -60,49 +56,48 @@ si ritiene
 possibile generalizzare, in modo computazionalmente efficiente, la
 $\RLPBWT$ anche a questa casistica. 
 \paragraph{RLPBWT con dati mancanti.}
-La maggior parte delle soluzioni attualmente sviluppate sono basate su una forte
-assunzione: i dati in input sono corretti e senza dati mancanti. Ovviamente,
-limitandosi a studiare pannelli simulati corretti in una fase di
+Limitandosi a studiare pannelli corretti in una fase di
 preprocessing, si rischia di limitare la capacità di inferenza dai pannelli
-stessi.\\ 
+stessi, poiché si assumono esatti e senza dati mancanti.\\ 
 Come anticipato alla sezione \ref{secpbwt}, si sono iniziate a sviluppare
-estensioni della $\PBWT$ che ammettano wildcard, ovvero simboli nel
-pannello che possono assumere qualsiasi valore dell'alfabeto $\Sigma$, su cui è
-costruito il pannello stesso.\\
-Uno degli sviluppi futuri sarebbe quindi quello di generalizzare la
+estensioni della $\PBWT$ che ammettono wildcard, ovvero simboli nel
+pannello che possono assumere qualsiasi valore dell'alfabeto $\Sigma$ del
+pannello.\\
+Uno degli sviluppi futuri potrebbe essere quello di generalizzare la
 $\RLPBWT$, ma anche l'eventuale $\MRLPBWT$, per la gestione di dati
 mancanti nel pannello. Inoltre, si potrebbero sviluppare algoritmi in grado di
 gestire le wildcard anche all'interno delle query stesse.\\
-Sempre in via ipotetica, l'uso di algoritmi parametrici (ma anche
+L'uso di algoritmi parametrici (ma anche
 di algoritmi approssimati), adattati al
-funzionamento della $\RLPBWT$, potrebbero portare a soluzioni interessanti
+funzionamento della $\RLPBWT$, potrebbe portare a soluzioni interessanti
 per la gestione di pannelli reali non preprocessati.
 \paragraph{K-SMEM.}
-Come anticipato, oltre che variare le caratteristiche del pannello in analisi,
+Oltre a variare le caratteristiche del pannello in analisi,
 si possono studiare anche algoritmi per risolvere nuovi task con la
 $\RLPBWT$.\\ 
-Di recente, Gagie \cite{kmems} ha proposto un articolo in cui dimostra come
+Di recente, Gagie \cite{kmems} ha proposto uno studio in cui dimostra come
 la $\RLBWT$, implementata in MONI \cite{moni}, sia già predisposta al
 calcolo dei $\KMEM$, ovvero $\MEM$, tra sottostringhe di un
-pattern e un testo, che occorrono esattamente $k$ volte nel testo stesso.\\
-In merito alla $\RLPBWT$, si potrebbe adattare l'idea di Gagie al calcolo
-dei $\KSMEM$, tra sottostringhe dell'aplotipo query e il pannello, che
-comportino $\SMEM$ con esattamente $k$ righe del pannello stesso. La
+pattern e un testo che occorrono esattamente $k$ volte nel testo stesso.\\
+Si potrebbe adattare l'idea di Gagie al calcolo
+dei $\KSMEM$, ovvero $\SMEM$ che occorrono tra l'aplotipo query e esattamente
+$k$ righe del pannello. La 
 correlazione tra la $\RLBWT$ e la $\RLPBWT$ 
 porta a pensare che tale problema sia risolvibile anche con la nuova definizione
-di matching statistics presentata in questa tesi.\\
-Nulla è stato sviluppato al momento ma si ritiene questo
-un'interessante sviluppo futuro in quanto permetterebbe studi statistici, molto
-comuni nei GWAS, in merito alla presenza di sottostringhe di un
-aplotipo esterno all'interno di un pannello di aplotipi.\\
+di matching statistics, presentata in questa tesi.
+Si ritiene la risoluzione di questo task
+un interessante sviluppo futuro in quanto potrebbe permettere studi statistici
+(caratteristici dei GWAS),
+riguardanti la presenza di specifici $\SMEM$ tra un aplotipo query e un pannello
+di aplotipi.\\
 \\
 \\
-\textit{La tematica della \emph{pangenomica} è innovativa e il numero di
-problemi aperti è incredibilmente grande. I dati aumentano sempre di più e gli
-studi informatici devono evolversi per ``stare al passo'' con questa mole
-d'informazioni. Gli \emph{sviluppi futuri} sono, da diversi punti di vista,
-anche imprevedibili. Risulta quindi difficile elencare, in modo completo, le
-possibilità future dietro questa branca della bioinformatica e dell'algoritmica
+\textit{La tematica della pangenomica è innovativa, il numero di
+problemi aperti è incredibilmente grande, i dati aumentano sempre di più e gli
+studi informatici/bioinformatici devono evolversi per ``stare al passo'' con
+questa mole 
+d'informazioni. Gli sviluppi futuri sono, da diversi punti di vista,
+imprevedibili e quindi risulta difficile elencare, in modo completo, le
+prospettive future di questa branca della bioinformatica e dell'algoritmica
 sperimentale.}
-\dc{Frase conclusiva da modificare fortemente}
 % LocalWords:  preprocessing
