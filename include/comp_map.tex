@@ -413,7 +413,7 @@ memoria, indicando con $r$ il numero di run:
   \label{eq:bv2}
   \approx r\left(2+\log\frac{M}{r}\right)\mbox{ bit}
 \end{equation}
-Pensando ad una correlazione tra \texttt{MAP-INT} e \texttt{MAP-BV}, si ha che
+Pensando a una correlazione tra \texttt{MAP-INT} e \texttt{MAP-BV}, si ha che
 $\rank_{h_k}$ fa le veci della funzione $\ITR$ mentre
 $\select_{h_k}$ equivale ad accedere ai valori di $p_k$.\\
 Per la rappresentazione dei vettori $u_k$ e $v_k$ si
@@ -843,7 +843,7 @@ dato $\rho$ numero medio di run per colonna, essa è:
 \begin{equation}
   \label{eq:mapintmem2}
   \approx N\left(\frac{\rho\left(2+\log\frac{M}{\rho}\right)}{4}+
-    29\right)\mbox{ byte} 
+    53\right)\mbox{ byte} 
 \end{equation}
 \dc{Ricontrollare conto}
 È possibile stimare un confronto tra la memoria
@@ -869,7 +869,9 @@ media del numero di run resti proporzionale a quanto visto con 4.908 sample
 (ovvero una media di 12 run come verrà
 analizzato nel Capitolo \ref{reschap}), l'uso di un
 bitvector sparso diventerebbe favorevole solo con pannelli con più di circa
-17.180 sample/aplotipi/righe. 
+17.180 sample/aplotipi/righe (anche se bisognerebbe considerare poi tutti i
+bitvector sparsi e tutti gli intvector compressi delle due componenti per il
+mapping).  
 \begin{figure}
   \centering
   \includegraphics[scale = 0.7]{img/bv_vs_iv.pdf}

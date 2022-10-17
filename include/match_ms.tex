@@ -125,6 +125,16 @@ Si hanno tre casi possibili:
   non si trova un mismatch, calcolando la lunghezza $l$ del suffisso comune tra
   esse e memorizzando tale valore come $\MS[i].\len=l$
 \end{enumerate}
+In fase di costruzione delle lunghezze, è possibile anche riportare gli
+$\SMEM$, terminanti in colonna $i$, qualora:
+\begin{itemize}
+  \item $\MS[i].\len\geq \MS[i+1].\len \land \MS[i].\len\neq 0$
+  \item si è arrivati a fine query, avendo $i=N-1\land \MS[i].\len\neq 0$
+\end{itemize}
+Queste condizioni segnalano che non è possibile estendere a destra il più lungo
+suffisso comune, terminante in colonna $i$, tra la query e una qualsiasi riga del
+pannello di input. 
+Questo si può verificare anche nell'esempio \ref{es:ms}.
 \begin{esempio}
   \label{es:thr}
   Si vede un esempio di funzionamento delle threshold per la scelta
@@ -178,16 +188,6 @@ Si hanno tre casi possibili:
   $x_{16}$ e la query $z$ fino alla colonna $k=2$, si può calcolare che
   $\MS[2].\len=3$. 
 \end{esempio}
-In fase di costruzione delle lunghezze, è possibile anche riportare gli
-$\SMEM$, terminanti in colonna $i$, qualora:
-\begin{itemize}
-  \item $\MS[i].\len\geq \MS[i+1].\len \land \MS[i].\len\neq 0$
-  \item si è arrivati a fine query, avendo $i=N-1\land \MS[i].\len\neq 0$
-\end{itemize}
-Queste condizioni segnalano che non è possibile estendere a destra il più lungo
-suffisso comune, terminante in colonna $i$, tra la query e una qualsiasi riga del
-pannello di input. 
-Questo si può verificare anche nell'esempio \ref{es:ms}.\\
 L'algoritmo per il il calcolo degli $\SMEM$ tramite threshold è visualizzabile
 all'algoritmo \ref{algo:matchthr}. All'algoritmo \ref{algo:updatems}
 si riporta il metodo di $\UP$ delle informazioni, nel passaggio dalla
@@ -293,9 +293,9 @@ usando l'$\,\SLP$ per il random access).
     \Else
     \State  $curr_{thr}\gets t_k[curr_{run}]$ \textbf{oppure}
     $curr_{thr}\gets \rank_t^k(curr_{index})$ 
-    \State $force_{down} \gets \top$\textit{ sse l'indice è sovrapposto ad una
+    \State $force_{down} \gets \top$\textit{ sse l'indice è sovrapposto a una
     threshold non in coda di run}
-    \State $force_{down} \gets \top$\textit{ sse l'indice è sovrapposto ad una
+    \State $force_{down} \gets \top$\textit{ sse l'indice è sovrapposto a una
     threshold in coda di run e $\mathtt{DOWN}(\ldots)=\top$}
     \If{$|samples_{beg}^k|=1$}
     \State $ms_{row}[k]\gets M$
