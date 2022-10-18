@@ -11,11 +11,12 @@ a un qualsiasi elemento del pannello mentre, nel caso di \texttt{RA-SLP}, si ha
 che l'accesso a ogni elemento è in tempo:
 \begin{equation}
   \label{eq:timera}
-  \mathcal{O}(\log (NM))
+  \mathcal{O}(\log (\mathit{NM}))
 \end{equation}
 La seconda differenza è data
 dalla dimensione delle due strutture dati, avendo che \texttt{RA-BV} memorizza
-$\sim NM$ bit, dove il $\sim$ è dato dai costi in memoria aggiuntivi dovuti
+$\sim \mathit{NM}$ bit, dove il $\sim$ è dato dai costi in memoria aggiuntivi
+dovuti 
 al vettore che memorizza i bitvector. Parlando invece di
 \texttt{RA-SLP}, non si può avere una stima a priori dello spazio necessario ma,
 come si vedrà nel Capitolo \ref{reschap}, i risultati quantitativi daranno prova
@@ -94,5 +95,5 @@ In termini di complessità, si ricorda che, come per il random access,
 il calcolo delle $\LCE$ query con $\SLP$ è in tempo proporzionale a: 
 \begin{equation}
   \label{eq:timelce}
-  \mathcal{O}(\log (NM))
+  \mathcal{O}(\log (\mathit{NM}))
 \end{equation}

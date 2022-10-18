@@ -14,8 +14,7 @@ della sperimentazione, ovvero:
   \item la fase di preprocessing, necessaria per la preparazione dei
   vari input della $\RLPBWT$, comprendente: 
   \begin{itemize}
-    \item la conversione dei file in formato VCF nei file in formato MaCS
-    \cite{macs}, usato 
+    \item la conversione dei file in formato VCF nei file in formato MaCS\footnote{\url{https://github.com/gchen98/macs}}, usato 
     come formato di input nella $\RLPBWT$
     \item l'estrazione del pannello delle query e la creazione del nuovo
     pannello di aplotipi
@@ -54,13 +53,14 @@ $\RLPBWT$, che utilizzano la componente \texttt{RA-SLP} o la
 componente \texttt{LCE}. 
 Inoltre, il fatto che questa costruzione sia necessaria solo una volta 
 è cruciale nell'ottica di un confronto con
-lo spazio richiesto dall'algoritmo 5 di Durbin, che richiede $13NM$
+lo spazio richiesto dall'algoritmo 5 di Durbin, che richiede $13\mathit{NM}$
 byte a ogni esecuzione.\\
 In generale, la crescita di memoria e di tempo, richiesti per le tre fasi di
 preprocessing, sembra essere proporzionale al numero di siti dei pannelli.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{img/prep_mem_time.pdf}
+  \vspace{-5mm}
   \caption{Picchi di memoria (a) e tempo richiesto (b) per le tre fasi di
     preprocessing dell'input per la $\RLPBWT$, in scala logaritmica.}
   \label{fig:prechr}
@@ -115,7 +115,7 @@ richiede circa l'1\% della memoria necessaria al file non compresso.
   \centering
   \caption{Dimensioni, in gigabyte, degli $\SLP$ e dei file MaCS
     per i vari pannelli del 1000 Genome Project.}
-      \vspace{-2mm}
+  \vspace{-2mm}
   \begin{tabular}{c||c|c}
     \textbf{Chr} & \textbf{SLP}
     & \textbf{MaCS} \\
@@ -137,6 +137,7 @@ cromosoma 1 con una tecnica standard (GZip), richiede 0,5GB.
 \begin{figure}
   \centering
   \includegraphics[width=0.7\linewidth]{img/slp_vs_macs_log.pdf}
+  \vspace{-5mm}
   \caption{Confronto tra la memoria richiesta dai file MaCS e dagli $\SLP$ per i
     pannelli del 1000 Genome Project, in scala
     logaritmica.} 
@@ -167,7 +168,7 @@ Le strutture dati composte
 \texttt{MAP-INT + RLCP} e \texttt{MAP-BV + RLCP}, dovendo 
 memorizzare l'intero insieme degli array $\RLCP$, hanno un elevato
 consumo di memoria. Pur utilizzando degli intvector compressi, si ha
-necessità di salvare $NM$ valori interi. Risulta ovvio notare come, in
+necessità di salvare $\mathit{NM}$ valori interi. Risulta ovvio notare come, in
 termini di costruzione, siano le due strutture che non scalano sul numero
 di run 
 ad aver maggiori richieste di memoria. Proseguendo nell'analisi si ha che
@@ -198,7 +199,7 @@ strutture, comportando un aumento dei tempi di calcolo (meno del 5\% in
 più) rispetto alle strutture basate su
 \texttt{RA-SLP}/\texttt{LCE}. Confrontando i tempi di  
 tutte le varianti, si ha che tutti gli algoritmi di costruzione sono in tempo
-proporzionale a $\mathcal{O}(NM)$, ma le varianti della
+proporzionale a $\mathcal{O}(\mathit{NM})$, ma le varianti della
 $\RLPBWT$ includono, in questa fase, anche il calcolo degli indici
 utili al calcolo degli $\SMEM$. \\
 Si conclude che, parlando di $\RLPBWT$, la
@@ -213,6 +214,7 @@ concludere che questo risultato conferma quanto discusso nel capitolo
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{img/make_time_mem_paper.pdf}
+  \vspace{-5mm}
   \caption{Picchi di memoria (a) e tempi di calcolo (b) per la
     costruzione delle varianti della $\RLPBWT$ e per 
     la $\PBWT$.}
@@ -224,11 +226,11 @@ concludere che questo risultato conferma quanto discusso nel capitolo
     costruzione delle 
     strutture dati.} 
   \label{tab:makemem}
-  \vspace{-2mm}
   \footnotesize
   \subcaption*{\footnotesize{Tabella A: risultati relativi alla \textit{PBWT} e
       alle varianti 
-    basate su $\RLCP$ per la $\RLPBWT$.}} 
+      basate su $\RLCP$ per la $\RLPBWT$.}}
+  \vspace{+1mm}
   \begin{tabular}{c||c|c|c} 
     \textbf{Chr}
     & \textbf{PBWT}
@@ -287,7 +289,6 @@ concludere che questo risultato conferma quanto discusso nel capitolo
     strutture dati.} 
   \label{tab:maketime}
   \footnotesize
-  \vspace{-2mm}
   \subcaption*{\footnotesize{Tabella A: risultati relativi alla $\PBWT$ e
       alle varianti 
     basate su $\RLCP$ per la \texttt{\RLPBWT}.}} 
@@ -380,7 +381,8 @@ nuovamente le componenti per il random access, si ha conferma della
 richiesta eccessiva in memoria della componente \texttt{RLCP}.
 \begin{figure}
   \centering
-    \includegraphics[width=\linewidth]{img/comp_mem.pdf}
+  \includegraphics[width=\linewidth]{img/comp_mem.pdf}
+  \vspace{-5mm}
   \caption{Memoria occupata dalle singole componenti, avendo sulle ascisse in
     (a) il numero di siti e in (b) il numero di run. }
   \label{fig:comp}
@@ -390,7 +392,6 @@ richiesta eccessiva in memoria della componente \texttt{RLCP}.
   \caption{Dimensioni, in megabyte, delle singole componenti per la
     $\RLPBWT$.} 
   \label{tab:comp}
-  \vspace{-2mm}
   \subcaption*{\footnotesize{Tabella A: dimensioni delle componenti di
     mapping e threshold usate nelle
     strutture dati per la $\RLPBWT$.}}   
@@ -435,7 +436,8 @@ in spazio, calcolando dinamicamente i vari indici necessari al computo degli
 $\SMEM$ interni. Invece, per quanto riguarda l'algoritmo
 5 di Durbin, ovvero l'algoritmo \texttt{matchIndexed}, si confermano le
 previsioni 
-fatte dall'autore stesso, avendo che la memoria utilizzata è circa $13NM$
+fatte dall'autore stesso, avendo che la memoria utilizzata è circa
+$13\mathit{NM}$ 
 byte. Escludendo le strutture \texttt{MAP-INT + RLCP} e \texttt{MAP-BV + RLCP},
 si rileva almeno un intero ordine di grandezza in più di memoria rispetto alle
 strutture dati composte per la $\RLPBWT$. In esse, la
@@ -478,10 +480,10 @@ frequenti operazioni di random access con la componente
 matching statistics che per la fase di disambiguazione), richiedono più tempo
 di tutte le altre varianti, soprattutto se si pensa alle corrispondenti
 varianti con componente \texttt{RA-BV}. L'uso della componente \texttt{RA-SLP}
-comporta, infatti, circa venti volte i tempi di calcolo che si hanno usando le
-componenti basate su bitvector sparsi e di circa 45 volte quelli che si hanno
-usando 
-le strutture basate su intvector compressi per mapping e threshold. La struttura
+comporta, infatti, circa 20 volte i tempi di calcolo, rispetto all'uso della
+componente \texttt{RA-BV}, nelle strutture composte
+basate su bitvector sparsi e di circa 45 volte in quelle basate su intvector
+compressi. La struttura 
 \texttt{MAP-INT + LCE + 
   PERM + PHI} e la struttura 
 \texttt{MAP-BV + LCE + PERM + PHI} risultano essere, al massimo,
@@ -515,6 +517,7 @@ fondamentale in fase di analisi dati.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{img/exe_time_mem_paper}
+  \vspace{-5mm}
   \caption{Picchi di memoria (a) e tempi di esecuzione (b) per il calcolo degli
     $\SMEM$.}
   \label{fig:smemtimememchr}
@@ -704,6 +707,7 @@ quantitativi delle due fasi della sperimentazione.
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{img/exe_time_single_paper.pdf}
+  \vspace{-5mm}
   \caption{Tempo medio di esecuzione del calcolo degli $\SMEM$ per una singola
     query. Le
     barre d'errore rappresentano la deviazione standard.}

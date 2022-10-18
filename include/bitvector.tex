@@ -36,7 +36,9 @@ memoria. Lo spazio necessario per l'implementazione delle principali varianti
 nella \textbf{Succinct Data Structure Library (\textit{SDSL})} 
 \cite{sdsl} (una delle principali librerie, scritta in \Cplusplus 11, per
 strutture dati succinte) è visualizzabile in tabella 
-\ref{tab:bvspace}. Il secondo vantaggio consiste nel fatto che i
+\ref{tab:bvspace} (per gli interleaved bitvector si rimanda
+a \footnote{\scriptsize{\url{https://github.com/simongog/sdsl-lite/blob/c32874cb2d8524119f25f3b501526fe692df29f4/include/sdsl/bit\_vector\_il.hpp\#L55}}}). Il
+secondo vantaggio consiste nel fatto che i 
 bitvector permettono l'implementazione efficiente di due funzioni: la funzione
 $\rank$ e la funzione $\select$.\\
 Un'implementazione na\"{i}ve delle stesse richiederebbe tempo $\mathcal{O}(n)$,
@@ -53,8 +55,9 @@ tipologia di bitvector.
   \caption{Stime dello spazio occupato (bit) per la memorizzazione di alcune varianti
     di \textit{bitvector}. Si 
     assume un bitvector di lunghezza $n$ con un numero di simboli $\sigma=1$
-    (o $\sigma=\top$) pari a $m$. $K$ indica la \textit{block size} per
-    l'\textit{interleave}.}  
+    (o $\sigma=\top$) pari a $m$. $K$ indica la
+    \textit{block size} per l'\textit{interleave}.}
+  \vspace{-2mm}
   \begin{tabular}{c|c}
     \textbf{Variante} & \textbf{Spazio occupato}\\
     \hline\xrowht{15pt}
@@ -68,7 +71,6 @@ tipologia di bitvector.
   \end{tabular}
   \label{tab:bvspace}
 \end{table}
-
 \subsection{Funzione rank}
 La prima funzione che si approfondisce è la funzione $\rank$, che permette di
 calcolare il \textit{rango} di un dato elemento del 
@@ -90,7 +92,9 @@ dell'implementazione, anche in conseguenza del fatto che si ha una quantità
 diversa di bit aggiuntivi salvati in memoria.
 In tabella \ref{tab:rank} sono visualizzabili le complessità temporali stimate
 della funzione $\rank$, 
-per le varianti di bitvector implementate nella SDSL.
+per le varianti di bitvector implementate nella SDSL (in merito agli $H_0$
+compressed
+bitvector si rimanda a \footnote{\scriptsize{\url{https://github.com/simongog/sdsl-lite/blob/c32874cb2d8524119f25f3b501526fe692df29f4/include/sdsl/rrr\_vector.hpp\#L50}}}).
 % tabella relativa ai costi della funzione rank dei bitvector
 \begin{table}[H]
   \small
@@ -100,7 +104,8 @@ per le varianti di bitvector implementate nella SDSL.
     richiesta. Si assume un 
     bitvector di lunghezza $n$, con un numero di simboli $\sigma=1$
     pari a $m$, e un numero $k$ di \textit{rank
-      sample}.}  
+      sample}.}
+  \vspace{-2mm}
   \begin{tabular}{c|c|c}
     \textbf{Variante} & \textbf{Bit aggiuntivi} & \textbf{Complessità
                                                   temporale}\\ 
@@ -116,6 +121,7 @@ per le varianti di bitvector implementate nella SDSL.
   \end{tabular}
   \label{tab:rank}
 \end{table}
+
 \subsection{Funzione select}
 La seconda funzione fondamentale è la funzione $\select$, che
 permettere di ottenere l'indice di un simbolo $\sigma=1$ nel bitvector.
@@ -140,7 +146,8 @@ per le varianti di bitvector implementate nella SDSL.\\
   \centering
   \caption{Complessità temporali stimate della funzione $\select$ per
     alcune varianti di bitvector, con la quantità di bit aggiuntivi
-    richiesta. Si assume un bitvector di lunghezza $n$.} 
+    richiesta. Si assume un bitvector di lunghezza $n$.}
+  \vspace{-2mm}
   \begin{tabular}{c|c|c}
     \textbf{Variante} & \textbf{Bit aggiuntivi} & \textbf{Complessità
                                                   temporale}\\ 

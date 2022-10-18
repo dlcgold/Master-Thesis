@@ -192,7 +192,6 @@ compresso necessita $\frac{\lceil\log(M-1)\rceil+1}{8}$ byte, essa è:
   \label{eq:mapintmem}
   \approx N\left(\rho\frac{\lceil\log(M-1)\rceil+1}{4}+5\right)\mbox{ byte}
 \end{equation}
-\dc{Ricontrollare conto}
 \begin{algorithm}
   \small
   \begin{algorithmic}[1]
@@ -253,7 +252,6 @@ compresso necessita $\frac{\lceil\log(M-1)\rceil+1}{8}$ byte, essa è:
   \texttt{MAP-INT} per la colonna $k$.}}
   \label{algo:buildnaive}
 \end{algorithm}
-\dc{Spiegare algoritmo?}
 \begin{esempio}
   Data la seguente colonna:
   \[y^5=00101111000000000000\]
@@ -845,7 +843,7 @@ dato $\rho$ numero medio di run per colonna, essa è:
   \approx N\left(\frac{\rho\left(2+\log\frac{M}{\rho}\right)}{4}+
     53\right)\mbox{ byte} 
 \end{equation}
-\dc{Ricontrollare conto}
+%\dc{Ricontrollare conto}
 È possibile stimare un confronto tra la memoria
 richiesta da un bitvector sparso e da un intvector compresso.\\
 Si noti che è molto complesso risolvere analiticamente la seguente equazione,
@@ -856,7 +854,7 @@ compresso:
   \label{eq:mapbvintmem}
   \rho\left(2+\log\frac{M}{\rho}\right)+128=\rho\lceil\log(M-1)\rceil+1
 \end{equation}
-\dc{Ricontrollare conto}
+%\dc{Ricontrollare conto}
 Bisogna considerare come difficoltà aggiuntiva il fatto che $M,\,\rho\in
 \mathbb{N}$ e che entrambi i lati dell'equazione hanno valori nell'insieme dei
 naturali.\\
@@ -875,6 +873,7 @@ mapping).
 \begin{figure}
   \centering
   \includegraphics[scale = 0.7]{img/bv_vs_iv.pdf}
+  \vspace{-5mm}
   \caption{Confronto tra la stima di memoria in bit necessaria a un bitvector
     sparso e a un 
     intvector compresso, al variare dell'altezza del pannello. Con la linea

@@ -27,6 +27,7 @@ L’informazione combinata di tutti gli aplotipi in un individuo è detta
 \begin{figure}
   \centering
   \includegraphics[scale = 0.25]{img/haplo.jpg}
+  \vspace{-5mm}
   \caption{Schema di ottenimento del pannello di aplotipi.}
   \label{fig:haplo}
 \end{figure}
@@ -183,7 +184,7 @@ $d_k$ è disponibile all'algoritmo \ref{algo:durbin1}. Si noti che
 il costo della costruzione dei due insiemi di array è:
 \begin{equation}
   \label{eq:pbwtadtime}
-  \mathcal{O}(NM)
+  \mathcal{O}(\mathit{NM})
 \end{equation}
 Ai fini della trattazione dell'algoritmo di computo degli $\SMEM$ per
 un aplotipo esterno,
@@ -204,6 +205,7 @@ questa tesi.
   \caption{Tabella di confronto tra le strutture dati relative alla $\BWT$ e
     alla $\PBWT$.}
   \label{tab:pbwtbwt}
+  \vspace{-2mm}
   \begin{tabular}{c|c}
     $\BWT$ & $\PBWT$\\
     \hline
@@ -680,24 +682,24 @@ $z$.\\
 Ricapitolando, per poter eseguire l'algoritmo 5, è necessario avere in
 memoria con random access:
 \begin{itemize}
-  \item il pannello $X$, di dimensione $NM$
-  \item l'insieme dei prefix array $a$, di dimensione $NM$
-  \item l'insieme dei divergence array $d$, di dimensione $NM$
+  \item il pannello $X$, di dimensione $\mathit{NM}$
+  \item l'insieme dei prefix array $a$, di dimensione $\mathit{NM}$
+  \item l'insieme dei divergence array $d$, di dimensione $\mathit{NM}$
   \item gli array $u_k$ e $v_k$, per ogni colonna $k$, complessivamente
-  di dimensione $2NM$ 
+  di dimensione $2\mathit{NM}$ 
   \item l'array $c$, di dimensione $N$
 \end{itemize}
 Quindi, si ha una complessità in spazio pari a:
 \begin{equation}
   \label{eq:pbwtsize}
-  \mathcal{O}(NM)
+  \mathcal{O}(\mathit{NM})
 \end{equation}
 Nel dettaglio, Durbin stesso ha proposto una stima quantitativa della memoria
 richiesta,
 ovvero\footnote{\scriptsize{\url{https://github.com/richarddurbin/pbwt/blob/0de8d02df1b77146ded81e9e196991fdab520767/pbwtMatch.c\#L252}}}:
 \begin{equation}
   \label{eq:pbwtsize2}
-  13NM\mbox{ byte}
+  13\mathit{NM}\mbox{ byte}
 \end{equation}
 Per poter capire meglio la problematica conseguente a tali richieste di spazio,
 prendiamo, ad esempio, un pannello di 
@@ -775,7 +777,8 @@ con:
   \item $c$ numero totale dei match
 \end{itemize}
 In merito alla complessità in tempo dell'algoritmo L-PBWT-query si ha che, al
-costo di $8NM$ interi aggiuntivi in memoria, con $N$ e $M$ dimensioni del
+costo di $8\mathit{NM}$ interi aggiuntivi in memoria, con $N$ e $M$ dimensioni
+del 
 pannello, essa è proporzionale a: 
 \begin{equation}
   \label{eq:leap2}
@@ -797,7 +800,7 @@ asintotica di quelli basati sull'uso di tali strutture dinamiche. Ad
 esempio, la creazione della $\DPBWT$ richiede tempo:
 \begin{equation}
   \label{eq:dpbwt}
-  \mathcal{O}(NM)
+  \mathcal{O}(\mathit{NM})
 \end{equation}
 Invece, l'aggiunta e la rimozione di un aplotipo sono entrambe in tempo:
 \begin{equation}
@@ -822,7 +825,7 @@ In termini computazionali, gli autori sono riusciti a formulare un algoritmo in
 grado di calcolare questi $T$ match interni al pannello in tempo: 
 \begin{equation}
   \label{eq:pbwtwild}
-  \mathcal{O}(NMT)
+  \mathcal{O}(\mathit{NMT})
 \end{equation}
 \subsubsection{IMPUTE5}
 Per citare un uso della $\PBWT$, si può introdurre il concetto di
@@ -840,7 +843,7 @@ A tal fine, nel 2020, Rubinacci et al. \cite{impute5} hanno proposto
   dimensioni. 
 \subsection{Una prima proposta run-length encoded}
 \label{subsectravis}
-A fine 2021, Gagie et al. \cite{tricks} hanno iniziato a teorizzare una variante
+A fine 2021, Brown, Gagie et al. \cite{tricks} hanno iniziato a teorizzare una variante
 run-length encoded della $\PBWT$, cercando di basarsi sui risultati
 già ottenuti sulla $\BWT$ con la $\RLBWT$.
 Pensando alla costruzione della $\PBWT$, con $M$ individui e $N$ siti, si

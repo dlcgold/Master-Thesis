@@ -46,13 +46,16 @@ nei commenti del codice:
   \item \texttt{matchNaive}, ovvero un'implementazione na\"{i}ve del calcolo
   degli $\SMEM$ che non sfrutta la $\PBWT$. Questo algoritmo non è
   utilizzabile in casi reali. La complessità in tempo di tale 
-  soluzione è stimata essere $\mathcal{O}(NMQ)$ mentre quella in spazio è
-  $\mathcal{O}(NM)$
+  soluzione è stimata essere $\mathcal{O}(\mathit{NMQ})$ mentre quella in spazio
+  è 
+  $\mathcal{O}(\mathit{NM})$
   \item \texttt{matchIndexed}, ovvero l'algoritmo 5 del paper originale
   \cite{pbwt}. La complessità in tempo di tale 
-  soluzione è stimata essere $\mathcal{O}(NQ)$, dopo una fase di preprocessing
-  con complessità $\mathcal{O}(NM)$. La complessità in spazio è stimata essere
-  $\mathcal{O}(NM)$, ricordando che essa corrisponde a $13NM$
+  soluzione è stimata essere $\mathcal{O}(\mathit{NQ})$, dopo una fase di
+  preprocessing 
+  con complessità $\mathcal{O}(\mathit{NM})$. La complessità in spazio è stimata
+  essere 
+  $\mathcal{O}(\mathit{NM})$, ricordando che essa corrisponde a $13\mathit{NM}$
   byte in memoria
   \item \texttt{matchDynamic}, ovvero un algoritmo non approfondito nel paper,
   ma
@@ -140,6 +143,7 @@ fasi della sperimentazione.
   \centering
   \caption{Informazioni quantitative relative ai cinque pannelli in analisi.}
   \label{tab:panel}
+  \vspace{-2mm}
   \begin{tabular}{c||c|c|c|c}
     \textbf{Chr} & \textbf{\#Siti} & \textbf{\#Run totale}
     & \textbf{Max run} & \textbf{Media run} \\ 
@@ -165,6 +169,7 @@ numero massimo di run riscontrabili in una colonna.
 \begin{figure}
   \centering
   \includegraphics[width = \linewidth]{img/boxplotbi.png}
+  \vspace{-5mm}
   \caption{Boxplot della distribuzione delle run per i pannelli dei cinque
     cromosomo studiati. Il grafico (a) presenta uno zoom che esclude la maggior
     parte degli outlier mentre il grafico (b) presenta, in scala logaritmica, il
@@ -197,6 +202,7 @@ query, in modo che il calcolo non sia banale.\\
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{img/final_dag_r.pdf}
+  \vspace{-5mm}
   \caption{Regole usate in Snakemake per la sperimentazione. Si hanno
   il download  dei vari software, la compilazione degli stessi, la produzione
   delle strutture dati,
