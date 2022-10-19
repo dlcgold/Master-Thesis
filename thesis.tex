@@ -553,8 +553,11 @@ medicina personalizzata.
 %% BIBLIOGRAFIA
 % \addcontentsline{toc}{chapter}{Bibliografia e sitografia}
 % \printbibliography[title={Bibliografia e sitografia}]
-%\addcontentsline{toc}{chapter}{Bibliografia}
-\addcontentsline{toc}{chapter}{Riferimenti}
+% \addcontentsline{toc}{chapter}{Bibliografia}
+\fancyhead[LO,RE]{\slshape \leftmark}
+% \fancyhead[CO,CE]{\slshape\rightmark}
+\fancyhead[LE,RO]{}
+\addcontentsline{toc}{chapter}{Bibliografia}
 \bibliographystyle{unsrt}
 \bibliography{thesis}
 %\dc{Sistemare tutte le citazione coi DOI}
@@ -567,7 +570,7 @@ medicina personalizzata.
 % \input{include/file}
 
 % ringraziamenti
-\input{include/ringraziamenti_final}
+\input{include/ringraziamenti}
 \end{document}
 
 % LocalWords:  divergence prefix primis
