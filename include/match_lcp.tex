@@ -258,18 +258,19 @@ numero
 di step all'indietro necessari a computare la nuova tripla $e_k$, $f_k$ e
 $g_k$. Tale numero di 
 step scala sulla cardinalità dei caratteri in overlap tra due $\SMEM$
-consecutivi. Fatta questa premessa, si può stimare che il calcolo dei $c$
+consecutivi. Fatta questa premessa, si può stimare che il tempo medio di
+calcolo dei $c$
 $\SMEM$ con
 la struttura \texttt{MAP-INT + RLCP} è proporzionale, con $\rho$ numero medio di
 run per una colonna, a:
 \begin{equation}
   \label{eq:lcpmatchint}
-  \mathcal{O}(N\log \rho+c)
+  Avg.\,\,\,\mathcal{O}(N\log \rho+c)
 \end{equation}
 Nel caso, invece, della struttura \texttt{MAP-BV + RLCP} si ha:
 \begin{equation}
   \label{eq:lcpmatchbv}
-  \mathcal{O}\left(N\log\frac{M}{\rho}+c\right)
+  Avg.\,\,\,\mathcal{O}\left(N\log\frac{M}{\rho}+c\right)
 \end{equation}
 \begin{algorithm}
   \footnotesize

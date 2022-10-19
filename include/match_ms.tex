@@ -227,7 +227,8 @@ l'algoritmo, si ha che:
   stimare, in termini di complessità asintotica. Questa difficoltà è dovuta dal
   fatto che gli accessi al pannello vengono fatti solo quando $\MS.\row[i]\neq
   \MS.\row[i-1]$.
-  Ipotizzando un caso peggiore dove si ha necessità di accedere al pannello in
+  Ipotizzando un caso peggiore dove si ha necessità di accedere al pannello per
+  il calcolo dei valori $\len$ in
   ogni 
   colonna, nel caso della componente \texttt{RA-BV}, il calcolo
   complessivo delle lunghezza è proporzionale a:
@@ -257,7 +258,8 @@ l'algoritmo, si ha che:
   % \end{equation}
 \end{itemize}
 Tali complessità teoriche sono fortemente sovrastimate ($N^2$ è, di fatto, un
-$NL$, con $L$ lunghezza media degli $\SMEM$ e, tendenzialmente, $L<<N$). \\
+$\mathit{NL}$, con $L$ numero medio di accessi al pannello per il calcolo di un
+valore $\len$). \\ 
 Facendo una stima complessiva, si può ipotizzare come la struttura
 \texttt{MAP-BV 
 + THR-BV + RA-SLP + PERM + PHI}, a causa della maggior lentezza in fase di
