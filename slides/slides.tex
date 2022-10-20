@@ -596,21 +596,33 @@
   %     \item prefix array sample: \underline{\texttt{PERM}}  
   %     \item struttura per le funzioni $\varphi$ e $\varphi^{-1}$:
   %     \underline{\texttt{PHI}} 
-  %     %\item reverse longest common prefix: \underline{\texttt{RLCP}}
+  %     %     \item reverse longest common prefix: \underline{\texttt{RLCP}}
   %   \end{itemize}
   % \end{block}
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{img/ds2.pdf}
-  \end{figure}
+  \only<1>{
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.75\textwidth]{img/ds2.pdf}
+    \end{figure}
+  } \only<2>{
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.75\textwidth]{img/ds2thr.pdf}
+    \end{figure}
+  } \only<3>{
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.75\textwidth]{img/ds2lce.pdf}
+    \end{figure}
+  }
 \end{frame}
-\begin{frame}{Qualche confronto in spazio}
-  \begin{figure}[H]
-    \centering
-    \hspace{-0.2cm}\includegraphics[width=0.8\textwidth]{img/bv_vs_iv2.pdf}
-    %\includegraphics[width=0.49\textwidth]{img/slp_vs_macs_log.pdf}
-  \end{figure}
-\end{frame}
+% \begin{frame}{Qualche confronto in spazio}
+%   \begin{figure}[H]
+%     \centering
+%     \hspace{-0.2cm}\includegraphics[width=0.8\textwidth]{img/bv_vs_iv2.pdf}
+%     %\includegraphics[width=0.49\textwidth]{img/slp_vs_macs_log.pdf}
+%   \end{figure}
+% \end{frame}
 \subsection{Strutture dati per la RLPBWT e calcolo degli SMEM}
 % \begin{frame}{Le strutture dati}
 %   \begin{block}{Strutture per il calcolo degli $\SMEM$ tramite $\RLCP$, non in
