@@ -251,30 +251,31 @@
     \end{figure}
   }
 \end{frame}
-\begin{frame}{Trasformata di Burrows--Wheeler posizionale}
+\begin{frame}{{\small{Trasformata di Burrows--Wheeler posizionale -}} {\scriptsize{\textit{Durbin, Bioinformatics,
+               2014}}}}
   \only<1>{
-    \begin{block}{$\PBWT$ - {\footnotesize{\textit{Durbin, Bioinformatics,
-              2014}}}} 
-      Dato pannello di $M$ aplotipi, lunghi $N$ siti (biallelici:
-      $\Sigma=\{0,1\}$), si definisce 
-      $\PBWT$ del 
-      pannello una collezione di $N+1$ coppie di array $(a_k,d_k)$, $0\leq k\leq
-      N$, dove:
-      \begin{itemize}
-        \item $a_k$ è il \textbf{prefix array} della colonna $k$
-        \item $d_k$ è il \textbf{divergence array} della colonna $k$
-      \end{itemize}
-    \end{block}
-    \begin{block}{}
-      \begin{itemize}
-        \item la $\PBWT$ è basata sul riordinamento co-lessicografico a ogni
-        colonna
-        \item il pannello, riordinato in ogni colonna $k$ con $a_k$, è detto
-        \underline{matrice $\PBWT$}
-        \item aplotipi simili, riordinati consecutivamente alla colonna $k$, è
-        molto probabile presentino il medesimo carattere in colonna $k+1$
-      \end{itemize}
-    \end{block}
+    % \begin{block}{$\PBWT$ - {\footnotesize{\textit{Durbin, Bioinformatics,
+    %           2014}}}} 
+    %   Dato pannello di $M$ aplotipi, lunghi $N$ siti (biallelici:
+    %   $\Sigma=\{0,1\}$), si definisce 
+    %   $\PBWT$ del 
+    %   pannello una collezione di $N+1$ coppie di array $(a_k,d_k)$, $0\leq k\leq
+    %   N$, dove:
+    %   \begin{itemize}
+    %     \item $a_k$ è il \textbf{prefix array} della colonna $k$
+    %     \item $d_k$ è il \textbf{divergence array} della colonna $k$
+    %   \end{itemize}
+    % \end{block}
+    % \begin{block}{}
+    %   \begin{itemize}
+    %     \item la $\PBWT$ è basata sul riordinamento co-lessicografico a ogni
+    %     colonna
+    %     \item il pannello, riordinato in ogni colonna $k$ con $a_k$, è detto
+    %     \underline{matrice $\PBWT$}
+    %     \item aplotipi simili, riordinati consecutivamente alla colonna $k$, è
+    %     molto probabile presentino il medesimo carattere in colonna $k+1$
+    %   \end{itemize}
+    % \end{block}
   
     % \begin{block}{Run-length encoding}
     %   Il run-length encoding consiste nel memorizzare le \textit{run}, ovvero
@@ -285,10 +286,20 @@
     %     \texttt{000000} $\implies$ \texttt{(0,6)}
     %   \end{center}
     % \end{block}
+    \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.8]{img/pa.pdf}
+    \end{figure}
   }\only<2>{
     \begin{figure}[H]
       \centering
-      \includegraphics[scale = 0.8]{img/matrix2.pdf}
+      \includegraphics[scale = 0.8]{img/da.pdf}
+    \end{figure}
+  }
+  \only<3>{
+    \begin{figure}[H]
+      \centering
+      \includegraphics[scale = 0.8]{img/run.pdf}
     \end{figure}
   }
   % \only<3>{
@@ -307,11 +318,12 @@
     aplotipo esterno. 
   \end{alertblock}
   \begin{block}{}
-    Complessità calcolo degli $\SMEM$ con un algoritmo na\"{i}ve:
+    Calcolo degli $\SMEM$ na\"{i}ve ($N$ siti e $M$
+    aplotipi):
     $\mathcal{O}(N^2M)$
   \end{block}
   \begin{block}{}
-    Calcolo degli $\SMEM$ con aplotipo esterno per Durbin:
+    Calcolo degli $\SMEM$ con aplotipo esterno per Durbin ($c$ numero $\SMEM$):
     \begin{itemize}
       \item tempo: $\mathcal{O}(\mathit{NM})$ + Avg. $\mathcal{O}(N+c)$
       \item spazio: $\mathcal{O}(\mathit{NM})\implies$
@@ -644,57 +656,57 @@
 %     \end{itemize}
 %   \end{block}
 % \end{frame}
-\begin{frame}{Calcolo degli $\SMEM$}
-  \begin{block}{Matching statistics per la $\PBWT$}
-    {\small{
-        Dato un pannello $X=\{x_0,\ldots,x_{M-1}\}$, $x_i=N$,
-        e un aplotipo esterno $z$, tale che $|z|=N$, si definisce
-        \textbf{matching
-        statistics} di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, 
-        $|\MS|=N$, tale che:   
-        \begin{itemize}
-          \item $x_{\MS[i].\row}[i-\MS[i].\len+1,i]=z[i-\MS[i].\len+1,i]$, ovvero si
-          ha che 
-          l'aplotipo esterno ha un match, lungo $\MS[i].\len$ e terminante in colonna
-          $i$, con la riga 
-          $\MS[i].\row$-esima del pannello
-          \item $z[i-\MS[i].\len,i]$ non è un suffisso,
-          terminante in 
-          colonna $i$,
-          di un qualsiasi sottoinsieme di righe di $X$
-        \end{itemize}
-      }}
-  \end{block}
-  \pause
-  \begin{block}{$\SMEM$ da $\MS$}
-    {\small{
-        Dato un array di matching statistics $\MS$ si ha che $z[i-l+1,i]$
-        presenta uno $\SMEM$ di lunghezza $l$ con la riga $\MS[i].\row$-esima
-        del 
-        pannello $X$ sse: 
-        $\MS[i].\len=l\land(i=N-1\lor \MS[i].\len\geq \MS[i+1].\len)$
-      }}
-  \end{block}
-\end{frame}
+% \begin{frame}{Calcolo degli $\SMEM$}
+%   \begin{block}{Matching statistics per la $\PBWT$}
+%     {\small{
+%         Dato un pannello $X=\{x_0,\ldots,x_{M-1}\}$, $x_i=N$,
+%         e un aplotipo esterno $z$, tale che $|z|=N$, si definisce
+%         \textbf{matching
+%         statistics} di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, 
+%         $|\MS|=N$, tale che:   
+%         \begin{itemize}
+%           \item $x_{\MS[i].\row}[i-\MS[i].\len+1,i]=z[i-\MS[i].\len+1,i]$, ovvero si
+%           ha che 
+%           l'aplotipo esterno ha un match, lungo $\MS[i].\len$ e terminante in colonna
+%           $i$, con la riga 
+%           $\MS[i].\row$-esima del pannello
+%           \item $z[i-\MS[i].\len,i]$ non è un suffisso,
+%           terminante in 
+%           colonna $i$,
+%           di un qualsiasi sottoinsieme di righe di $X$
+%         \end{itemize}
+%       }}
+%   \end{block}
+%   \pause
+%   \begin{block}{$\SMEM$ da $\MS$}
+%     {\small{
+%         Dato un array di matching statistics $\MS$ si ha che $z[i-l+1,i]$
+%         presenta uno $\SMEM$ di lunghezza $l$ con la riga $\MS[i].\row$-esima
+%         del 
+%         pannello $X$ sse: 
+%         $\MS[i].\len=l\land(i=N-1\lor \MS[i].\len\geq \MS[i+1].\len)$
+%       }}
+%   \end{block}
+% \end{frame}
 % \begin{frame}{Componenti e strutture dati, una panoramica}
 %   \begin{figure}[H]
 %     \centering
 %     \includegraphics[width=0.7\textwidth]{img/ds2.pdf}
 %   \end{figure}
 % \end{frame}
-\begin{frame}{Esempio di matching statistics}
+\begin{frame}{Matching statistics e calcolo degli $\SMEM$}
   \vspace{-0.3cm}
  \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.21, valign=t]{img/pbwtmatch.pdf}
-    \includegraphics[scale = 0.3, valign=t]{img/mini_ms3.pdf}
+    \includegraphics[scale = 0.3, valign=t]{img/mini_ms4.pdf}
   \end{figure}
   \vspace{-0.5cm}
   \begin{table}[H]
     \scriptsize
     \centering
     \begin{tabular}{c|ccccccccccccccc}
-      $k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordcyan}05} & 06 & 07 & 08
+      $\MS\backslash k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordcyan}05} & 06 & 07 & 08
       &  {\color{nordred}09} & 10 &  {\color{nordgreen}11} & 12 & 13
       &  {\color{nordpurple}14} \\
       \hline
@@ -711,7 +723,7 @@
   \begin{figure}[H]
     \centering
     \includegraphics[scale = 0.65, valign=t]{img/phi.pdf}
-    \includegraphics[scale = 0.28, valign=t]{img/mini_phi3.pdf}
+    \includegraphics[scale = 0.28, valign=t]{img/mini_phi4.pdf}
   \end{figure}
   % {\footnotesize{\[\varPhi_j=[0,0,0,1,0, \ldots],\quad
   %       \varPhi^{-1}_m=[0,0,0,1,0,\ldots],\quad
@@ -791,7 +803,7 @@
         \item $\SMEM$ interni con $\RLPBWT$
         \item $\RLPBWT$ con dati mancanti
         \item $\RLPBWT$ multiallelica
-        \item calcolo $\KSMEM$ con $\RLPBWT$
+        %\item calcolo $\KSMEM$ con $\RLPBWT$
       \end{itemize}
     \end{multicols}
   \end{block}
@@ -835,6 +847,72 @@
   
 \end{frame}
 \subsection{Slide supplementari}
+\begin{frame}[plain]{PBWT e RL-encoding}
+  \begin{block}{$\PBWT$ - {\footnotesize{\textit{Durbin, Bioinformatics,
+            2014}}}} 
+    \footnotesize{ Dato pannello di $M$ aplotipi, lunghi $N$ siti (biallelici:
+      $\Sigma=\{0,1\}$), si definisce 
+      $\PBWT$ del 
+      pannello una collezione di $N+1$ coppie di array $(a_k,d_k)$, $0\leq k\leq
+      N$, dove:
+      \begin{itemize}
+        \item $a_k$ è il \textbf{prefix array} della colonna $k$
+        \item $d_k$ è il \textbf{divergence array} della colonna $k$
+      \end{itemize}}
+  \end{block}
+  \begin{block}{}
+    \footnotesize{\begin{itemize}
+        \item la $\PBWT$ è basata sul riordinamento co-lessicografico a ogni
+        colonna
+        \item il pannello, riordinato in ogni colonna $k$ con $a_k$, è detto
+        \underline{matrice $\PBWT$}
+        \item aplotipi simili, riordinati consecutivamente alla colonna $k$, è
+        molto probabile presentino il medesimo carattere in colonna $k+1$
+      \end{itemize}}
+  \end{block}
+  
+  \begin{block}{Run-length encoding}
+    \footnotesize{Il run-length encoding consiste nel memorizzare le \textit{run}, ovvero
+      sequenze massimali di caratteri uguali, come coppie: \\
+      \vspace{-0.3cm}
+      \begin{center}
+        \texttt{(carattere, lunghezza della run)}\\
+        \texttt{000000} $\implies$ \texttt{(0,6)}
+      \end{center}}
+  \end{block}
+\end{frame}
+\begin{frame}[plain]{Definizione $\MS$ e calcolo $\SMEM$}
+  \begin{block}{Matching statistics per la $\PBWT$}
+    {\small{
+        Dato un pannello $X=\{x_0,\ldots,x_{M-1}\}$, $x_i=N$,
+        e un aplotipo esterno $z$, tale che $|z|=N$, si definisce
+        \textbf{matching
+        statistics} di $z$ su $X$ un array $\MS$ di coppie $(\row,\len)$, 
+        $|\MS|=N$, tale che:   
+        \begin{itemize}
+          \item $x_{\MS[i].\row}[i-\MS[i].\len+1,i]=z[i-\MS[i].\len+1,i]$, ovvero si
+          ha che 
+          l'aplotipo esterno ha un match, lungo $\MS[i].\len$ e terminante in colonna
+          $i$, con la riga 
+          $\MS[i].\row$-esima del pannello
+          \item $z[i-\MS[i].\len,i]$ non è un suffisso,
+          terminante in 
+          colonna $i$,
+          di un qualsiasi sottoinsieme di righe di $X$
+        \end{itemize}
+      }}
+  \end{block}
+  \pause
+  \begin{block}{$\SMEM$ da $\MS$}
+    {\small{
+        Dato un array di matching statistics $\MS$ si ha che $z[i-l+1,i]$
+        presenta uno $\SMEM$ di lunghezza $l$ con la riga $\MS[i].\row$-esima
+        del 
+        pannello $X$ sse: 
+        $\MS[i].\len=l\land(i=N-1\lor \MS[i].\len\geq \MS[i+1].\len)$
+      }}
+  \end{block}
+\end{frame}
 \begin{frame}[plain]{Mapping e threshold}
   \begin{block}{Colonna matrice $\PBWT$}
     \[y^5=00101111000000000000\]
