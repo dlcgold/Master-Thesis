@@ -34,7 +34,7 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{blindtext}
 \usepackage{mwe}
-
+\usepackage{citeall}
 \usepackage{tikz}\usetikzlibrary{er}\tikzset{multi  attribute /.style={attribute
     ,double  distance =1.5pt}}\tikzset{derived  attribute /.style={attribute
     ,dashed}}\tikzset{total /.style={double  distance =1.5pt}}\tikzset{every
@@ -836,13 +836,20 @@
     % \includegraphics[scale = 0.4]{img/ufl.png}
     % \includegraphics[scale = 0.25]{img/dal.png}
     % \includegraphics[scale = 0.15]{img/tmdu.jpg}
-    \includegraphics[width = 0.18\textwidth]{img/bias_gh.png}$\quad\quad$
+    \includegraphics[width = 0.18\textwidth]{img/logo-bias.pdf}$\quad\quad$
     \includegraphics[width = 0.17\textwidth]{img/ufl.png}$\quad\quad$
     \includegraphics[width = 0.18\textwidth]{img/dal.png}$\quad\quad$
     \includegraphics[width = 0.18\textwidth]{img/tmdu.jpg}
   \end{figure}
 \end{frame}
 \appendix
+\subsection{Bibliografia}
+\nocite{*}
+\begin{frame}[plain, allowframebreaks]{Bibliografia}
+  \nocite{*}
+  \bibliographystyle{unsrt}
+  \bibliography{slides}
+\end{frame}
 \begin{frame}[plain]{}
   
 \end{frame}
