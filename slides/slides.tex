@@ -251,6 +251,7 @@
     \end{figure}
   }
 \end{frame}
+\subsection{$\PBWT$ e calcolo degli $\SMEM$}
 \begin{frame}{{\small{Trasformata di Burrows--Wheeler posizionale -}} {\scriptsize{\textit{Durbin, Bioinformatics,
                2014}}}}
   \only<1>{
@@ -311,11 +312,11 @@
 \end{frame}
 \begin{frame}{Scopo della tesi}
    \begin{alertblock}{}
-    Lo scopo di questa tesi è stato quello di creare
-    una variante run-length encoded della $\PBWT$ ($\RLPBWT$) che permettesse,
-    in modo efficiente dal 
-    punto di vista della memoria richiesta, il calcolo degli $\SMEM$ con
-    aplotipo esterno. 
+    Lo scopo di questa tesi è quello di creare
+    una variante run-length encoded della $\PBWT$ ($\RLPBWT$) che permetta
+    il calcolo degli $\SMEM$ con
+    aplotipo esterno, in modo efficiente dal 
+    punto di vista della memoria richiesta. 
   \end{alertblock}
   \begin{block}{}
     Calcolo degli $\SMEM$ na\"{i}ve ($N$ siti e $M$
@@ -583,7 +584,8 @@
 %   % tale $\SMEM$.
 % \end{frame}
 \section{Run-length encoded PBWT}
-\subsection{Strutture per la RLPBWT}
+%\subsection{Strutture per la RLPBWT}
+\subsection{Strutture dati per la RLPBWT e calcolo degli SMEM}
 \begin{frame}{Sottostrutture e strutture dati composte per la $\RLPBWT$}
   % \begin{block}{Sottostrutture per ottenere strutture dati composte per
   %     la $\RLPBWT$} 
@@ -735,7 +737,7 @@
 \end{frame}
 \section{Risultati sperimentali}
 \subsection{Setup sperimentale}
-\begin{frame}{Dati di input}
+\begin{frame}{Dati in input}
   %  \begin{block}{Implementazione e sperimentazione}
   %   \small
   %   La sperimentazione, orchestrata tramite \texttt{snakemake}, è stata
@@ -774,7 +776,7 @@
   \end{figure}
 \end{frame}
 \subsection{Risultati del calcolo degli SMEM}
-\begin{frame}{Performance calcolo degli $\SMEM$ con 100 query}
+\begin{frame}{Performance del calcolo degli $\SMEM$ con 100 query}
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.99\textwidth]{img/exe_time_mem_paper2.pdf}
@@ -782,16 +784,16 @@
 \end{frame}
 
 \section{Conclusioni e sviluppi futuri}
-\subsection{Conclusioni e sviluppi futuri}
+\subsection{Considerazioni finali}
 \begin{frame}{Considerazioni e sviluppi futuri}
-  \begin{block}{Alcune considerazioni}
+  \begin{block}{Considerazioni finali}
     \small
     \begin{itemize}
       \item le strutture dati e gli algoritmi proposti hanno
-      confermato la potenzialità dell'uso di strutture run-length encoded in
+      confermato le potenzialità dell'uso di strutture run-length encoded in
       pangenomica
-      \item l'obbiettivo della tesi, ovvero lo sviluppo di un algoritmo,
-      efficiente in spazio, per il calcolo degli $\SMEM$ di un aplotipo esterno
+      \item l'obiettivo della tesi, ovvero lo sviluppo di un algoritmo
+      efficiente in spazio per il calcolo degli $\SMEM$ di un aplotipo esterno
       contro un pannello, è stato raggiunto con risultati molto interessanti
     \end{itemize}
   \end{block}
@@ -808,6 +810,7 @@
     \end{multicols}
   \end{block}
 \end{frame}
+\subsection{Conclusioni}
 \begin{frame}{}
   \begin{block}{Ulteriori dettagli}
     \footnotesize{\textit{\textbf{Bonizzoni, Boucher, Cozzi, Gagie, Kashgouli,
@@ -843,6 +846,9 @@
   \end{figure}
 \end{frame}
 \appendix
+\begin{frame}[plain]{}
+
+\end{frame}
 \subsection{Bibliografia}
 \nocite{*}
 \begin{frame}[plain]{Bibliografia}
@@ -850,9 +856,9 @@
   \bibliographystyle{unsrt}
   \bibliography{slides}
 \end{frame}
-\begin{frame}[plain]{}
+% \begin{frame}[plain]{}
   
-\end{frame}
+% \end{frame}
 \subsection{Slide supplementari}
 \begin{frame}[plain]{PBWT e RL-encoding}
   \begin{block}{$\PBWT$ - {\footnotesize{\textit{Durbin, Bioinformatics,
