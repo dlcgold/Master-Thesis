@@ -68,8 +68,9 @@
 
 
 \setbeamercolor{block title}{bg=nord2,fg=white}
+\setbeamercolor{block body alerted}{bg=nord2,fg=white}
 
-\setbeamercolor{itemize item}{fg=nord3}
+\setbeamercolor{itemize item}{fg=nord2}
 \setbeamercolor{itemize subitem}{fg=nord4}
 \setbeamercolor{itemize subsubitem}{fg=nord5}
 
@@ -152,8 +153,8 @@
       ($(#3)+(0.2em,-0.5ex)$);}
   }
   
-\title[Algoritmi per la $\RLPBWT$] {Algoritmi per la trasformata di
-  Burrows--Wheeler posizionale con compressione run-length}
+\title[Algoritmi per la $\RLPBWT$] {\Large{Algoritmi per la trasformata di
+  Burrows--Wheeler posizionale con compressione run-length}}
 
 % \subtitle
 % {Presentation Subtitle} % (optional)
@@ -161,7 +162,7 @@
 \author[Davide Cozzi]{\Large{Davide Cozzi}}
 
 
-\institute[] {\large{\textbf{{\color{nord2}Relatore:}}
+\institute[] {\normalsize{\textbf{{\color{nord2}Relatore:}}
     \textit{Prof.ssa~Raffaella 
       Rizzi}\quad 
     \textbf{\color{nord2}{Correlatore:}} \textit{Dr.~Yuri Pirola}}\\
@@ -170,7 +171,7 @@
       (DISCo)\\
       Università degli Studi di Milano Bicocca}}}
 
-\date[26/10/2022] {26 Ottobre 2022}
+\date[26/10/2022] {\newline \footnotesize{26 Ottobre 2022}}
 
 \subject{Presentatazione}
 \pgfdeclareimage[height=0.5cm]{university-logo}{img/logo_unimib.pdf}
@@ -196,7 +197,7 @@
   \titlepage
 \end{frame}
 
-\begin{frame}{Outline}
+\begin{frame}{Indice}
   \setcounter{tocdepth}{1}
   \tableofcontents
 \end{frame}
@@ -236,13 +237,15 @@
     \begin{block}{Rappresentazioni del pangenoma}
       \begin{itemize}
         \item grafo del pangenoma
-        \item \underline{\textbf{pannello di aplotipi}}
+        \item \textbf{pannello di aplotipi}
       \end{itemize}
-    \end{block}
-    \begin{block}{}
       Un \textbf{aplotipo} è  l'insieme di alleli, ovvero di
       varianti che, a meno di mutazioni, un organismo eredita da ogni genitore.
     \end{block}
+    
+    %\begin{block}{}
+      
+    % \end{block}
   }\only<2>{
     \vspace{-2mm}
     \begin{figure}[H]
@@ -707,17 +710,17 @@
   \begin{table}[H]
     \scriptsize
     \centering
-    \begin{tabular}{c|ccccccccccccccc}
-      $\MS\backslash k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordcyan}05} & 06 & 07 & 08
-      &  {\color{nordred}09} & 10 &  {\color{nordgreen}11} & 12 & 13
-      &  {\color{nordpurple}14} \\
+    \begin{tabular}{p{0.6cm}|p{0.16cm}p{0.16cm}p{0.16cm}p{0.16cm}ccp{0.16cm}p{0.16cm}ccccp{0.16cm}cc}
+      $\MS\backslash k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordcyan}\textbf{05}} & 06 & 07 & 08
+      &  {\color{nordred}\textbf{09}} & 10 &  {\color{nordgreen}\textbf{11}} & 12 & 13
+      &  {\color{nordpurple}\textbf{14}} \\
       \hline
-      $\row$ & 19 & 19 & 16 & 15 & 13 &  {\color{nordcyan}13} & 19 & 19 & 19
-      &  {\color{nordred}19} & 11 &  {\color{nordgreen}11} & 17 & 17
-      &  {\color{nordpurple}17} \\
-      $\len$ & 1 & 2 & 3 & 4 & 5 & {\color{nordcyan}6} & 4 & 5 & 6
-      & {\color{nordred}7} & 4 & {\color{nordgreen}5} & 2 & 3
-      & {\color{nordpurple}4}\\
+      $\row$ & 19 & 19 & 16 & 15 & 13 &  {\color{nordcyan}\textbf{13}} & 19 & 19 & 19
+      &  {\color{nordred}\textbf{19}} & 11 &  {\color{nordgreen}\textbf{11}} & 17 & 17
+      &  {\color{nordpurple}\textbf{17}} \\
+      $\len$ & 1 & 2 & 3 & 4 & 5 & {\color{nordcyan}\textbf{6}} & 4 & 5 & 6
+      & {\color{nordred}\textbf{7}} & 4 & {\color{nordgreen}\textbf{5}} & 2 & 3
+      & {\color{nordpurple}\textbf{4}}\\
     \end{tabular}
   \end{table}
 \end{frame}
@@ -757,7 +760,7 @@
   \end{block}
   \begin{table}[H]
     \centering
-    \begin{tabular}{c||c|c}
+    \begin{tabular}{c|c|c}
       \textbf{Chr} & \textbf{\#Siti} & \textbf{Media run} \\ 
       \hline
       \texttt{chr22} & 1.055.454 & 14\\
@@ -799,9 +802,10 @@
   \end{block}
   \begin{block}{Sviluppi futuri}
     \small
-    \begin{multicols}{2}
+    %\setlength{\columnsep}{10pt}
+    \begin{multicols}{1}
       \begin{itemize}
-        \item ottimizzazioni per pannelli di query
+        \item gestione di pannelli di query
         \item $\SMEM$ interni con $\RLPBWT$
         \item $\RLPBWT$ con dati mancanti
         \item $\RLPBWT$ multiallelica
@@ -814,20 +818,21 @@
 \begin{frame}{}
   \begin{block}{Ulteriori dettagli}
     \footnotesize{\textit{\textbf{Bonizzoni, Boucher, Cozzi, Gagie, Kashgouli,
-          K\"{o}ppl e Rossi:} \\\underline{Compressed data structures for
-          population-scale positional Burrows--Wheeler transforms}},
-      \textit{bioRxiv, 2022}} 
+          K\"{o}ppl e Rossi:} \\Compressed data structures for
+          population-scale positional Burrows--Wheeler transforms}
+      bioRxiv, 2022}
   \end{block}
   \begin{block}{}
-    \footnotesize{\textit{\underline{17th Workshop on Compression, Text and
-          Algorithms (WCTA)}, 11 Novembre 2022}}  
+    \footnotesize{\textit{$17^{\mathit{th}}$ Workshop on Compression, Text and
+          Algorithms (WCTA)} - Concepción (Cile)\\11 Novembre 2022} 
   \end{block}
-  \begin{alertblock}{}
-    \begin{center}
-       {\LARGE{Grazie per l'attenzione}}
-    \end{center}
-  \end{alertblock}
-  \vspace{-0.2cm}
+  % \begin{alertblock}{}
+  %   \begin{center}
+  %      {}
+  %   \end{center}
+  % \end{alertblock}
+  % \vspace{-0.2cm}
+  \vspace{0.35cm}
   % \begin{figure}[H]
   %   \centering
   %   \includegraphics[scale = 0.5]{img/logo-bias-mini.png}
@@ -844,6 +849,10 @@
     \includegraphics[width = 0.18\textwidth]{img/dal.png}$\quad\quad$
     \includegraphics[width = 0.18\textwidth]{img/tmdu.jpg}
   \end{figure}
+  \vspace{0.1cm}
+  \begin{center}
+   {\color{nord2}{\large{Grazie per l'attenzione}}}
+  \end{center}
 \end{frame}
 \appendix
 \begin{frame}[plain]{}
