@@ -23,6 +23,7 @@
 \usepackage[export]{adjustbox}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usepackage{array}
 \usetikzlibrary{positioning,shapes,chains,backgrounds,arrows,chains,fit,snakes,
   calc,automata}
 \usepackage{array}
@@ -35,6 +36,10 @@
 \usepackage{blindtext}
 \usepackage{mwe}
 \usepackage{citeall}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{booktabs}
 \usepackage{tikz}\usetikzlibrary{er}\tikzset{multi  attribute /.style={attribute
     ,double  distance =1.5pt}}\tikzset{derived  attribute /.style={attribute
     ,dashed}}\tikzset{total /.style={double  distance =1.5pt}}\tikzset{every
@@ -202,7 +207,7 @@
   \tableofcontents
 \end{frame}
 \section{Introduzione e scopo della tesi}
-\subsection{Pangenoma e aplotipi}
+\subsection{Pangenoma e pannello di aplotipi}
 \begin{frame}{Il pangenoma}
   % \begin{block}{}
   %   \small{
@@ -239,13 +244,13 @@
         \item grafo del pangenoma
         \item \textbf{pannello di aplotipi}
       \end{itemize}
-      Un \textbf{aplotipo} è  l'insieme di alleli, ovvero di
-      varianti che, a meno di mutazioni, un organismo eredita da ogni genitore.
     \end{block}
     
-    %\begin{block}{}
-      
-    % \end{block}
+    \begin{block}{Aplotipo}
+      %Un \textbf{aplotipo} è  l'
+      Insieme di alleli, ovvero di
+      varianti che un organismo eredita da ogni genitore, a meno di mutazioni.  
+    \end{block}
   }\only<2>{
     \vspace{-2mm}
     \begin{figure}[H]
@@ -327,7 +332,7 @@
     $\mathcal{O}(N^2M)$
   \end{block}
   \begin{block}{}
-    Calcolo degli $\SMEM$ con aplotipo esterno per Durbin ($c$ numero $\SMEM$):
+    Calcolo degli $\SMEM$ per Durbin ($c$ numero $\SMEM$):
     \begin{itemize}
       \item tempo: $\mathcal{O}(\mathit{NM})$ + Avg. $\mathcal{O}(N+c)$
       \item spazio: $\mathcal{O}(\mathit{NM})\implies$
@@ -710,13 +715,14 @@
   \begin{table}[H]
     \scriptsize
     \centering
-    \begin{tabular}{p{0.6cm}|p{0.16cm}p{0.16cm}p{0.16cm}p{0.16cm}ccp{0.16cm}p{0.16cm}ccccp{0.16cm}cc}
-      $\MS\backslash k$ & 00 & 01 & 02 & 03 & 04 &  {\color{nordcyan}\textbf{05}} & 06 & 07 & 08
-      &  {\color{nordred}\textbf{09}} & 10 &  {\color{nordgreen}\textbf{11}} & 12 & 13
+    \addtolength{\tabcolsep}{-0.12em}
+    \begin{tabular}{c|ccccccccccccccc}
+      $\MS\backslash k$ & 00 & 01 & 02 & 03 & 04 & {\color{nordcyan}\textbf{05}} & 06 & 07 & 08
+      &  {\color{nordred}\textbf{09}} & 10 & {\color{nordgreen}\textbf{11}} & 12 & 13
       &  {\color{nordpurple}\textbf{14}} \\
       \hline
-      $\row$ & 19 & 19 & 16 & 15 & 13 &  {\color{nordcyan}\textbf{13}} & 19 & 19 & 19
-      &  {\color{nordred}\textbf{19}} & 11 &  {\color{nordgreen}\textbf{11}} & 17 & 17
+      $\row$ & 19 & 19 & 16 & 15 & 13 & {\color{nordcyan}\textbf{13}} & 19 & 19 & 19
+      &  {\color{nordred}\textbf{19}} & 11 & {\color{nordgreen}\textbf{11}} & 17 & 17
       &  {\color{nordpurple}\textbf{17}} \\
       $\len$ & 1 & 2 & 3 & 4 & 5 & {\color{nordcyan}\textbf{6}} & 4 & 5 & 6
       & {\color{nordred}\textbf{7}} & 4 & {\color{nordgreen}\textbf{5}} & 2 & 3
@@ -771,7 +777,7 @@
     \end{tabular}
   \end{table}
 \end{frame}
-\subsection{Risultati della costruzione delle strutture}
+\subsection{Analisi delle sottostrutture}
 \begin{frame}{Costo in memoria delle componenti}
   \begin{figure}[H]
     \centering
@@ -803,7 +809,7 @@
   \begin{block}{Sviluppi futuri}
     \small
     %\setlength{\columnsep}{10pt}
-    \begin{multicols}{1}
+    \begin{multicols}{2}
       \begin{itemize}
         \item gestione di pannelli di query
         \item $\SMEM$ interni con $\RLPBWT$
@@ -832,7 +838,7 @@
   %   \end{center}
   % \end{alertblock}
   % \vspace{-0.2cm}
-  \vspace{0.35cm}
+  %\vspace{0.7cm}
   % \begin{figure}[H]
   %   \centering
   %   \includegraphics[scale = 0.5]{img/logo-bias-mini.png}
@@ -849,10 +855,12 @@
     \includegraphics[width = 0.18\textwidth]{img/dal.png}$\quad\quad$
     \includegraphics[width = 0.18\textwidth]{img/tmdu.jpg}
   \end{figure}
-  \vspace{0.1cm}
-  \begin{center}
-   {\color{nord2}{\large{Grazie per l'attenzione}}}
-  \end{center}
+  %\vspace{0.1cm}
+  \begin{block}{}
+    \begin{center}
+      {\color{nord2}{\large{Grazie per l'attenzione}}}
+    \end{center}
+  \end{block}
 \end{frame}
 \appendix
 \begin{frame}[plain]{}
@@ -924,7 +932,7 @@
         \end{itemize}
       }}
   \end{block}
-  \pause
+  %\pause
   \begin{block}{$\SMEM$ da $\MS$}
     {\small{
         Dato un array di matching statistics $\MS$ si ha che $z[i-l+1,i]$
